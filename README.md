@@ -2,7 +2,6 @@
 ## Team 52
 
 ### Team Members:
-- Student1 99100000
+- Mohammad Moasayebi 99105729
 - Alireza Alipanah 99106396
-- Ali Rahimi 99170445
-- Mohammad moasayebi 99105729
+- Ali Rahimi 99170445 
