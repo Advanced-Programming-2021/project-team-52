@@ -57,7 +57,8 @@ public class ScoreBoardController {
             response.append(usersInScoreOrder.get(i).getNickname());
             response.append(": ");
             response.append(usersInScoreOrder.get(i).getScore());
+            response.append("\n");
         }
-        return String.valueOf(response);
+        return response.toString();
     }
 }

@@ -1,6 +1,7 @@
 package model;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class Shop {
@@ -38,7 +39,15 @@ public class Shop {
     }
 
     public String toString() {
-        TreeMap treeMap = new TreeMap<String, Integer>(items);
+        TreeMap<String, Integer> treeMap = new TreeMap<String, Integer>(items);
+        StringBuilder response = new StringBuilder();
+        for (Map.Entry<String, Integer> entry : treeMap.entrySet()) {
+            response.append(entry.getKey());
+            response.append(":");
+            response.append(entry.getValue());
+            response.append("\n");
+        }
+        return response.toString();
     }
 
 }
