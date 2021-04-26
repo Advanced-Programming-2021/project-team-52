@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 public class Shop {
-    private static Shop shop;
+    private static Shop shop = null;
     private PrintBuilder printBuilder;
     private static HashMap<String, Integer> items;
 
@@ -15,11 +15,12 @@ public class Shop {
     private Shop() {
     }
 
-    public static void addCard(String name, int price){
-        items.put(name ,price);
+    public static void addCard(String name, int price) {
+        items.put(name, price);
     }
+
     public static Shop getInstance() {
-        if(shop == null){
+        if (shop == null) {
             Shop shop = new Shop();
         }
         return shop;
@@ -31,7 +32,9 @@ public class Shop {
     }
 
     public int getItemPrize(String name) {
-
+        if (items.containsKey(name))
+            return items.get(name);
+        return -1;
     }
 
     public String toString() {
