@@ -9,9 +9,9 @@ public class PrintBuliderController {
     public static PrintBulider getistance() {}
     public void buildAllCardsInDeck(Deck deck) {}
     public void buildAllDecks(User user) {}
-    public void buildGraveyard(ArrayList<String> graveyard)
+    public void buildGraveyard(ArrayList<String> graveyard){}
     public void buildGameWinner(String username, int score1 , int score2) {}
     public void buildMatchWinner(String username, int score1 , int score2) {}
-    public void buildScoreBoard()
-    public void buildChainTurnPromot(String playerName, GameBoard board)
+    public void buildScoreBoard(){}
+    public void buildChainTurnPromot(String playerName, GameBoard board){}
 }

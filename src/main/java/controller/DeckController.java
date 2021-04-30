@@ -13,5 +13,5 @@ public class DeckController {
     public void run(User user){}
     private static void addDeck(Deck deck){}
     public static void DeleteDeck(name String){}
-    public void checkBeforeAddOrRemoveCard(String deckName, String cardName, boolean isSide, boolean isAdding)
+    public void checkBeforeAddOrRemoveCard(String deckName, String cardName, boolean isSide, boolean isAdding){}
 }
