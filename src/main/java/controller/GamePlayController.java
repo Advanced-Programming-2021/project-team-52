@@ -15,6 +15,7 @@ public class GamePlayController {
     private void battlePhase(){}
     private void endPhase(){}
     public void selectCard(String command){}
+    
     public void summon(String name){}
     public void set(String name){}
     public boolean getTribute(int amount){}
@@ -23,6 +24,7 @@ public class GamePlayController {
     public void attackMonster(int place){}
     public boolean checkBeforeAttacking(int place){}
     public void attackDirectly(){}
+    
     public void activateEffectOrSetting(boolean isSet){}
     private boolean checkBeforeActivingOrSetting(boolean isSet){}
     private boolean doChain(){}
