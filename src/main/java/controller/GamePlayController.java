@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 import model.cards.Cards;
+import model.cards.monster.MonsterCards;
 import model.game.GameBoard;
 import model.game.GamePlay;
 import model.game.PlaceName;
 import model.tools.RegexPatterns;
+import model.game.PlaceName;
 import view.PrinterAndScanner;
 import model.tools.StringMessages;
 
@@ -175,23 +177,118 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         }
         printerAndScanner.printNextLine(invalidPhase);
     }
-    
-    public void summon(String name){}
-    public void set(String name){}
-    public boolean getTribute(int amount){}
+    public void selectCard(String command){}
+
+    public void summon() {
+        Cards card = gamePlay.getSelectedCard();
+        if (handleSummonAndSetErrors(card)) return;
+        MonsterCards monsterCard = (MonsterCards) card;
+        boolean isTributeDone = false;
+        if (monsterCard.getLevel() <= 4)
+            isTributeDone = true;
+        else if (monsterCard.getLevel() <= 6)
+            isTributeDone = getTribute(1);
+        else
+            isTributeDone = getTribute(2);
+
+        if (isTributeDone) {
+            int emptyPlace = gameBoard.getFirstEmptyPlace(PlaceName.MONSTER);
+            gameBoard.addCard(monsterCard, emptyPlace, PlaceName.MONSTER);
+            // todo : add status to addCard func in GameBoard
+            // todo : make enum for cardStatus if it needs
+            gamePlay.setAlreadySummonedOrSet(true);
+            printerAndScanner.printNextLine(StringMessages.summonedSuccessfully);
+        }
+    }
+
+    public void set() {
+        Cards card = gamePlay.getSelectedCard();
+        if (handleSummonAndSetErrors(card)) return;
+
+        MonsterCards monsterCard = (MonsterCards) card;
+        int emptyPlace = gameBoard.getFirstEmptyPlace(PlaceName.MONSTER);
+        gameBoard.addCard(monsterCard, emptyPlace, PlaceName.MONSTER);
+        // todo : add status to addCard func in GameBoard
+        // todo : make enum for cardStatus if it needs
+        gamePlay.setAlreadySummonedOrSet(true);
+        printerAndScanner.printNextLine(StringMessages.setSuccessfully);
+    }
+
+    private boolean handleSummonAndSetErrors(Cards card) {
+        if (card == null) {
+            printerAndScanner.printNextLine(StringMessages.noCardsIsSelectedYet);
+            return true;
+        }
+        if (!gameBoard.isThisCardExistsInThisPlace(card, PlaceName.HAND) || !(card instanceof MonsterCards)) { // add "aya summon addi mishe?"
+            printerAndScanner.printNextLine(StringMessages.cantSummonThisCard);
+            return true;
+        }
+        // if(can't do in this phase){
+        // printerAndScanner.printNextLine(StringMessages.actionNotAllowedInThisPhase);
+        // return;
+        // }
+        if (gameBoard.getNumberOfCardsInThisPlace(PlaceName.MONSTER) >= 5) {
+            printerAndScanner.printNextLine(StringMessages.monsterCardZoneIsFull);
+            return true;
+        }
+        if (gamePlay.getAlreadySummonedOrSet()) {
+            printerAndScanner.printNextLine(StringMessages.alreadySummonedORSetOnThisTurn);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean getTribute(int amount) {
+        int NumberOfCardInMonsterZone = gameBoard.getNumberOfCardsInThisPlace(PlaceName.MONSTER);
+        if (NumberOfCardInMonsterZone < amount) {
+            printerAndScanner.printNextLine(StringMessages.thereAreNotEnoughCardsForTribute);
+            return false;
+        }
+
+        ArrayList<Integer> cardAddresses = new ArrayList<>();
+        ArrayList<Cards> cardsToRemove = new ArrayList<>();
+        for (int i = 0; i < amount; i++) {
+            String response = printerAndScanner.scanNextLine();
+            if (response.matches("^\\d$"))
+                cardAddresses.add(Integer.valueOf(response));
+            else
+                printerAndScanner.printNextLine(StringMessages.invalidCommand);
+        }
+
+        for (int cardAddress : cardAddresses) {
+            Cards cardToRemove = gameBoard.getCardByAddressAndPlace(cardAddress, PlaceName.MONSTER);
+            if (cardToRemove == null) {
+                printerAndScanner.printNextLine(StringMessages.thereNoMonstersOneThisAddress);
+                return false;
+            } else
+                cardsToRemove.add(cardToRemove);
+        }
+
+        for (int i = 0; i < cardAddresses.size(); i++) {
+            gameBoard.removeCard(cardsToRemove.get(i), cardAddresses.get(i), PlaceName.MONSTER);
+        }
+        return true;
+    }
     public void changePosition(String position){}
     public void flipSummon(String name){}
     public void attackMonster(int place){}
     public boolean checkBeforeAttacking(int place){}
     public void attackDirectly(){}
-    
+
     public void activateEffectOrSetting(boolean isSet){}
     private boolean checkBeforeActivingOrSetting(boolean isSet){}
     private boolean doChain(){}
     private boolean chainCanBeDone(){}
     private void runChain(ArrayList<String> chain){}
     public void ritualChain(){}
-    public void showGraveyard(){}
-    public void increaseLpWithCheat(int amount){}
+    public void showGraveyard(){
+        for (int i = 0; i < board.getGraveYardCards().size(); i++) {
+            System.out.println(board.getGraveYardCards() + ":" + board.getGraveYardCards().get(i));
+        }
+    }
+    public void increaseLpWithCheat(int amount){
+        int currentHealth = gamePlay.getHealth();
+        gamePlay.setHealth(currentHealth + amount);
+    }
 }
 

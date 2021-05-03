@@ -63,6 +63,35 @@ public class GameBoard {
         return place.get(name.getNumber() + number).getCard();
     }
 
+
+    ///////////////////////////////////////////////
+    public boolean isThisCardExistsInThisPlace(Cards card, PlaceName placeName){
+        for (int i = 1; i < 6; i++) {
+            if(place.get(placeName.getNumber() + i).getCard().equals(card))
+                return true;
+        }
+        return false;
+    }
+    public int getNumberOfCardsInThisPlace(PlaceName placeName){
+        int counter = 0;
+        for (int i = 1; i < 6; i++) {
+            if(place.get(placeName.getNumber() + i).getCard() != null)
+                ++counter;
+        }
+        return counter;
+    }
+
+    public int getFirstEmptyPlace(PlaceName placeName){
+        for (int i = 1; i < 6; i++) {
+            if(place.get(placeName.getNumber() + i).getCard() == null)
+                return i;
+        }
+    }
+    public Cards getCardByAddressAndPlace(int placeNumber, PlaceName name) {
+        return place.get(placeNumber + name.getNumber()).getCard();
+    }
+    //////////////////////////////////////////////
+
     @Override
     public String toString() {
         //TODO change toString
