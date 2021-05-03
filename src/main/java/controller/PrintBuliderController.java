@@ -1,12 +1,20 @@
 package controller;
 
+import model.Deck;
+import model.User;
+import model.game.GameBoard;
+
 import java.util.ArrayList;
 
-public class PrintBuliderController {
-    private PrintBulider printBulider;
+public class PrintBuilderController {
+    private static PrintBuilderController printPrintBuilderController = null;
 
-    private void printBuilder(){}
-    public static PrintBulider getistance() {}
+    private void PrintBuilderController(){}
+    public static PrintBuilderController getInstance() {
+        if (printPrintBuilderController == null)
+            printPrintBuilderController = new PrintBuilderController();
+        return printPrintBuilderController;
+    }
     public void buildAllCardsInDeck(Deck deck) {}
     public void buildAllDecks(User user) {}
     public void buildGraveyard(ArrayList<String> graveyard){}

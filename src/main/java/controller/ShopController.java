@@ -1,6 +1,6 @@
-package Controller;
+package controller;
 
-import model.*;
+import model.cards.Cards;
 
 
 public class ShopController {
@@ -21,7 +21,7 @@ public class ShopController {
     }
 
     public void buy(model.User user, String cardName) {
-        Card card = Cards.getCard(cardName);
+        Cards card = Cards.getCard(cardName);
         if (card == null) {
             System.out.println("there is no card with this name");
             return;
@@ -35,7 +35,7 @@ public class ShopController {
     }
 
     private boolean checkBeforeTransaction(String cardName, int balance) {
-        Card card = Cards.getCard(cardName);
+        Cards card = Cards.getCard(cardName);
         int cardPrice = model.Shop.getInstance().getItemPrize(cardName);
         if(cardPrice == -1)
             return false;  //card doesn't exists
