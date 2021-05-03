@@ -6,6 +6,7 @@ import model.cards.Cards;
 import model.cards.monster.MonsterCards;
 import model.game.GameBoard;
 import model.game.GamePlay;
+import model.game.PlaceName;
 import view.PrinterAndScanner;
 import model.tools.StringMessages;
 
@@ -114,23 +115,26 @@ public class GamePlayController {
     }
     public void selectCard(String command){}
 
-    public void summon(String name) {
-        Cards card = Cards.getCard(name);
+    public void summon() {
+        Cards card = gamePlay.getSelectedCard();
         if (card == null) {
-            System.out.println("no card is selected yet");
+            printerAndScanner.printNextLine(StringMessages.noCardsIsSelectedYet);
             return;
         }
-        if (gameBoard.isHandContainThisCard(card.getName()) || !(card instanceof MonsterCards)) { // add "aya summon addi mishe?
-            System.out.println("you can’t set this card");
+        if (!gameBoard.isThisCardExistsInThisPlace(card, PlaceName.HAND) || !(card instanceof MonsterCards)) { // add "aya summon addi mishe?
+            printerAndScanner.printNextLine(StringMessages.cantSummonThisCard);
             return;
         }
-        // can't do in this phase
-        if (gameBoard.getNumberOfCardsInMonsterZone() >= 5) {
-            System.out.println("monster card zone is full");
+        // if(can't do in this phase){
+        // printerAndScanner.printNextLine(StringMessages.actionNotAllowedInThisPhase);
+        // return;
+        // }
+        if (gameBoard.getNumberOfCardsInThisPlace(PlaceName.MONSTER) >= 5) {
+            printerAndScanner.printNextLine(StringMessages.monsterCardZoneIsFull);
             return;
         }
         if (gamePlay.getAlreadySummonedOrSet()) {
-            System.out.println("you already summoned/set on this turn");
+            printerAndScanner.printNextLine(StringMessages.alreadySummonedORSetOnThisTurn);
             return;
         }
         MonsterCards monsterCard = (MonsterCards) card;
@@ -143,10 +147,12 @@ public class GamePlayController {
             isTributeDone = getTribute(2);
 
         if (isTributeDone) {
+            int emptyPlace = gameBoard.getFirstEmptyPlace(PlaceName.MONSTER);
+            gameBoard.addCard(monsterCard, emptyPlace, PlaceName.MONSTER);
+            // todo : add status to addCard func in GameBoard
+            // todo : make enum for cardStatus if it needs
             gamePlay.setAlreadySummonedOrSet(true);
-//        gameBoard.addCardToMonsterZoneInSummon(card);
-//        other things
-            System.out.println("summoned successfully");
+            printerAndScanner.printNextLine(StringMessages.summonedSuccessfully);
         }
     }
 
