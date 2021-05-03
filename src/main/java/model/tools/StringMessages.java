@@ -14,6 +14,9 @@ public class StringMessages {
     public static String monsterCardZoneIsFull = "monster card zone is full";
     public static String alreadySummonedORSetOnThisTurn = "you already summoned/set on this turn";
     public static String summonedSuccessfully = "summoned successfully";
+    public static String thereAreNotEnoughCardsForTribute = "there are not enough cards for tribute";
+    public static String thereNoMonstersOneThisAddress = "there no monsters one this address";
+    public static String setSuccessfully = "set successfully";
 
     private StringMessages(){}
 }

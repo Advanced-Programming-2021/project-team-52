@@ -117,26 +117,7 @@ public class GamePlayController {
 
     public void summon() {
         Cards card = gamePlay.getSelectedCard();
-        if (card == null) {
-            printerAndScanner.printNextLine(StringMessages.noCardsIsSelectedYet);
-            return;
-        }
-        if (!gameBoard.isThisCardExistsInThisPlace(card, PlaceName.HAND) || !(card instanceof MonsterCards)) { // add "aya summon addi mishe?
-            printerAndScanner.printNextLine(StringMessages.cantSummonThisCard);
-            return;
-        }
-        // if(can't do in this phase){
-        // printerAndScanner.printNextLine(StringMessages.actionNotAllowedInThisPhase);
-        // return;
-        // }
-        if (gameBoard.getNumberOfCardsInThisPlace(PlaceName.MONSTER) >= 5) {
-            printerAndScanner.printNextLine(StringMessages.monsterCardZoneIsFull);
-            return;
-        }
-        if (gamePlay.getAlreadySummonedOrSet()) {
-            printerAndScanner.printNextLine(StringMessages.alreadySummonedORSetOnThisTurn);
-            return;
-        }
+        if (handleSummonAndSetErrors(card)) return;
         MonsterCards monsterCard = (MonsterCards) card;
         boolean isTributeDone = false;
         if (monsterCard.getLevel() <= 4)
@@ -156,49 +137,71 @@ public class GamePlayController {
         }
     }
 
-    public void set(String name) {
-        Cards card = Cards.getCard(name);
+    public void set() {
+        Cards card = gamePlay.getSelectedCard();
+        if (handleSummonAndSetErrors(card)) return;
+
+        MonsterCards monsterCard = (MonsterCards) card;
+        int emptyPlace = gameBoard.getFirstEmptyPlace(PlaceName.MONSTER);
+        gameBoard.addCard(monsterCard, emptyPlace, PlaceName.MONSTER);
+        // todo : add status to addCard func in GameBoard
+        // todo : make enum for cardStatus if it needs
+        gamePlay.setAlreadySummonedOrSet(true);
+        printerAndScanner.printNextLine(StringMessages.setSuccessfully);
+    }
+
+    private boolean handleSummonAndSetErrors(Cards card) {
         if (card == null) {
-            System.out.println("no card is selected yet");
-            return;
+            printerAndScanner.printNextLine(StringMessages.noCardsIsSelectedYet);
+            return true;
         }
-        if (gameBoard.isHandContainThisCard(card.getName())) {
-            System.out.println("you can’t set this card");
-            return;
+        if (!gameBoard.isThisCardExistsInThisPlace(card, PlaceName.HAND) || !(card instanceof MonsterCards)) { // add "aya summon addi mishe?"
+            printerAndScanner.printNextLine(StringMessages.cantSummonThisCard);
+            return true;
         }
-        // can't do in this phase
-        if (gameBoard.getNumberOfCardsInMonsterZone() >= 5) {
-            System.out.println("monster card zone is full");
-            return;
+        // if(can't do in this phase){
+        // printerAndScanner.printNextLine(StringMessages.actionNotAllowedInThisPhase);
+        // return;
+        // }
+        if (gameBoard.getNumberOfCardsInThisPlace(PlaceName.MONSTER) >= 5) {
+            printerAndScanner.printNextLine(StringMessages.monsterCardZoneIsFull);
+            return true;
         }
         if (gamePlay.getAlreadySummonedOrSet()) {
-            System.out.println("you already summoned/set on this turn");
-            return;
+            printerAndScanner.printNextLine(StringMessages.alreadySummonedORSetOnThisTurn);
+            return true;
         }
-        gamePlay.setAlreadySummonedOrSet(true);
-//        gameBoard.addCardToMonsterZoneInSet(card);
-//        other things
-        //////////////////////////// son of a ...
+        return false;
     }
 
     public boolean getTribute(int amount) {
-        int NumberOfCardInMonsterZone = gameBoard.getNumberOfCardInMonsterZone();
+        int NumberOfCardInMonsterZone = gameBoard.getNumberOfCardsInThisPlace(PlaceName.MONSTER);
         if (NumberOfCardInMonsterZone < amount) {
-            System.out.println("there are not enough cards for tribute");
+            printerAndScanner.printNextLine(StringMessages.thereAreNotEnoughCardsForTribute);
             return false;
         }
-        ArrayList<String> cardAddresses = new ArrayList<>();
+
+        ArrayList<Integer> cardAddresses = new ArrayList<>();
+        ArrayList<Cards> cardsToRemove = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
-            cardAddresses.add(printerAndScanner.scanNextLine());
+            String response = printerAndScanner.scanNextLine();
+            if (response.matches("^\\d$"))
+                cardAddresses.add(Integer.valueOf(response));
+            else
+                printerAndScanner.printNextLine(StringMessages.invalidCommand);
         }
-        for (String cardAddress : cardAddresses) {
-            if (gameBoard.getCardOfThisAddress(Integer.parseInt(cardAddress)) == null) {
-                System.out.println("there no monsters one this address");
+
+        for (int cardAddress : cardAddresses) {
+            Cards cardToRemove = gameBoard.getCardByAddressAndPlace(cardAddress, PlaceName.MONSTER);
+            if (cardToRemove == null) {
+                printerAndScanner.printNextLine(StringMessages.thereNoMonstersOneThisAddress);
                 return false;
-            }
+            } else
+                cardsToRemove.add(cardToRemove);
         }
-        for (String cardAddress : cardAddresses) {
-            gameBoard.sendFromMonsterZoneToGraveyard(Integer.parseInt(cardAddress));
+
+        for (int i = 0; i < cardAddresses.size(); i++) {
+            gameBoard.removeCard(cardsToRemove.get(i), cardAddresses.get(i), PlaceName.MONSTER);
         }
         return true;
     }
@@ -207,7 +210,7 @@ public class GamePlayController {
     public void attackMonster(int place){}
     public boolean checkBeforeAttacking(int place){}
     public void attackDirectly(){}
-    
+
     public void activateEffectOrSetting(boolean isSet){}
     private boolean checkBeforeActivingOrSetting(boolean isSet){}
     private boolean doChain(){}

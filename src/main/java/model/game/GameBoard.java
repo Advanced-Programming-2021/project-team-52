@@ -60,6 +60,9 @@ public class GameBoard {
                 return i;
         }
     }
+    public Cards getCardByAddressAndPlace(int placeNumber, PlaceName name) {
+        return place.get(placeNumber + name.getNumber()).getCard();
+    }
     //////////////////////////////////////////////
 
     @Override
