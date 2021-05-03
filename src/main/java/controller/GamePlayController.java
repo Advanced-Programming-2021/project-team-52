@@ -9,7 +9,6 @@ import model.game.GameBoard;
 import model.game.GamePlay;
 import model.game.PlaceName;
 import model.tools.RegexPatterns;
-import model.game.PlaceName;
 import view.PrinterAndScanner;
 import model.tools.StringMessages;
 
@@ -85,7 +84,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
                     set(matcher.group("position"));
                     printerAndScanner.printNextLine(invalidCommand);
             }
-            else if (command.startsWith("set --position"))
+            else if (command.startsWith("set --position")) //TODO ???????
                 changePosition(command);
             else if (command.equals("flip-summon"))
                 flipSummon();
@@ -177,7 +176,6 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         }
         printerAndScanner.printNextLine(invalidPhase);
     }
-    public void selectCard(String command){}
 
     public void summon() {
         Cards card = gamePlay.getSelectedCard();
