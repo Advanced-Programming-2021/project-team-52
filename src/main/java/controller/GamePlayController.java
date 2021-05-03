@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 
 import model.cards.Cards;
+import model.cards.monster.MonsterCards;
 import model.game.GameBoard;
 import model.game.GamePlay;
 import view.PrinterAndScanner;
@@ -112,10 +113,88 @@ public class GamePlayController {
         }
     }
     public void selectCard(String command){}
-    
-    public void summon(String name){}
-    public void set(String name){}
-    public boolean getTribute(int amount){}
+
+    public void summon(String name) {
+        Cards card = Cards.getCard(name);
+        if (card == null) {
+            System.out.println("no card is selected yet");
+            return;
+        }
+        if (gameBoard.isHandContainThisCard(card.getName()) || !(card instanceof MonsterCards)) { // add "aya summon addi mishe?
+            System.out.println("you can’t set this card");
+            return;
+        }
+        // can't do in this phase
+        if (gameBoard.getNumberOfCardsInMonsterZone() >= 5) {
+            System.out.println("monster card zone is full");
+            return;
+        }
+        if (gamePlay.getAlreadySummonedOrSet()) {
+            System.out.println("you already summoned/set on this turn");
+            return;
+        }
+        MonsterCards monsterCard = (MonsterCards) card;
+        boolean isTributeDone = false;
+        if (monsterCard.getLevel() <= 4)
+            isTributeDone = true;
+        else if (monsterCard.getLevel() <= 6)
+            isTributeDone = getTribute(1);
+        else
+            isTributeDone = getTribute(2);
+
+        if (isTributeDone) {
+            gamePlay.setAlreadySummonedOrSet(true);
+//        gameBoard.addCardToMonsterZoneInSummon(card);
+//        other things
+            System.out.println("summoned successfully");
+        }
+    }
+
+    public void set(String name) {
+        Cards card = Cards.getCard(name);
+        if (card == null) {
+            System.out.println("no card is selected yet");
+            return;
+        }
+        if (gameBoard.isHandContainThisCard(card.getName())) {
+            System.out.println("you can’t set this card");
+            return;
+        }
+        // can't do in this phase
+        if (gameBoard.getNumberOfCardsInMonsterZone() >= 5) {
+            System.out.println("monster card zone is full");
+            return;
+        }
+        if (gamePlay.getAlreadySummonedOrSet()) {
+            System.out.println("you already summoned/set on this turn");
+            return;
+        }
+        gamePlay.setAlreadySummonedOrSet(true);
+//        gameBoard.addCardToMonsterZoneInSet(card);
+//        other things
+    }
+
+    public boolean getTribute(int amount) {
+        int NumberOfCardInMonsterZone = gameBoard.getNumberOfCardInMonsterZone();
+        if (NumberOfCardInMonsterZone < amount) {
+            System.out.println("there are not enough cards for tribute");
+            return false;
+        }
+        ArrayList<String> cardAddresses = new ArrayList<>();
+        for (int i = 0; i < amount; i++) {
+            cardAddresses.add(printerAndScanner.scanNextLine());
+        }
+        for (String cardAddress : cardAddresses) {
+            if (gameBoard.getCardOfThisAddress(Integer.parseInt(cardAddress)) == null) {
+                System.out.println("there no monsters one this address");
+                return false;
+            }
+        }
+        for (String cardAddress : cardAddresses) {
+            gameBoard.sendFromMonsterZoneToGraveyard(Integer.parseInt(cardAddress));
+        }
+        return true;
+    }
     public void changePosition(String position){}
     public void flipSummon(String name){}
     public void attackMonster(int place){}
