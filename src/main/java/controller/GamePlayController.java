@@ -208,7 +208,14 @@ public class GamePlayController {
     private boolean chainCanBeDone(){}
     private void runChain(ArrayList<String> chain){}
     public void ritualChain(){}
-    public void showGraveyard(){}
-    public void increaseLpWithCheat(int amount){}
+    public void showGraveyard(){
+        for (int i = 0; i < board.getGraveYardCards().size(); i++) {
+            System.out.println(board.getGraveYardCards() + ":" + board.getGraveYardCards().get(i));
+        }
+    }
+    public void increaseLpWithCheat(int amount){
+        int currentHealth = gamePlay.getHealth();
+        gamePlay.setHealth(currentHealth + amount);
+    }
 }
 
