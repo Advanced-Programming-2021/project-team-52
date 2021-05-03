@@ -1,14 +1,13 @@
 package model.tools;
 
-public class StringMessages {
+public interface StringMessages {
 
-    public static String drawPhase = "phase: draw phase";
-    public static String mainPhase = "phase: main phase";
-    public static String standbyPhase = "phase: standby phase";
-    public static String endPhase = "phase: end phase";
-    public static String battlePhase = "phase: battle phase";
-    public static String invalidCommand = "invalid command";
-    public static String noCardsIsSelectedYet = "no card is selected yet";
-
-    private StringMessages(){}
+    String drawPhase = "phase: draw phase";
+    String mainPhase = "phase: main phase";
+    String standbyPhase = "phase: standby phase";
+    String endPhase = "phase: end phase";
+    String battlePhase = "phase: battle phase";
+    String invalidCommand = "invalid command";
+    String noCardsIsSelectedYet = "no card is selected yet";
+    String invalidPhase = "you can't do this action in this phase";
 }

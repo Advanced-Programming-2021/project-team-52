@@ -3,6 +3,7 @@ package controller;
 import model.Deck;
 import model.User;
 import model.game.GameBoard;
+import model.cards.Cards;
 
 import java.util.ArrayList;
 
@@ -17,7 +18,7 @@ public class PrintBuilderController {
     }
     public void buildAllCardsInDeck(Deck deck) {}
     public void buildAllDecks(User user) {}
-    public void buildGraveyard(ArrayList<String> graveyard){}
+    public void buildGraveyard(ArrayList<Cards> graveyard){}
     public void buildGameWinner(String username, int score1 , int score2) {}
     public void buildMatchWinner(String username, int score1 , int score2) {}
     public void buildScoreBoard(){}

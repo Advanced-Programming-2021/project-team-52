@@ -10,24 +10,12 @@ public abstract class RegexController implements RegexPatterns{
 
     private static Matcher matcher;
 
-    public static Matcher getMatcher(String command, Pattern pattern, boolean extractOnlyOneVariable){
+    public static Matcher getMatcher(String command, Pattern pattern){
         command = command.concat(" ");
-        if (generalPattern.matcher(command).find() || extractOnlyOneVariable){
-            matcher = pattern.matcher(command);
-            if (matcher.find())
-                return matcher;
-        }
-        return null;
-    }
-
-    public static Matcher getMatcherForAddOrRemoveCard(String command){
-        command = command.concat(" ");
-        if (addOrRemoveCardGeneralPattern.matcher(command).find()){
-            matcher = addOrRemoveCardGeneralPattern.matcher(command);
-            if (matcher.find())
-                return matcher;
-        }
-        return null;
+        matcher = pattern.matcher(command);
+        if (matcher.find())
+            return matcher;
+        else return null;
     }
 
     public static boolean hasField(Matcher matcher, String field){

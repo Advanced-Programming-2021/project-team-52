@@ -1,11 +1,12 @@
 package model.game;
 
+import model.cards.Cards;
 import model.game.GameBoard;
 
 public class GamePlay {
 
     private GameBoard myGameBoard,opponentGameBoard;
-    private String selectedCard;
+    private Cards selectedCard;
     private boolean alreadySummonedOrSet, isHost, isAi, flipSummonedInThisRound;
 
     GamePlay(boolean isHost, GameBoard myGameBoard, GameBoard opponentGameBoard, boolean isAi){
@@ -27,8 +28,12 @@ public class GamePlay {
         return opponentGameBoard;
     }
 
-    public String getSelectedCard() {
+    public Cards getSelectedCard() {
         return selectedCard;
+    }
+
+    public void setSelectedCard(Cards selectedCard) {
+        this.selectedCard = selectedCard;
     }
 
     public boolean getAlreadySummonedOrSet(){
@@ -47,9 +52,6 @@ public class GamePlay {
         return flipSummonedInThisRound;
     }
 
-    public void setSelectedCard(String selectedCard) {
-        this.selectedCard = selectedCard;
-    }
 
     public void setAlreadySummonedOrSet(boolean alreadySummonedOrSet) {
         this.alreadySummonedOrSet = alreadySummonedOrSet;
