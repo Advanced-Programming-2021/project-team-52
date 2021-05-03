@@ -172,6 +172,7 @@ public class GamePlayController {
         gamePlay.setAlreadySummonedOrSet(true);
 //        gameBoard.addCardToMonsterZoneInSet(card);
 //        other things
+        //////////////////////////// son of a ...
     }
 
     public boolean getTribute(int amount) {
