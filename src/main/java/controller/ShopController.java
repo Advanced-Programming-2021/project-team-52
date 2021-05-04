@@ -1,12 +1,13 @@
 package controller;
 
 import model.cards.Cards;
+import view.PrinterAndScanner;
 
 
 public class ShopController {
     private static ShopController shop = null;
     private PrintBulider printBulider;
-    private printerAndScanner printerAndScanner;
+    private PrinterAndScanner printerAndScanner;
 
     private ShopController() {
     }

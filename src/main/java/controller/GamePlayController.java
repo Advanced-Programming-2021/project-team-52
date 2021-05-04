@@ -1,16 +1,18 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
 
 import model.cards.Cards;
 import model.cards.monster.MonsterCards;
 import model.game.GameBoard;
 import model.game.GamePlay;
-import model.game.PlaceName;
+import model.game.PLACE_NAME;
+import model.tools.RegexPatterns;
 import view.PrinterAndScanner;
 import model.tools.StringMessages;
 
-public class GamePlayController {
+public class GamePlayController implements RegexPatterns,StringMessages {
 
     private static PrinterAndScanner printerAndScanner;
     private static PrintBuilderController printBuilderController;
@@ -18,6 +20,7 @@ public class GamePlayController {
 
     private GamePlay gamePlay;
     private GameBoard gameBoard;
+    private GameBoard opponentGameBoard;
     private NewGame newGame;
     private boolean isHost;
     private String opponentName;
@@ -27,13 +30,14 @@ public class GamePlayController {
         printBuilderController = PrintBuilderController.getInstance();
     }
 
-    public GamePlayController(GamePlay gameplay, GameBoard gameBoard, NewGame newGame, boolean isHost, String opponentName){
+    public GamePlayController(GamePlay gameplay, GameBoard gameBoard,GameBoard opponentGameBoard, NewGame newGame, boolean isHost, String opponentName){
         this.gameBoard = gameBoard;
         this.gamePlay = gameplay;
         this.newGame = newGame;
         this.firstTurn = true;
         this.isHost = isHost;
         this.opponentName = opponentName;
+        this.opponentGameBoard = opponentGameBoard;
     }
     public void run(){
         if (drawPhase())
@@ -45,75 +49,132 @@ public class GamePlayController {
         endPhase();
     }
     private boolean drawPhase(){
-        printerAndScanner.printNextLine(StringMessages.drawPhase);
-        String drawCard = gameBoard.drawCard(firstTurn);
-        if (drawCard == null){
-            newGame.changeHealthAmount(-8000, isHost);
-            return false;
-        } else if (!drawCard.equals("firstTurn"))
-            printerAndScanner.printNextLine("new card added to the hand: " + drawCard);
-        //TODO special abilities may be triggered
-        return true;
+        printerAndScanner.printNextLine(drawPhase);
+        if (!firstTurn){
+            Cards drawCard = gameBoard.drawCard();
+            if (drawCard == null){
+                newGame.changeHealthAmount(-8000, isHost);
+                return false;
+            } else {
+                printerAndScanner.printNextLine("new card added to the hand: " + drawCard);
+                //TODO special abilities may be triggered
+                return true;
+            }
+        } else
+            return true;
     }
     private boolean standByPhase(){
-        printerAndScanner.printNextLine(StringMessages.standbyPhase);
+        printerAndScanner.printNextLine(standbyPhase);
         //TODO special abilities may be triggered
         return true;
     }
     private boolean mainPhase(){
-        printerAndScanner.printNextLine(StringMessages.mainPhase);
+        printerAndScanner.printNextLine(mainPhase);
         printerAndScanner.printNextLine(gameBoard.toString());
         for (String command = printerAndScanner.scanNextLine();
-             !command.equals("end"); //TODO may change
+             !command.equals("next phase"); //TODO may change
              command = printerAndScanner.scanNextLine()){
             if (command.startsWith("select"))
                 selectCard(command);
             else if (command.equals("summon"))
                 summon();
-            else if (command.equals("set"))
-                set();
-            else if (command.startsWith("set --position"))
+            else if (command.startsWith("set")){
+                Matcher matcher = RegexController.getMatcher(command, setAttackOrDefensePattern);
+                if (matcher != null)
+                    set(matcher.group("position"));
+                    printerAndScanner.printNextLine(invalidCommand);
+            }
+            else if (command.startsWith("set --position")) //TODO ???????
                 changePosition(command);
             else if (command.equals("flip-summon"))
                 flipSummon();
             else if (command.equals("activate effect"))
                 activateEffectOrSetting();
             else if (command.equals("show graveyard"))
-                printBuilderController.buildGraveyard(gameBoard.getGraveyardCards());
-            else if (command.matches("card show (?:--selected|-s)"))
-                showSelectedCard();
-            else printerAndScanner.printNextLine(StringMessages.invalidCommand);
+                printBuilderController.buildGraveyard(gameBoard.getGraveyard());
+            else if (command.startsWith("card show")){
+                Matcher matcher = RegexController.getMatcher(command, cardShowPattern);
+                if (matcher.find()){
+                    if (!RegexController.hasField(matcher, "card"))
+                        showSelectedCard();
+                }
+            } else commandInWrongPhase(command, true);
+
         }
     }
     private void battlePhase(){
         for (String command = printerAndScanner.scanNextLine();
-             !command.equals("end"); //TODO may change
+             !command.equals("next phase"); //TODO may change
              command = printerAndScanner.scanNextLine()) {
-            printerAndScanner.printNextLine(StringMessages.battlePhase);
+            printerAndScanner.printNextLine(battlePhase);
             if (command.startsWith("attack")) {
-                String info = RegexController.getAttackInfo(command);
-                if (info.equals("direct"))
+                Matcher matcher = RegexController.getMatcher(command, attackPattern);
+                if (matcher.group("type").equals("direct"))
                     attackDirectly();
-                else if (info.matches("^\\d+$"))
-                    attackMonster(Integer.parseInt(info));
-                else printerAndScanner.printNextLine(StringMessages.invalidCommand);
-            }
+                else if (matcher.group("type").matches("^\\d+$"))
+                    attackMonster(Integer.parseInt(matcher.group("type")));
+                else printerAndScanner.printNextLine(invalidCommand);
+            } else commandInWrongPhase(command, false)
         }
     }
     private void endPhase(){
-        printerAndScanner.printNextLine(StringMessages.endPhase);
+        printerAndScanner.printNextLine(endPhase);
         printerAndScanner.printString(new StringBuilder("its ").append(opponentName).append("'s turn\n"));
     }
     private void showSelectedCard(){
-        ArrayList<String> selectedCards = GamePlay.getSelectedCards();
-        if (selectedCards.isEmpty())
-            printerAndScanner.printNextLine(StringMessages.noCardsIsSelectedYet);
-        else for (String selectedCard : selectedCards) {
+        Cards selectedCard = gamePlay.getSelectedCard();
+        if (selectedCard == null)
+            printerAndScanner.printNextLine(noCardsIsSelectedYet);
             //TODO if opponent card is selected and is not visible "card is not visible" message should be shown
-            printerAndScanner.printNextLine(Cards.getCard(selectedCard).toString());
-        }
+            printerAndScanner.printNextLine(selectedCard.toString());
     }
-    public void selectCard(String command){}
+    public void selectCard(String command){
+        Matcher matcher = selectCardPattern.matcher(command);
+        if (matcher.find()){
+            if (RegexController.hasField(matcher, "delete"))
+                gamePlay.setSelectedCard(null);
+            else {
+                PLACE_NAME name = PLACE_NAME.HAND;
+                if(RegexController.hasField(matcher, "type")) {
+                    switch (matcher.group("type")) {
+                        case "m":
+                        case "monster":
+                            name = PLACE_NAME.MONSTER;
+                            break;
+                        case "s":
+                        case "spell":
+                            name = PLACE_NAME.SPELL_AND_TRAP;
+                            break;
+                    }
+                } else if (RegexController.hasField(matcher, "typeField"))
+                    name = PLACE_NAME.FUSION;
+                if (RegexController.hasField(matcher, "opponent") ||
+                        RegexController.hasField(matcher, "opponent2")||
+                        RegexController.hasField(matcher, "opponent3"))
+                    gamePlay.setSelectedCard(opponentGameBoard.getCard(name, RegexController.hasField(matcher, "select")?
+                            Integer.parseInt(matcher.group("select")) : 0));
+                else gamePlay.setSelectedCard(gameBoard.getCard(name, RegexController.hasField(matcher, "select")?
+                        Integer.parseInt(matcher.group("select")) : 0));
+            }
+        } else printerAndScanner.printNextLine(invalidCommand);
+    }
+
+    private void commandInWrongPhase(String command, boolean isMain){
+        if (isMain ){
+            if (RegexController.getMatcher(command, attackPattern) != null)
+                printerAndScanner.printNextLine(invalidPhase);
+            else printerAndScanner.printNextLine(invalidCommand);
+        } else {
+            if (!command.equals("summon"))
+                if (!command.equals("flip-summon"))
+                    if (!command.equals("activate effect"))
+                        if (!command.equals("show graveyard"))
+                            if (RegexController.getMatcher(command, cardShowPattern) == null)
+                                if (RegexController.getMatcher(command, RegexPatterns.selectCardPattern) == null)
+                                    printerAndScanner.printNextLine(invalidCommand);
+        }
+        printerAndScanner.printNextLine(invalidPhase);
+    }
 
     public void summon() {
         Cards card = gamePlay.getSelectedCard();
@@ -128,8 +189,8 @@ public class GamePlayController {
             isTributeDone = getTribute(2);
 
         if (isTributeDone) {
-            int emptyPlace = gameBoard.getFirstEmptyPlace(PlaceName.MONSTER);
-            gameBoard.addCard(monsterCard, emptyPlace, PlaceName.MONSTER);
+            int emptyPlace = gameBoard.getFirstEmptyPlace(PLACE_NAME.MONSTER);
+            gameBoard.addCard(monsterCard, emptyPlace, PLACE_NAME.MONSTER);
             // todo : add status to addCard func in GameBoard
             // todo : make enum for cardStatus if it needs
             gamePlay.setAlreadySummonedOrSet(true);
@@ -142,8 +203,8 @@ public class GamePlayController {
         if (handleSummonAndSetErrors(card)) return;
 
         MonsterCards monsterCard = (MonsterCards) card;
-        int emptyPlace = gameBoard.getFirstEmptyPlace(PlaceName.MONSTER);
-        gameBoard.addCard(monsterCard, emptyPlace, PlaceName.MONSTER);
+        int emptyPlace = gameBoard.getFirstEmptyPlace(PLACE_NAME.MONSTER);
+        gameBoard.addCard(monsterCard, emptyPlace, PLACE_NAME.MONSTER);
         // todo : add status to addCard func in GameBoard
         // todo : make enum for cardStatus if it needs
         gamePlay.setAlreadySummonedOrSet(true);
@@ -155,7 +216,7 @@ public class GamePlayController {
             printerAndScanner.printNextLine(StringMessages.noCardsIsSelectedYet);
             return true;
         }
-        if (!gameBoard.isThisCardExistsInThisPlace(card, PlaceName.HAND) || !(card instanceof MonsterCards)) { // add "aya summon addi mishe?"
+        if (!gameBoard.isThisCardExistsInThisPlace(card, PLACE_NAME.HAND) || !(card instanceof MonsterCards)) { // add "aya summon addi mishe?"
             printerAndScanner.printNextLine(StringMessages.cantSummonThisCard);
             return true;
         }
@@ -163,7 +224,7 @@ public class GamePlayController {
         // printerAndScanner.printNextLine(StringMessages.actionNotAllowedInThisPhase);
         // return;
         // }
-        if (gameBoard.getNumberOfCardsInThisPlace(PlaceName.MONSTER) >= 5) {
+        if (gameBoard.getNumberOfCardsInThisPlace(PLACE_NAME.MONSTER) >= 5) {
             printerAndScanner.printNextLine(StringMessages.monsterCardZoneIsFull);
             return true;
         }
@@ -175,7 +236,7 @@ public class GamePlayController {
     }
 
     public boolean getTribute(int amount) {
-        int NumberOfCardInMonsterZone = gameBoard.getNumberOfCardsInThisPlace(PlaceName.MONSTER);
+        int NumberOfCardInMonsterZone = gameBoard.getNumberOfCardsInThisPlace(PLACE_NAME.MONSTER);
         if (NumberOfCardInMonsterZone < amount) {
             printerAndScanner.printNextLine(StringMessages.thereAreNotEnoughCardsForTribute);
             return false;
@@ -192,7 +253,7 @@ public class GamePlayController {
         }
 
         for (int cardAddress : cardAddresses) {
-            Cards cardToRemove = gameBoard.getCardByAddressAndPlace(cardAddress, PlaceName.MONSTER);
+            Cards cardToRemove = gameBoard.getCardByAddressAndPlace(cardAddress, PLACE_NAME.MONSTER);
             if (cardToRemove == null) {
                 printerAndScanner.printNextLine(StringMessages.thereNoMonstersOneThisAddress);
                 return false;
@@ -201,7 +262,7 @@ public class GamePlayController {
         }
 
         for (int i = 0; i < cardAddresses.size(); i++) {
-            gameBoard.removeCard(cardsToRemove.get(i), cardAddresses.get(i), PlaceName.MONSTER);
+            gameBoard.removeCard(cardsToRemove.get(i), cardAddresses.get(i), PLACE_NAME.MONSTER);
         }
         return true;
     }

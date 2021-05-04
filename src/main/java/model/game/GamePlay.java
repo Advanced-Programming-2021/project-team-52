@@ -32,6 +32,10 @@ public class GamePlay {
         return selectedCard;
     }
 
+    public void setSelectedCard(Cards selectedCard) {
+        this.selectedCard = selectedCard;
+    }
+
     public boolean getAlreadySummonedOrSet(){
         return alreadySummonedOrSet;
     }
@@ -48,9 +52,6 @@ public class GamePlay {
         return flipSummonedInThisRound;
     }
 
-    public void setSelectedCard(Cards selectedCard) {
-        this.selectedCard = selectedCard;
-    }
 
     public void setAlreadySummonedOrSet(boolean alreadySummonedOrSet) {
         this.alreadySummonedOrSet = alreadySummonedOrSet;

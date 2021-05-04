@@ -2,65 +2,92 @@ package model.game;
 
 import model.cards.Cards;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class GameBoard {
 
     private HashMap<Integer, Place> place;
     private ArrayList<Cards> graveyard;
+    private ArrayList<Cards> mainCards;
+    private ArrayList<Cards> sideCards;
+    private int lastNmCardNumberPicked;
+    private ArrayList<Cards> cardsPicked;
 
-    public GameBoard() {
+    public GameBoard(ArrayList<Cards> mainCards, ArrayList<Cards> sideCards) {
         place = new HashMap<>();
         for (int i = 1; i < 6; i++) {
-            place.put(PlaceName.HAND.getNumber() + i, new Place(PlaceName.HAND));
-            place.put(PlaceName.MONSTER.getNumber() + i, new Place(PlaceName.MONSTER));
-            place.put(PlaceName.SPELL_AND_TRAP.getNumber() + i, new Place(PlaceName.SPELL_AND_TRAP));
+            place.put(PLACE_NAME.HAND.getNumber() + i, new Place(PLACE_NAME.HAND));
+            place.put(PLACE_NAME.MONSTER.getNumber() + i, new Place(PLACE_NAME.MONSTER));
+            place.put(PLACE_NAME.SPELL_AND_TRAP.getNumber() + i, new Place(PLACE_NAME.SPELL_AND_TRAP));
         }
-        place.put(PlaceName.FUSION.getNumber(), new Place(PlaceName.FUSION));
+        place.put(PLACE_NAME.FUSION.getNumber(), new Place(PLACE_NAME.FUSION));
+        graveyard = new ArrayList<>();
+        this.mainCards = new ArrayList<>(mainCards);
+        this.sideCards = new ArrayList<>(sideCards);
+        lastNmCardNumberPicked = this.mainCards.size();
+        cardsPicked = new ArrayList<>();
     }
 
-    public void removeCard(Cards card, int placeNumber, PlaceName name) {
+    public STATUS getStatus(int placeNumber, PLACE_NAME name) {
+        return place.get(placeNumber + name.getNumber()).getStatus();
+    }
+
+    public ArrayList<Cards> getGraveyard() {
+        return graveyard;
+    }
+
+    public void shuffleCards(){
+        Collections.shuffle(mainCards);
+        lastNmCardNumberPicked = mainCards.size();
+    }
+
+    public void removeCard(Cards card, int placeNumber, PLACE_NAME name) {
         graveyard.add(card);
         place.get(placeNumber + name.getNumber()).setCard(null);
     }
 
-    public void addCard(Cards card, int placeNumber, PlaceName name) {
+    public void addCard(Cards card, int placeNumber, PLACE_NAME name) {
         place.get(placeNumber + name.getNumber()).setCard(card);
     }
 
-    public String getStatus(int placeNumber, PlaceName name) {
-        return place.get(placeNumber + name.getNumber()).getStatus();
+    public Cards drawCard() {
+        if (mainCards.equals(cardsPicked))
+            return null;
+        while (cardsPicked.contains(mainCards.get(lastNmCardNumberPicked)))
+            lastNmCardNumberPicked--;
+        return (mainCards.get(lastNmCardNumberPicked--));
     }
 
-    public String drawCard(boolean firstTurn) {
-        //TODO
+    public Cards getCard(PLACE_NAME name, int number){
+        return place.get(name.getNumber() + number).getCard();
     }
 
 
     ///////////////////////////////////////////////
-    public boolean isThisCardExistsInThisPlace(Cards card, PlaceName placeName){
+    public boolean isThisCardExistsInThisPlace(Cards card, PLACE_NAME PLACENAME){
         for (int i = 1; i < 6; i++) {
-            if(place.get(placeName.getNumber() + i).getCard().equals(card))
+            if(place.get(PLACENAME.getNumber() + i).getCard().equals(card))
                 return true;
         }
         return false;
     }
-    public int getNumberOfCardsInThisPlace(PlaceName placeName){
+    public int getNumberOfCardsInThisPlace(PLACE_NAME PLACENAME){
         int counter = 0;
         for (int i = 1; i < 6; i++) {
-            if(place.get(placeName.getNumber() + i).getCard() != null)
+            if(place.get(PLACENAME.getNumber() + i).getCard() != null)
                 ++counter;
         }
         return counter;
     }
 
-    public int getFirstEmptyPlace(PlaceName placeName){
+    public int getFirstEmptyPlace(PLACE_NAME PLACENAME){
         for (int i = 1; i < 6; i++) {
-            if(place.get(placeName.getNumber() + i).getCard() == null)
+            if(place.get(PLACENAME.getNumber() + i).getCard() == null)
                 return i;
         }
     }
-    public Cards getCardByAddressAndPlace(int placeNumber, PlaceName name) {
+    public Cards getCardByAddressAndPlace(int placeNumber, PLACE_NAME name) {
         return place.get(placeNumber + name.getNumber()).getCard();
     }
     //////////////////////////////////////////////
