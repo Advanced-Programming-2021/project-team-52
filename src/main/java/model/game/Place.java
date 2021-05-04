@@ -3,14 +3,17 @@ package model.game;
 
 import model.cards.Cards;
 
+import java.util.ArrayList;
+
 public class Place {
 
     private Cards card;
     private STATUS status;
     private PLACE_NAME type;
+    private ArrayList<TEMPORARY_FEATURES> temporaryFeatures = new ArrayList<>();
+    // َAttention developers!! temporaryFeatures is only valid for monster cards
 
-
-    protected Place(PLACE_NAME type){
+    protected Place(PLACE_NAME type) {
         this.type = type;
     }
 
@@ -28,5 +31,21 @@ public class Place {
 
     public Cards getCard() {
         return card;
+    }
+
+    public void addTemporaryFeatures(TEMPORARY_FEATURES temporaryFeature) {
+        temporaryFeatures.add(temporaryFeature);
+    }
+
+    public void removeTemporaryFeatures(TEMPORARY_FEATURES temporaryFeature) {
+        temporaryFeatures.remove(temporaryFeature)
+    }
+
+    public boolean isTemporaryFeaturesContainsThisFeature(TEMPORARY_FEATURES temporaryFeature){
+        return temporaryFeatures.contains(temporaryFeature);
+    }
+
+    public void clearTemporaryFeatures(){
+        temporaryFeatures.clear();
     }
 }

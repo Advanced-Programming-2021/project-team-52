@@ -189,6 +189,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         if (isTributeDone) {
             int emptyPlace = gameBoard.getFirstEmptyPlace(PLACE_NAME.MONSTER);
             gameBoard.addCard(monsterCard, emptyPlace, PLACE_NAME.MONSTER, STATUS.ATTACK);
+            gameBoard.setCardSetOrSummonInThisTurn(emptyPlace, PLACE_NAME.MONSTER);
             gamePlay.setAlreadySummonedOrSet(true);
             printerAndScanner.printNextLine(StringMessages.summonedSuccessfully);
         }
@@ -201,6 +202,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         MonsterCards monsterCard = (MonsterCards) card;
         int emptyPlace = gameBoard.getFirstEmptyPlace(PLACE_NAME.MONSTER);
         gameBoard.addCard(monsterCard, emptyPlace, PLACE_NAME.MONSTER, STATUS.DEFENCE);
+        gameBoard.setCardSetOrSummonInThisTurn(emptyPlace, PLACE_NAME.MONSTER);
         gamePlay.setAlreadySummonedOrSet(true);
         printerAndScanner.printNextLine(StringMessages.setSuccessfully);
     }
@@ -269,7 +271,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
             printerAndScanner.printNextLine(StringMessages.noCardsIsSelectedYet);
             return;
         }
-        if ((!gameBoard.isThisCardExistsInThisPlace(card, PLACE_NAME.HAND)) {
+        if ((!gameBoard.isThisCardExistsInThisPlace(card, PLACE_NAME.MONSTER)) {
             printerAndScanner.printNextLine(cantChangeThisCardPosition);
             return;
         }
@@ -278,20 +280,22 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         // return;
         // }
         STATUS status; // = matcher and pattern
-        if (gameBoard.getCardStatus(card, PLACE_NAME.MONSTER) != status) {
+        if (gameBoard.getCardStatus(card, PLACE_NAME.MONSTER) == status) {
             printerAndScanner.printNextLine(cardIsAlreadyInTheWantedPosition);
             return;
         }
-        if (gameBoard.isThisCardPositionAlreadyChangedInThisTurn(card)) {
+        int placeNumberOfCard = gameBoard.getPlaceNumberOfCard(card, PLACE_NAME.MONSTER);
+        if (gameBoard.isCardPositionChangedInThisTurn(placeNumberOfCard, PLACE_NAME.MONSTER)) {
             printerAndScanner.printNextLine(alreadyChangedThisCardPositionInThisTurn);
             return;
         }
-        gameBoard.changeStatusOfCard(gameBoard.getAddressOfCard(card, PLACE_NAME.MONSTER)
+        gameBoard.changeStatusOfCard(gameBoard.getPlaceNumberOfCard(card, PLACE_NAME.MONSTER)
                 , PLACE_NAME.MONSTER, status);
+        gameBoard.setCardPositionChangedInThisTurn(placeNumberOfCard, PLACE_NAME.MONSTER);
         printerAndScanner.printNextLine(monsterCardPositionChangedSuccessfully);
     }
 
-    public void flipSummon(String name) {
+    public void flipSummon() {
         Cards card = gamePlay.getSelectedCard();
         if (card == null) {
             printerAndScanner.printNextLine(StringMessages.noCardsIsSelectedYet);
@@ -305,14 +309,14 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         // printerAndScanner.printNextLine(StringMessages.actionNotAllowedInThisPhase);
         // return;
         // }
+        int placeNumberOfCard = gameBoard.getPlaceNumberOfCard(card, PLACE_NAME.MONSTER);
         if (gameBoard.getCardStatus(card, PLACE_NAME.MONSTER) != STATUS.SET ||
-                gameBoard.isCardSetInThisTurn(card)) { // todo : add "isCardSetInThisTurn" method
+                gameBoard.isCardSetOrSummonInThisTurn(placeNumberOfCard, PLACE_NAME.MONSTER)) {
             printerAndScanner.printNextLine(cantFlipSummonThisCard);
             return;
         }
-        gameBoard.changeStatusOfCard(gameBoard.getAddressOfCard(card, PLACE_NAME.MONSTER)
-                , PLACE_NAME.MONSTER, STATUS.ATTACK);
-        // todo : add "this card position changed once in This Turn" method
+        gameBoard.changeStatusOfCard(placeNumberOfCard, PLACE_NAME.MONSTER, STATUS.ATTACK);
+        gameBoard.setCardPositionChangedInThisTurn(placeNumberOfCard, PLACE_NAME.MONSTER);
         printerAndScanner.printNextLine(flipsSummonedSuccessfully);
     }
 
@@ -336,8 +340,8 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         // printerAndScanner.printNextLine(invalidPhase);
         // return;
         // }
-
-        if (gameBoard.isCardAlreadyAttackedInThisTurn(card)) {
+        int placeNumberOfCard = gameBoard.getPlaceNumberOfCard(card, PLACE_NAME.MONSTER);
+        if (gameBoard.isCardAttackedInThisTurn(placeNumberOfCard, PLACE_NAME.MONSTER)) {
             printerAndScanner.printNextLine(CardAlreadyAttacked);
             return;
         }
@@ -346,15 +350,12 @@ public class GamePlayController implements RegexPatterns,StringMessages {
             printerAndScanner.printNextLine(StringMessages.cantAttackTheOpponentDirectly);
             return;
         }
+        gameBoard.setCardAttackedInThisTurn(placeNumberOfCard, PLACE_NAME.MONSTER);
         // todo : decrease opponent health
         // todo : add "host and guest" in Duel class
-        // todo : add message
+        // todo : add successful message
 
     }
-
-    // isCardAlreadyAttackedInThisTurn
-    // isCardSetInThisTurn
-    // isThisCardPositionAlreadyChangedInThisTurn
 
     public void activateEffectOrSetting(boolean isSet){}
     private boolean checkBeforeActivingOrSetting(boolean isSet){}
