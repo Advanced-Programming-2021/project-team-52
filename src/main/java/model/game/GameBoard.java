@@ -90,6 +90,7 @@ public class GameBoard {
             if (place.get(placeName.getNumber() + i).getCard() == null)
                 return i;
         }
+        return -1;
     }
 
     public Cards getCardByAddressAndPlace(int placeNumber, PLACE_NAME name) {

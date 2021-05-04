@@ -38,7 +38,7 @@ public class Place {
     }
 
     public void removeTemporaryFeatures(TEMPORARY_FEATURES temporaryFeature) {
-        temporaryFeatures.remove(temporaryFeature)
+        temporaryFeatures.remove(temporaryFeature);
     }
 
     public boolean isTemporaryFeaturesContainsThisFeature(TEMPORARY_FEATURES temporaryFeature){

@@ -271,7 +271,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
             printerAndScanner.printNextLine(StringMessages.noCardsIsSelectedYet);
             return;
         }
-        if ((!gameBoard.isThisCardExistsInThisPlace(card, PLACE_NAME.MONSTER)) {
+        if ((!gameBoard.isThisCardExistsInThisPlace(card, PLACE_NAME.MONSTER))) {
             printerAndScanner.printNextLine(cantChangeThisCardPosition);
             return;
         }
@@ -301,7 +301,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
             printerAndScanner.printNextLine(StringMessages.noCardsIsSelectedYet);
             return;
         }
-        if ((!gameBoard.isThisCardExistsInThisPlace(card, PLACE_NAME.HAND)) {
+        if (!gameBoard.isThisCardExistsInThisPlace(card, PLACE_NAME.HAND)) {
             printerAndScanner.printNextLine(cantChangeThisCardPosition);
             return;
         }
