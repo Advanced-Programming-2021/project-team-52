@@ -47,8 +47,9 @@ public class GameBoard {
         place.get(placeNumber + name.getNumber()).setCard(null);
     }
 
-    public void addCard(Cards card, int placeNumber, PLACE_NAME name) {
+    public void addCard(Cards card, int placeNumber, PLACE_NAME name, STATUS status) {
         place.get(placeNumber + name.getNumber()).setCard(card);
+        place.get(placeNumber + name.getNumber()).setStatus(status);
     }
 
     public Cards drawCard() {

@@ -5,9 +5,7 @@ import java.util.regex.Matcher;
 
 import model.cards.Cards;
 import model.cards.monster.MonsterCards;
-import model.game.GameBoard;
-import model.game.GamePlay;
-import model.game.PLACE_NAME;
+import model.game.*;
 import model.tools.RegexPatterns;
 import view.PrinterAndScanner;
 import model.tools.StringMessages;
@@ -190,9 +188,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
 
         if (isTributeDone) {
             int emptyPlace = gameBoard.getFirstEmptyPlace(PLACE_NAME.MONSTER);
-            gameBoard.addCard(monsterCard, emptyPlace, PLACE_NAME.MONSTER);
-            // todo : add status to addCard func in GameBoard
-            // todo : make enum for cardStatus if it needs
+            gameBoard.addCard(monsterCard, emptyPlace, PLACE_NAME.MONSTER, STATUS.ATTACK);
             gamePlay.setAlreadySummonedOrSet(true);
             printerAndScanner.printNextLine(StringMessages.summonedSuccessfully);
         }
@@ -204,9 +200,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
 
         MonsterCards monsterCard = (MonsterCards) card;
         int emptyPlace = gameBoard.getFirstEmptyPlace(PLACE_NAME.MONSTER);
-        gameBoard.addCard(monsterCard, emptyPlace, PLACE_NAME.MONSTER);
-        // todo : add status to addCard func in GameBoard
-        // todo : make enum for cardStatus if it needs
+        gameBoard.addCard(monsterCard, emptyPlace, PLACE_NAME.MONSTER, STATUS.DEFENCE);
         gamePlay.setAlreadySummonedOrSet(true);
         printerAndScanner.printNextLine(StringMessages.setSuccessfully);
     }
@@ -216,7 +210,9 @@ public class GamePlayController implements RegexPatterns,StringMessages {
             printerAndScanner.printNextLine(StringMessages.noCardsIsSelectedYet);
             return true;
         }
-        if (!gameBoard.isThisCardExistsInThisPlace(card, PLACE_NAME.HAND) || !(card instanceof MonsterCards)) { // add "aya summon addi mishe?"
+        if (!gameBoard.isThisCardExistsInThisPlace(card, PLACE_NAME.HAND) ||
+                !(card instanceof MonsterCards)) {
+            // todo :  add "does it summon normally?" condition
             printerAndScanner.printNextLine(StringMessages.cantSummonThisCard);
             return true;
         }
@@ -266,8 +262,35 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         }
         return true;
     }
-    public void changePosition(String position){}
-    public void flipSummon(String name){}
+    public void changePosition(String position){
+        Cards card = gamePlay.getSelectedCard();
+        if (card == null) {
+            printerAndScanner.printNextLine(StringMessages.noCardsIsSelectedYet);
+            return;
+        }
+        if((!gameBoard.isThisCardExistsInThisPlace(card, PLACE_NAME.HAND)){
+            printerAndScanner.printNextLine(cantChangeThisCardPosition);
+            return;
+        }
+        // if(can't do in this phase){
+        // printerAndScanner.printNextLine(StringMessages.actionNotAllowedInThisPhase);
+        // return;
+        // }
+
+
+    }
+    public void flipSummon(String name){
+        Cards card = gamePlay.getSelectedCard();
+        if (card == null) {
+            printerAndScanner.printNextLine(StringMessages.noCardsIsSelectedYet);
+            return;
+        }
+        if((!gameBoard.isThisCardExistsInThisPlace(card, PLACE_NAME.HAND)){
+            printerAndScanner.printNextLine(cantChangeThisCardPosition);
+            return;
+        }
+
+    }
     public void attackMonster(int place){}
     public boolean checkBeforeAttacking(int place){}
     public void attackDirectly(){
@@ -276,7 +299,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
             printerAndScanner.printNextLine(StringMessages.noCardsIsSelectedYet);
             return;
         }
-        if(!gameBoard.isThisCardExistsInThisPlace(card, PlaceName.MONSTER)){
+        if(!gameBoard.isThisCardExistsInThisPlace(card, PLACE_NAME.MONSTER)){
             printerAndScanner.printNextLine(StringMessages.cantAttackWithThisCard);
             return;
         }
@@ -288,7 +311,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         // todo :add "is card already attacked" situation
 
         GameBoard opponentGameBoard = gamePlay.getOpponentGameBoard();
-        if(opponentGameBoard.getNumberOfCardsInThisPlace(PlaceName.MONSTER) != 0){ // todo : add other conditions
+        if(opponentGameBoard.getNumberOfCardsInThisPlace(PLACE_NAME.MONSTER) != 0){ // todo : add other conditions
             printerAndScanner.printNextLine(StringMessages.cantAttackTheOpponentDirectly);
             return;
         }

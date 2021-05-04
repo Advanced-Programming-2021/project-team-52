@@ -18,4 +18,10 @@ public interface StringMessages {
     String thereNoMonstersOneThisAddress = "there no monsters one this address";
     String setSuccessfully = "set successfully";
     String invalidPhase = "you can't do this answer in this phase";
+
+    String cantAttackWithThisCard = "you can’t attack with this card";
+    String cantAttackTheOpponentDirectly = "you can’t attack the opponent directly";
+
+    String cantChangeThisCardPosition = "you can’t change this card position";
+
 }
