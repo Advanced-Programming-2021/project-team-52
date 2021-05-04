@@ -9,7 +9,21 @@ public class DuelController {
     public static Duel getInstance(){}
     public void run(User user){}
     private boolean checkBeforeStartingDuel(String opponent, String roundCard){}
-    private void caculateScores(int turn){}
+    private void calculateScores(int gameRounds, User user){
+        //Loser in a 1-round game
+        if(user.getCards().size() == 0 && gameRounds == 1){
+            user.setScore(user.getScore() + 100);
+        } //winner in a 1-round game
+        else if (user.getCards().size() != 0 && gameRounds == 1){
+            user.setScore(user.getScore() + 1000);
+        } //loser in a 3-round game
+        else if(user.getCards().size() == 0 && gameRounds == 3){
+            user.setScore(user.getScore()+300);
+        } // winner in a 3-round game
+        else if(user.getCards().size() != 0 && gameRounds == 3){
+            user.setScore(user.getScore()+3000);
+        }
+    }
     private void transferCardsBetweenMainAndSideDeck(String cardName, Deck deck){
         String deckSituation;
         if (deck == null) {
