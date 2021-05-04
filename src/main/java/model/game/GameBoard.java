@@ -66,30 +66,50 @@ public class GameBoard {
 
 
     ///////////////////////////////////////////////
-    public boolean isThisCardExistsInThisPlace(Cards card, PLACE_NAME PLACENAME){
+    public boolean isThisCardExistsInThisPlace(Cards card, PLACE_NAME placeName){
         for (int i = 1; i < 6; i++) {
-            if(place.get(PLACENAME.getNumber() + i).getCard().equals(card))
+            if(place.get(placeName.getNumber() + i).getCard().equals(card))
                 return true;
         }
         return false;
     }
-    public int getNumberOfCardsInThisPlace(PLACE_NAME PLACENAME){
+    public int getNumberOfCardsInThisPlace(PLACE_NAME placeName){
         int counter = 0;
         for (int i = 1; i < 6; i++) {
-            if(place.get(PLACENAME.getNumber() + i).getCard() != null)
+            if(place.get(placeName.getNumber() + i).getCard() != null)
                 ++counter;
         }
         return counter;
     }
 
-    public int getFirstEmptyPlace(PLACE_NAME PLACENAME){
+    public int getFirstEmptyPlace(PLACE_NAME placeName){
         for (int i = 1; i < 6; i++) {
-            if(place.get(PLACENAME.getNumber() + i).getCard() == null)
+            if(place.get(placeName.getNumber() + i).getCard() == null)
                 return i;
         }
     }
     public Cards getCardByAddressAndPlace(int placeNumber, PLACE_NAME name) {
         return place.get(placeNumber + name.getNumber()).getCard();
+    }
+
+    public STATUS getCardStatus(Cards card, PLACE_NAME placeName){
+        for (int i = 1; i < 6; i++) {
+            if(place.get(placeName.getNumber() + i).getCard().equals(card))
+                return place.get(placeName.getNumber() + i).getStatus();
+        }
+        return null;
+    }
+
+    public void changeStatusOfCard(int placeNumber, PLACE_NAME placeName, STATUS status){
+        if(place.get(placeNumber + placeName.getNumber()) != null)
+            place.get(placeNumber + placeName.getNumber()).setStatus(status);
+    }
+    public int getAddressOfCard(Cards card, PLACE_NAME placeName){
+        for (int i = 1; i < 6; i++) {
+            if(place.get(placeName.getNumber() + i).getCard().equals(card))
+                return i;
+        }
+        return -1;
     }
     //////////////////////////////////////////////
 

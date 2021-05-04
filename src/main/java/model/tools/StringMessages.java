@@ -23,5 +23,10 @@ public interface StringMessages {
     String cantAttackTheOpponentDirectly = "you can’t attack the opponent directly";
 
     String cantChangeThisCardPosition = "you can’t change this card position";
+    String cardIsAlreadyInTheWantedPosition = "this card is already in the wanted position";
+    String alreadyChangedThisCardPositionInThisTurn = "you already changed this card position in this turn";
+    String monsterCardPositionChangedSuccessfully = "monster card position changed successfully";
 
+    String cantFlipSummonThisCard = "you can’t flip summon this card";
+    String flipsSummonedSuccessfully = "flip summoned successfully";
 }
