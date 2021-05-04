@@ -9,6 +9,7 @@ public class Place {
     private STATUS status;
     private PLACE_NAME type;
 
+
     protected Place(PLACE_NAME type){
         this.type = type;
     }

@@ -278,15 +278,16 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         // return;
         // }
         STATUS status; // = matcher and pattern
-        if(gameBoard.getCardStatus(card, PLACE_NAME.MONSTER) != status){
+        if (gameBoard.getCardStatus(card, PLACE_NAME.MONSTER) != status) {
             printerAndScanner.printNextLine(cardIsAlreadyInTheWantedPosition);
             return;
         }
-        if(gameBoard.isThisCardPositionAlreadyChangedInThisTurn(card)){
+        if (gameBoard.isThisCardPositionAlreadyChangedInThisTurn(card)) {
             printerAndScanner.printNextLine(alreadyChangedThisCardPositionInThisTurn);
             return;
         }
-        gameBoard.changePosition(card);
+        gameBoard.changeStatusOfCard(gameBoard.getAddressOfCard(card, PLACE_NAME.MONSTER)
+                , PLACE_NAME.MONSTER, status);
         printerAndScanner.printNextLine(monsterCardPositionChangedSuccessfully);
     }
 
@@ -304,12 +305,13 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         // printerAndScanner.printNextLine(StringMessages.actionNotAllowedInThisPhase);
         // return;
         // }
-        if(gameBoard.getCardStatus(card, PLACE_NAME.MONSTER) != STATUS.SET ||
-                gameBoard.isCardSetInThisTurn(card)){ // todo : add "isCardSetInThisTurn" method
+        if (gameBoard.getCardStatus(card, PLACE_NAME.MONSTER) != STATUS.SET ||
+                gameBoard.isCardSetInThisTurn(card)) { // todo : add "isCardSetInThisTurn" method
             printerAndScanner.printNextLine(cantFlipSummonThisCard);
             return;
         }
-        gameBoard.changeStatusOfCard(gameBoard.getAddressOfCard(card, PLACE_NAME.MONSTER), PLACE_NAME.MONSTER, STATUS.ATTACK);
+        gameBoard.changeStatusOfCard(gameBoard.getAddressOfCard(card, PLACE_NAME.MONSTER)
+                , PLACE_NAME.MONSTER, STATUS.ATTACK);
         // todo : add "this card position changed once in This Turn" method
         printerAndScanner.printNextLine(flipsSummonedSuccessfully);
     }
@@ -331,20 +333,28 @@ public class GamePlayController implements RegexPatterns,StringMessages {
             return;
         }
         // if(! battle phase){
-        // printerAndScanner.printNextLine(StringMessages.cantDoThisActionInThisPhaseForAttacking);
+        // printerAndScanner.printNextLine(invalidPhase);
         // return;
         // }
 
-        // todo :add "is card already attacked" situation
-
+        if (gameBoard.isCardAlreadyAttackedInThisTurn(card)) {
+            printerAndScanner.printNextLine(CardAlreadyAttacked);
+            return;
+        }
         GameBoard opponentGameBoard = gamePlay.getOpponentGameBoard();
         if (opponentGameBoard.getNumberOfCardsInThisPlace(PLACE_NAME.MONSTER) != 0) { // todo : add other conditions
             printerAndScanner.printNextLine(StringMessages.cantAttackTheOpponentDirectly);
             return;
         }
-
+        // todo : decrease opponent health
+        // todo : add "host and guest" in Duel class
+        // todo : add message
 
     }
+
+    // isCardAlreadyAttackedInThisTurn
+    // isCardSetInThisTurn
+    // isThisCardPositionAlreadyChangedInThisTurn
 
     public void activateEffectOrSetting(boolean isSet){}
     private boolean checkBeforeActivingOrSetting(boolean isSet){}
