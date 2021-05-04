@@ -17,6 +17,9 @@ public class StringMessages {
     public static String thereAreNotEnoughCardsForTribute = "there are not enough cards for tribute";
     public static String thereNoMonstersOneThisAddress = "there no monsters one this address";
     public static String setSuccessfully = "set successfully";
+    public static String cantAttackWithThisCard = "you can’t attack with this card";
+    public static String cantDoThisActionInThisPhaseForAttacking = "you can’t do this action in this phase";
+    public static String cantAttackTheOpponentDirectly = "you can’t attack the opponent directly";
 
     private StringMessages(){}
 }

@@ -209,7 +209,31 @@ public class GamePlayController {
     public void flipSummon(String name){}
     public void attackMonster(int place){}
     public boolean checkBeforeAttacking(int place){}
-    public void attackDirectly(){}
+    public void attackDirectly(){
+        Cards card = gamePlay.getSelectedCard();
+        if (card == null) {
+            printerAndScanner.printNextLine(StringMessages.noCardsIsSelectedYet);
+            return;
+        }
+        if(!gameBoard.isThisCardExistsInThisPlace(card, PlaceName.MONSTER)){
+            printerAndScanner.printNextLine(StringMessages.cantAttackWithThisCard);
+            return;
+        }
+        // if(! battle phase){
+        // printerAndScanner.printNextLine(StringMessages.cantDoThisActionInThisPhaseForAttacking);
+        // return;
+        // }
+
+        // todo :add "is card already attacked" situation
+
+        GameBoard opponentGameBoard = gamePlay.getOpponentGameBoard();
+        if(opponentGameBoard.getNumberOfCardsInThisPlace(PlaceName.MONSTER) != 0){ // todo : add other conditions
+            printerAndScanner.printNextLine(StringMessages.cantAttackTheOpponentDirectly);
+            return;
+        }
+
+
+    }
 
     public void activateEffectOrSetting(boolean isSet){}
     private boolean checkBeforeActivingOrSetting(boolean isSet){}
