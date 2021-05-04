@@ -30,4 +30,8 @@ public interface StringMessages {
 
     String cantFlipSummonThisCard = "you can’t flip summon this card";
     String flipsSummonedSuccessfully = "flip summoned successfully";
+
+    String noCardToAttackHere = "there is no card to attack here";
+
+
 }

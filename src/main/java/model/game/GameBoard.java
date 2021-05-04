@@ -31,7 +31,7 @@ public class GameBoard {
     }
 
     public STATUS getStatus(int placeNumber, PLACE_NAME name) {
-        return place.get(placeNumber + name.getNumber()).getStatus();
+        return getPlace(placeNumber, name).getStatus();
     }
 
     public ArrayList<Cards> getGraveyard() {
@@ -45,12 +45,12 @@ public class GameBoard {
 
     public void removeCard(Cards card, int placeNumber, PLACE_NAME name) {
         graveyard.add(card);
-        place.get(placeNumber + name.getNumber()).setCard(null);
+        getPlace(placeNumber, name).setCard(null);
     }
 
     public void addCard(Cards card, int placeNumber, PLACE_NAME name, STATUS status) {
-        place.get(placeNumber + name.getNumber()).setCard(card);
-        place.get(placeNumber + name.getNumber()).setStatus(status);
+        getPlace(placeNumber, name).setCard(card);
+        getPlace(placeNumber, name).setStatus(status);
     }
 
     public Cards drawCard() {
@@ -62,7 +62,7 @@ public class GameBoard {
     }
 
     public Cards getCard(PLACE_NAME name, int number) {
-        return place.get(name.getNumber() + number).getCard();
+        return getPlace(number, name).getCard();
     }
 
 
@@ -70,7 +70,7 @@ public class GameBoard {
     // todo : fix equal() for Cards class
     public boolean isThisCardExistsInThisPlace(Cards card, PLACE_NAME placeName) {
         for (int i = 1; i < 6; i++) {
-            if (place.get(placeName.getNumber() + i).getCard().equals(card))
+            if (getPlace(i, placeName).getCard().equals(card))
                 return true;
         }
         return false;
@@ -79,7 +79,7 @@ public class GameBoard {
     public int getNumberOfCardsInThisPlace(PLACE_NAME placeName) {
         int counter = 0;
         for (int i = 1; i < 6; i++) {
-            if (place.get(placeName.getNumber() + i).getCard() != null)
+            if (getPlace(i, placeName).getCard() != null)
                 ++counter;
         }
         return counter;
@@ -87,71 +87,75 @@ public class GameBoard {
 
     public int getFirstEmptyPlace(PLACE_NAME placeName) {
         for (int i = 1; i < 6; i++) {
-            if (place.get(placeName.getNumber() + i).getCard() == null)
+            if (getPlace(i, placeName).getCard() == null)
                 return i;
         }
         return -1;
     }
 
     public Cards getCardByAddressAndPlace(int placeNumber, PLACE_NAME name) {
-        return place.get(placeNumber + name.getNumber()).getCard();
+        return getPlace(placeNumber, name).getCard();
     }
 
     public STATUS getCardStatus(Cards card, PLACE_NAME placeName) {
         for (int i = 1; i < 6; i++) {
-            if (place.get(placeName.getNumber() + i).getCard().equals(card))
-                return place.get(placeName.getNumber() + i).getStatus();
+            if (getPlace(i, placeName).getCard().equals(card))
+                return getPlace(i, placeName).getStatus();
         }
         return null;
     }
 
     public void changeStatusOfCard(int placeNumber, PLACE_NAME placeName, STATUS status) {
-        if (place.get(placeNumber + placeName.getNumber()) != null)
-            place.get(placeNumber + placeName.getNumber()).setStatus(status);
+        if (getPlace(placeNumber, placeName) != null)
+            getPlace(placeNumber, placeName).setStatus(status);
     }
 
     public int getPlaceNumberOfCard(Cards card, PLACE_NAME placeName) {
         for (int i = 1; i < 6; i++) {
-            if (place.get(placeName.getNumber() + i).getCard().equals(card))
+            if (getPlace(i, placeName).getCard().equals(card))
                 return i;
         }
         return -1;
     }
 
     public boolean isCardSetOrSummonInThisTurn(int placeNumber, PLACE_NAME placeName) {
-        return place.get(placeNumber + placeName.getNumber())
+        return getPlace(placeNumber, placeName)
                 .isTemporaryFeaturesContainsThisFeature(TEMPORARY_FEATURES.CARD_SET_OR_SUMMON_IN_THIS_TURN);
     }
 
     public boolean isCardAttackedInThisTurn(int placeNumber, PLACE_NAME placeName) {
-        return place.get(placeNumber + placeName.getNumber())
+        return getPlace(placeNumber, placeName)
                 .isTemporaryFeaturesContainsThisFeature(TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN);
     }
 
     public boolean isCardPositionChangedInThisTurn(int placeNumber, PLACE_NAME placeName) {
-        return place.get(placeNumber + placeName.getNumber())
+        return getPlace(placeNumber, placeName)
                 .isTemporaryFeaturesContainsThisFeature(TEMPORARY_FEATURES.CARD_POSITION_CHANGED_IN_THIS_TURN);
     }
 
     public void setCardSetOrSummonInThisTurn(int placeNumber, PLACE_NAME placeName) {
-        place.get(placeNumber + placeName.getNumber()).addTemporaryFeatures
+        getPlace(placeNumber, placeName).addTemporaryFeatures
                 (TEMPORARY_FEATURES.CARD_SET_OR_SUMMON_IN_THIS_TURN);
     }
 
     public void setCardAttackedInThisTurn(int placeNumber, PLACE_NAME placeName) {
-        place.get(placeNumber + placeName.getNumber()).addTemporaryFeatures
+        getPlace(placeNumber, placeName).addTemporaryFeatures
                 (TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN);
     }
 
     public void setCardPositionChangedInThisTurn(int placeNumber, PLACE_NAME placeName) {
-        place.get(placeNumber + placeName.getNumber()).addTemporaryFeatures
+        getPlace(placeNumber, placeName).addTemporaryFeatures
                 (TEMPORARY_FEATURES.CARD_POSITION_CHANGED_IN_THIS_TURN);
+    }
+
+    private Place getPlace(int placeNumber, PLACE_NAME placeName) {
+        return place.get(placeName.getNumber() + placeNumber);
     }
 
     // todo : add this method at the first of each round
     public void clearAllTemporaryFeatures() {
         for (int i = 1; i < 6; i++) {
-            place.get(PLACE_NAME.MONSTER.getNumber() + i).clearTemporaryFeatures();
+            getPlace(i, PLACE_NAME.MONSTER).clearTemporaryFeatures();
         }
     }
     // agar card az graveyard bargasht, bazi tanzimat esh bayad reset beshe
