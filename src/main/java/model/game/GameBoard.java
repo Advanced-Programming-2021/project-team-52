@@ -152,7 +152,6 @@ public class GameBoard {
         return place.get(placeName.getNumber() + placeNumber);
     }
 
-    // todo : add this method at the first of each round
     public void clearAllTemporaryFeatures() {
         for (int i = 1; i < 6; i++) {
             getPlace(i, PLACE_NAME.MONSTER).clearTemporaryFeatures();
