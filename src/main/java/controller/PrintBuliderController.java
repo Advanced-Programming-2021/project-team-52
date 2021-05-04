@@ -23,4 +23,26 @@ public class PrintBuilderController {
     public void buildMatchWinner(String username, int score1 , int score2) {}
     public void buildScoreBoard(){}
     public void buildChainTurnPromot(String playerName, GameBoard board){}
+
+    public String winingAgainstOO(int damage) {
+        return "your opponent’s monster is destroyed" +
+                " and your opponent receives" +
+                damage +
+                "battle damage";
+    }
+
+    public String losingAgainstOO(int damage) {
+        return "Your monster card is destroyed" +
+                " and you received " + damage + " battle" +
+                " damage";
+    }
+
+    public String losingAgainstDO(int damage) {
+        return "no card is destroyed and" +
+                " you received " + damage + "battle damage";
+    }
+
+    public String hiddenCardAfterAttacking(String cardName) {
+        return "opponent’s monster card was " + cardName + " and ";
+    }
 }

@@ -115,7 +115,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
                 else if (matcher.group("type").matches("^\\d+$"))
                     attackMonster(Integer.parseInt(matcher.group("type")));
                 else printerAndScanner.printNextLine(invalidCommand);
-            } else commandInWrongPhase(command, false)
+            } else commandInWrongPhase(command, false);
         }
     }
     private void endPhase(){
@@ -283,7 +283,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         // return;
         // }
         STATUS status = null;
-        if(position.toLowerCase().equals("attack"))
+        if (position.toLowerCase().equals("attack"))
             status = STATUS.ATTACK;
         else
             status = STATUS.DEFENCE;
@@ -327,6 +327,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         printerAndScanner.printNextLine(flipsSummonedSuccessfully);
     }
 
+    // todo : fix decreasing health problems
     public void attackMonster(int place) {
         Cards myCard = gamePlay.getSelectedCard();
         if (myCard == null) {
@@ -347,7 +348,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
             return;
         }
         Cards opponentCard = opponentGameBoard.getCard(PLACE_NAME.MONSTER, place);
-        if(opponentCard == null){
+        if (opponentCard == null) {
             printerAndScanner.printNextLine(noCardToAttackHere);
             return;
         }
@@ -357,54 +358,49 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         int myMonsterCardAttackPoint = myMonsterCard.getAttack();
         int opponentMonsterCardAttackPoint = opponentMonsterCard.getAttack();
         int myMonsterCardDefendPoint = myMonsterCard.getDefense();
-        int opponentMonsterCardDefendPoint= opponentMonsterCard.getDefense();
+        int opponentMonsterCardDefendPoint = opponentMonsterCard.getDefense();
         int placeNumberOfOpponentCard = opponentGameBoard.getPlaceNumberOfCard(opponentCard, PLACE_NAME.MONSTER);
-        int myHealth;
-        int opponentHealth;
         STATUS opponentCardStatus = gameBoard.getCardStatus(opponentCard, PLACE_NAME.MONSTER);
         if (opponentCardStatus == STATUS.ATTACK) {
             if (myMonsterCardAttackPoint > opponentMonsterCardAttackPoint) {
                 int damage = myMonsterCardAttackPoint - opponentMonsterCardAttackPoint;
                 duelController.changeHealthAmount(damage, isHost); // problem
                 opponentGameBoard.removeCard(opponentCard, placeNumberOfOpponentCard, PLACE_NAME.MONSTER);
-                printerAndScanner.
+                printerAndScanner.printNextLine(printBuilderController.winingAgainstOO(damage));
             } else if (myMonsterCardAttackPoint == opponentMonsterCardAttackPoint) {
                 gameBoard.removeCard(myCard, placeNumberOfMyCard, PLACE_NAME.MONSTER);
                 opponentGameBoard.removeCard(opponentCard, placeNumberOfOpponentCard, PLACE_NAME.MONSTER);
-                printerAndScanner.
+                printerAndScanner.printNextLine(drawingAgainstOO);
             } else {
                 int damage = opponentMonsterCardAttackPoint - myMonsterCardAttackPoint;
                 duelController.changeHealthAmount(damage, isHost); // problem
                 gameBoard.removeCard(myCard, placeNumberOfMyCard, PLACE_NAME.MONSTER);
-                printerAndScanner.
+                printerAndScanner.printNextLine(printBuilderController.losingAgainstOO(damage));
             }
         } else if (opponentCardStatus == STATUS.DEFENCE || opponentCardStatus == STATUS.SET) {
             if (myMonsterCardAttackPoint > opponentMonsterCardDefendPoint) {
                 opponentGameBoard.removeCard(opponentCard, placeNumberOfOpponentCard, PLACE_NAME.MONSTER);
-                if(opponentCardStatus == STATUS.DEFENCE)
-                    printerAndScanner;
+                if (opponentCardStatus == STATUS.DEFENCE)
+                    printerAndScanner.printNextLine(winingAgainstDO);
                 else
-                    printerAndScanner;
+                    printerAndScanner.printNextLine(printBuilderController.hiddenCardAfterAttacking
+                            (opponentCard.getName()) + winingAgainstDO);
             } else if (myMonsterCardAttackPoint == opponentMonsterCardDefendPoint) {
-                if(opponentCardStatus == STATUS.DEFENCE)
-                    printerAndScanner;
+                if (opponentCardStatus == STATUS.DEFENCE)
+                    printerAndScanner.printNextLine(drawingAgainstDO);
                 else
-                    printerAndScanner;
+                    printerAndScanner.printNextLine(printBuilderController.hiddenCardAfterAttacking
+                            (opponentCard.getName()) + drawingAgainstDO);
             } else {
                 int damage = opponentMonsterCardDefendPoint - myMonsterCardAttackPoint;
                 duelController.changeHealthAmount(damage, isHost); // problem
-                if(opponentCardStatus == STATUS.DEFENCE)
-                    printerAndScanner;
+                if (opponentCardStatus == STATUS.DEFENCE)
+                    printerAndScanner.printNextLine(printBuilderController.losingAgainstDO(damage));
                 else
-                    printerAndScanner;
+                    printerAndScanner.printNextLine(printBuilderController.hiddenCardAfterAttacking
+                            (opponentCard.getName()) + printBuilderController.losingAgainstDO(damage));
             }
-
         }
-
-    }
-
-    public boolean checkBeforeAttacking(int place) {
-
     }
 
     public void attackDirectly() {

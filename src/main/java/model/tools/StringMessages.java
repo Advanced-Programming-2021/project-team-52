@@ -32,6 +32,10 @@ public interface StringMessages {
     String flipsSummonedSuccessfully = "flip summoned successfully";
 
     String noCardToAttackHere = "there is no card to attack here";
+    String drawingAgainstOO = "both you and your opponent monster cards are destroyed and no one receives damage";
+    String winingAgainstDO = "the defense position monster is destroyed";
+    String drawingAgainstDO = "no card is destroyed";
+
 
 
 }
