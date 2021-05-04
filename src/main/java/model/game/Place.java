@@ -1,22 +1,19 @@
 package model.game;
 
 
-import model.cards.monster.MonsterCards;
-import model.cards.spell.SpellCards;
-import model.cards.trap.TrapCards;
 import model.cards.Cards;
 
 public class Place {
 
     private Cards card;
-    private String status;
-    private PlaceName type;
+    private STATUS status;
+    private PLACE_NAME type;
 
-    protected Place(PlaceName type){
+    protected Place(PLACE_NAME type){
         this.type = type;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(STATUS status) {
         this.status = status;
     }
 
@@ -24,7 +21,7 @@ public class Place {
         this.card = card;
     }
 
-    public String getStatus() {
+    public STATUS getStatus() {
         return status;
     }
 

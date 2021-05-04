@@ -1,6 +1,6 @@
 package model.game;
 
-public enum PlaceName{
+public enum PLACE_NAME {
     HAND(0),
     MONSTER(10),
     SPELL_AND_TRAP(20),
@@ -9,7 +9,7 @@ public enum PlaceName{
 
     private int number;
 
-    private PlaceName(int number){
+    private PLACE_NAME(int number){
         this.number = number;
 
     }

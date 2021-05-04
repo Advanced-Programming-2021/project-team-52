@@ -7,7 +7,7 @@ import model.cards.Cards;
 import model.cards.monster.MonsterCards;
 import model.game.GameBoard;
 import model.game.GamePlay;
-import model.game.PlaceName;
+import model.game.PLACE_NAME;
 import model.tools.RegexPatterns;
 import view.PrinterAndScanner;
 import model.tools.StringMessages;
@@ -134,28 +134,27 @@ public class GamePlayController implements RegexPatterns,StringMessages {
             if (RegexController.hasField(matcher, "delete"))
                 gamePlay.setSelectedCard(null);
             else {
-                PlaceName name = PlaceName.HAND;
-                if (RegexController.hasField(matcher, "typeHand"))
-                    name = PlaceName.MONSTER;
-                else {
+                PLACE_NAME name = PLACE_NAME.HAND;
+                if(RegexController.hasField(matcher, "type")) {
                     switch (matcher.group("type")) {
                         case "m":
                         case "monster":
-                            name = PlaceName.MONSTER;
+                            name = PLACE_NAME.MONSTER;
                             break;
                         case "s":
                         case "spell":
-                            name = PlaceName.SPELL_AND_TRAP;
-                            break;
-                        case "f":
-                        case "field":
-                            name = PlaceName.FUSION;
+                            name = PLACE_NAME.SPELL_AND_TRAP;
                             break;
                     }
-                }
-                if (RegexController.hasField(matcher, "opponent") || RegexController.hasField(matcher, "opponent2"))
-                    gamePlay.setSelectedCard(opponentGameBoard.getCard(name, Integer.parseInt(matcher.group("select"))));
-                else gamePlay.setSelectedCard(gameBoard.getCard(name, Integer.parseInt(matcher.group("select"))));
+                } else if (RegexController.hasField(matcher, "typeField"))
+                    name = PLACE_NAME.FUSION;
+                if (RegexController.hasField(matcher, "opponent") ||
+                        RegexController.hasField(matcher, "opponent2")||
+                        RegexController.hasField(matcher, "opponent3"))
+                    gamePlay.setSelectedCard(opponentGameBoard.getCard(name, RegexController.hasField(matcher, "select")?
+                            Integer.parseInt(matcher.group("select")) : 0));
+                else gamePlay.setSelectedCard(gameBoard.getCard(name, RegexController.hasField(matcher, "select")?
+                        Integer.parseInt(matcher.group("select")) : 0));
             }
         } else printerAndScanner.printNextLine(invalidCommand);
     }
@@ -190,8 +189,8 @@ public class GamePlayController implements RegexPatterns,StringMessages {
             isTributeDone = getTribute(2);
 
         if (isTributeDone) {
-            int emptyPlace = gameBoard.getFirstEmptyPlace(PlaceName.MONSTER);
-            gameBoard.addCard(monsterCard, emptyPlace, PlaceName.MONSTER);
+            int emptyPlace = gameBoard.getFirstEmptyPlace(PLACE_NAME.MONSTER);
+            gameBoard.addCard(monsterCard, emptyPlace, PLACE_NAME.MONSTER);
             // todo : add status to addCard func in GameBoard
             // todo : make enum for cardStatus if it needs
             gamePlay.setAlreadySummonedOrSet(true);
@@ -204,8 +203,8 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         if (handleSummonAndSetErrors(card)) return;
 
         MonsterCards monsterCard = (MonsterCards) card;
-        int emptyPlace = gameBoard.getFirstEmptyPlace(PlaceName.MONSTER);
-        gameBoard.addCard(monsterCard, emptyPlace, PlaceName.MONSTER);
+        int emptyPlace = gameBoard.getFirstEmptyPlace(PLACE_NAME.MONSTER);
+        gameBoard.addCard(monsterCard, emptyPlace, PLACE_NAME.MONSTER);
         // todo : add status to addCard func in GameBoard
         // todo : make enum for cardStatus if it needs
         gamePlay.setAlreadySummonedOrSet(true);
@@ -217,7 +216,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
             printerAndScanner.printNextLine(StringMessages.noCardsIsSelectedYet);
             return true;
         }
-        if (!gameBoard.isThisCardExistsInThisPlace(card, PlaceName.HAND) || !(card instanceof MonsterCards)) { // add "aya summon addi mishe?"
+        if (!gameBoard.isThisCardExistsInThisPlace(card, PLACE_NAME.HAND) || !(card instanceof MonsterCards)) { // add "aya summon addi mishe?"
             printerAndScanner.printNextLine(StringMessages.cantSummonThisCard);
             return true;
         }
@@ -225,7 +224,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         // printerAndScanner.printNextLine(StringMessages.actionNotAllowedInThisPhase);
         // return;
         // }
-        if (gameBoard.getNumberOfCardsInThisPlace(PlaceName.MONSTER) >= 5) {
+        if (gameBoard.getNumberOfCardsInThisPlace(PLACE_NAME.MONSTER) >= 5) {
             printerAndScanner.printNextLine(StringMessages.monsterCardZoneIsFull);
             return true;
         }
@@ -237,7 +236,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
     }
 
     public boolean getTribute(int amount) {
-        int NumberOfCardInMonsterZone = gameBoard.getNumberOfCardsInThisPlace(PlaceName.MONSTER);
+        int NumberOfCardInMonsterZone = gameBoard.getNumberOfCardsInThisPlace(PLACE_NAME.MONSTER);
         if (NumberOfCardInMonsterZone < amount) {
             printerAndScanner.printNextLine(StringMessages.thereAreNotEnoughCardsForTribute);
             return false;
@@ -254,7 +253,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         }
 
         for (int cardAddress : cardAddresses) {
-            Cards cardToRemove = gameBoard.getCardByAddressAndPlace(cardAddress, PlaceName.MONSTER);
+            Cards cardToRemove = gameBoard.getCardByAddressAndPlace(cardAddress, PLACE_NAME.MONSTER);
             if (cardToRemove == null) {
                 printerAndScanner.printNextLine(StringMessages.thereNoMonstersOneThisAddress);
                 return false;
@@ -263,7 +262,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         }
 
         for (int i = 0; i < cardAddresses.size(); i++) {
-            gameBoard.removeCard(cardsToRemove.get(i), cardAddresses.get(i), PlaceName.MONSTER);
+            gameBoard.removeCard(cardsToRemove.get(i), cardAddresses.get(i), PLACE_NAME.MONSTER);
         }
         return true;
     }
