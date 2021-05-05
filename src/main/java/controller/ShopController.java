@@ -6,7 +6,7 @@ import view.PrinterAndScanner;
 
 public class ShopController {
     private static ShopController shop = null;
-    private PrintBulider printBulider;
+//    private PrintBulider printBulider;
     private PrinterAndScanner printerAndScanner;
 
     private ShopController() {

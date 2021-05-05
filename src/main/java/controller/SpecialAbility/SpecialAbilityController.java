@@ -1,6 +1,6 @@
 package controller.SpecialAbility;
 
-public class SpecialAbilityController {
+public class pecialAbilityController {
     private SpecialAbilityController specialAbilityController;
 
     private SpecialAbilityController(){}

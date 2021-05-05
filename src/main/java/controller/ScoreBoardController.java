@@ -1,5 +1,6 @@
 package Controller;
 
+import controller.LoginController;
 import model.*;
 
 import java.util.ArrayList;
@@ -10,8 +11,8 @@ import java.util.Collections;
 
 public class ScoreBoardController {
     private static ScoreBoardController scoreBoard = null;
-    private PrintBulider printBulider;
-    private printerAndScanner printerAndScanner;
+    //    private PrintBulider printBulider;
+//    private printerAndScanner printerAndScanner;
     Collection<model.User> collection = LoginController.users.values();
     ArrayList<model.User> usersInScoreOrder = new ArrayList<>(collection);
 
