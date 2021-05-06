@@ -12,8 +12,9 @@ public class GameBoard {
     private ArrayList<Cards> graveyard;
     private ArrayList<Cards> mainCards;
     private ArrayList<Cards> sideCards;
-    private int lastNmCardNumberPicked;
+    private int lastCardNumberPicked;
     private ArrayList<Cards> cardsPicked;
+    private GameBoard opponentGameBoard;
 
     public GameBoard(ArrayList<Cards> mainCards, ArrayList<Cards> sideCards) {
         place = new HashMap<>();
@@ -26,7 +27,7 @@ public class GameBoard {
         graveyard = new ArrayList<>();
         this.mainCards = new ArrayList<>(mainCards);
         this.sideCards = new ArrayList<>(sideCards);
-        lastNmCardNumberPicked = this.mainCards.size();
+        lastCardNumberPicked = this.mainCards.size();
         cardsPicked = new ArrayList<>();
     }
 
@@ -40,7 +41,7 @@ public class GameBoard {
 
     public void shuffleCards() {
         Collections.shuffle(mainCards);
-        lastNmCardNumberPicked = mainCards.size();
+        lastCardNumberPicked = mainCards.size();
     }
 
     public void removeCard(Cards card, int placeNumber, PLACE_NAME name) {
@@ -56,9 +57,25 @@ public class GameBoard {
     public Cards drawCard() {
         if (mainCards.equals(cardsPicked))
             return null;
-        while (cardsPicked.contains(mainCards.get(lastNmCardNumberPicked)))
-            lastNmCardNumberPicked--;
-        return (mainCards.get(lastNmCardNumberPicked--));
+        while (cantPickAnyMoreOfThisCard())
+            lastCardNumberPicked--;
+        return (mainCards.get(lastCardNumberPicked--));
+    }
+
+    private boolean cantPickAnyMoreOfThisCard(){
+        int amountInPickedCards = 0, amountInDeck = 0;
+        Cards cardToCheck = mainCards.get(lastCardNumberPicked);
+        for (Cards cards : cardsPicked) {
+            if (cards == cardToCheck)
+                amountInPickedCards++;
+        }
+        for (Cards mainCard : mainCards) {
+            if (mainCard == cardToCheck)
+                amountInDeck++;
+        }
+        if (amountInDeck == amountInPickedCards)
+            return true;
+        else return false;
     }
 
     public Cards getCard(PLACE_NAME name, int number) {

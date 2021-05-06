@@ -1,13 +1,13 @@
 package model.game;
 
-import controller.PrintBuliderController;
+//import controller.PrintBuliderController;
 import model.*;
 import view.PrinterAndScanner;
 
 import java.util.ArrayList;
 
 public class NewGame {
-    private PrintBuliderController printBuliderController;
+//    private PrintBuliderController printBuliderController;
     private PrinterAndScanner printerAndScanner;
     private GameBoard hostBoard;
     private GameBoard guestBoard;

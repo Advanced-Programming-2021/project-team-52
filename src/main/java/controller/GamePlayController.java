@@ -82,11 +82,11 @@ public class GamePlayController implements RegexPatterns,StringMessages {
             else if (command.startsWith("set")){
                 Matcher matcher = RegexController.getMatcher(command, setAttackOrDefensePattern);
                 if (matcher != null)
-                    set(matcher.group("position"));
-                    printerAndScanner.printNextLine(invalidCommand);
+                    changePosition(matcher.group("position"));
+                else if (command.equals("set"))
+                    set();
+                else printerAndScanner.printNextLine(invalidCommand);
             }
-            else if (command.startsWith("set --position")) //TODO ???????
-                changePosition(command);
             else if (command.equals("flip-summon"))
                 flipSummon();
             else if (command.equals("activate effect"))

@@ -5,8 +5,8 @@ import model.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Login {
-    static Login login;
+public class LoginController {
+    static LoginController loginController;
     static ArrayList<String> userName;
     static ArrayList<String> nicknames;
     static HashMap<String, User> users;
@@ -14,10 +14,10 @@ public class Login {
     private PrintBulider printBulider;
     private printerAndScanner printerAndScanner;
 
-    private Login(){}
-    public static Login getinstance(){
-        if (login == null) login = new Login();
-        return login;
+    private LoginController(){}
+    public static LoginController getinstance(){
+        if (loginController == null) loginController = new LoginController();
+        return loginController;
     }
     private static void intantiateCArds(){}
     public static User getUser(String username, String password) {

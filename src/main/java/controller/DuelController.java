@@ -1,17 +1,18 @@
 package controller;
 
-
 import model.Deck;
 import model.User;
 
 public class DuelController {
-    private static Duel duel;
+    private static DuelController duel;
     private PrintBulider printBulider;
     private printerAndScanner printerAndScanner;
 
     public DuelController(){}
-    public static Duel getInstance(){}
-    public void run(User user){}
+    public static DuelController getInstance(){}
+    public void run(User user){
+
+    }
     private boolean checkBeforeStartingDuel(String opponent, String roundCard){}
     private void calculateScores(int gameRounds, User user){
         //Loser in a 1-round game
@@ -50,7 +51,7 @@ public class DuelController {
         }
     }
     public void surrender(){}
-    public void setDuelWinnerByCheat(){}
+    public void serDuelWinnerByCheat(){}
     public void changeHealthAmount(int amount, boolean changeHost){}
 
 }
