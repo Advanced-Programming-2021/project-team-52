@@ -1,6 +1,8 @@
 package model.game;
 
+import controller.SpecialAbility.SpecialAbilityController;
 import model.cards.Cards;
+import model.cards.monster.MonsterCards;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -125,6 +127,7 @@ public class GameBoard {
     public void changeStatusOfCard(int placeNumber, PLACE_NAME placeName, STATUS status) {
         if (getPlace(placeNumber, placeName) != null)
             getPlace(placeNumber, placeName).setStatus(status);
+
     }
 
     public int getPlaceNumberOfCard(Cards card, PLACE_NAME placeName) {
@@ -165,7 +168,7 @@ public class GameBoard {
                 (TEMPORARY_FEATURES.CARD_POSITION_CHANGED_IN_THIS_TURN);
     }
 
-    private Place getPlace(int placeNumber, PLACE_NAME placeName) {
+    public Place getPlace(int placeNumber, PLACE_NAME placeName) {
         return place.get(placeName.getNumber() + placeNumber);
     }
 

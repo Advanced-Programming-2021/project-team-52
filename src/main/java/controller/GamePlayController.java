@@ -1,8 +1,10 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 
+import controller.SpecialAbility.SpecialAbilityController;
 import model.cards.Cards;
 import model.cards.monster.MonsterCards;
 import model.game.*;
@@ -15,6 +17,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
     private static PrinterAndScanner printerAndScanner;
     private static PrintBuilderController printBuilderController;
     private static boolean firstTurn;
+    private HashMap<String, ArrayList<Place>> history;
 
     private GamePlay gamePlay;
     private GameBoard gameBoard;
@@ -29,7 +32,8 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         printBuilderController = PrintBuilderController.getInstance();
     }
 
-    public GamePlayController(GamePlay gameplay, GameBoard gameBoard,GameBoard opponentGameBoard, NewGame newGame, boolean isHost, String opponentName){
+    public GamePlayController(GamePlay gameplay, GameBoard gameBoard,GameBoard opponentGameBoard, NewGame newGame
+            , boolean isHost, String opponentName){
         this.gameBoard = gameBoard;
         this.gamePlay = gameplay;
         this.newGame = newGame;
@@ -37,6 +41,8 @@ public class GamePlayController implements RegexPatterns,StringMessages {
         this.isHost = isHost;
         this.opponentName = opponentName;
         this.opponentGameBoard = opponentGameBoard;
+        this.history = new HashMap<>();
+
     }
     public void run(){
         gameBoard.clearAllTemporaryFeatures();
@@ -405,6 +411,10 @@ public class GamePlayController implements RegexPatterns,StringMessages {
                     printerAndScanner.printNextLine(printBuilderController.hiddenCardAfterAttacking
                             (opponentCard.getName()) + printBuilderController.losingAgainstDO(damage));
             }
+        }
+        if (gameBoard.getPlace(placeNumberOfOpponentCard, PLACE_NAME.MONSTER).getCard() == null){
+            SpecialAbilityController.run(opponentGameBoard.getPlace(placeNumberOfOpponentCard, PLACE_NAME.MONSTER),
+                    gameBoard.getPlace(placeNumberOfMyCard, PLACE_NAME.MONSTER));
         }
     }
 

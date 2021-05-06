@@ -1,9 +1,25 @@
 package controller.SpecialAbility;
 
-public class pecialAbilityController {
-    private SpecialAbilityController specialAbilityController;
+import model.game.Place;
 
-    private SpecialAbilityController(){}
-    public static SpecialAbilityController getInstance(){}
-    public void runSpecialAbility(String id){}
+import java.util.HashMap;
+
+public class SpecialAbilityController {
+
+    public static void run(Place affectBy, Place affecting){
+        String[] special = affectBy.getCard().getSpecial();
+        for (String s : special) {
+            switch (s){
+                case "deathWish" : deathWish(affecting);
+            }
+        }
+    }
+
+    public static void deathWish(Place place){
+        place.setCard(null);
+        place.setAttackModifier(0);
+        place.setStatus(null);
+    }
+
+
 }

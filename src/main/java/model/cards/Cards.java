@@ -12,14 +12,17 @@ public class Cards {
 
     private String name, type, description;
 
+    private String[] special;
+
     static{
         ALL_CARDS = new HashMap<>();
     }
 
-    protected Cards(String name, String type, String description){
+    protected Cards(String name, String type, String description, String special){
         this.name = name;
         this.type = type;
         this.description = description;
+        this.special = special.split("_");
     }
 
     protected static void addCard(Cards card, String name){
@@ -62,5 +65,9 @@ public class Cards {
         }
         results.append("Description: ").append(this.getDescription()).append("\n");
         return results.toString();
+    }
+
+    public String[] getSpecial() {
+        return special;
     }
 }
