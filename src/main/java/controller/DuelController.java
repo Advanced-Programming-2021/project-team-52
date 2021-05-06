@@ -1,5 +1,9 @@
 package controller;
 
+
+import model.Deck;
+import model.User;
+
 public class DuelController {
     private static Duel duel;
     private PrintBulider printBulider;
@@ -46,7 +50,7 @@ public class DuelController {
         }
     }
     public void surrender(){}
-    public void serDuelWinnerByCheat(){}
+    public void setDuelWinnerByCheat(){}
     public void changeHealthAmount(int amount, boolean changeHost){}
 
 }

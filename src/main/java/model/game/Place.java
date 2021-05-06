@@ -7,11 +7,11 @@ import java.util.ArrayList;
 
 public class Place {
 
-    private Cards card;
+    protected Cards card;
     private STATUS status;
     private PLACE_NAME type;
     private ArrayList<TEMPORARY_FEATURES> temporaryFeatures = new ArrayList<>();
-    // َAttention developers!! temporaryFeatures is only valid for monster cards
+    // َAttention developers!! temporaryFeatures are only valid for monster cards
 
     protected Place(PLACE_NAME type) {
         this.type = type;

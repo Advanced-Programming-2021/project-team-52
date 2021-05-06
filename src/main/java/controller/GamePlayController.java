@@ -367,16 +367,19 @@ public class GamePlayController implements RegexPatterns,StringMessages {
                 duelController.changeHealthAmount(damage, isHost); // problem
                 opponentGameBoard.removeCard(opponentCard, placeNumberOfOpponentCard, PLACE_NAME.MONSTER);
                 printerAndScanner.printNextLine(printBuilderController.winingAgainstOO(damage));
+
             } else if (myMonsterCardAttackPoint == opponentMonsterCardAttackPoint) {
                 gameBoard.removeCard(myCard, placeNumberOfMyCard, PLACE_NAME.MONSTER);
                 opponentGameBoard.removeCard(opponentCard, placeNumberOfOpponentCard, PLACE_NAME.MONSTER);
                 printerAndScanner.printNextLine(drawingAgainstOO);
+
             } else {
                 int damage = opponentMonsterCardAttackPoint - myMonsterCardAttackPoint;
                 duelController.changeHealthAmount(damage, isHost); // problem
                 gameBoard.removeCard(myCard, placeNumberOfMyCard, PLACE_NAME.MONSTER);
                 printerAndScanner.printNextLine(printBuilderController.losingAgainstOO(damage));
             }
+
         } else if (opponentCardStatus == STATUS.DEFENCE || opponentCardStatus == STATUS.SET) {
             if (myMonsterCardAttackPoint > opponentMonsterCardDefendPoint) {
                 opponentGameBoard.removeCard(opponentCard, placeNumberOfOpponentCard, PLACE_NAME.MONSTER);
@@ -385,6 +388,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
                 else
                     printerAndScanner.printNextLine(printBuilderController.hiddenCardAfterAttacking
                             (opponentCard.getName()) + winingAgainstDO);
+
             } else if (myMonsterCardAttackPoint == opponentMonsterCardDefendPoint) {
                 if (opponentCardStatus == STATUS.DEFENCE)
                     printerAndScanner.printNextLine(drawingAgainstDO);
@@ -392,6 +396,7 @@ public class GamePlayController implements RegexPatterns,StringMessages {
                     printerAndScanner.printNextLine(printBuilderController.hiddenCardAfterAttacking
                             (opponentCard.getName()) + drawingAgainstDO);
             } else {
+
                 int damage = opponentMonsterCardDefendPoint - myMonsterCardAttackPoint;
                 duelController.changeHealthAmount(damage, isHost); // problem
                 if (opponentCardStatus == STATUS.DEFENCE)
