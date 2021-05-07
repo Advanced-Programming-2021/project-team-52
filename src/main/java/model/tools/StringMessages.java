@@ -36,6 +36,11 @@ public interface StringMessages {
     String winingAgainstDO = "the defense position monster is destroyed";
     String drawingAgainstDO = "no card is destroyed";
 
+    String getTribute = "please specify the next tribute :";
+    String wrongTribute = "wrong tribute";
+    String doAlternativeSpecial = "do alternative ?";
+    String askStatus = "status ?";
+
 
 
 }

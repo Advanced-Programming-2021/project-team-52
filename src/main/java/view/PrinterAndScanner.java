@@ -21,6 +21,10 @@ public class PrinterAndScanner {
         return input.nextLine();
     }
 
+    public int scanNextInt(){
+        return input.nextInt();
+    }
+
     public void printNextLine(String string){
         System.out.println(string);
     }

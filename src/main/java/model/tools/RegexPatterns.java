@@ -45,6 +45,12 @@ public interface RegexPatterns {
             "--LP|-l).*(?:--LP|-l))(?: (?:(?:--money|-m) (?<money>\\d+)|(?:--LP|-l) (?<LP>\\d+)))+$");
     Pattern setDuelWinnerByCheat = Pattern.compile("^duel set-winner (?<username>\\w+) $");
     Pattern importOrExportCard = Pattern.compile("^(?:import|export) card [^- ] $");
+
+
+    Pattern attackBoostPattern = Pattern.compile("attack boost (?<amount>\\d+) (?<all>all)");
+    Pattern reduceAttackerAttackPattern = Pattern.compile("reduce attacker attack (?<amount>all|\\d+) (?<oneRound>oneRound)? (?<oneUse>oneUse)? (?<faceUp>faceUp)?");
+    Pattern tributePattern = Pattern.compile("tribute (?<amount>\\d+) (?<faceUpOnly>face up only)? (?<alternative>.+)?");
+    Pattern drawCardPattern = Pattern.compile("draw card (?<amount>\\d+)");
 }
 
 

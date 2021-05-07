@@ -64,4 +64,8 @@ public class Place {
     public Place getAffect() {
         return affect;
     }
+
+    public void setAffect(Place affect) {
+        this.affect = affect;
+    }
 }

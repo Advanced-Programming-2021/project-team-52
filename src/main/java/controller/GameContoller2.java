@@ -1,5 +1,6 @@
 package controller;
 
+import controller.SpecialAbility.SpecialController;
 import model.game.GameBoard;
 import model.game.GamePlay;
 import model.game.NewGame;
@@ -14,11 +15,14 @@ public class GameContoller2 {
     protected GameBoard gameBoard;
     protected GameBoard opponentGameBoard;
     protected NewGame newGame;
+    protected SpecialController mySpecialController, opponentSpecialController;
     private boolean isHost;
     private String opponentName;
     DuelController duelController;
 
     public void run(){}
+
+    public void drawCard(){}
 
 
 }
