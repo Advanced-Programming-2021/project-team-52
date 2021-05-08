@@ -17,7 +17,7 @@ public class Deck {
         allSideCards = new ArrayList<>();
     }
 
-    Deck(String name) {
+    public Deck(String name) {
     }
 
 

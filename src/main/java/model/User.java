@@ -11,6 +11,7 @@ public class User extends Player {
     private String password;
     private int balance = 100000;
     private int score = 0;
+    private Deck activeDeck;
     private HashMap<String, Deck> decks;
     private ArrayList<String> cards;
 
@@ -53,6 +54,14 @@ public class User extends Player {
         this.score = score;
     }
 
+    public void setCards(ArrayList<String> cards) {
+        this.cards = cards;
+    }
+
+    public void setActiveDeck(Deck activeDeck) {
+        this.activeDeck = activeDeck;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -77,9 +86,15 @@ public class User extends Player {
         return cards;
     }
 
+    public Deck getActiveDeck() {
+        return activeDeck;
+    }
 
     public Deck getDeckByName(String name) {
-        return decks.get(name);
+//        return decks.get(name);
+        if(decks.containsKey(name))
+            return decks.get(name);
+        return null;
         // can be null
     }
 
@@ -124,6 +139,8 @@ public class User extends Player {
         cards.add(name);
     }
 
+
+
     @Override
     public String toString() {
         // todo : what do we need for show from User model
@@ -156,4 +173,5 @@ public class User extends Player {
 //        mamad.addDeck(deck3);
 //        mamad.addDeck(deck4);
 //    }
+
 }

@@ -46,12 +46,38 @@ public interface StringMessages {
     String currentPasswordIsInvalid = "current password is invalid";
     String enterNewPassword = "please enter a new password";
     String passwordChangedSuccessfully = "password changed successfully";
+    String menuNavigationIsNotPossible = "menu navigation is not possible";
 
     // ShopController
     String cardBoughtSuccessfully = "card bought successfully";
     String noCardWithThisName = "there is no card with this name";
     String notEnoughMoney = "not enough money";
 
+
+    // Menu show current
+    // todo : is this enough (without abbreviation mode) ??
+    String showCurrentInProfileController = "Profile menu :\n" +
+            "profile change --nickname <nickname>\n" +
+            "profile change --password --current <current password> --new <new password>\n" +
+            "menu show-current\n" +
+            "menu enter <menu name>\n" +
+            "menu exit";
+    String showCurrentInShopController = "Shop menu :\n" +
+            "shop buy <card name>\n" +
+            "shop show --all\n" +
+            "menu show-current\n" +
+            "menu enter <menu name>\n" +
+            "menu exit";
+    String getShowCurrentInScoreboardController = "Scoreboard menu :\n" +
+            "scoreboard show\n" +
+            "menu show-current\n" +
+            "menu enter <menu name>\n" +
+            "menu exit";
+
+    // DeckController
+    String deckCreatedSuccessfully = "deck created successfully!";
+    String deckDeletedSuccessfully = "deck deleted successfully";
+    String deckActivatedSuccessfully = "deck activated successfully";
 
 
 }

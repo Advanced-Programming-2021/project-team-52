@@ -2,7 +2,6 @@ package controller;
 
 import model.User;
 import model.tools.RegexPatterns;
-import org.graalvm.compiler.phases.graph.ScopedPostOrderNodeIterator;
 import view.PrinterAndScanner;
 import model.tools.StringMessages;
 
@@ -24,20 +23,25 @@ public class ProfileController implements RegexPatterns, StringMessages {
     }
 
     public void run(User user) {
-        String command = printerAndScanner.scanNextLine();
+        String command = printerAndScanner.scanNextLine().toLowerCase();
         Matcher matcher;
-        while (!command.equals("menu exit")) {
+        while (true) {
             if ((matcher = RegexController.getMatcher(command, profileChangeNickNamePattern)) != null) {
                 changeNickname(matcher.group("nickname"), user);
             } else if ((matcher = RegexController.getMatcher(command, profileChangePasswordPattern)) != null) {
                 changePassword(matcher.group("new"), matcher.group("current"), user);
-            }else if((matcher = RegexController.getMatcher(command, menuPattern)) != null){
-                // todo : exit menu
-                // todo : how does menu navigation works
-                // todo : show current
-                // todo : do they make null in different group? why it didn't work
-            }
-            command = printerAndScanner.scanNextLine();
+            } else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
+                if (RegexController.hasField(matcher, "exit"))
+                    break;
+                else if (RegexController.hasField(matcher, "enter"))
+                    printerAndScanner.printNextLine(menuNavigationIsNotPossible);
+                else if (RegexController.hasField(matcher, "showCurrent"))
+                    showCurrent();
+                else
+                    printerAndScanner.printNextLine(invalidCommand);
+            } else
+                printerAndScanner.printNextLine(invalidCommand);
+            command = printerAndScanner.scanNextLine().toLowerCase();
         }
     }
 
@@ -60,5 +64,9 @@ public class ProfileController implements RegexPatterns, StringMessages {
             user.setPassword(newPassword);
             printerAndScanner.printNextLine(passwordChangedSuccessfully);
         }
+    }
+
+    private static void showCurrent() {
+        printerAndScanner.printNextLine(showCurrentInProfileController);
     }
 }

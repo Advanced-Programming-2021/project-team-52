@@ -11,7 +11,7 @@ public abstract class RegexController implements RegexPatterns{
     private static Matcher matcher;
 
     public static Matcher getMatcher(String command, Pattern pattern){
-        command = command.concat(" ");
+//        command = command.concat(" ");
         matcher = pattern.matcher(command);
         if (matcher.find())
             return matcher;

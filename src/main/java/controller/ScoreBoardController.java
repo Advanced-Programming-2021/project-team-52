@@ -1,9 +1,8 @@
 package controller;
 
-import controller.LoginController;
-import controller.PrintBuilderController;
 import model.*;
 import model.tools.RegexPatterns;
+import model.tools.StringMessages;
 import view.PrinterAndScanner;
 
 import java.util.ArrayList;
@@ -13,14 +12,14 @@ import java.util.regex.Matcher;
 
 // say in group : delete run method input (User : user)
 
-public class ScoreBoardController implements RegexPatterns {
+public class ScoreBoardController implements RegexPatterns, StringMessages {
     private static ScoreBoardController scoreBoard = null;
-    private PrintBuilderController printBuilderController;
-    private PrinterAndScanner printerAndScanner;
+    private static PrintBuilderController printBuilderController;
+    private static PrinterAndScanner printerAndScanner;
     Collection<User> collection = LoginController.users.values();
     ArrayList<User> usersInScoreOrder = new ArrayList<>(collection);
 
-    private ScoreBoardController() {
+    private ScoreBoardController(){
     }
 
     public static ScoreBoardController getInstance() {
@@ -30,16 +29,23 @@ public class ScoreBoardController implements RegexPatterns {
     }
 
     public void run() {
-        String command = printerAndScanner.scanNextLine();
+        String command = printerAndScanner.scanNextLine().toLowerCase();
         Matcher matcher;
-        while (!command.equals("menu exit")){
+        while (true){
             if(command.equals("scoreboard show")){
                 sortUserByScore();
                 printerAndScanner.printNextLine(toString());
-            }else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null){
-                // todo : same as profileController
+            }else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
+                if (RegexController.hasField(matcher, "exit"))
+                    break;
+                else if (RegexController.hasField(matcher, "enter"))
+                    printerAndScanner.printNextLine(menuNavigationIsNotPossible);
+                else if (RegexController.hasField(matcher, "showCurrent"))
+                    showCurrent();
+                else
+                    printerAndScanner.printNextLine(invalidCommand);
             }
-            command = printerAndScanner.scanNextLine();
+            command = printerAndScanner.scanNextLine().toLowerCase();
         }
     }
 
@@ -55,6 +61,10 @@ public class ScoreBoardController implements RegexPatterns {
                 }
             }
         }
+    }
+
+    private static void showCurrent() {
+        printerAndScanner.printNextLine(getShowCurrentInScoreboardController);
     }
 
 

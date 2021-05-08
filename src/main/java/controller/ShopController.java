@@ -12,8 +12,8 @@ import java.util.regex.Matcher;
 
 public class ShopController implements StringMessages, RegexPatterns {
     private static ShopController shop = null;
-    private PrintBuilderController printBuilderController;
-    private PrinterAndScanner printerAndScanner;
+    private static PrintBuilderController printBuilderController;
+    private static PrinterAndScanner printerAndScanner;
 
     private ShopController() {
     }
@@ -25,19 +25,27 @@ public class ShopController implements StringMessages, RegexPatterns {
     }
 
     public void run(User user) {
-        String command = printerAndScanner.scanNextLine();
+        String command = printerAndScanner.scanNextLine().toLowerCase();
         Matcher matcher;
-        while (!command.equals("menu exit")) {
+        while (true) {
             if ((matcher = RegexController.getMatcher(command, shopBuyPattern)) != null) {
-                buy(user, matcher.group("card"));
-                // todo : how to use show all?? throws null??
-                //if
-                Shop shop = Shop.getInstance();
-                printerAndScanner.printNextLine(shop.getAllCardsWithPrice());
+                if (RegexController.hasField(matcher, "card"))
+                    buy(user, matcher.group("card"));
+                else if (RegexController.hasField(matcher, "all"))
+                    printerAndScanner.printNextLine(Shop.getInstance().getAllCardsWithPrice());
+                else
+                    printerAndScanner.printNextLine(invalidCommand);
             } else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
-                // todo : same as profileController
+                if (RegexController.hasField(matcher, "exit"))
+                    break;
+                else if (RegexController.hasField(matcher, "enter"))
+                    printerAndScanner.printNextLine(menuNavigationIsNotPossible);
+                else if (RegexController.hasField(matcher, "showCurrent"))
+                    showCurrent();
+                else
+                    printerAndScanner.printNextLine(invalidCommand);
             }
-            command = printerAndScanner.scanNextLine();
+            command = printerAndScanner.scanNextLine().toLowerCase();
         }
     }
 
@@ -57,10 +65,14 @@ public class ShopController implements StringMessages, RegexPatterns {
     }
 
     private boolean checkBeforeTransaction(String cardName, int balance) {
-        Cards card = Cards.getCard(cardName);
+//        Cards card = Cards.getCard(cardName);
         int cardPrice = Shop.getInstance().getItemPrize(cardName);
         if (cardPrice == -1)
             return false;  //card doesn't exists
         return cardPrice <= balance;
+    }
+
+    private static void showCurrent() {
+        printerAndScanner.printNextLine(showCurrentInShopController);
     }
 }

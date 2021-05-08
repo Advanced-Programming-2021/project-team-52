@@ -6,7 +6,7 @@ public interface RegexPatterns {
     Pattern loginPattern = Pattern.compile("^login user(?!.*(?:--password|-p).*(?:--password|-p))(?!.*(?:--username|" +
             "-u).*(?:--username|-u))(?=.*(?:--username|-u))(?=.*(?:--password|-p))(?: (?:(?:--password|-p) (?<passwo" +
             "rd>\\w+)|(?:--username|-u) (?<username>\\w+)))+$");
-    Pattern menuPattern = Pattern.compile("^menu (?:enter(?<enter> \\w+)|(?<exit>exit)|(?<showCurrent>show-current))" +
+    Pattern menuPattern = Pattern.compile("^menu (?:enter (?<enter>\\w+)|(?<exit>exit)|(?<showCurrent>show-current))" +
             "$");
     Pattern userCreatPattern = Pattern.compile("^user create(?!.*(?:--password|-p).*(?:--password|-p))(?!.*(?:--user" +
             "name|-u).*(?:--username|-u))(?!.*(?:--nickname|-n).*(?:--nickname|-n))(?=.*(?:--username|-u))(?=.*(?:--" +
