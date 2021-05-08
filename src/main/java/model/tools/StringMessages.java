@@ -41,6 +41,17 @@ public interface StringMessages {
     String doAlternativeSpecial = "do alternative ?";
     String askStatus = "status ?";
 
+    // ProfileController
+    String nicknameChangedSuccessfully = "nickname changed successfully";
+    String currentPasswordIsInvalid = "current password is invalid";
+    String enterNewPassword = "please enter a new password";
+    String passwordChangedSuccessfully = "password changed successfully";
+
+    // ShopController
+    String cardBoughtSuccessfully = "card bought successfully";
+    String noCardWithThisName = "there is no card with this name";
+    String notEnoughMoney = "not enough money";
+
 
 
 }

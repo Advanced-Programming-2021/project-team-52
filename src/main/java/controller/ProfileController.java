@@ -1,11 +1,18 @@
-package Controller;
+package controller;
 
-import model.*;
+import model.User;
+import model.tools.RegexPatterns;
+import org.graalvm.compiler.phases.graph.ScopedPostOrderNodeIterator;
+import view.PrinterAndScanner;
+import model.tools.StringMessages;
 
-public class ProfileController {
+import java.util.regex.Matcher;
+
+// todo : ask about static
+public class ProfileController implements RegexPatterns, StringMessages {
     private static ProfileController profile = null;
-    private PrintBulider printBulider;
-    private printerAndScanner printerAndScanner;
+    private static PrintBuilderController printBuilderController;
+    private static PrinterAndScanner printerAndScanner;
 
     private ProfileController() {
     }
@@ -16,27 +23,42 @@ public class ProfileController {
         return profile;
     }
 
-    public void run(model.User user) {
+    public void run(User user) {
+        String command = printerAndScanner.scanNextLine();
+        Matcher matcher;
+        while (!command.equals("menu exit")) {
+            if ((matcher = RegexController.getMatcher(command, profileChangeNickNamePattern)) != null) {
+                changeNickname(matcher.group("nickname"), user);
+            } else if ((matcher = RegexController.getMatcher(command, profileChangePasswordPattern)) != null) {
+                changePassword(matcher.group("new"), matcher.group("current"), user);
+            }else if((matcher = RegexController.getMatcher(command, menuPattern)) != null){
+                // todo : exit menu
+                // todo : how does menu navigation works
+                // todo : show current
+                // todo : do they make null in different group? why it didn't work
+            }
+            command = printerAndScanner.scanNextLine();
+        }
     }
 
-    private static void changeNickname(String newNickname, model.User user) {
+    private static void changeNickname(String newNickname, User user) {
         if (LoginController.nicknames.contains(newNickname))
-            System.out.println("user with nickname " + newNickname + "already exists");
+            printerAndScanner.printNextLine(printBuilderController.thisNicknameAlreadyExists(newNickname));
         else {
             user.setNickname(newNickname);
-            System.out.println("nickname changed successfully!");
+            printerAndScanner.printNextLine(nicknameChangedSuccessfully);
         }
     }
 
 
-    private static void changePassword(String newPassword, String oldPassword, model.User user) {
+    private static void changePassword(String newPassword, String oldPassword, User user) {
         if (user.getPassword().equals(oldPassword))
-            System.out.println("current password is invalid");
+            printerAndScanner.printNextLine(currentPasswordIsInvalid);
         else if (oldPassword.equals(newPassword))
-            System.out.println("please enter a new password");
+            printerAndScanner.printNextLine(enterNewPassword);
         else {
             user.setPassword(newPassword);
-            System.out.println("password changed successfully!");
+            printerAndScanner.printNextLine(passwordChangedSuccessfully);
         }
     }
 }

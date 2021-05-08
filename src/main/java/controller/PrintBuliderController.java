@@ -45,4 +45,8 @@ public class PrintBuilderController {
     public String hiddenCardAfterAttacking(String cardName) {
         return "opponent’s monster card was " + cardName + " and ";
     }
+
+    public String thisNicknameAlreadyExists(String newNickname){
+        return "user with nickname " + newNickname + " already exists";
+    }
 }

@@ -1,20 +1,24 @@
-package Controller;
+package controller;
 
 import controller.LoginController;
+import controller.PrintBuilderController;
 import model.*;
+import model.tools.RegexPatterns;
+import view.PrinterAndScanner;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.regex.Matcher;
 
 // say in group : delete run method input (User : user)
 
-public class ScoreBoardController {
+public class ScoreBoardController implements RegexPatterns {
     private static ScoreBoardController scoreBoard = null;
-    //    private PrintBulider printBulider;
-//    private printerAndScanner printerAndScanner;
-    Collection<model.User> collection = LoginController.users.values();
-    ArrayList<model.User> usersInScoreOrder = new ArrayList<>(collection);
+    private PrintBuilderController printBuilderController;
+    private PrinterAndScanner printerAndScanner;
+    Collection<User> collection = LoginController.users.values();
+    ArrayList<User> usersInScoreOrder = new ArrayList<>(collection);
 
     private ScoreBoardController() {
     }
@@ -26,6 +30,17 @@ public class ScoreBoardController {
     }
 
     public void run() {
+        String command = printerAndScanner.scanNextLine();
+        Matcher matcher;
+        while (!command.equals("menu exit")){
+            if(command.equals("scoreboard show")){
+                sortUserByScore();
+                printerAndScanner.printNextLine(toString());
+            }else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null){
+                // todo : same as profileController
+            }
+            command = printerAndScanner.scanNextLine();
+        }
     }
 
     private void sortUserByScore() {

@@ -1,12 +1,18 @@
 package controller;
 
+import model.Shop;
+import model.User;
 import model.cards.Cards;
+import model.tools.RegexPatterns;
+import model.tools.StringMessages;
 import view.PrinterAndScanner;
 
+import java.util.regex.Matcher;
 
-public class ShopController {
+
+public class ShopController implements StringMessages, RegexPatterns {
     private static ShopController shop = null;
-//    private PrintBulider printBulider;
+    private PrintBuilderController printBuilderController;
     private PrinterAndScanner printerAndScanner;
 
     private ShopController() {
@@ -18,27 +24,42 @@ public class ShopController {
         return shop;
     }
 
-    public void run(model.User user) {
+    public void run(User user) {
+        String command = printerAndScanner.scanNextLine();
+        Matcher matcher;
+        while (!command.equals("menu exit")) {
+            if ((matcher = RegexController.getMatcher(command, shopBuyPattern)) != null) {
+                buy(user, matcher.group("card"));
+                // todo : how to use show all?? throws null??
+                //if
+                Shop shop = Shop.getInstance();
+                printerAndScanner.printNextLine(shop.getAllCardsWithPrice());
+            } else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
+                // todo : same as profileController
+            }
+            command = printerAndScanner.scanNextLine();
+        }
     }
 
-    public void buy(model.User user, String cardName) {
+    public void buy(User user, String cardName) {
         Cards card = Cards.getCard(cardName);
         if (card == null) {
-            System.out.println("there is no card with this name");
+            printerAndScanner.printNextLine(noCardWithThisName);
             return;
         }
-        if(!checkBeforeTransaction(cardName, user.getBalance())){
-            System.out.println("not enough money");
+        if (!checkBeforeTransaction(cardName, user.getBalance())) {
+            printerAndScanner.printNextLine(notEnoughMoney);
             return;
         }
         user.changeBalance(-model.Shop.getInstance().getItemPrize(cardName));
         user.addCards(cardName);
+        printerAndScanner.printNextLine(cardBoughtSuccessfully); // This message does not exists
     }
 
     private boolean checkBeforeTransaction(String cardName, int balance) {
         Cards card = Cards.getCard(cardName);
-        int cardPrice = model.Shop.getInstance().getItemPrize(cardName);
-        if(cardPrice == -1)
+        int cardPrice = Shop.getInstance().getItemPrize(cardName);
+        if (cardPrice == -1)
             return false;  //card doesn't exists
         return cardPrice <= balance;
     }
