@@ -85,6 +85,16 @@ public class User extends Player {
     public ArrayList<String> getCards() {
         return cards;
     }
+    
+    public User getUserByUsername(String userName){
+        if(name.equals(this.username)) {
+            return this;
+        }
+        else {
+            System.out.println("user with username" + userName + "doesn't exist");
+            return null;
+        }
+    }
 
     public Deck getActiveDeck() {
         return activeDeck;
