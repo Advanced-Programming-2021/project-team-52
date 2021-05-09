@@ -49,7 +49,7 @@ public class ScoreBoardController implements RegexPatterns, StringMessages {
         }
     }
 
-    private void sortUserByScore() {
+    public void sortUserByScore() {
         for (int i = 0; i < usersInScoreOrder.size(); i++) {
             for (int j = i + 1; j < usersInScoreOrder.size(); j++) {
                 if (usersInScoreOrder.get(i).getScore() > usersInScoreOrder.get(j).getScore())

@@ -82,4 +82,5 @@ public interface StringMessages {
     String mainDeckIsFull = "main deck is full";
     String sideDeckIsFull = "side deck is full";
     String cardRemovedFormDeckSuccessfully = "card removed form deck successfully";
+
 }
