@@ -1,6 +1,8 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Set;
 import java.util.regex.Matcher;
 
 import model.Deck;
@@ -19,7 +21,6 @@ public class DeckController implements RegexPatterns, StringMessages {
     }
 
 
-
     public static DeckController getInstance() {
         if (deckController != null)
             deckController = new DeckController();
@@ -29,22 +30,31 @@ public class DeckController implements RegexPatterns, StringMessages {
     public void run(User user) {
         String command = printerAndScanner.scanNextLine();
         Matcher matcher;
-        while (true){
+        while (true) {
             if ((matcher = RegexController.getMatcher(command, deckCreatePattern)) != null)
                 createDeck(matcher.group("deck"), user);
-            else if((matcher = RegexController.getMatcher(command, deckDeletePattern)) != null)
+            else if ((matcher = RegexController.getMatcher(command, deckDeletePattern)) != null)
                 deleteDeck(matcher.group("deck"), user);
-            else if((matcher = RegexController.getMatcher(command, deckSetActivePattern)) != null)
+            else if ((matcher = RegexController.getMatcher(command, deckSetActivePattern)) != null)
                 activateDeck(matcher.group("deck"), user);
-            if ((matcher = RegexController.getMatcher(command, deckAddCardPattern)) != null){
+            else if ((matcher = RegexController.getMatcher(command, deckAddCardPattern)) != null) {
+                if (matcher.group("addOrRemove").equals("add"))
+                    addCardToDeck(matcher.group("card"), matcher.group("deck")
+                            , matcher.group("side") == null, user);
+                else if (matcher.group("addOrRemove").equals("rm"))
+                    removeCardFromDeck(matcher.group("card"), matcher.group("deck")
+                            , matcher.group("side") == null, user);
+                else
+                    printerAndScanner.printNextLine(invalidCommand);
+            }else if((matcher = RegexController.getMatcher(command, deckShowPattern)) != null){
 
             }
 
         }
     }
 
-    public static void createDeck(String deckName, User user){
-        if(user.getDeckByName(deckName) != null){
+    public static void createDeck(String deckName, User user) {
+        if (user.getDeckByName(deckName) != null) {
             printerAndScanner.printNextLine(printBuilderController.DeckWithThisNameAlreadyExists(deckName));
             return;
         }
@@ -53,14 +63,14 @@ public class DeckController implements RegexPatterns, StringMessages {
         printerAndScanner.printNextLine(deckCreatedSuccessfully);
     }
 
-    public static void deleteDeck(String deckName, User user){
+    public static void deleteDeck(String deckName, User user) {
         Deck deck = user.getDeckByName(deckName);
-        if(deck == null){
+        if (deck == null) {
             printerAndScanner.printNextLine(printBuilderController.deckWithThisNameDoesNotExist(deckName));
             return;
         }
         // transfer deck cards to all cards
-        ArrayList<String>userCards = user.getCards();
+        ArrayList<String> userCards = user.getCards();
         userCards.addAll(deck.getAllMainCards());
         userCards.addAll(deck.getAllSideCards());
 
@@ -68,9 +78,9 @@ public class DeckController implements RegexPatterns, StringMessages {
         printerAndScanner.printNextLine(deckDeletedSuccessfully);
     }
 
-    public static void activateDeck(String deckName, User user){
+    public static void activateDeck(String deckName, User user) {
         Deck deck = user.getDeckByName(deckName);
-        if(deck == null){
+        if (deck == null) {
             printerAndScanner.printNextLine(printBuilderController.deckWithThisNameDoesNotExist(deckName));
             return;
         }
@@ -78,6 +88,53 @@ public class DeckController implements RegexPatterns, StringMessages {
         printerAndScanner.printNextLine(deckActivatedSuccessfully);
     }
 
+    public static void addCardToDeck(String cardName, String deckName, boolean isSide, User user) {
+        if (!user.isCardWithThisNameExists(cardName)) {
+            printerAndScanner.printNextLine(printBuilderController.cardWithThisNameDoesNotExist(cardName));
+            return;
+        }
+        Deck deck = user.getDeckByName(deckName);
+        if (deck == null) {
+            printerAndScanner.printNextLine(printBuilderController.deckWithThisNameDoesNotExist(deckName));
+            return;
+        }
+        if (deck.isDeckFull(isSide)) {
+            if (!isSide)
+                printerAndScanner.printNextLine(mainDeckIsFull);
+            else
+                printerAndScanner.printNextLine(sideDeckIsFull);
+            return;
+        }
+        if (deck.numberOfThisCardInDeck(cardName) >= 3) {
+            printerAndScanner.printNextLine(printBuilderController.
+                    thereAreAlreadyThreeCardsWithThisNameInThisDeck(cardName, deckName));
+            return;
+        }
+
+        user.removeCardFromCardsWithoutDeck(cardName);
+        deck.addCard(cardName, isSide);
+        printerAndScanner.printNextLine(cardAddedToDeckSuccessfully);
+    }
+
+    public static void removeCardFromDeck(String cardName, String deckName, boolean isSide, User user) {
+        Deck deck = user.getDeckByName(deckName);
+        if (deck == null) {
+            printerAndScanner.printNextLine(printBuilderController.deckWithThisNameDoesNotExist(deckName));
+            return;
+        }
+        if (deck.isCardWithThisNameExists(cardName, isSide)) {
+            printerAndScanner.printNextLine(printBuilderController
+                    .cardWithThisNameDoesNotExistInThisDeck(cardName, isSide));
+            return;
+        }
+        deck.removeCard(cardName, isSide);
+        user.addCardToCardsWithoutDeck(cardName);
+        printerAndScanner.printNextLine(cardRemovedFormDeckSuccessfully);
+    }
+
+    public void showAllDecks(User user){
+        printerAndScanner.printNextLine(printBuilderController.showAllDecks(user));
+    }
 
 
 //    private static void addDeck(Deck deck, String name) {
@@ -93,49 +150,49 @@ public class DeckController implements RegexPatterns, StringMessages {
 //        }
 //    }
 
-    public void checkBeforeAddOrRemoveCard(String deckName, String cardName, boolean isSide, boolean isAdding) {
-        if (isAdding) {
-            if (!(cards.allCards.contian(cardName))) {
-                System.out.println("card with name" + cardName + "does not exist");
-            } else if (!(deckNames.contains(deckName))) {
-                System.out.println("deck with name" + deckName + "does not exist");
-            } else if (!isSide && deck.getMainDeckCardCount() > 60) {
-                System.out.println("main deck is full");
-            } else if (isSide && deck.getSideDeckCardCount() > 15) {
-                System.out.println("side deck is full");
-            } else if (deck.getEachCardCount(cardName) > 3) {
-                System.out.println("there are already three cards with name" + cardName + " in deck" + deckName);
-            } else {
-                if (!isSide) {
-                    int cardCount = deck.getMainDeckCardCount() + 1;
-                    deck.addCard(deck, cardName);
-                    deck.setMainDeckCardCount(cardCount);
-                    System.out.println("card added to deck successfully");
-                } else {
-                    int cardCount = deck.getSideDeckCardCount() + 1;
-                    deck.addCard(deck, cardName);
-                    deck.setSideDeckCardCount(cardCount);
-                    System.out.println("card added to deck successfully");
-                }
-            }
-        } else {
-            if (!(cards.allCards.contian(cardName))) {
-                System.out.println("card with name" + cardName + "does not exist");
-            } else if (deck.getAllMainCards().contains(cardName)) {
-                System.out.println("card with name" + cardName + "does not exist in main deck");
-            } else if (deck.getAllSideCards().contains(cardName)) {
-                System.out.println("card with name" + cardName + "does not exist in side deck");
-            } else {
-                if (isSide) {
-                    int cardCount = deck.getSideDeckCardCount() - 1;
-                    deck.removeCard(deck, cardName);
-                    deck.setSideDeckCardCount(cardCount);
-                } else {
-                    int cardCount = deck.getMainDeckCardCount() - 1;
-                    deck.removeCard(deck, cardName);
-                    deck.setMainDeckCardCount(cardCount);
-                }
-            }
-        }
-    }
+//    public void checkBeforeAddOrRemoveCard(String deckName, String cardName, boolean isSide, boolean isAdding) {
+//        if (isAdding) {
+//            if (!(cards.allCards.contian(cardName))) {
+//                System.out.println("card with name" + cardName + "does not exist");
+//            } else if (!(deckNames.contains(deckName))) {
+//                System.out.println("deck with name" + deckName + "does not exist");
+//            } else if (!isSide && deck.getMainDeckCardCount() > 60) {
+//                System.out.println("main deck is full");
+//            } else if (isSide && deck.getSideDeckCardCount() > 15) {
+//                System.out.println("side deck is full");
+//            } else if (deck.getEachCardCount(cardName) > 3) {
+//                System.out.println("there are already three cards with name" + cardName + " in deck" + deckName);
+//            } else {
+//                if (!isSide) {
+//                    int cardCount = deck.getMainDeckCardCount() + 1;
+//                    deck.addCard(deck, cardName);
+//                    deck.setMainDeckCardCount(cardCount);
+//                    System.out.println("card added to deck successfully");
+//                } else {
+//                    int cardCount = deck.getSideDeckCardCount() + 1;
+//                    deck.addCard(deck, cardName);
+//                    deck.setSideDeckCardCount(cardCount);
+//                    System.out.println("card added to deck successfully");
+//                }
+//            }
+//        } else {
+//            if (!(cards.allCards.contian(cardName))) {
+//                System.out.println("card with name" + cardName + "does not exist");
+//            } else if (deck.getAllMainCards().contains(cardName)) {
+//                System.out.println("card with name" + cardName + "does not exist in main deck");
+//            } else if (deck.getAllSideCards().contains(cardName)) {
+//                System.out.println("card with name" + cardName + "does not exist in side deck");
+//            } else {
+//                if (isSide) {
+//                    int cardCount = deck.getSideDeckCardCount() - 1;
+//                    deck.removeCard(deck, cardName);
+//                    deck.setSideDeckCardCount(cardCount);
+//                } else {
+//                    int cardCount = deck.getMainDeckCardCount() - 1;
+//                    deck.removeCard(deck, cardName);
+//                    deck.setMainDeckCardCount(cardCount);
+//                }
+//            }
+//        }
+//    }
 }

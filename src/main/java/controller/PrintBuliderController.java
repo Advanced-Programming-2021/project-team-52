@@ -6,6 +6,7 @@ import model.game.GameBoard;
 import model.cards.Cards;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class PrintBuilderController {
     private static PrintBuilderController printPrintBuilderController = null;
@@ -73,4 +74,52 @@ public class PrintBuilderController {
     public String deckWithThisNameDoesNotExist(String deckName) {
         return "deck with name " + deckName + " does not exist";
     }
+
+    public String cardWithThisNameDoesNotExist(String cardName) {
+        return "card with name " + cardName + " does not exist";
+    }
+
+    public String thereAreAlreadyThreeCardsWithThisNameInThisDeck(String cardName, String deckName) {
+        return "there are already three cards with name " + cardName + " in deck " + deckName;
+    }
+
+    public String cardWithThisNameDoesNotExistInThisDeck(String cardName, boolean isSide) {
+        if (!isSide)
+            return "card with name " + cardName + " does not exist in main deck";
+        else
+            return "card with name " + cardName + " does not exist in side deck";
+    }
+
+    public String showAllDecks(User user){
+        Deck activeDeck = user.getActiveDeck();
+        ArrayList<String> allDecks = new ArrayList<>(user.getDecks().keySet());
+        Collections.sort(allDecks);
+
+        StringBuilder response = new StringBuilder();
+        response.append("Decks:\nActive deck:\n");
+        showOneDeck(activeDeck, response);
+
+        response.append("Other decks:\n");
+        for (String deckName : allDecks) {
+            if(!deckName.equals(activeDeck.getName())){
+                Deck deck = user.getDeck(deckName);
+                showOneDeck(deck, response);
+            }
+        }
+        return response.toString();
+    }
+
+    private void showOneDeck(Deck deck, StringBuilder response) {
+        response.append(deck.getName());
+        response.append(": main deck");
+        response.append(deck.getMainDeckCardCount());
+        response.append(", side deck");
+        response.append(deck.getAllSideCards());
+        response.append(", ");
+        if(deck.isDeckValid())
+            response.append("valid\n");
+        else
+            response.append("invalid\n");
+    }
+
 }

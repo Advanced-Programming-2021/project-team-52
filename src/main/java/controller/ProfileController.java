@@ -46,7 +46,7 @@ public class ProfileController implements RegexPatterns, StringMessages {
     }
 
     private static void changeNickname(String newNickname, User user) {
-        if (LoginController.nicknames.contains(newNickname))
+        if (LoginController.nickNames.contains(newNickname))
             printerAndScanner.printNextLine(printBuilderController.thisNicknameAlreadyExists(newNickname));
         else {
             user.setNickname(newNickname);

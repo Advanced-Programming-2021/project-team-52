@@ -78,6 +78,8 @@ public interface StringMessages {
     String deckCreatedSuccessfully = "deck created successfully!";
     String deckDeletedSuccessfully = "deck deleted successfully";
     String deckActivatedSuccessfully = "deck activated successfully";
-
-
+    String cardAddedToDeckSuccessfully = "card added to deck successfully";
+    String mainDeckIsFull = "main deck is full";
+    String sideDeckIsFull = "side deck is full";
+    String cardRemovedFormDeckSuccessfully = "card removed form deck successfully";
 }

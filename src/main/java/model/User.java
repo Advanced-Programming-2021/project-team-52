@@ -85,9 +85,13 @@ public class User extends Player {
     public ArrayList<String> getCards() {
         return cards;
     }
-    
+
+    public HashMap<String, Deck> getDecks() {
+        return decks;
+    }
+
     public User getUserByUsername(String userName){
-        if(name.equals(this.username)) {
+        if(userName.equals(this.username)) {
             return this;
         }
         else {
@@ -147,6 +151,18 @@ public class User extends Player {
     public void addCards(String name) {
         // is card with this name already exists
         cards.add(name);
+    }
+
+    public void removeCardFromCardsWithoutDeck(String cardName){
+        cards.remove(cardName);
+    }
+
+    public void addCardToCardsWithoutDeck(String cardName){
+        cards.add(cardName);
+    }
+
+    public boolean isCardWithThisNameExists(String cardName){
+        return cards.contains(cardName);
     }
 
 

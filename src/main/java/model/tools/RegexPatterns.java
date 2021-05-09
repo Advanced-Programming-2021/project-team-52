@@ -21,7 +21,7 @@ public interface RegexPatterns {
     Pattern deckCreatePattern = Pattern.compile("^deck create (?<deck>[^-]+)$");
     Pattern deckDeletePattern = Pattern.compile("^deck delete (?<deck>[^-]+)$");
     Pattern deckSetActivePattern = Pattern.compile("^deck set-active (?<deck>[^-]+)$");
-    Pattern deckAddCardPattern = Pattern.compile("^(?=deck (?:add|rm)(?: --?\\w+(?: [^-]+)?)+)deck (?<addOrRemove>ad" +
+    Pattern deckAddCardPattern = Pattern.compile("^(?=deck (?:add|rm)-card(?: --?\\w+(?: [^-]+)?)+)deck (?<addOrRemove>ad" +
             "d|rm)-card(?!.*(?:--card|-c).*(?:--card|-c))(?!.*(?:--deck|-d).*(?:--deck|-d))(?!.*(?:--side|-s).*(?:--" +
             "side|-s))(?=.*(?:--card|-c))(?=.*(?:--deck|-d))(?: (?:(?:--card|-c) (?<card>[^-]+)|(?:--deck|-d) (?<dec" +
             "k>[^-]+)|(?<side>--side|-s)))+$");
