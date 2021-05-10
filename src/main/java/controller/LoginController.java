@@ -14,6 +14,7 @@ public class LoginController {
     User user;
     private static PrintBuilderController printBuilderController;
     private static PrinterAndScanner printerAndScanner;
+    private boolean loginChecker = false;
 
     private LoginController() {
     }
@@ -23,7 +24,29 @@ public class LoginController {
         return login;
     }
 
-    private void run() {
+private void run(){
+        String command = printerAndScanner.scanNextLine().toLowerCase();
+        Matcher matcher;
+        while (true){
+            if((matcher = RegexController.getMatcher(command, loginPattern)) != null){
+                loginUser(matcher.group("username"), matcher.group("password"));
+            } else if((matcher = RegexController.getMatcher(command, userCreatPattern)) != null){
+                createUser(matcher.group("username"), matcher.group("password"), matcher.group("nickname"));
+            } else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null){
+                if(RegexController.hasField(matcher, "showcurrent")){
+                    showCurrentMenu();
+                } else if(RegexController.hasField(matcher, "exit")){
+                    break;
+                } else if (RegexController.hasField(matcher, "enter")){
+                    if(loginChecker) {
+                        MainController mainController = MainController.getInstance();
+                        mainController.run(user);
+                    } else {
+                        System.out.println("please login first");
+                    }
+                }
+            }
+        }
     }
 
     private static void instantiateCards() {
@@ -68,6 +91,7 @@ public class LoginController {
             System.out.println("Username and password didn't match!");
         } else {
             user = user.getUserByUsername(username);
+            loginChecker = true;
             System.out.println("user logged in successfully!");
         }
     }
