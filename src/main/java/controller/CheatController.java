@@ -1,5 +1,7 @@
 package controller;
 
+import model.User;
+
 public class CheatController {
 
 //    private static DuelController duelController;

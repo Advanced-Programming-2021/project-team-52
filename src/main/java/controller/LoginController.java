@@ -27,6 +27,7 @@ public class LoginController implements RegexPatterns {
         return login;
     }
 
+
     private void run() {
         String command = printerAndScanner.scanNextLine().toLowerCase();
         Matcher matcher;
@@ -74,7 +75,7 @@ public class LoginController implements RegexPatterns {
         return "login Menu";
     }
 
-    private User createUser(String username, String password, String nickname) {
+    public void createUser(String username, String password, String nickname) {
         if (userNames.contains(username)) {
             System.out.println("user with username" + username + "already exist");
         }
@@ -86,7 +87,6 @@ public class LoginController implements RegexPatterns {
             nickNames.add(nickname);
             users.put(username, user);
         }
-        return user;
     }
 
     private void loginUser(String username, String password) {
