@@ -9,7 +9,12 @@ public class DuelController {
     private printerAndScanner printerAndScanner;
 
     public DuelController(){}
-    public static DuelController getInstance(){}
+    public static DuelController getInstance() {
+        if (duelController == null) {
+            duelController = new DuelController();
+        }
+        return duelController;
+    }
     public void run(User user){
 
     }
