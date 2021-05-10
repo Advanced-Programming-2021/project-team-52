@@ -6,6 +6,7 @@ import view.PrinterAndScanner;
 
 import static model.tools.RegexPatterns.*;
 import static view.PrinterAndScanner.*;
+
 import java.util.regex.Matcher;
 
 public class MainController {

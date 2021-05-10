@@ -3,6 +3,7 @@ package controller;
 import model.User;
 import model.tools.RegexPatterns;
 import view.PrinterAndScanner;
+
 import java.util.regex.Matcher;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.HashMap;
 
 public class LoginController implements RegexPatterns {
     static LoginController login;
-    static ArrayList<String> userName;
+    static ArrayList<String> userNames;
     static ArrayList<String> nickNames;
     static HashMap<String, User> users;
     User user;
@@ -21,26 +22,26 @@ public class LoginController implements RegexPatterns {
     private LoginController() {
     }
 
-    public static LoginController getInstance(){
+    public static LoginController getInstance() {
         if (login == null) login = new LoginController();
         return login;
     }
 
-private void run(){
+    private void run() {
         String command = printerAndScanner.scanNextLine().toLowerCase();
         Matcher matcher;
-        while (true){
-            if((matcher = RegexController.getMatcher(command, loginPattern)) != null){
+        while (true) {
+            if ((matcher = RegexController.getMatcher(command, loginPattern)) != null) {
                 loginUser(matcher.group("username"), matcher.group("password"));
-            } else if((matcher = RegexController.getMatcher(command, userCreatPattern)) != null){
+            } else if ((matcher = RegexController.getMatcher(command, userCreatPattern)) != null) {
                 createUser(matcher.group("username"), matcher.group("password"), matcher.group("nickname"));
-            } else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null){
-                if(RegexController.hasField(matcher, "showcurrent")){
+            } else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
+                if (RegexController.hasField(matcher, "showcurrent")) {
                     showCurrentMenu();
-                } else if(RegexController.hasField(matcher, "exit")){
+                } else if (RegexController.hasField(matcher, "exit")) {
                     break;
-                } else if (RegexController.hasField(matcher, "enter")){
-                    if(loginChecker) {
+                } else if (RegexController.hasField(matcher, "enter")) {
+                    if (loginChecker) {
                         MainController mainController = MainController.getInstance();
                         mainController.run(user);
                     } else {
@@ -74,22 +75,24 @@ private void run(){
     }
 
     private User createUser(String username, String password, String nickname) {
-        if (userName.contains(username)) {
+        if (userNames.contains(username)) {
             System.out.println("user with username" + username + "already exist");
         }
         if (nickNames.contains(nickname)) {
             System.out.println("user with nickname" + nickname + "already exist");
         } else {
             User.createUser(username, password, nickname);
+            userNames.add(username);
+            nickNames.add(nickname);
+            users.put(username, user);
         }
         return user;
     }
 
-    private void loginUser(String username, String password){
-        if(userName.contains(username)){
+    private void loginUser(String username, String password) {
+        if (userNames.contains(username)) {
             System.out.println("Username and password didn't match!");
-        }
-        else if(!(password.equals(user.getPassword()))){
+        } else if (!(password.equals(user.getPassword()))) {
             System.out.println("Username and password didn't match!");
         } else {
             user = user.getUserByUsername(username);
@@ -98,5 +101,5 @@ private void run(){
         }
     }
 
-    }
+}
 
