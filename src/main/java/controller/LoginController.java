@@ -60,14 +60,17 @@ public class LoginController {
         return user;
     }
 
-    private void loginUser(String username, String password) {
-        if (userName.contains(username)) {
+    private void loginUser(String username, String password){
+        if(userName.contains(username)){
             System.out.println("Username and password didn't match!");
-        } else if (!(password.equals(user.getPassword()))) {
+        }
+        else if(!(password.equals(user.getPassword()))){
             System.out.println("Username and password didn't match!");
         } else {
+            user = user.getUserByUsername(username);
             System.out.println("user logged in successfully!");
         }
+    }
 
     }
 }
