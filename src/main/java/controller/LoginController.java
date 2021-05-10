@@ -1,12 +1,14 @@
 package controller;
 
 import model.User;
+import model.tools.RegexPatterns;
 import view.PrinterAndScanner;
+import java.util.regex.Matcher;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LoginController {
+public class LoginController implements RegexPatterns {
     static LoginController login;
     static ArrayList<String> userName;
     static ArrayList<String> nickNames;
@@ -19,7 +21,7 @@ public class LoginController {
     private LoginController() {
     }
 
-    public static LoginController getInstance() {
+    public static LoginController getInstance(){
         if (login == null) login = new LoginController();
         return login;
     }
@@ -97,4 +99,4 @@ private void run(){
     }
 
     }
-}
+

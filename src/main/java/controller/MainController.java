@@ -1,7 +1,8 @@
-package Controller;
+package controller;
 
 import model.Deck;
 import model.User;
+import view.PrinterAndScanner;
 
 import static model.tools.RegexPatterns.*;
 import static view.PrinterAndScanner.*;
@@ -9,6 +10,7 @@ import java.util.regex.Matcher;
 
 public class MainController {
     private static MainController mainController = null;
+    private static PrinterAndScanner printerAndScanner;
 
     private MainController() {
     }
