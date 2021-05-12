@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class LoginController implements RegexPatterns {
-    static LoginController login;
+    static LoginController loginController = null;
     static ArrayList<String> userNames;
     static ArrayList<String> nickNames;
     static HashMap<String, User> users;
@@ -19,12 +19,24 @@ public class LoginController implements RegexPatterns {
     private static PrinterAndScanner printerAndScanner;
     private boolean loginChecker = false;
 
+    {
+        printBuilderController = PrintBuilderController.getInstance();
+        printerAndScanner = PrinterAndScanner.getInstance();
+        userNames = new ArrayList<>();
+        nickNames = new ArrayList<>();
+        users = new HashMap<>();
+    }
+
     private LoginController() {
     }
 
+    public static void main(String[] args) {
+        LoginController.getInstance().run();
+    }
+
     public static LoginController getInstance() {
-        if (login == null) login = new LoginController();
-        return login;
+        if (loginController == null) loginController = new LoginController();
+        return loginController;
     }
 
 
@@ -49,7 +61,8 @@ public class LoginController implements RegexPatterns {
                         System.out.println("please login first");
                     }
                 }
-            }
+            } else System.out.println("invalid command");
+            command = printerAndScanner.scanNextLine().toLowerCase();
         }
     }
 
@@ -86,6 +99,7 @@ public class LoginController implements RegexPatterns {
             userNames.add(username);
             nickNames.add(nickname);
             users.put(username, user);
+            System.out.println("user created successfully!");
         }
     }
 

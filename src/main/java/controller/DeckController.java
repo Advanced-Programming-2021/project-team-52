@@ -47,7 +47,11 @@ public class DeckController implements RegexPatterns, StringMessages {
                 else
                     printerAndScanner.printNextLine(invalidCommand);
             }else if((matcher = RegexController.getMatcher(command, deckShowPattern)) != null){
+                if(RegexController.hasField(matcher, "all"))
+                    showAllDecks(user);
+                else if(RegexController.hasField(matcher, "deck")){
 
+                }
             }
 
         }

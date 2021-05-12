@@ -2,11 +2,12 @@ package controller;
 
 import model.Deck;
 import model.User;
+import view.PrinterAndScanner;
 
 public class DuelController {
-    private static DuelController duel;
-    private PrintBulider printBulider;
-    private printerAndScanner printerAndScanner;
+    private static DuelController duelController;
+    private PrintBuilderController printBuilderController;
+    private PrinterAndScanner printerAndScanner;
 
     public DuelController(){}
     public static DuelController getInstance() {
@@ -18,7 +19,7 @@ public class DuelController {
     public void run(User user){
 
     }
-    private boolean checkBeforeStartingDuel(String opponent, String roundCard){}
+    //    private boolean checkBeforeStartingDuel(String opponent, String roundCard){}
     private void calculateScores(int gameRounds, User user){
         //Loser in a 1-round game
         if(user.getCards().size() == 0 && gameRounds == 1){
