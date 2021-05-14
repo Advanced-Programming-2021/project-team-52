@@ -68,6 +68,7 @@ public class MainController {
             command = printerAndScanner.scanNextLine().toLowerCase();
         }
         System.out.println("user logged out successfully!");
+        // testing
     }
 }
 
