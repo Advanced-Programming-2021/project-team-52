@@ -238,5 +238,9 @@ public class PrintBuilderController {
         return new StringBuilder("do you want to lose ").append(amount).append("LP or lose ").append(cardName).append("?");
     }
 
+    public StringBuilder askForLpForActivation(int amount){
+        return new StringBuilder("do you want to pay ").append(amount).append(" LP to activate this special ability?");
+    }
+
 
 }

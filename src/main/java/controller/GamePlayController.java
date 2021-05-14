@@ -222,9 +222,15 @@ public class GamePlayController extends RegexController implements RegexPatterns
         placeTo.addTemporaryFeatures(TEMPORARY_FEATURES.CARD_SET_OR_SUMMON_IN_THIS_TURN);
         place.setCard(null);
         alreadySummonedOrSet = true;
-        printerAndScanner.printNextLine(summonedSuccessfully);
         specialAbilityActivationController.setGamePlayController(this);
-        specialAbilityActivationController.activateField();
+        specialAbilityActivationController.runFlipSpecial(placeTo);
+        specialAbilityActivationController.runFacUpSpecial(placeTo);
+        if (gamePlay.getUniversalHistory().contains("killThisCardUponSummon"))
+            specialAbilityActivationController.checkSummonDeactivation(placeTo);
+        if (placeTo.getCard() != null) {
+            printerAndScanner.printNextLine(summonedSuccessfully);
+            specialAbilityActivationController.activateField();
+        }
     }
 
     private void checkBeforeSet(){

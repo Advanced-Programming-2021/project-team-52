@@ -13,6 +13,7 @@ public class Conditions implements SpecialAbility{
     private GamePlayController gamePlayController;
     private Place place;
     private boolean met = false;
+    private int amount;
 
     @Override
     public void run(GamePlayController gamePlayController, Place place){
@@ -92,5 +93,14 @@ public class Conditions implements SpecialAbility{
 
     private void monsterPlaceIsEmpty(){
         met = gamePlayController.getGamePlay().getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER) != -1;
+    }
+
+    private void playLPForActivation(){
+        printerAndScanner.printNextLine(printBuilderController.askForLpForActivation(amount).toString());
+        if (printerAndScanner.scanNextLine().equals("yes")){
+            gamePlayController.getGamePlay().getMyGameBoard().changeHealth(amount * -1);
+            met = true;
+        } else
+            met = false;
     }
 }

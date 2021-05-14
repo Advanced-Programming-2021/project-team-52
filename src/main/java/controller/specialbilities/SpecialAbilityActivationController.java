@@ -1,5 +1,6 @@
 package controller.specialbilities;
 
+import controller.Chain;
 import controller.GamePlayController;
 import controller.PrintBuilderController;
 import controller.RegexController;
@@ -200,6 +201,42 @@ public class SpecialAbilityActivationController implements StringMessages {
         for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
             if (specialAbility instanceof Success)
                 specialAbility.run(gamePlayController, place);
+        }
+    }
+
+    public void checkSummonDeactivation(Place placeToAfffect){
+        ArrayList<Place> doAble = new ArrayList<>();
+        for (int i = 1; i < 6; i++) {
+            Place candidate = gamePlayController.getGamePlay().getOpponentGamePlayController().
+                    getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
+            if (placeToAfffect.getCard() != null){
+                if (candidate.getCard().getSpecialSpeed() == 3) {
+                    for (SpecialAbility specialAbility : candidate.getCard().getSpecial()) {
+                        if (specialAbility.getMethodName().equals("killThisCardUponSummon"))
+                            doAble.add(candidate);
+                    }
+                }
+            }
+        }
+        if (!doAble.isEmpty()){
+            printerAndScanner.printNextLine(askActivateSpecial);
+            if (printerAndScanner.scanNextLine().equals("yes")){
+                Place place;
+                while (true){
+                    printerAndScanner.printNextLine(cardNumber);
+                    int placeNumber = printerAndScanner.scanNextInt();
+                    if (placeNumber > 5 || placeNumber < 1)
+                        continue;
+                    place = gamePlayController.getGamePlay().getOpponentGamePlayController().
+                            getGamePlay().getMyGameBoard().getPlace(placeNumber, PLACE_NAME.SPELL_AND_TRAP);
+                    if (!doAble.contains(place))
+                        continue;
+                    else break;
+                }
+                place.setAffect(placeToAfffect);
+                new Chain(gamePlayController.getGamePlay().getOpponentGamePlayController(), place,
+                        place.getCard().getSpecialSpeed(), false);
+            }
         }
     }
 }
