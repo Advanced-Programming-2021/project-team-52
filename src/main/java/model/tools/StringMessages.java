@@ -21,7 +21,7 @@ public interface StringMessages {
 
     String cantAttackWithThisCard = "you can’t attack with this card";
     String cantAttackTheOpponentDirectly = "you can’t attack the opponent directly";
-    String CardAlreadyAttacked = "this card already attacked";
+    String cardAlreadyAttacked = "this card already attacked";
 
     String cantChangeThisCardPosition = "you can’t change this card position";
     String cardIsAlreadyInTheWantedPosition = "this card is already in the wanted position";
@@ -40,6 +40,52 @@ public interface StringMessages {
     String wrongTribute = "wrong tribute";
     String doAlternativeSpecial = "do alternative ?";
     String askStatus = "status ?";
+
+    String askActivateSpecial = "Do you want to active this card's special ability?";
+    String wrongCard = "wrong card. please select another one";
+    String cannotDoThat = "unable to do that";
+    String askForName = "please enter the card name";
+    String yourGraveYardIsEmpty = "your graveyard is empty";
+    String emptyOpponentGraveYard = "opponent graveyard is empty";
+    String fullHand = "your hand is full";
+    String emptyGraveYard = "all graveYards are empty";
+    String fullMonsterPlaces = "your monster places are full";
+    String couldNotFindASuitableCard = "could not find a suitable card";
+    String emptyOpponentMonsterPlaces = "your opponent has no monster in the board";
+    String doOnceMore = "do you want to activate this special ability once more?";
+    String askForPlace = "please enter the number of card you want to destroy";
+    String noMonsterInGraveYard = "there is no monster card in graveyard to summon";
+    String doYouWantToTribute = "do you want to tribute?";
+    String thereIsNoCard = "there is no card in the selected place. please select another";
+    String summonWithoutTribute = "summon without Tribute?";
+
+    String invalidSelection = "invalid selection";
+    String noCardInGivenPosition = "no card found in the given position";
+    String cardDeselected = "card deselected";
+    String cardSelected = "card selected";
+    String noMonsterOnOneOfTheseAddresses = "there is no monster on one of these addresses";
+    String pleaseEnterNextCard = "please enter the next card";
+    String cantSetThisCard = "you can't set this card";
+    String spellCardZoneIsFull = "spell card zone is full";
+    String cantDoInThisPhase = "you can’t do this action in this phase";
+
+    String askActivateChain = "do you want to activate your trap and spell?";
+    String cardNumber = "please enter the card number";
+    String activateEffectIsOnlyForSpells = "activate effect is only for spell cards.";
+    String youCantActivateOnThisTurn = "you can’t activate an effect on this turn";
+    String youHaveAlreadyActivatedThisCard = "you have already activated this card";
+    String cantActivateThisCard = "can't activate this card";
+    String preparationsAreNotDoneYet = "preparations of this spell are not done yet";
+    String spellActivated = "spell activated";
+    String cantRitualSummon = "there is no way you could ritual summon a monster";
+    String ritualSummonTribute = "please enter the card's number that you want to sacrifice with an space between them";
+    String youShouldRitualSummonRightNow = "you should ritual summon right now";
+    String pleaseEnterTheCardThatYouWantToRitualSummon = "please enter the card that you want to ritual summon";
+    String wrongCardCombination = "selected monsters levels don’t match with ritual monster";
+    String askActivateScanner = "do you want to activate scanner?";
+    String wrongStatus = "wrong status";
+    String cannotBeAttackedWhileThereAreMonsters = "cannot be attacked while there are other monsters";
+
 
     // ProfileController
     String nicknameChangedSuccessfully = "nickname changed successfully";

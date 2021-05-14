@@ -29,7 +29,8 @@ public class PrintBuilderController {
     public void buildAllDecks(User user) {
     }
 
-    public void buildGraveyard(ArrayList<Cards> graveyard) {
+    public StringBuilder buildGraveyard(ArrayList<Cards> graveyard) {
+        return null;
     }
 
     public void buildGameWinner(String username, int score1, int score2) {
@@ -179,12 +180,62 @@ public class PrintBuilderController {
         return response.toString();
     }
 
-    public String userHasNoActiveDeck(String username){
+    public String userHasNoActiveDeck(String username) {
         return username + " has no active deck";
     }
 
-    public String userDeckIsInvalid(String username){
+    public String userDeckIsInvalid(String username) {
         return username + " deck is invalid";
+    }
+
+
+    public StringBuilder drawCard(String name) {
+        return new StringBuilder("new card added to hand: ").append(name);
+    }
+
+    public StringBuilder playerTurn(String name) {
+        return new StringBuilder("its ").append(name).append("'s turn");
+    }
+
+    public StringBuilder attackToAttackResult(int damage, boolean opponentLost) {
+        if (opponentLost)
+            return new StringBuilder("your opponent’s monster is destroyed and your opponent receives ").append(damage)
+                    .append("battle damage");
+        else
+            return new StringBuilder("Your monster card is destroyed and you received ").append(damage).
+                    append(" battle damage");
+    }
+
+    public StringBuilder attackToDefenseResult(boolean defenderWasHidden, String defenderName, int result, int damage) {
+        StringBuilder results = new StringBuilder();
+        if (defenderWasHidden)
+            results.append("opponent’s monster card was ").append(defenderName).append(" ");
+        switch (result) {
+            case 1:
+                results.append("the defense position monster is destroyed");
+            case 0:
+                results.append("no card is destroyed");
+            case -1:
+                results.append("no card is destroyed and you received ").append(damage).append("  battle damage");
+        }
+        return results;
+    }
+
+    public StringBuilder attackDirectly(int damage) {
+        return new StringBuilder("you opponent receives ").append(damage).append(" battle damage");
+    }
+
+    public StringBuilder turnComplete(String name, GameBoard myGameBoard, GameBoard opponentGameBoard) {
+        return new StringBuilder("now it will be ").append(name).append("’s turn\n").
+                append(gameBoardBuilder(myGameBoard, opponentGameBoard));
+    }
+
+    public StringBuilder gameBoardBuilder(GameBoard myGameBoard, GameBoard opponentGameBoard) {
+        return null;
+    }
+
+    public StringBuilder askForPayingLp(String amount, String cardName) {
+        return new StringBuilder("do you want to lose ").append(amount).append("LP or lose ").append(cardName).append("?");
     }
 
 

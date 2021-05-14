@@ -1,28 +1,29 @@
 package model.game;
 
 
-import controller.SpecialAbility.SpecialAbilityController;
 import model.cards.Cards;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Place {
 
     protected Cards card;
+    protected HashMap<Place, ArrayList<String>> history;
     private STATUS status;
     private PLACE_NAME type;
     private ArrayList<TEMPORARY_FEATURES> temporaryFeatures;
-    private int attackModifier;
     private Place affect;
     // َAttention developers!! temporaryFeatures are only valid for monster cards
 
-    protected Place(PLACE_NAME type, SpecialAbilityController specialAbilityController) {
+    protected Place(PLACE_NAME type) {
         this.type = type;
         temporaryFeatures = new ArrayList<>();
     }
 
-    public Place(PLACE_NAME type) {
-
+    public void setHistory(HashMap<Place, ArrayList<String>> history) {
+        this.history = history;
+        this.history.put(this, new ArrayList<String>());
     }
 
     public void setStatus(STATUS status) {
@@ -41,6 +42,10 @@ public class Place {
         return card;
     }
 
+    public PLACE_NAME getType() {
+        return type;
+    }
+
     public void addTemporaryFeatures(TEMPORARY_FEATURES temporaryFeature) {
         temporaryFeatures.add(temporaryFeature);
     }
@@ -57,19 +62,32 @@ public class Place {
         temporaryFeatures.clear();
     }
 
-    public void setAttackModifier(int attackModifier) {
-        this.attackModifier = attackModifier;
-    }
-
-    public int getAttackModifier() {
-        return attackModifier;
-    }
-
     public Place getAffect() {
         return affect;
     }
 
     public void setAffect(Place affect) {
         this.affect = affect;
+    }
+
+    public void killCard(){
+        if (this instanceof MonsterZone){
+            ((MonsterZone) this).setAttackModifier(0);
+            ((MonsterZone) this).setDefenseModifier(0);
+            //TODO remove this from affected in field
+            //TODO remove equipped cards
+        }
+        this.card = null;
+        this.status = null;
+        this.type = null;
+        this.temporaryFeatures.clear();
+        this.affect = null;
+        history.get(this).clear();
+        temporaryFeatures.clear();
+        //TODO add to graveYard
+    }
+
+    public ArrayList<TEMPORARY_FEATURES> getTemporaryFeatures() {
+        return temporaryFeatures;
     }
 }

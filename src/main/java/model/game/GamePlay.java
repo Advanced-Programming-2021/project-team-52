@@ -1,63 +1,67 @@
 package model.game;
 
-import model.cards.Cards;
-import model.game.GameBoard;
+import controller.GamePlayController;
+import controller.PrintBuilderController;
+import view.PrinterAndScanner;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GamePlay {
 
-    private GameBoard myGameBoard,opponentGameBoard;
-    private Cards selectedCard;
-    private boolean alreadySummonedOrSet, isHost, isAi, flipSummonedInThisRound;
+    private static PrinterAndScanner printerAndScanner;
+    private static PrintBuilderController printBuilderController;
+    private static boolean firstTurn;
 
-    GamePlay(boolean isHost, GameBoard myGameBoard, GameBoard opponentGameBoard, boolean isAi){
+    private GameBoard myGameBoard;
+    private boolean alreadySummonedOrSet, isHost, isAi, flipSummonedInThisRound; //TODO move already summoned or set from gameplay to here
+    private HashMap<Place, ArrayList<String>> history;
+    private ArrayList<String> universalHistory;
+    private Place selectedCard;
+    private String name;
+    private GamePlayController opponentGamePlayController;
+
+    public GamePlay(boolean isHost, GameBoard myGameBoard, boolean isAi, String name){
         this.isHost = isHost;
         this.isAi = isAi;
         this.myGameBoard = myGameBoard;
-        this.opponentGameBoard = opponentGameBoard;
+        this.history = new HashMap<>();
+        this.alreadySummonedOrSet = false;
+        this.flipSummonedInThisRound = false;
+        this.selectedCard = null;
+        this.universalHistory = new ArrayList<>();
+        this.name = name;
     }
 
-    void setOpponentBoard(GameBoard board){
-        this.opponentGameBoard = board;
+    public void setOpponentGamePlayController(GamePlayController opponentGamePlayController) {
+        this.opponentGamePlayController = opponentGamePlayController;
+    }
+
+    public GamePlayController getOpponentGamePlayController() {
+        return opponentGamePlayController;
     }
 
     public GameBoard getMyGameBoard() {
         return myGameBoard;
     }
 
-    public GameBoard getOpponentGameBoard() {
-        return opponentGameBoard;
+    public HashMap<Place, ArrayList<String>> getHistory() {
+        return history;
     }
 
-    public Cards getSelectedCard() {
+    public Place getSelectedCard() {
         return selectedCard;
     }
 
-    public void setSelectedCard(Cards selectedCard) {
+    public String getName() {
+        return name;
+    }
+
+    public void setSelectedCard(Place selectedCard) {
         this.selectedCard = selectedCard;
     }
 
-    public boolean getAlreadySummonedOrSet(){
-        return alreadySummonedOrSet;
-    }
-
-    public boolean getIsHost(){
-        return isHost;
-    }
-
-    public boolean getIsAI(){
-        return isAi;
-    }
-
-    public boolean getFlipSummonedInThisRound(){
-        return flipSummonedInThisRound;
-    }
-
-
-    public void setAlreadySummonedOrSet(boolean alreadySummonedOrSet) {
-        this.alreadySummonedOrSet = alreadySummonedOrSet;
-    }
-
-    public void setFlipSummonedInThisRound(boolean flipSummonedInThisRound) {
-        this.flipSummonedInThisRound = flipSummonedInThisRound;
+    public ArrayList<String> getUniversalHistory() {
+        return universalHistory;
     }
 }

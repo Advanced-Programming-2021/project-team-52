@@ -1,8 +1,8 @@
 package model.game;
 
-import controller.SpecialAbility.SpecialAbilityController;
+import controller.GamePlayController;
+import controller.specialbilities.SpecialAbilityActivationController;
 import model.cards.Cards;
-import model.cards.monster.MonsterCards;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,23 +14,26 @@ public class GameBoard {
     private ArrayList<Cards> graveyard;
     private ArrayList<Cards> mainCards;
     private ArrayList<Cards> sideCards;
+    private ArrayList<Integer> cardsPicked;
     private int lastCardNumberPicked;
-    private ArrayList<Cards> cardsPicked;
-    private GameBoard opponentGameBoard;
+    private int health;
+    private boolean monsterCardDestroyed = false;
 
     public GameBoard(ArrayList<Cards> mainCards, ArrayList<Cards> sideCards) {
         place = new HashMap<>();
+        place.put(0, new Place(PLACE_NAME.HAND));
         for (int i = 1; i < 6; i++) {
-//            place.put(PLACE_NAME.HAND.getNumber() + i, new Place(PLACE_NAME.HAND));
-//            place.put(PLACE_NAME.MONSTER.getNumber() + i, new Place(PLACE_NAME.MONSTER));
-//            place.put(PLACE_NAME.SPELL_AND_TRAP.getNumber() + i, new Place(PLACE_NAME.SPELL_AND_TRAP));
+            place.put(PLACE_NAME.HAND.getNumber() + i, new Place(PLACE_NAME.HAND));
+            place.put(PLACE_NAME.MONSTER.getNumber() + i, new Place(PLACE_NAME.MONSTER));
+            place.put(PLACE_NAME.SPELL_AND_TRAP.getNumber() + i, new Place(PLACE_NAME.SPELL_AND_TRAP));//TODO instantiate History arrayList From place
         }
-//        place.put(PLACE_NAME.FUSION.getNumber(), new Place(PLACE_NAME.FUSION));
+        place.put(PLACE_NAME.FIELD.getNumber(), new Place(PLACE_NAME.FIELD));
         graveyard = new ArrayList<>();
         this.mainCards = new ArrayList<>(mainCards);
         this.sideCards = new ArrayList<>(sideCards);
-        lastCardNumberPicked = this.mainCards.size();
-        cardsPicked = new ArrayList<>();
+        this.lastCardNumberPicked = this.mainCards.size() - 1;
+        this.cardsPicked = new ArrayList<>();
+        this.health = 8000;
     }
 
     public STATUS getStatus(int placeNumber, PLACE_NAME name) {
@@ -57,27 +60,14 @@ public class GameBoard {
     }
 
     public Cards drawCard() {
-        if (mainCards.equals(cardsPicked))
-            return null;
-        while (cantPickAnyMoreOfThisCard())
+        while (cardsPicked.contains(lastCardNumberPicked))
             lastCardNumberPicked--;
+        cardsPicked.add(lastCardNumberPicked);
         return (mainCards.get(lastCardNumberPicked--));
     }
 
-    private boolean cantPickAnyMoreOfThisCard(){
-        int amountInPickedCards = 0, amountInDeck = 0;
-        Cards cardToCheck = mainCards.get(lastCardNumberPicked);
-        for (Cards cards : cardsPicked) {
-            if (cards == cardToCheck)
-                amountInPickedCards++;
-        }
-        for (Cards mainCard : mainCards) {
-            if (mainCard == cardToCheck)
-                amountInDeck++;
-        }
-        if (amountInDeck == amountInPickedCards)
-            return true;
-        else return false;
+    public boolean noCardToDraw(){
+        return mainCards.size() == cardsPicked.size();
     }
 
     public Cards getCard(PLACE_NAME name, int number) {
@@ -110,6 +100,14 @@ public class GameBoard {
                 return i;
         }
         return -1;
+    }
+
+    public void setMonsterCardDestroyed(boolean monsterCardDestroyed) {
+        this.monsterCardDestroyed = monsterCardDestroyed;
+    }
+
+    public boolean getMonsterCardDestroyed(){
+        return monsterCardDestroyed;
     }
 
     public Cards getCardByAddressAndPlace(int placeNumber, PLACE_NAME name) {
@@ -179,6 +177,38 @@ public class GameBoard {
     }
     // agar card az graveyard bargasht, bazi tanzimat esh bayad reset beshe
     //////////////////////////////////////////////
+
+    public Cards getACardByType(String type){
+        int fieldNum = lastCardNumberPicked;
+        while (fieldNum >= 0){
+            if (mainCards.get(fieldNum).getType().equals(type) && !cardsPicked.contains(fieldNum)){
+                cardsPicked.add(fieldNum);
+                return mainCards.get(fieldNum);
+            }
+            fieldNum --;
+        }
+        return null;
+    }
+
+    public void killCards(GamePlayController gamePlayController, Place place){
+        SpecialAbilityActivationController specialAbilityActivationController = SpecialAbilityActivationController.getInstance();
+        specialAbilityActivationController.setGamePlayController(gamePlayController);
+        specialAbilityActivationController.deathWishWithoutKillCard(place);
+        if (place instanceof MonsterZone) {
+            specialAbilityActivationController.removeMonsterFromFieldAndEffect(place);
+            monsterCardDestroyed = true;
+        }
+        graveyard.add(place.getCard());
+        place.killCard();
+    }
+
+     public void changeHealth(int amount){
+        health += amount;
+     }
+
+     public boolean fromThisGameBoard(Place place){
+        return this.place.containsValue(place);
+     }
 
     @Override
     public String toString() {

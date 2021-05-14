@@ -8,8 +8,8 @@ public class MonsterCards extends Cards{
     private String attribute, monsterType;
 
     public MonsterCards(String name, int level, String attribute, String monsterType,
-                        String type, int attack, int defense, String description){
-        super(name,type,description);
+                        String type, int attack, int defense, String description, String status){
+        super(name, type, description, status);
         Cards.addCard(this, name);
         this.level = level;
         this.attack = attack;

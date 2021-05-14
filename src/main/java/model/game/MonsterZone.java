@@ -6,7 +6,7 @@ import model.cards.monster.MonsterCards;
 public class MonsterZone extends Place{
 
     private int attackModifier;
-    private int defendModifier;
+    private int defenseModifier;
 
 
     protected MonsterZone(PLACE_NAME type) {
@@ -17,20 +17,35 @@ public class MonsterZone extends Place{
         return ((MonsterCards) card).getAttack() + attackModifier;
     }
 
-    public int getDefend(){
-        return ((MonsterCards) card).getDefense() + defendModifier;
+    public int getDefense(){
+        return ((MonsterCards) card).getDefense() + defenseModifier;
     }
 
     public void setAttackModifier(int attackModifier) {
         this.attackModifier = attackModifier;
     }
 
-    public void setDefendModifier(int defendModifier) {
-        this.defendModifier = defendModifier;
+    public void setDefenseModifier(int defenseModifier) {
+        this.defenseModifier = defenseModifier;
     }
 
-    // todo : complete method
-    public void changeToThisCard(Cards card){
+    public int getAttackModifier() {
+        return attackModifier;
+    }
 
+    public int getDefenseModifier() {
+        return defenseModifier;
+    }
+
+    public void changeToThisCard(Cards card){
+        super.setAffect(null);
+        super.setCard(card);
+        String string = "";
+        for (int i = 0; i < super.history.get(this).size(); i++) {
+            string = super.history.get(this).get(i);
+            if (!string.equals("scanner"))
+                super.history.get(this).remove(string);
+        }
+        //TODO reverse the card before scanner special abilities
     }
 }

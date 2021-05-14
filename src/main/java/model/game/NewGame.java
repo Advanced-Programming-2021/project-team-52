@@ -52,8 +52,8 @@ public class NewGame {
     public GamePlay getGuestGamePlay() {
         return guestGamePlay;
     }
-//
-//    public int getHealths() {
-//
-//    }
+
+    public int getHealths() {
+        return 0;
+    }
 }

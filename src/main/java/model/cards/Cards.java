@@ -1,5 +1,6 @@
 package model.cards;
 
+import controller.specialbilities.SpecialAbility;
 import model.cards.monster.MonsterCards;
 import model.cards.spell.SpellCards;
 
@@ -10,23 +11,19 @@ public class Cards {
 
     private static final HashMap<String, Cards> ALL_CARDS;
 
-    private String name, type, description;
-
-    private String[] special;
+    private String name, type, description, status;
+    private ArrayList<SpecialAbility> special;
+    private int specialSpeed;//TODO add special speed to csv
 
     static{
         ALL_CARDS = new HashMap<>();
     }
 
-    protected Cards(String name, String type, String description, String special){
+    protected Cards(String name, String type, String description, String status){
         this.name = name;
         this.type = type;
         this.description = description;
-        this.special = special.split("_");
-    }
-
-    public Cards(String name, String type, String description) {
-
+        this.status = status;
     }
 
     protected static void addCard(Cards card, String name){
@@ -53,6 +50,22 @@ public class Cards {
         return description;
     }
 
+    public ArrayList<SpecialAbility> getSpecial() {
+        return special;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setSpecialSpeed(int specialSpeed) {
+        this.specialSpeed = specialSpeed;
+    }
+
+    public int getSpecialSpeed() {
+        return specialSpeed;
+    }
+
     @Override
     public String toString() {
         StringBuilder results = new StringBuilder("Name: ").append(this.name).append("\n");
@@ -69,9 +82,5 @@ public class Cards {
         }
         results.append("Description: ").append(this.getDescription()).append("\n");
         return results.toString();
-    }
-
-    public String[] getSpecial() {
-        return special;
     }
 }

@@ -52,8 +52,12 @@ public interface RegexPatterns {
     Pattern tributePattern = Pattern.compile("tribute (?<amount>\\d+) (?<faceUpOnly>face up only)? (?<alternative>.+)?");
     Pattern drawCardPattern = Pattern.compile("draw card (?<amount>\\d+)");
 
+    Pattern extractEndingNumber = Pattern.compile("^\\w+(-?\\d+)$");
+
     Pattern standardPassword = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");
     Pattern standardUsernameAndNickname = Pattern.compile("\\w");
+
+
 }
 
 
