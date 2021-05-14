@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 
 public class Chain implements StringMessages {
 
+    //TODO remove this comment
     private static PrinterAndScanner printerAndScanner = null;
     private static PrintBuilderController printBuilderController = null;
     private static SpecialAbilityActivationController specialAbilityActivationController;
