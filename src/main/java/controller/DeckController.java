@@ -30,11 +30,11 @@ public class DeckController implements RegexPatterns, StringMessages {
         return deckController;
     }
 
-    public static void setAddCardCheat(boolean addCardCheat) {
+    public void setAddCardCheat(boolean addCardCheat) {
         DeckController.addCardCheat = addCardCheat;
     }
 
-    public static boolean isAddCardCheat() {
+    public boolean isAddCardCheat() {
         return addCardCheat;
     }
 
@@ -72,7 +72,7 @@ public class DeckController implements RegexPatterns, StringMessages {
         }
     }
 
-    public static void createDeck(String deckName, User user) {
+    public void createDeck(String deckName, User user) {
         if (user.getDeckByName(deckName) != null) {
             printerAndScanner.printNextLine(printBuilderController.DeckWithThisNameAlreadyExists(deckName));
             return;
@@ -82,7 +82,7 @@ public class DeckController implements RegexPatterns, StringMessages {
         printerAndScanner.printNextLine(deckCreatedSuccessfully);
     }
 
-    public static void deleteDeck(String deckName, User user) {
+    public void deleteDeck(String deckName, User user) {
         Deck deck = user.getDeckByName(deckName);
         if (deck == null) {
             printerAndScanner.printNextLine(printBuilderController.deckWithThisNameDoesNotExist(deckName));
@@ -97,7 +97,7 @@ public class DeckController implements RegexPatterns, StringMessages {
         printerAndScanner.printNextLine(deckDeletedSuccessfully);
     }
 
-    public static void activateDeck(String deckName, User user) {
+    public void activateDeck(String deckName, User user) {
         Deck deck = user.getDeckByName(deckName);
         if (deck == null) {
             printerAndScanner.printNextLine(printBuilderController.deckWithThisNameDoesNotExist(deckName));
@@ -107,7 +107,7 @@ public class DeckController implements RegexPatterns, StringMessages {
         printerAndScanner.printNextLine(deckActivatedSuccessfully);
     }
 
-    public static void addCardToDeck(String cardName, String deckName, boolean isSide, User user) {
+    public void addCardToDeck(String cardName, String deckName, boolean isSide, User user) {
         if (!user.isCardWithThisNameExists(cardName)) {
             printerAndScanner.printNextLine(printBuilderController.cardWithThisNameDoesNotExist(cardName));
             return;
@@ -141,7 +141,7 @@ public class DeckController implements RegexPatterns, StringMessages {
         printerAndScanner.printNextLine(cardAddedToDeckSuccessfully);
     }
 
-    public static void removeCardFromDeck(String cardName, String deckName, boolean isSide, User user) {
+    public void removeCardFromDeck(String cardName, String deckName, boolean isSide, User user) {
         Deck deck = user.getDeckByName(deckName);
         if (deck == null) {
             printerAndScanner.printNextLine(printBuilderController.deckWithThisNameDoesNotExist(deckName));

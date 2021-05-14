@@ -10,6 +10,7 @@ import model.cards.Cards;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.TreeMap;
 
 public class PrintBuilderController {
     private static PrintBuilderController printPrintBuilderController = null;
@@ -101,11 +102,12 @@ public class PrintBuilderController {
 
         StringBuilder response = new StringBuilder();
         response.append("Decks:\nActive deck:\n");
+        if(activeDeck != null)
         showOneDeckForAllDecks(activeDeck, response);
 
         response.append("Other decks:\n");
         for (String deckName : allDecks) {
-            if (!deckName.equals(activeDeck.getName())) {
+            if ((activeDeck == null) || (!deckName.equals(activeDeck.getName()))) {
                 Deck deck = user.getDeck(deckName);
                 showOneDeckForAllDecks(deck, response);
             }
@@ -115,10 +117,10 @@ public class PrintBuilderController {
 
     private void showOneDeckForAllDecks(Deck deck, StringBuilder response) {
         response.append(deck.getName());
-        response.append(": main deck");
+        response.append(": main deck ");
         response.append(deck.getMainDeckCardCount());
-        response.append(", side deck");
-        response.append(deck.getAllSideCards());
+        response.append(", side deck ");
+        response.append(deck.getSideDeckCardCount());
         response.append(", ");
         if (deck.isDeckValid())
             response.append("valid\n");

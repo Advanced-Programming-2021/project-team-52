@@ -77,19 +77,19 @@ public class LoginController implements RegexPatterns {
 
     }
 
-    public static User getUser(String username, String password) {
-        if (users.containsKey(username)) {
-            if (users.get(username).getPassword().equals(password)) {
-                return users.get(username).getUserByUsername(username);
-            } else {
-                System.out.println("user with name " + username + " doesn't exist or username and password doesnt match");
-                return null;
-            }
-        } else {
-            System.out.println("user with name " + username + " doesn't exist or username and password doesnt match");
-            return null;
-        }
-    }
+//    public static User getUser(String username, String password) {
+//        if (users.containsKey(username)) {
+//            if (users.get(username).getPassword().equals(password)) {
+//                return users.get(username).getUserByUsername(username);
+//            } else {
+//                System.out.println("user with name " + username + " doesn't exist or username and password doesnt match");
+//                return null;
+//            }
+//        } else {
+//            System.out.println("user with name " + username + " doesn't exist or username and password doesnt match");
+//            return null;
+//        }
+//    }
 
     private void showCurrentMenu() {
         System.out.println("Login menu :\n" +

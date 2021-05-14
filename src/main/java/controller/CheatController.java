@@ -19,7 +19,7 @@ public class CheatController {
         user.setBalance(currentMoney + amount);
     }
     private static void addCard(){
-    DeckController.setAddCardCheat(!DeckController.isAddCardCheat());
+    DeckController.getInstance().setAddCardCheat(!DeckController.getInstance().isAddCardCheat());
     }
     
     //we have them in their own appropriate class
