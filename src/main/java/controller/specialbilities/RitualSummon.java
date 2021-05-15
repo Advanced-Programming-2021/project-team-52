@@ -46,7 +46,7 @@ public class RitualSummon implements SpecialAbility, StringMessages {
                 break;
         }
         sacrificeTributes(tributes);
-        gamePlayController.summon(toSummon);
+        gamePlayController.summon(toSummon, true);
     }
 
     private Place getRitualCard() {
