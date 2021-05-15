@@ -85,6 +85,8 @@ public interface StringMessages {
     String askActivateScanner = "do you want to activate scanner?";
     String wrongStatus = "wrong status";
     String cannotBeAttackedWhileThereAreMonsters = "cannot be attacked while there are other monsters";
+    String cantSpecialSummon = "there is no way you could special summon a monster";
+    String conditionsNotMet = "conditions have not been met";
 
 
     // ProfileController

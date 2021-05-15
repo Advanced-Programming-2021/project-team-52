@@ -80,14 +80,8 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
         if (!gamePlayController.getGamePlay().getMyGameBoard().getGraveyard().isEmpty() && !
                 gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
                         .getGraveyard().isEmpty()){
-            Place emptyPlace = null;
-            for (int i = 1; i < 6; i++) {
-                if (gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER).getCard() == null){
-                    emptyPlace = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER);
-                    break;
-                }
-            }
-            if (emptyPlace != null){
+            int emptyPlace = gamePlayController.getGamePlay().getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER);
+            if (emptyPlace != -1){
                 printerAndScanner.printString(PrintBuilderController.getInstance().buildGraveyard(
                         gamePlayController.getGamePlay().getMyGameBoard().getGraveyard()));
                 printerAndScanner.printString(PrintBuilderController.getInstance().buildGraveyard(
@@ -99,9 +93,10 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
                     printerAndScanner.printNextLine(wrongCard);
                     cardName = printerAndScanner.scanNextLine();
                 }
-                gamePlayController.placeCard(emptyPlace, Cards.getCard(cardName), STATUS.ATTACK);//TODO may change
-            } else printerAndScanner.printNextLine(monsterCardZoneIsFull);
-        } else printerAndScanner.printNextLine(emptyGraveYard);
+                Place temporaryPlace = new Place(PLACE_NAME.HAND);
+                gamePlayController.summon(temporaryPlace, false);
+            } else printerAndScanner.printNextLine(cantSpecialSummon);
+        } else printerAndScanner.printNextLine(cantSpecialSummon);
     }
 
     public void addFieldSpellToHand(){

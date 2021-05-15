@@ -40,7 +40,7 @@ public class Tribute implements SpecialAbility, StringMessages {
 
     public void canSummonNormally(){
         GeneralSpecialAbility.attackBoost(place, amount, true);
-        gamePlayController.summon(place);
+        gamePlayController.summon(place, true);
     }
 
     public void summonWithTribute(){
@@ -50,7 +50,7 @@ public class Tribute implements SpecialAbility, StringMessages {
             if (gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER).getCard() != null)
                 numberOfMonsterToTribute++;
         }
-        if (amount >= numberOfMonsterToTribute){
+        if (amount <= numberOfMonsterToTribute){
             printerAndScanner.printNextLine(doYouWantToTribute);
             if (printerAndScanner.scanNextLine().equals("yes")){
                 int[] cardsToTribute = new int[amount];
@@ -62,7 +62,7 @@ public class Tribute implements SpecialAbility, StringMessages {
                     gamePlayController.getGamePlay().getMyGameBoard().killCards(
                             gamePlayController, place);
                 }
-                gamePlayController.summon(place);
+                gamePlayController.summon(place, true);
             }
         } else printerAndScanner.printNextLine(thereAreNotEnoughCardsForTribute);
     }

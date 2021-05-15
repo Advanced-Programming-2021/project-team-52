@@ -5,10 +5,9 @@ import controller.GamePlayController;
 import controller.PrintBuilderController;
 import controller.RegexController;
 import model.cards.Cards;
-import model.game.Field;
-import model.game.PLACE_NAME;
-import model.game.Place;
-import model.game.STATUS;
+import model.cards.spell.SpellCards;
+import model.cards.trap.TrapCards;
+import model.game.*;
 import model.tools.RegexPatterns;
 import model.tools.StringMessages;
 import view.PrinterAndScanner;
@@ -24,7 +23,7 @@ public class SpecialAbilityActivationController implements StringMessages {
     private PrinterAndScanner printerAndScanner;
     private PrintBuilderController printBuilderController;
 
-    private SpecialAbilityActivationController(){
+    private SpecialAbilityActivationController() {
         printerAndScanner = PrinterAndScanner.getInstance();
         printBuilderController = PrintBuilderController.getInstance();
     }
@@ -39,7 +38,7 @@ public class SpecialAbilityActivationController implements StringMessages {
         this.gamePlayController = gamePlayController;
     }
 
-    public void runKillCardDeathWishes(Place place, boolean killAttacker){
+    public void runKillCardDeathWishes(Place place, boolean killAttacker) {
         for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
             if (specialAbility instanceof DeathWish)
                 if ((specialAbility.getMethodName().equals("killAttacker") && killAttacker) ||
@@ -48,7 +47,7 @@ public class SpecialAbilityActivationController implements StringMessages {
         }
     }
 
-    public void deathWishWithoutKillCard(Place place){
+    public void deathWishWithoutKillCard(Place place) {
         for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
             if (specialAbility instanceof DeathWish)
                 if (!specialAbility.getMethodName().equals("killAttacker") &&
@@ -57,17 +56,17 @@ public class SpecialAbilityActivationController implements StringMessages {
         }
     }
 
-    public boolean summonWithTribute(Place place){
+    public boolean summonWithTribute(Place place) {
         ArrayList<String> specials = new ArrayList<>();
         for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
             if (specialAbility instanceof Tribute)
                 specials.add(specialAbility.getMethodName());
         }
-        if (specials.contains("canSummonNormally")){
+        if (specials.contains("canSummonNormally")) {
             printerAndScanner.printNextLine(summonWithoutTribute);
-            if (printerAndScanner.scanNextLine().equals("yes")){
+            if (printerAndScanner.scanNextLine().equals("yes")) {
                 for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
-                    if (specialAbility.getMethodName().equals("canSummonNormally")){
+                    if (specialAbility.getMethodName().equals("canSummonNormally")) {
                         specialAbility.run(gamePlayController, gamePlayController.getGamePlay().getSelectedCard());
                     }
                 }
@@ -76,12 +75,12 @@ public class SpecialAbilityActivationController implements StringMessages {
         return specials.size() == 0;
     }
 
-    private void runTributeSummon(Place place){
+    private void runTributeSummon(Place place) {
         ArrayList<SpecialAbility> specials = place.getCard().getSpecial();
         for (int i = 0; i < specials.size(); i++) {
-            if (specials.get(i).getMethodName().equals("summonWithTribute")){
+            if (specials.get(i).getMethodName().equals("summonWithTribute")) {
                 specials.get(i).run(gamePlayController, place);
-                for (int j = i+1; j < specials.size(); j++) {
+                for (int j = i + 1; j < specials.size(); j++) {
                     if (specials.get(j) instanceof Success) {
                         specials.get(j).run(gamePlayController, place);
                         break;
@@ -92,7 +91,7 @@ public class SpecialAbilityActivationController implements StringMessages {
         }
     }
 
-    public boolean hasTributeMethod(Cards card){
+    public boolean hasTributeMethod(Cards card) {
         for (SpecialAbility specialAbility : card.getSpecial()) {
             if (specialAbility instanceof Tribute)
                 return true;
@@ -100,34 +99,34 @@ public class SpecialAbilityActivationController implements StringMessages {
         return false;
     }
 
-    public void runFlipSpecial(Place place){
+    public void runFlipSpecial(Place place) {
         for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
             if (specialAbility instanceof Flip)
                 specialAbility.run(gamePlayController, place);
         }
     }
 
-    public boolean checkForConditions(Place place){
+    public boolean checkForConditions(Place place) {
         ArrayList<Conditions> conditions = new ArrayList<>();
         for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
             if (specialAbility instanceof Conditions)
                 conditions.add((Conditions) specialAbility);
         }
-        boolean met = conditions.isEmpty();
+        boolean met = !conditions.isEmpty();
         for (Conditions condition : conditions) {
             condition.setMet(met);
             condition.run(gamePlayController, place);
-            met = condition.getMet();
+            met = met && condition.getMet();
         }
         return met;
     }
 
-    public void activateField(){
+    public void activateField() {
         Place place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(0, PLACE_NAME.FIELD);
-        if (place instanceof Field){
+        if (place instanceof Field) {
             Field field = (Field) place;
             for (SpecialAbility specialAbility : field.getCard().getSpecial()) {
-                if (specialAbility instanceof FieldSpecial){
+                if (specialAbility instanceof FieldSpecial) {
                     ((FieldSpecial) specialAbility).setAffected(field.getAffected());
                     specialAbility.run(gamePlayController, place);
                 }
@@ -135,60 +134,74 @@ public class SpecialAbilityActivationController implements StringMessages {
         }
     }
 
-    public void runFacUpSpecial(Place place){
+    public void runFacUpSpecial(Place place) {
         for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
             if (specialAbility instanceof FaceUp)
                 specialAbility.run(gamePlayController, place);
         }
     }
 
-    public void activateEffectWithoutChain(Place place){
+    public void activateEffectWithoutChain(Place place) {
         for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
             if ((specialAbility instanceof Continuous) || (specialAbility instanceof ActivateNoChain))
                 specialAbility.run(gamePlayController, place);
         }
     }
 
-    public void removeMonsterFromFieldAndEffect(Place place){
-        Place field = gamePlayController.getGamePlay().getMyGameBoard().getPlace(0, PLACE_NAME.FIELD);
-        if (field != null){
-            ((Field) field).removeFromAffect(place);
+    public void activateEffectWithChain(Place place) {
+        for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
+            if (specialAbility instanceof ActivateChain)
+                specialAbility.run(gamePlayController, place);
         }
-        //TODO remove from equip
     }
 
-    public void stopControl(String command){
+    public void removeMonsterFromFieldAndEffect(Place place) {
+        Place field = gamePlayController.getGamePlay().getMyGameBoard().getPlace(0, PLACE_NAME.FIELD);
+        if (field != null) {
+            ((Field) field).removeFromAffect(place);
+        }
+        Place effectCheck;
+        for (int i = 1; i < 6; i++) {
+            effectCheck = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
+            if (effectCheck.getCard() != null)
+                if (effectCheck.getCard().getType().equals("Equip") && effectCheck.getAffect() == place)
+                    gamePlayController.getGamePlay().getMyGameBoard().killCards(gamePlayController, effectCheck);
+
+        }
+    }
+
+    public void stopControl(String command) {
         GamePlayController opponentGamePlayController = gamePlayController.getGamePlay().getOpponentGamePlayController();
         Matcher matcher = RegexController.getMatcher(command, RegexPatterns.extractEndingNumber);
         Place opponent = opponentGamePlayController.getGamePlay().
                 getMyGameBoard().getPlace(Integer.parseInt(matcher.group(1)), PLACE_NAME.MONSTER);
-        if (opponentGamePlayController.getGamePlay().getHistory().get(opponent).contains("forEnemy")){
+        if (opponentGamePlayController.getGamePlay().getHistory().get(opponent).contains("forEnemy")) {
             int myEmptyPlace = gamePlayController.getGamePlay().getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER);
-            if (myEmptyPlace != -1){
+            if (myEmptyPlace != -1) {
                 Place toPlace = gamePlayController.getGamePlay().getMyGameBoard().getPlace(myEmptyPlace, PLACE_NAME.MONSTER);
                 toPlace.setCard(opponent.getCard());
                 toPlace.setStatus(opponent.getStatus());
             }
-           opponentGamePlayController.getGamePlay().getMyGameBoard().killCards(opponentGamePlayController, opponent);
+            opponentGamePlayController.getGamePlay().getMyGameBoard().killCards(opponentGamePlayController, opponent);
         }
     }
 
-    public void handleScanner(Place place){
+    public void handleScanner(Place place) {
         gamePlayController.getGamePlay().getMyGameBoard().killCards(gamePlayController, place);
         place.setCard(Cards.getCard("Scanner"));
         place.setStatus(STATUS.ATTACK);
         printerAndScanner.printNextLine(askActivateScanner);
-        if (printerAndScanner.scanNextLine().equals("yes")){
+        if (printerAndScanner.scanNextLine().equals("yes")) {
             place.getCard().getSpecial().get(0).run(gamePlayController, place);
             runFlipSpecial(place);
             runFacUpSpecial(place);
         }
     }
 
-    public boolean getHealthOrDestroyCard(Place place, String command){
+    public boolean getHealthOrDestroyCard(Place place, String command) {
         Matcher matcher = RegexController.getMatcher(command, RegexPatterns.extractEndingNumber);
         printerAndScanner.printString(printBuilderController.askForPayingLp(matcher.group(1), place.getCard().getName()));
-        if (printerAndScanner.scanNextLine().equals("yes")){
+        if (printerAndScanner.scanNextLine().equals("yes")) {
             gamePlayController.getGamePlay().getMyGameBoard().changeHealth(Integer.parseInt(matcher.group(1)) * -1);
             return false;
         } else {
@@ -197,19 +210,19 @@ public class SpecialAbilityActivationController implements StringMessages {
         }
     }
 
-    public void runSuccessSpecialAbility(Place place){
+    public void runSuccessSpecialAbility(Place place) {
         for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
             if (specialAbility instanceof Success)
                 specialAbility.run(gamePlayController, place);
         }
     }
 
-    public void checkSummonDeactivation(Place placeToAfffect){
+    public void checkSummonDeactivation(Place placeToAffect) {
         ArrayList<Place> doAble = new ArrayList<>();
         for (int i = 1; i < 6; i++) {
             Place candidate = gamePlayController.getGamePlay().getOpponentGamePlayController().
                     getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
-            if (placeToAfffect.getCard() != null){
+            if (placeToAffect.getCard() != null) {
                 if (candidate.getCard().getSpecialSpeed() == 3) {
                     for (SpecialAbility specialAbility : candidate.getCard().getSpecial()) {
                         if (specialAbility.getMethodName().equals("killThisCardUponSummon"))
@@ -218,11 +231,11 @@ public class SpecialAbilityActivationController implements StringMessages {
                 }
             }
         }
-        if (!doAble.isEmpty()){
+        if (!doAble.isEmpty()) {
             printerAndScanner.printNextLine(askActivateSpecial);
-            if (printerAndScanner.scanNextLine().equals("yes")){
+            if (printerAndScanner.scanNextLine().equals("yes")) {
                 Place place;
-                while (true){
+                while (true) {
                     printerAndScanner.printNextLine(cardNumber);
                     int placeNumber = printerAndScanner.scanNextInt();
                     if (placeNumber > 5 || placeNumber < 1)
@@ -233,10 +246,54 @@ public class SpecialAbilityActivationController implements StringMessages {
                         continue;
                     else break;
                 }
-                place.setAffect(placeToAfffect);
+                place.setAffect(placeToAffect);
                 new Chain(gamePlayController.getGamePlay().getOpponentGamePlayController(), place,
                         place.getCard().getSpecialSpeed(), false);
             }
         }
+    }
+
+//    public boolean spellAndTrapActivationChecker(Place place, boolean shouldChain, int previousSpeed, PHASE phase) {
+////        if (selectedCard != null)
+////            if (gamePlay.getMyGameBoard().fromThisGameBoard(selectedCard))
+////                if (selectedCard.getCard() instanceof SpellCards)
+////                    if (phase != PHASE.MAIN) { //TODO ?
+////                            if ((selectedCard.getType() == PLACE_NAME.HAND &&
+////                                    (gamePlay.getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.SPELL_AND_TRAP) != -1 ||
+////                                            selectedCard.getCard().getType().equals("Field"))) ||
+////                                    selectedCard.getType() == PLACE_NAME.SPELL_AND_TRAP ){
+//        if (place != null) {
+//            if (place.getCard() != null) {
+//                if (gamePlayController.getGamePlay().getMyGameBoard().fromThisGameBoard(place)) {
+//                    if (phase == PHASE.MAIN || phase == PHASE.CHAIN)
+//                        if (!gamePlayController.getGamePlay().getHistory().get(place).contains("noSpecialThisRound"))
+//                            if (place.getCard() instanceof SpellCards || (place.getCard() instanceof TrapCards &&
+//                                    !gamePlayController.getGamePlay().getUniversalHistory().contains("cannotActivateTrap")))
+//                                if (!place.getTemporaryFeatures().contains(TEMPORARY_FEATURES.SPELL_ACTIVATED))
+//                                    if (checkForConditions(place))
+//                                        return true;
+//                } else printerAndScanner.printNextLine(cantActivateThisCard);
+//            } else printerAndScanner.printNextLine(noCardsIsSelectedYet);
+//        } else printerAndScanner.printNextLine(noCardsIsSelectedYet);
+//        return false;
+//    }
+
+    public boolean canActivateSpellOrTrap(int speedToCheck){
+        for (int i = 1; i < 6; i++) {
+            Place place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
+            if (place.getCard() != null)
+                if (place.getCard() instanceof SpellCards)
+                    if (canActivateSpell(place, speedToCheck))
+                        return true;
+        }
+        return false;
+    }
+
+    public boolean canActivateSpell(Place place, int speedToCheck){
+        if (place.getCard().getSpecialSpeed() >= speedToCheck)
+            if (!place.getTemporaryFeatures().contains(TEMPORARY_FEATURES.SPELL_ACTIVATED))
+                if (checkForConditions(place))
+                    return true;
+        return false;
     }
 }

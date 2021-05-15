@@ -138,7 +138,7 @@ public class GameBoard {
 
     public boolean isCardSetOrSummonInThisTurn(int placeNumber, PLACE_NAME placeName) {
         return getPlace(placeNumber, placeName)
-                .isTemporaryFeaturesContainsThisFeature(TEMPORARY_FEATURES.CARD_SET_OR_SUMMON_IN_THIS_TURN);
+                .isTemporaryFeaturesContainsThisFeature(TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN);
     }
 
     public boolean isCardAttackedInThisTurn(int placeNumber, PLACE_NAME placeName) {
@@ -153,7 +153,7 @@ public class GameBoard {
 
     public void setCardSetOrSummonInThisTurn(int placeNumber, PLACE_NAME placeName) {
         getPlace(placeNumber, placeName).addTemporaryFeatures
-                (TEMPORARY_FEATURES.CARD_SET_OR_SUMMON_IN_THIS_TURN);
+                (TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN);
     }
 
     public void setCardAttackedInThisTurn(int placeNumber, PLACE_NAME placeName) {
