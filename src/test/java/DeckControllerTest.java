@@ -1,11 +1,13 @@
 import com.opencsv.exceptions.CsvException;
 import controller.DeckController;
 import controller.LoginController;
+import controller.PrintBuilderController;
 import controller.ShopController;
 import model.Deck;
 import model.Shop;
 import model.User;
 import model.cards.Cards;
+import model.tools.StringMessages;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-public class DeckControllerTest {
+public class DeckControllerTest extends PrintBuilderController implements StringMessages {
 
     ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     User user;
@@ -65,7 +67,6 @@ public class DeckControllerTest {
         deckController.createDeck("ZerfectDeck", user);
         deckController.createDeck("GoodDeck", user);
         deckController.createDeck("1oodDeck", user);
-        deckController.createDeck("PerfectDeck", user);
         outContent.reset();
         deckController.showAllDecks(user);
         Assertions.assertEquals("Decks:\n" +
@@ -75,8 +76,7 @@ public class DeckControllerTest {
                 "GoodDeck: main deck 0, side deck 0, invalid\n" +
                 "PerfectDeck: main deck 0, side deck 0, invalid\n" +
                 "ZerfectDeck: main deck 0, side deck 0, invalid\n" +
-                "goodDeck: main deck 0, side deck 0, invalid\n" +
-                "perfectDeck: main deck 0, side deck 0, invalid\n\r\n", outContent.toString());
+                "goodDeck: main deck 0, side deck 0, invalid\n\n" , outContent.toString());
     }
 
     @Test
@@ -246,4 +246,35 @@ public class DeckControllerTest {
                 outContent.toString().trim().replace("\r",""));
 
     }
+
+    @Test
+    public void removeCardFromSideDeckTest(){
+        System.setOut(new PrintStream(outContent));
+        ShopController.getInstance().buy(user, "Bitron");
+        deckController.addCardToDeck("Bitron", "perfectDeck", true, user);
+        outContent.reset();
+        deckController.removeCardFromDeck("Bitron", "perfectDeck", true, user);
+        Assertions.assertEquals(cardRemovedFormDeckSuccessfully,
+                outContent.toString().trim().replace("\r",""));
+    }
+
+    @Test
+    public void test(){
+        LoginController.getInstance().createUser("mamadGhole", "12345aaAA", "gholi");
+        User user = LoginController.getUserByUsername("mamadGhole");
+        deckController.createDeck("gholiDeck", user);
+        ShopController shopController = ShopController.getInstance();
+        shopController.buy(user, "Marshmallon");
+        Deck deck = user.getDeck("gholiDeck");
+
+        Assertions.assertEquals("gholiDeck", deck.getName());
+
+        deck.addCard("Marshmallon",true);
+        deck.removeCard("Marshmallon",true);
+        Assertions.assertEquals(deck.getSideDeckCardCount(), 0);
+
+        Assertions.assertFalse(deck.isDeckValid());
+
+    }
+
 }
