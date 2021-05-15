@@ -76,10 +76,6 @@ public class PrintBuilderController {
         return "user with this nickname " + newNickname + " already exists";
     }
 
-    public String thisUsernameAlreadyExists(String newUsername){
-        return "user with username " + newUsername + " already exists";
-    }
-
     public String DeckWithThisNameAlreadyExists(String deckName) {
         return "deck with name " + deckName + " already exists";
     }
