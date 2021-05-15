@@ -57,7 +57,7 @@ public class ScoreBoardController implements RegexPatterns, StringMessages {
     public void sortUserByScore() {
         for (int i = 0; i < usersInScoreOrder.size(); i++) {
             for (int j = i + 1; j < usersInScoreOrder.size(); j++) {
-                if (usersInScoreOrder.get(i).getScore() > usersInScoreOrder.get(j).getScore())
+                if (usersInScoreOrder.get(i).getScore() < usersInScoreOrder.get(j).getScore())
                     Collections.swap(usersInScoreOrder, i, j);
                 else if (usersInScoreOrder.get(i).getScore() == usersInScoreOrder.get(j).getScore()) {
                     if (usersInScoreOrder.get(i).getUsername()

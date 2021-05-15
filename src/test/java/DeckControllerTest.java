@@ -199,7 +199,7 @@ public class DeckControllerTest {
                 "Active deck:\n" +
                 "perfectDeck: main deck 1, side deck 0, invalid\n" +
                 "Other decks:\n" +
-                "goodDeck: main deck 0, side deck 0, invalid\n\r", outContent.toString());
+                "goodDeck: main deck 0, side deck 0, invalid", outContent.toString().trim().replace("\r",""));
     }
 
     @Test

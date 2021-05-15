@@ -112,7 +112,6 @@ public class DeckController implements RegexPatterns, StringMessages {
         if (cardDoesNotExists(cardName, user)) return;
         Deck deck = user.getDeckByName(deckName);
         if (deckDoesNotExists(deckName, deck)) return;
-
         if (deck.isDeckFull(isSide)) {
             if (!isSide)
                 printerAndScanner.printNextLine(mainDeckIsFull);
