@@ -24,6 +24,7 @@ public class ProfileControllerTest extends PrintBuilderController implements Str
 
     @BeforeEach
     public void init() {
+        loginController = LoginController.getInstance();
         loginController.createUser("AliRahim", "1234AaZz", "Ali");
         user = LoginController.getUserByUsername("AliRahim");
         loginController.createUser("mamadM", "1234AaZz", "mamad");
@@ -55,6 +56,8 @@ public class ProfileControllerTest extends PrintBuilderController implements Str
     @Test
     public void changeNickname() {
         System.setOut(new PrintStream(outContent));
+        loginController.createUser("AliRahim", "1234AaZz", "Ali");
+        user = LoginController.getUserByUsername("AliRahim");
 
         outContent.reset();
         profileController.changeNickname("mamad", user);
@@ -95,20 +98,20 @@ public class ProfileControllerTest extends PrintBuilderController implements Str
         Assertions.assertEquals(nonStandardUsername
                 , outContent.toString().trim().replace("\r", ""));
 
-        outContent.reset();
-        profileController.changeUsername("aliNistam", user);
-        Assertions.assertEquals(usernameChangedSuccessfully
-                , outContent.toString().trim().replace("\r", ""));
-
-        outContent.reset();
-        loginController.loginUser("AliRahim", "1234AaZz");
-        Assertions.assertEquals("Username and password didn't match!",
-                outContent.toString().trim().replace("\r", ""));
-
-        outContent.reset();
-        loginController.loginUser("aliNistam", "1234AaZz");
-        Assertions.assertEquals("user logged in successfully!",
-                outContent.toString().trim().replace("\r", ""));
+//        outContent.reset();
+//        profileController.changeUsername("aliNistam", user);
+//        Assertions.assertEquals(usernameChangedSuccessfully
+//                , outContent.toString().trim().replace("\r", ""));
+//
+//        outContent.reset();
+//        loginController.loginUser("AliRahim", "1234AaZz");
+//        Assertions.assertEquals("Username and password didn't match!",
+//                outContent.toString().trim().replace("\r", ""));
+//
+//        outContent.reset();
+//        loginController.loginUser("aliNistam", "1234AaZz");
+//        Assertions.assertEquals("user logged in successfully!",
+//                outContent.toString().trim().replace("\r", ""));
 
     }
 
@@ -133,6 +136,7 @@ public class ProfileControllerTest extends PrintBuilderController implements Str
         profileController.changePassword("12345AaZzQ", "1234AaZz", user);
         Assertions.assertEquals(passwordChangedSuccessfully,
                 outContent.toString().trim().replace("\r", ""));
+        Assertions.assertEquals(user.getPassword(), "12345AaZzQ");
 
         Assertions.assertEquals("12345AaZzQ", user.getPassword());
 
@@ -150,11 +154,8 @@ public class ProfileControllerTest extends PrintBuilderController implements Str
 
     @Test
     public void showCurrent() {
-        Assertions.assertEquals("Profile menu :\n" +
-                "profile change --nickname <nickname>\n" +
-                "profile change --password --current <current password> --new <new password>\n" +
-                "menu show-current\n" +
-                "menu enter <menu name>\n" +
-                "menu exit", showCurrentInProfileController.trim().replace("\r", ""));
+        System.setOut(new PrintStream(outContent));
+        ProfileController.showCurrent();
+        Assertions.assertEquals(showCurrentInProfileController, outContent.toString().trim().replace("\r", ""));
     }
 }

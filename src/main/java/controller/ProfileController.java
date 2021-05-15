@@ -46,7 +46,6 @@ public class ProfileController implements RegexPatterns, StringMessages {
     }
 
     public void changeNickname(String newNickname, User user) {
-        Matcher matcher;
         if (LoginController.nickNames.contains(newNickname)) {
             printerAndScanner.printNextLine(printBuilderController.thisNicknameAlreadyExists(newNickname));
             return;
@@ -80,8 +79,7 @@ public class ProfileController implements RegexPatterns, StringMessages {
 
 
     public void changePassword(String newPassword, String oldPassword, User user) {
-        Matcher matcher;
-        if ((matcher = RegexController.getMatcher(newPassword, RegexPatterns.standardPassword)) == null) {
+        if (RegexController.getMatcher(newPassword, RegexPatterns.standardPassword) == null) {
             printerAndScanner.printNextLine(nonStandardPassword);
         } else if (!user.getPassword().equals(oldPassword))
             printerAndScanner.printNextLine(currentPasswordIsInvalid);
@@ -93,7 +91,7 @@ public class ProfileController implements RegexPatterns, StringMessages {
         }
     }
 
-    private static void showCurrent() {
+    public static void showCurrent() {
         printerAndScanner.printNextLine(showCurrentInProfileController);
     }
 }

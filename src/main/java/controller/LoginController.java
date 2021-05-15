@@ -64,12 +64,6 @@ public class LoginController implements RegexPatterns {
                     break;
                 } else if (RegexController.hasField(matcher, "enter")) {
                     printerAndScanner.printNextLine(loginFirst);
-//                    if (loginChecker) {
-//                        MainController mainController = MainController.getInstance();
-//                        mainController.run(user);
-//                    } else {
-//                        System.out.println("please login first");
-//                    }
                 } else printerAndScanner.printNextLine(invalidCommand);
             } else printerAndScanner.printNextLine(invalidCommand);
             command = printerAndScanner.scanNextLine();
@@ -82,31 +76,16 @@ public class LoginController implements RegexPatterns {
 
     }
 
-//    public static User getUser(String username, String password) {
-//        if (users.containsKey(username)) {
-//            if (users.get(username).getPassword().equals(password)) {
-//                return users.get(username).getUserByUsername(username);
-//            } else {
-//                System.out.println("user with name " + username + " doesn't exist or username and password doesnt match");
-//                return null;
-//            }
-//        } else {
-//            System.out.println("user with name " + username + " doesn't exist or username and password doesnt match");
-//            return null;
-//        }
-//    }
-
     private void showCurrentMenu() {
         printerAndScanner.printNextLine(showLoginMenu);
     }
 
     public void createUser(String username, String password, String nickname) {
-        Matcher matcher;
-        if ((matcher = RegexController.getMatcher(username, standardUsernameAndNickname)) == null)
+        if (RegexController.getMatcher(username, standardUsernameAndNickname) == null)
             printerAndScanner.printNextLine(createUserFailedBecauseOfUsername);
-        else if ((matcher = RegexController.getMatcher(nickname, standardUsernameAndNickname)) == null)
+        else if ( RegexController.getMatcher(nickname, standardUsernameAndNickname) == null)
             printerAndScanner.printNextLine(createUserFailedBecauseOfNickname);
-        else if ((matcher = RegexController.getMatcher(password, standardPassword)) == null)
+        else if ( RegexController.getMatcher(password, standardPassword) == null)
             printerAndScanner.printNextLine(createUserFailedBecauseOfPasswordWeakness);
         else if (userNames.contains(username)) {
             printBuilderController.thisUsernameAlreadyExists(username);
@@ -129,16 +108,6 @@ public class LoginController implements RegexPatterns {
         }
         printerAndScanner.printNextLine(userLoggedInSuccessfully);
         return true;
-//        if (userNames.contains(username)) {
-//            System.out.println("Username and password didn't match!");
-//        } else if (!(password.equals(user.getPassword()))) {
-//            System.out.println("Username and password didn't match!");
-//        }
-//        else {
-//            user = user.getUserByUsername(username);
-//            loginChecker = true;
-//            System.out.println("user logged in successfully!");
-//        }
     }
 
     public static User getUserByUsername(String username){

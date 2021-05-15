@@ -22,22 +22,6 @@ public class Deck {
     }
 
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-//    public void setMainDeckCardCount(int mainDeckCardCount) {
-//        this.mainDeckCardCount = mainDeckCardCount;
-//    }
-//
-//    public void setSideDeckCardCount(int sideDeckCardCount) {
-//        this.sideDeckCardCount = sideDeckCardCount;
-//    }
-//
-//    public void setEachCardCount(String name, int amount) {
-//    }
-
-
     public String getName() {
         return name;
     }
@@ -57,12 +41,6 @@ public class Deck {
     public ArrayList<String> getAllSideCards() {
         return allSideCards;
     }
-
-//    public int getEachCardCount(String name) {
-//    }
-
-//    public void addCardByCheat(String name) {
-//    }
 
     public void addCard(String cardName, boolean isSide) {
         if (!isSide) {
@@ -122,8 +100,5 @@ public class Deck {
             allSideCards.add(cardNameFromMainToSide);
         }
     }
-
-//    public String toString() {
-//    }
 
 }

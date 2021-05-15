@@ -56,10 +56,6 @@ public class User extends Player {
         this.score = score;
     }
 
-    public void setCards(ArrayList<String> cards) {
-        this.cards = cards;
-    }
-
     public void setActiveDeck(Deck activeDeck) {
         this.activeDeck = activeDeck;
     }
@@ -96,16 +92,6 @@ public class User extends Player {
         return cardsToJustShow;
     }
 
-    public User getUserByUsername(String userName){
-        if(userName.equals(this.username)) {
-            return this;
-        }
-        else {
-            System.out.println("user with username" + userName + "doesn't exist");
-            return null;
-        }
-    }
-
     public Deck getActiveDeck() {
         return activeDeck;
     }
@@ -115,16 +101,6 @@ public class User extends Player {
             return decks.get(name);
         return null;
         // can be null
-    }
-
-    public ArrayList<Deck> getDeckList() {
-        // check for order
-        ArrayList<Deck> allDecks;
-        if (decks != null) {
-            allDecks = new ArrayList<>(decks.values());
-            return allDecks;
-        }
-        return null;
     }
 
     public Deck getDeck(String name) {
@@ -174,40 +150,4 @@ public class User extends Player {
         if(!cardsToJustShow.contains(cardName))
             cardsToJustShow.add(cardName);
     }
-
-
-
-    @Override
-    public String toString() {
-        // todo : what do we need for show from User model
-        return "User{" +
-                "username='" + username + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", password='" + password + '\'' +
-                ", balance=" + balance +
-                ", score=" + score +
-                ", decks=" + decks +
-                ", cards=" + cards +
-                '}';
-    }
-
-    // can't be tested
-//    public static void main(String[] args) {
-//        User ali = new User("ali", "1234", "MrAli");
-////        createUser("ali", "1234", "MrAli");
-//        Deck deck1 = new Deck("alis deck");
-//        Deck deck2 = new Deck("another alis deck");
-//        ali.addDeck(deck1);
-//        ali.addDeck(deck2);
-//        System.out.println(ali.getDeckByName("alis deck").getName());
-//        System.out.println(ali.getDeckByName("hamchin chizi vojood nadare").getName());
-//
-//        User mamad = new User("mamad", "1234", "MrMamad");
-////        createUser("mamad", "1234", "MrMamad");
-//        Deck deck3 = new Deck("alis deck");
-//        Deck deck4 = new Deck("another mamad deck");
-//        mamad.addDeck(deck3);
-//        mamad.addDeck(deck4);
-//    }
-
 }

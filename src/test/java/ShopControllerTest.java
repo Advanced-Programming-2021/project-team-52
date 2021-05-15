@@ -29,12 +29,6 @@ public class ShopControllerTest extends PrintBuilderController implements String
         user = LoginController.getUserByUsername("AliRahim");
         loginController.createUser("mamadM", "1234AaZz", "mamad");
     }
-    @Test
-    public void buyTest2(){
-        User user = LoginController.getUserByUsername("ali_r");
-        ShopController.getInstance().buy(user, "Battle OX");
-        Assertions.assertEquals(user.getBalance(), 97100);
-    }
 
     @Test
     public void buyTest(){
