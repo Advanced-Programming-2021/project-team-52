@@ -95,6 +95,10 @@ public class DeathWish implements SpecialAbility {
                 .getUniversalHistory().remove("neutralizeTrap");
     }
 
+    public void canNoLongerKillCardUponSummon(){
+        gamePlayController.getGamePlay().getUniversalHistory().remove("killThisCardUponSummon");
+    }
+
 //    public void killAMonsterThatIsNormalOrFlipSummoned(){
 //        gamePlayController.getGamePlay().getUniversalHistory().remove("killAMonsterThatIsNormalOrFlipSummoned" + amount);
 //        gamePlayController.getGamePlay().getHistory().get(place).remove("killAMonsterThatIsNormalOrFlipSummoned" + amount);

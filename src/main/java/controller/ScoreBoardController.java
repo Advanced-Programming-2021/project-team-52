@@ -16,8 +16,8 @@ public class ScoreBoardController implements RegexPatterns, StringMessages {
     private static ScoreBoardController scoreBoard = null;
     private static PrintBuilderController printBuilderController;
     private static PrinterAndScanner printerAndScanner;
-    Collection<User> collection = LoginController.users.values();
-    ArrayList<User> usersInScoreOrder = new ArrayList<>(collection);
+    Collection<User> collection;
+    ArrayList<User> usersInScoreOrder;
 
     {
         printBuilderController = PrintBuilderController.getInstance();
@@ -55,9 +55,11 @@ public class ScoreBoardController implements RegexPatterns, StringMessages {
     }
 
     public void sortUserByScore() {
+        collection = LoginController.users.values();
+        usersInScoreOrder = new ArrayList<>(collection);
         for (int i = 0; i < usersInScoreOrder.size(); i++) {
             for (int j = i + 1; j < usersInScoreOrder.size(); j++) {
-                if (usersInScoreOrder.get(i).getScore() > usersInScoreOrder.get(j).getScore())
+                if (usersInScoreOrder.get(i).getScore() < usersInScoreOrder.get(j).getScore())
                     Collections.swap(usersInScoreOrder, i, j);
                 else if (usersInScoreOrder.get(i).getScore() == usersInScoreOrder.get(j).getScore()) {
                     if (usersInScoreOrder.get(i).getUsername()

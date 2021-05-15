@@ -44,6 +44,9 @@ public class LoginController implements RegexPatterns {
         return loginController;
     }
 
+    public static ArrayList<String> getNickNames() {
+        return nickNames;
+    }
 
     public void run() {
         String command = printerAndScanner.scanNextLine();

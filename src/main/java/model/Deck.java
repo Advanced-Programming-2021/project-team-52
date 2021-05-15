@@ -38,7 +38,6 @@ public class Deck {
 //    }
 
 
-
     public String getName() {
         return name;
     }
@@ -73,7 +72,10 @@ public class Deck {
             allSideCards.add(cardName);
             sideDeckCardCount++;
         }
-        eachCardCount.put(cardName, eachCardCount.get(cardName) + 1);
+        if (eachCardCount.get(cardName) == null)
+            eachCardCount.put(cardName, 1);
+        else
+            eachCardCount.put(cardName, eachCardCount.get(cardName) + 1);
     }
 
     public void removeCard(String cardName, boolean isSide) {
@@ -89,9 +91,9 @@ public class Deck {
 
     public boolean isDeckFull(boolean isSide) {
         if (!isSide)
-            return mainDeckCardCount < 60;
+            return mainDeckCardCount >= 60;
         else
-            return sideDeckCardCount < 15;
+            return sideDeckCardCount >= 15;
     }
 
     public int numberOfThisCardInDeck(String cardName) {
@@ -107,12 +109,12 @@ public class Deck {
             return allSideCards.contains(cardName);
     }
 
-    public boolean isDeckValid(){
-        return mainDeckCardCount > 40;
+    public boolean isDeckValid() {
+        return mainDeckCardCount >= 40;
     }
 
-    public void changeCardBetweenMainAndSideDeck(String cardNameFromMainToSide, String cardNameFromSideToMain){
-        if(isCardWithThisNameExists(cardNameFromMainToSide, false)
+    public void changeCardBetweenMainAndSideDeck(String cardNameFromMainToSide, String cardNameFromSideToMain) {
+        if (isCardWithThisNameExists(cardNameFromMainToSide, false)
                 && isCardWithThisNameExists(cardNameFromMainToSide, true)) {
             allSideCards.remove(cardNameFromSideToMain);
             allMainCards.add(cardNameFromSideToMain);

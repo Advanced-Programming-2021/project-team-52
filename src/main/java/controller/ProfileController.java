@@ -45,13 +45,13 @@ public class ProfileController implements RegexPatterns, StringMessages {
         }
     }
 
-    public static void changeNickname(String newNickname, User user) {
+    public void changeNickname(String newNickname, User user) {
         Matcher matcher;
         if (LoginController.nickNames.contains(newNickname)) {
             printerAndScanner.printNextLine(printBuilderController.thisNicknameAlreadyExists(newNickname));
             return;
         }
-        if ((matcher = RegexController.getMatcher(newNickname, standardUsernameAndNickname)) == null) {
+        if ( RegexController.getMatcher(newNickname, standardUsernameAndNickname) == null) {
             printerAndScanner.printNextLine(nonStandardNickname);
             return;
         }
@@ -61,12 +61,29 @@ public class ProfileController implements RegexPatterns, StringMessages {
         printerAndScanner.printNextLine(nicknameChangedSuccessfully);
     }
 
+    public void changeUsername(String newUsername, User user){
+        if (LoginController.userNames.contains(newUsername)) {
+            printerAndScanner.printNextLine(printBuilderController.thisUsernameAlreadyExists(newUsername));
+            return;
+        }
+        if ( RegexController.getMatcher(newUsername, standardUsernameAndNickname) == null) {
+            printerAndScanner.printNextLine(nonStandardUsername);
+            return;
+        }
+        LoginController.userNames.remove(user.getUsername());
+        LoginController.users.remove(user.getUsername());
+        user.setUsername(newUsername);
+        LoginController.userNames.add(newUsername);
+        LoginController.users.put(newUsername, user);
+        printerAndScanner.printNextLine(usernameChangedSuccessfully);
+    }
 
-    public static void changePassword(String newPassword, String oldPassword, User user) {
+
+    public void changePassword(String newPassword, String oldPassword, User user) {
         Matcher matcher;
         if ((matcher = RegexController.getMatcher(newPassword, RegexPatterns.standardPassword)) == null) {
             printerAndScanner.printNextLine(nonStandardPassword);
-        } else if (user.getPassword().equals(oldPassword))
+        } else if (!user.getPassword().equals(oldPassword))
             printerAndScanner.printNextLine(currentPasswordIsInvalid);
         else if (oldPassword.equals(newPassword))
             printerAndScanner.printNextLine(enterNewPassword);

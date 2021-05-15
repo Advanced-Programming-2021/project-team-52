@@ -2,6 +2,7 @@ package controller;
 
 import controller.specialbilities.*;
 import model.cards.monster.MonsterCards;
+import model.cards.spell.SpellCards;
 import model.cards.trap.TrapCards;
 import model.game.*;
 import model.tools.RegexPatterns;
@@ -39,7 +40,10 @@ public class Chain implements StringMessages {
     }
 
     private void run(){
-        ArrayList<Place> chainableCards = getChainableCards();
+        specialAbilityActivationController.setGamePlayController(gamePlayController.getGamePlay().getOpponentGamePlayController());
+        ArrayList<Place> chainableCards = new ArrayList<>();
+        getSpellChainableCards(chainableCards);
+        getTrapChainableCards(chainableCards);
         if (!chainableCards.isEmpty()){
             printerAndScanner.printString(printBuilderController.turnComplete(
                     gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getName(),
@@ -47,27 +51,51 @@ public class Chain implements StringMessages {
                     gamePlayController.getGamePlay().getMyGameBoard()
             ));
             printerAndScanner.printNextLine(askActivateChain);
-            if (printerAndScanner.scanNextLine().equals("yes")){
-                printerAndScanner.printNextLine(cardNumber);
-                Place place = null;
-                int cardNumber;
-                while (true) {
-                    cardNumber = printerAndScanner.scanNextInt();
-                    if (cardNumber < 6 && cardNumber > 0){
-                        place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(cardNumber, PLACE_NAME.SPELL_AND_TRAP);
-                        if (place.getCard() != null && chainableCards.contains(place))
-                            break;
-                    }
-                    printerAndScanner.printNextLine(wrongCard);
-                }
-                if (place != null){
-                    place.setAffect(this.place);
-                    new Chain(gamePlayController.getGamePlay().getOpponentGamePlayController(), place, place.getCard().
-                            getSpecialSpeed(), attackChain);
-                    if (place.getCard() != null && place.getAffect() != null)
-                        doChain();
-                }
+            if (printerAndScanner.scanNextLine().equals("yes")) {
+//                printerAndScanner.printNextLine(cardNumber);
+//                Place place = null;
+//                int cardNumber;
+//                while (true) {
+//                    cardNumber = printerAndScanner.scanNextInt();
+//                    if (cardNumber < 6 && cardNumber > 0){
+//                        place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(cardNumber, PLACE_NAME.SPELL_AND_TRAP);
+//                        if (place.getCard() != null && chainableCards.contains(place))
+//                            break;
+//                    }
+//                    printerAndScanner.printNextLine(wrongCard);
+//                }
+//                if (place != null){
+//                    place.setAffect(this.place);
+//                    new Chain(gamePlayController.getGamePlay().getOpponentGamePlayController(), place, place.getCard().
+//                            getSpecialSpeed(), attackChain);
+//                    if (place.getCard() != null && place.getAffect() != null)
+//                        doChain();
+//                }
+                getChainCommands(chainableCards);
+                if (place.getCard() != null && place.getAffect() != null)
+                    doChain();
+
             }
+        }
+    }
+
+    private void getChainCommands(ArrayList<Place> chainable){
+        for (String command = printerAndScanner.scanNextLine(); !command.equals("cancel")
+                ; command = printerAndScanner.scanNextLine()){
+            if (command.startsWith("select")){
+                Matcher matcher = RegexController.getMatcher(command, RegexPatterns.selectCardPattern);
+                if (matcher != null)
+                    gamePlayController.getGamePlay().getOpponentGamePlayController().selectCardCredibility(matcher);
+                else printerAndScanner.printNextLine(invalidCommand);
+            } else if (command.equals("activate effect")){
+                Place selectedCard = gamePlayController.getGamePlay().getSelectedCard();
+                if (chainable.contains(selectedCard)) {
+                    selectedCard.setAffect(place);
+                    new Chain(gamePlayController.getGamePlay().getOpponentGamePlayController(), selectedCard,
+                            selectedCard.getCard().getSpecialSpeed(), false);
+                }
+                break;
+            } else printerAndScanner.printNextLine(invalidCommand);
         }
     }
 
@@ -125,10 +153,11 @@ public class Chain implements StringMessages {
         else if (place.getCard() instanceof MonsterCards && place.getAffect().getCard() instanceof MonsterCards)
             attack();
         else {
-            for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
-                if (specialAbility instanceof ActivateChain || specialAbility instanceof ActivateNoChain)
-                    specialAbility.run(gamePlayController, place);
-            }
+//            for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
+//                if (specialAbility instanceof ActivateChain || specialAbility instanceof ActivateNoChain)
+//                    specialAbility.run(gamePlayController, place);
+//            }
+            activateEffect(place);
         }
     }
 
@@ -224,6 +253,8 @@ public class Chain implements StringMessages {
     }
 
     private void activateEffect(Place place){
+        if (place.getStatus() == STATUS.SET)
+            gamePlayController.flip(place);
         GamePlayController opponentGamePlayController = gamePlayController.getGamePlay().getOpponentGamePlayController();
         for (String history : opponentGamePlayController.getGamePlay().getUniversalHistory()) {
             if (history.startsWith("getLPIfEnemySpellIsActivated")){
@@ -232,7 +263,39 @@ public class Chain implements StringMessages {
             }
         }
         specialAbilityActivationController.setGamePlayController(gamePlayController);
+        specialAbilityActivationController.activateEffectWithChain(place);
         specialAbilityActivationController.activateEffectWithoutChain(place);
         specialAbilityActivationController.runSuccessSpecialAbility(place);
+    }
+
+    private void getSpellChainableCards(ArrayList<Place> chainable){
+        Place place;
+        for (int i = 1; i < 6; i++) {
+            place = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
+                    .getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
+            if (place.getCard() instanceof SpellCards) {
+                Place previousAffect = place.getAffect();
+                place.setAffect(this.place);
+                if (specialAbilityActivationController.canActivateSpell(place, this.previousSpeed))
+                    chainable.add(place);
+                place.setAffect(previousAffect);
+            }
+        }
+    }
+
+    private void getTrapChainableCards(ArrayList<Place> chainable){
+        Place place;
+        for (int i = 1; i < 6; i++) {
+            place = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
+                    .getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
+            if (place.getCard() instanceof TrapCards) {
+                Place previousAffect = place.getAffect();
+                place.setAffect(this.place);
+                if (specialAbilityActivationController.checkForConditions(place))
+                    if (place.getCard().getSpecialSpeed() >= this.previousSpeed)
+                        chainable.add(place);
+                place.setAffect(previousAffect);
+            }
+        }
     }
 }

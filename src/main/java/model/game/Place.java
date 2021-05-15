@@ -16,7 +16,7 @@ public class Place {
     private Place affect;
     // َAttention developers!! temporaryFeatures are only valid for monster cards
 
-    protected Place(PLACE_NAME type) {
+    public Place(PLACE_NAME type) {
         this.type = type;
         temporaryFeatures = new ArrayList<>();
     }

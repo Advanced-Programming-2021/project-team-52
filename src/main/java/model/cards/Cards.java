@@ -38,6 +38,11 @@ public class Cards {
         return new ArrayList<>(ALL_CARDS.keySet());
     }
 
+    //just for unit tests
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getName() {
         return name;
     }

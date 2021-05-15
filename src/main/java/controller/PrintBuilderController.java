@@ -76,6 +76,10 @@ public class PrintBuilderController {
         return "user with this nickname " + newNickname + " already exists";
     }
 
+    public String thisUsernameAlreadyExists(String newUsername){
+        return "user with username " + newUsername + " already exists";
+    }
+
     public String DeckWithThisNameAlreadyExists(String deckName) {
         return "deck with name " + deckName + " already exists";
     }
@@ -88,8 +92,8 @@ public class PrintBuilderController {
         return "card with name " + cardName + " does not exist";
     }
 
-    public String thereAreAlreadyThreeCardsWithThisNameInThisDeck(String cardName, String deckName) {
-        return "there are already three cards with name " + cardName + " in deck " + deckName;
+    public String thereAreAlreadyThreeCardsWithThisNameInThisDeck(String cardName, String deckName, int numberOfCards) {
+        return "there are already "+numberOfCards+" cards with name " + cardName + " in deck " + deckName;
     }
 
     public String cardWithThisNameDoesNotExistInThisDeck(String cardName, boolean isSide) {
@@ -138,13 +142,16 @@ public class PrintBuilderController {
             allCardsName = deck.getAllMainCards();
         else
             allCardsName = deck.getAllSideCards();
-        ArrayList<Cards> allMonsterCards = new ArrayList<>();
-        ArrayList<Cards> allSpellCards = new ArrayList<>();
-        ArrayList<Cards> allTrapCards = new ArrayList<>();
+        ArrayList<String> allMonsterCards = new ArrayList<>();
+        ArrayList<String> allSpellCards = new ArrayList<>();
+        ArrayList<String> allTrapCards = new ArrayList<>();
         for (String cardName : allCardsName) {
             Cards card = Cards.getCard(cardName);
             specifyCardsType(allMonsterCards, allSpellCards, allTrapCards, card);
         }
+        Collections.sort(allMonsterCards);
+        Collections.sort(allSpellCards);
+        Collections.sort(allTrapCards);
         StringBuilder response = new StringBuilder();
         response.append("Deck: ");
         response.append(deck.getName());
@@ -158,30 +165,34 @@ public class PrintBuilderController {
         return response.toString();
     }
 
-    private void specifyCardsType(ArrayList<Cards> allMonsterCards, ArrayList<Cards> allSpellCards, ArrayList<Cards> allTrapCards, Cards card) {
+    private void specifyCardsType(ArrayList<String> allMonsterCards, ArrayList<String> allSpellCards,
+                                  ArrayList<String> allTrapCards, Cards card) {
         if (card instanceof MonsterCards)
-            allMonsterCards.add(card);
+            allMonsterCards.add(card.getName());
         if (card instanceof SpellCards)
-            allSpellCards.add(card);
+            allSpellCards.add(card.getName());
         if (card instanceof TrapCards)
-            allTrapCards.add(card);
+            allTrapCards.add(card.getName());
     }
 
-    private void showCardsOfDeckForShowingDeck(ArrayList<Cards> allMonsterCards, StringBuilder response) {
-        for (Cards monsterCard : allMonsterCards) {
-            response.append(monsterCard.getName());
+    private void showCardsOfDeckForShowingDeck(ArrayList<String> allMonsterCards, StringBuilder response) {
+        for (String monsterCardName : allMonsterCards) {
+            response.append(monsterCardName);
             response.append(": ");
-            response.append(monsterCard.getDescription());
+            Cards card = Cards.getCard(monsterCardName);
+            response.append(card.getDescription());
             response.append("\n");
         }
     }
 
     public String showAllCardsOfUser(ArrayList<String> cardNames) {
+        Collections.sort(cardNames);
         StringBuilder response = new StringBuilder();
         for (String cardName : cardNames) {
             response.append(cardName);
             response.append(": ");
             response.append(Cards.getCard(cardName).getDescription());
+            response.append("\n");
         }
         return response.toString();
     }

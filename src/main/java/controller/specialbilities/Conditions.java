@@ -1,6 +1,9 @@
 package controller.specialbilities;
 
 import controller.GamePlayController;
+import model.cards.monster.MonsterCards;
+import model.cards.spell.SpellCards;
+import model.cards.trap.TrapCards;
 import model.game.PLACE_NAME;
 import model.game.Place;
 
@@ -102,5 +105,17 @@ public class Conditions implements SpecialAbility{
             met = true;
         } else
             met = false;
+    }
+
+    private void affectIsMonster(){
+        met = place.getAffect().getCard() instanceof MonsterCards;
+    }
+
+    private void affectIsSpell(){
+        met = place.getAffect().getCard() instanceof SpellCards;
+    }
+
+    private void affectIsTrap(){
+        met = place.getAffect().getCard() instanceof TrapCards;
     }
 }

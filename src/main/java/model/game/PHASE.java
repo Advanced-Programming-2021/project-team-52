@@ -5,7 +5,8 @@ public enum PHASE {
     STAND_BY("phase : standby"),
     MAIN("phase : main"),
     BATTLE("phase : battle"),
-    END("phase : end");
+    END("phase : end"),
+    CHAIN("chain");
 
     private final String phaseName;
 
