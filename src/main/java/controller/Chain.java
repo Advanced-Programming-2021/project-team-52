@@ -24,6 +24,7 @@ public class Chain implements StringMessages {
     private Place place;
     private int previousSpeed;
     boolean attackChain;
+    boolean defenderWasHidden = false;
 
     static {
         printerAndScanner = PrinterAndScanner.getInstance();
@@ -40,6 +41,9 @@ public class Chain implements StringMessages {
     }
 
     private void run(){
+        if (place.getCard() instanceof MonsterCards && place.getAffect().getCard() instanceof MonsterCards &&
+                place.getAffect() != place)
+            defenderWasHidden = place.getAffect().getStatus() == STATUS.SET;
         specialAbilityActivationController.setGamePlayController(gamePlayController.getGamePlay().getOpponentGamePlayController());
         ArrayList<Place> chainableCards = new ArrayList<>();
         getSpellChainableCards(chainableCards);
@@ -151,7 +155,7 @@ public class Chain implements StringMessages {
             else activateEffect(place);
         }
         else if (place.getCard() instanceof MonsterCards && place.getAffect().getCard() instanceof MonsterCards)
-            attack();
+            attackMonster();
         else {
 //            for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
 //                if (specialAbility instanceof ActivateChain || specialAbility instanceof ActivateNoChain)
@@ -161,29 +165,44 @@ public class Chain implements StringMessages {
         }
     }
 
-    private void attack(){
+    private void attackMonster(){
         MonsterZone attacker = (MonsterZone) place;
         MonsterZone defender = (MonsterZone) place.getAffect();
+        int attackerAttack = attacker.getAttack();
+        int defenderAttack = defender.getAttack();
+        int defenderDefense = defender.getDefense();
+        String defenderName = defender.getCard().getName();
+        boolean defenderInDefendingStatus = defender.getStatus() != STATUS.ATTACK;
         attacker.addTemporaryFeatures(TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN);
-        if (attacker.getStatus() == STATUS.ATTACK && defender.getAffect().getStatus() == STATUS.ATTACK){
-            attackToAttackPosition(attacker, defender);
-        } else {
-            attackToDefensePosition(attacker, defender);
+        Place previousAffect = defender.getAffect();
+        defender.setAffect(attacker);
+        if (defenderWasHidden)
+            gamePlayController.getGamePlay().getOpponentGamePlayController().flip(defender);
+        specialAbilityActivationController.setGamePlayController(gamePlayController.getGamePlay().getOpponentGamePlayController());
+        specialAbilityActivationController.runAttackSpecial(defender, defenderWasHidden);
+        defender.setAffect(previousAffect);
+        if (!gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getHistory().get(attacker)
+                .contains("neutralizeAttack")) {
+            if (defenderInDefendingStatus) {
+                attackToDefensePosition(attackerAttack, defenderDefense, defenderName,
+                        attacker, defender, defenderWasHidden);
+            } else {
+                attackToAttackPosition(attackerAttack, defenderAttack, attacker, defender);
+            }
         }
     }
 
-    private void attackToAttackPosition(MonsterZone attacker, MonsterZone defender) {
-        int attackerAttack = attacker.getAttack();
-        int defenderAttack = defender.getAttack();
+    private void attackToAttackPosition(int attackerAttack, int defenderAttack,
+                                        MonsterZone attacker, MonsterZone defender) {
         if (attackerAttack > defenderAttack){
             destroy(gamePlayController, defender,attacker, true, true);
             gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().
                     changeHealth(defenderAttack - attackerAttack);
-            if (reduceHealth(defenderAttack - attackerAttack,
-                    gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard(),
-                    gamePlayController.getGamePlay().getOpponentGamePlayController()))
             printerAndScanner.printString(printBuilderController
-                    .attackToAttackResult(attackerAttack - defenderAttack, true));
+                    .attackToAttackResult(reduceHealth(defenderAttack - attackerAttack,
+                            gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard(),
+                            gamePlayController.getGamePlay().getOpponentGamePlayController()) ? attackerAttack -
+                            defenderAttack : 0, true));
         } else if (attackerAttack == defenderAttack){
             destroy(gamePlayController, defender, attacker, true, true);
             destroy(gamePlayController.getGamePlay().getOpponentGamePlayController(), attacker, defender, false, true);
@@ -191,33 +210,32 @@ public class Chain implements StringMessages {
         } else {
             destroy(gamePlayController.getGamePlay().getOpponentGamePlayController(), attacker, defender, false, false);
             gamePlayController.getGamePlay().getMyGameBoard().changeHealth(attackerAttack - defenderAttack);
-            if (reduceHealth(attackerAttack - defenderAttack, gamePlayController.getGamePlay().getMyGameBoard(),
-                    gamePlayController))
             printerAndScanner.printString(printBuilderController
-                    .attackToAttackResult(defenderAttack - attackerAttack, false));
+                    .attackToAttackResult(reduceHealth(attackerAttack - defenderAttack,
+                            gamePlayController.getGamePlay().getMyGameBoard(),
+                            gamePlayController) ? defenderAttack - attackerAttack : 0, false));
         }
     }
 
-    private void attackToDefensePosition(MonsterZone attacker, MonsterZone defender){
-        int attackerAttack = attacker.getAttack();
-        int defenderDefense = defender.getDefense();
-        boolean defenderWasHidden = defender.getStatus() == STATUS.SET;
-        if (defenderWasHidden)
-            gamePlayController.getGamePlay().getOpponentGamePlayController().flip(defender);
+    private void attackToDefensePosition(int attackerAttack, int defenderDefense,
+                                         String defenderName,
+                                         MonsterZone attacker, MonsterZone defender,
+                                         boolean defenderWasHidden) {
         if (defenderDefense < attackerAttack){
             destroy(gamePlayController, defender, attacker, true, true);
             printerAndScanner.printString(printBuilderController.
-                    attackToDefenseResult(defenderWasHidden, defender.getCard().getName(), 1, 0));
+                    attackToDefenseResult(defenderWasHidden, defenderName, 1, 0));
         } else if (defenderDefense == attackerAttack)
             printerAndScanner.printString(printBuilderController.
-                    attackToDefenseResult(defenderWasHidden, defender.getCard().getName(), 0, 0));
+                    attackToDefenseResult(defenderWasHidden, defenderName, 0, 0));
         else {
-            destroy(gamePlayController.getGamePlay().getOpponentGamePlayController(), attacker, defender, false, false);
-            if (reduceHealth(attackerAttack - defenderDefense, gamePlayController.getGamePlay().getMyGameBoard(),
-                    gamePlayController))
+            destroy(gamePlayController.getGamePlay().getOpponentGamePlayController(), attacker, defender,
+                    false, false);
             printerAndScanner.printString(printBuilderController.
-                    attackToDefenseResult(defenderWasHidden, defender.getCard().getName(), -1,
-                            defenderDefense - attackerAttack));
+                    attackToDefenseResult(defenderWasHidden, defenderName, -1,
+                            reduceHealth(attackerAttack - defenderDefense,
+                                    gamePlayController.getGamePlay().getMyGameBoard(),
+                                    gamePlayController) ? defenderDefense - attackerAttack : 0));
         }
     }
 

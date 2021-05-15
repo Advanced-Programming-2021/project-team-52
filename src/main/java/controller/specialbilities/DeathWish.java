@@ -40,19 +40,19 @@ public class DeathWish implements SpecialAbility {
         return method;
     }
 
-    public void killAttacker(){
+    public void killAttacker(){ //TODO ++
         if (place.getAffect().getCard() instanceof MonsterCards)
             gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().killCards(
                     gamePlayController.getGamePlay().getOpponentGamePlayController(), place.getAffect());
     }
 
-    public void killDestroyer(){
+    public void killDestroyer(){//TODO ++
         if (place.getAffect().getCard() instanceof MonsterCards)
             gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().killCards(
                     gamePlayController.getGamePlay().getOpponentGamePlayController(), place.getAffect());
     }
 
-    public void removeAllAttackBoost(){
+    public void removeAllAttackBoost(){ //TODO ++
         GeneralSpecialAbility.boostAllAttack(gamePlayController, amount, true);
         gamePlayController.getGamePlay().getHistory().get(place).remove("attack boost all " + amount);
     }
@@ -70,16 +70,16 @@ public class DeathWish implements SpecialAbility {
         GeneralSpecialAbility.defenseBoost(place, amount, true);
     }
 
-    public void canActivateTrap(){
+    public void canActivateTrap(){ //TODO ++
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
                 .getUniversalHistory().add("cannotActivateTrap");
     }
 
-    public void noHealthReduction(){
+    public void noHealthReduction(){ //TODO ++
         gamePlayController.getGamePlay().getUniversalHistory().add("noHealthReduction");
     }
 
-    public void canAttack(){
+    public void canAttack(){ //TODO ++
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
                 .getUniversalHistory().remove("cannotAttack");
     }

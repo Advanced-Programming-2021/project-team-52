@@ -10,6 +10,7 @@ import model.tools.StringMessages;
 import view.PrinterAndScanner;
 //TODO some bug that i forgot about remove something from place special each round :|
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.regex.Matcher;
 
 public class GamePlayController extends RegexController implements RegexPatterns, StringMessages {
@@ -199,8 +200,8 @@ public class GamePlayController extends RegexController implements RegexPatterns
             if (selectedCard.getCard() != null) {
                 if (gamePlay.getMyGameBoard().fromThisGameBoard(selectedCard) && selectedCard.getCard() instanceof MonsterCards) {
                     if (phase == PHASE.MAIN) {
-                        if (gamePlay.getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER) != -1 ||
-                                selectedCard.getCard().getType().equals("Ritual")) {
+                        if (gamePlay.getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER) != -1 /*||
+                                selectedCard.getCard().getType().equals("Ritual")*/) {
                             if (!alreadySummonedOrSet) {
                                 if (specialAbilityActivationController.summonWithTribute(selectedCard)) {
                                     if (selectedCard.getCard().getType().equals("Ritual"))
@@ -232,6 +233,10 @@ public class GamePlayController extends RegexController implements RegexPatterns
             printerAndScanner.printNextLine(summonedSuccessfully);
             specialAbilityActivationController.activateField();
         }
+        specialAbilityActivationController.setGamePlayController(this);
+        specialAbilityActivationController.runAttackAmountByQuantifier();
+        if (normalSummon)
+            specialAbilityActivationController.checkSummonAMonsterUponNormalSummon(placeTo);
     }
 
     private void checkBeforeSet(){
@@ -333,7 +338,8 @@ public class GamePlayController extends RegexController implements RegexPatterns
     }
 
     private boolean checkCannotBeAttacked(Place place){
-        if (gamePlay.getOpponentGamePlayController().getGamePlay().getHistory().get(place).contains("cannotBeAttacked")){
+        if (gamePlay.getOpponentGamePlayController().getGamePlay().getHistory().get(place)
+                .contains("cannotBeAttackedWhileThereAreOtherMonsters")){
             for (int i = 1; i < 6; i++) {
                 if (gamePlay.getOpponentGamePlayController().getGamePlay().getMyGameBoard().
                         getPlace(i, PLACE_NAME.MONSTER).getCard() != null)
@@ -381,8 +387,9 @@ public class GamePlayController extends RegexController implements RegexPatterns
                         if (!selectedCard.getTemporaryFeatures().contains(TEMPORARY_FEATURES.SPELL_ACTIVATED) &&
                             !gamePlay.getHistory().get(selectedCard).contains("noSpecialThisRound")) {
                             if ((selectedCard.getType() == PLACE_NAME.HAND &&
-                                    (gamePlay.getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.SPELL_AND_TRAP) != -1 ||
-                                            selectedCard.getCard().getType().equals("Field"))) ||
+//                                    gamePlay.getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.SPELL_AND_TRAP) != -1 ||
+                                    selectedCard.getCard().getSpecialSpeed() >= 2) ||
+                                    selectedCard.getCard().getType().equals("Field") ||
                                     selectedCard.getType() == PLACE_NAME.SPELL_AND_TRAP ){
                                 specialAbilityActivationController.setGamePlayController(this);
                                 if (specialAbilityActivationController.checkForConditions(selectedCard) &&
@@ -567,6 +574,19 @@ public class GamePlayController extends RegexController implements RegexPatterns
                         ((MonsterZone) place).getAttackModifier() - Integer.parseInt(matcher.group(1)));
             } else if (history.equals("drawCardIfAMonsterIsDestroyed") && gamePlay.getMyGameBoard().getMonsterCardDestroyed())
                 drawCard();
+            else if (history.startsWith("turnsRemaining")){
+                Matcher matcher = RegexController.getMatcher(history, extractEndingNumber);
+                if (matcher != null){
+                    int number = Integer.parseInt(matcher.group(1));
+                    if (number != 0){
+                        historyArray.remove(history);
+                        historyArray.add("turnsRemaining" + (number -1));
+                    } else {
+                        gamePlay.getMyGameBoard().killCards(this, place);
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -650,5 +670,27 @@ public class GamePlayController extends RegexController implements RegexPatterns
                     temporaryFeatures.remove(temporaryFeatures.get(j));
             }
         }
+    }
+
+    public void shuffleDeck(){
+        ArrayList<Cards> mainCards = new ArrayList<>(gamePlay.getMyGameBoard().getMainCards());
+        ArrayList<Integer> cardsPicked = new ArrayList<>(gamePlay.getMyGameBoard().getCardsPicked());
+        ArrayList<Integer> cardsShuffled = new ArrayList<>();
+        ArrayList<Cards> shuffledMainCards = new ArrayList<>();
+        ArrayList<Integer> shuffledCardsPicked = new ArrayList<>();
+        int mainCardsSize = mainCards.size();
+        Random random = new Random();
+        for (int i = 0; i < mainCardsSize; i++) {
+            int cardToPut;
+            do {
+                cardToPut = random.nextInt(mainCardsSize);
+            } while (cardsShuffled.contains(cardToPut));
+            shuffledMainCards.add(mainCards.get(cardToPut));
+            if (cardsPicked.contains(cardToPut))
+                shuffledCardsPicked.add(i);
+            cardsShuffled.add(cardToPut);
+        }
+        gamePlay.getMyGameBoard().setMainCards(shuffledMainCards);
+        gamePlay.getMyGameBoard().setCardsPicked(shuffledCardsPicked);
     }
 }

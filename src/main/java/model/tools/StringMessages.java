@@ -87,6 +87,8 @@ public interface StringMessages {
     String cannotBeAttackedWhileThereAreMonsters = "cannot be attacked while there are other monsters";
     String cantSpecialSummon = "there is no way you could special summon a monster";
     String conditionsNotMet = "conditions have not been met";
+    String whereDoYouWantToSpecialSummonFrom = "where do you want to special summon form? (deck/graveyard/hand)";
+    String nameOfTheCardYouWantToSummon = "please enter the name of the card that you want to summon";
 
 
     // ProfileController

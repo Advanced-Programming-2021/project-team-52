@@ -15,6 +15,8 @@ public class Tribute implements SpecialAbility, StringMessages {
     private GamePlayController gamePlayController;
     private Place place;
     private int amount;
+    private boolean specialSummon;
+    private int key;
 
     @Override
     public void run(GamePlayController gamePlayController, Place place){
@@ -38,12 +40,34 @@ public class Tribute implements SpecialAbility, StringMessages {
         return methodName;
     }
 
-    public void canSummonNormally(){
-        GeneralSpecialAbility.attackBoost(place, amount, true);
-        gamePlayController.summon(place, true);
+    public void canSummonNormally(){ //TODO ++ ++
+        switch (key) {
+            case 1 : summonWithReducingAttack();
+            case 2 : summonWithSacrificingCardFromHand();
+        }
     }
 
-    public void summonWithTribute(){
+    private void summonWithReducingAttack(){
+        GeneralSpecialAbility.attackBoost(place, amount, true);
+        gamePlayController.summon(place, specialSummon);
+    }
+
+    private void summonWithSacrificingCardFromHand(){
+        printerAndScanner.printNextLine(cardNumber);
+        int handNumberToSacrifice = printerAndScanner.scanNextInt();
+        Place place;
+        while (true){
+            place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(handNumberToSacrifice, PLACE_NAME.HAND);
+            if (place.getCard() == null){
+                printerAndScanner.printNextLine(wrongTribute);
+                handNumberToSacrifice = printerAndScanner.scanNextInt();
+            } else break;
+        }
+        gamePlayController.getGamePlay().getMyGameBoard().killCards(gamePlayController, place);
+        gamePlayController.summon(this.place, specialSummon);
+    }
+
+    public void summonWithTribute(){ //TODO ++ ++ ++
         int amount = this.amount;
         int numberOfMonsterToTribute = 0;
         for (int i = 1; i < 6; i++) {
@@ -62,7 +86,13 @@ public class Tribute implements SpecialAbility, StringMessages {
                     gamePlayController.getGamePlay().getMyGameBoard().killCards(
                             gamePlayController, place);
                 }
-                gamePlayController.summon(place, true);
+                gamePlayController.summon(place, specialSummon);
+                if (place.getCard() != null){
+                    SpecialAbilityActivationController specialAbilityActivationController =
+                            SpecialAbilityActivationController.getInstance();
+                    specialAbilityActivationController.setGamePlayController(gamePlayController);
+                    specialAbilityActivationController.runSuccessSpecialAbility(place);
+                }
             }
         } else printerAndScanner.printNextLine(thereAreNotEnoughCardsForTribute);
     }

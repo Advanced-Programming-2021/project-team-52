@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 public class RitualSummon implements SpecialAbility, StringMessages {
 
     private Method method;
+    private String methodName;
     private GamePlayController gamePlayController;
     private Place place;
 
@@ -27,12 +28,13 @@ public class RitualSummon implements SpecialAbility, StringMessages {
 
     @Override
     public void setMethod(Method method) {
-
+        this.methodName = method.getName();
+        this.method = method;
     }
 
     @Override
     public String getMethodName() {
-        return null;
+        return methodName;
     }
 
     //TODO in dock it says that this can be cancelled but doest say how

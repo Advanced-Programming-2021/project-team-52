@@ -12,7 +12,7 @@ public class AttackSpecial implements SpecialAbility {
     private String methodName;
     private GamePlayController gamePlayController;
     private Place place;
-    private String monsterType;
+    private int amount;
 
     @Override
     public void run(GamePlayController gamePlayController, Place place){
@@ -35,7 +35,7 @@ public class AttackSpecial implements SpecialAbility {
         this.method = method;
     }
 
-    public void reduceAttackToZero(){
+    public void reduceAttackToZero(){ //TODO ++
         if (!gamePlayController.getGamePlay().getHistory().get(place).contains("noSpecial")) {
             gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
                     .getHistory().get(place.getAffect()).add(
@@ -45,15 +45,23 @@ public class AttackSpecial implements SpecialAbility {
         }
     }
 
-    public void neutralizeAttack(){
+    public void neutralizeAttack(){ //TODO ++
         if (!gamePlayController.getGamePlay().getHistory().get(place).contains("noSpecialThisRound")) {
             place.getAffect().setAffect(null);
-            specialSummon();
+            gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getHistory().
+                    get(place.getAffect()).add("neutralizeAttack");
+            SpecialAbilityActivationController specialAbilityActivationController =
+                    SpecialAbilityActivationController.getInstance();
+            specialAbilityActivationController.setGamePlayController(gamePlayController);
+            specialAbilityActivationController.runSuccessSpecialAbility(place);
             gamePlayController.getGamePlay().getHistory().get(place).add("noSpecialThisRound");
         }
     }
 
-    public void specialSummon(){
-        //TODO special summon using monster type
+    public void reduceAttackerLPIfItWasFacingDown(){ //TODO ++
+        if (place.getAffect() != null) {
+            gamePlayController.getGamePlay().getOpponentGamePlayController()
+                    .getGamePlay().getMyGameBoard().changeHealth(amount * -1);
+        }
     }
 }

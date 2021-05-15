@@ -64,7 +64,7 @@ public class SpecialAbilityActivationController implements StringMessages {
         }
         if (specials.contains("canSummonNormally")) {
             printerAndScanner.printNextLine(summonWithoutTribute);
-            if (printerAndScanner.scanNextLine().equals("yes")) {
+            if (!printerAndScanner.scanNextLine().equals("yes")) {
                 for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
                     if (specialAbility.getMethodName().equals("canSummonNormally")) {
                         specialAbility.run(gamePlayController, gamePlayController.getGamePlay().getSelectedCard());
@@ -80,12 +80,13 @@ public class SpecialAbilityActivationController implements StringMessages {
         for (int i = 0; i < specials.size(); i++) {
             if (specials.get(i).getMethodName().equals("summonWithTribute")) {
                 specials.get(i).run(gamePlayController, place);
-                for (int j = i + 1; j < specials.size(); j++) {
-                    if (specials.get(j) instanceof Success) {
-                        specials.get(j).run(gamePlayController, place);
-                        break;
-                    }
-                }
+//                for (int j = i + 1; j < specials.size(); j++) {
+//                    if (specials.get(j) instanceof Success) {
+//                        specials.get(j).run(gamePlayController, place);
+//                        break;
+//                    }
+//                }
+                runSuccessSpecialAbility(place);
                 break;
             }
         }
@@ -137,8 +138,10 @@ public class SpecialAbilityActivationController implements StringMessages {
     public void runFacUpSpecial(Place place) {
         for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
             if (specialAbility instanceof FaceUp)
-                specialAbility.run(gamePlayController, place);
+                if (!specialAbility.getMethodName().equals("summonAMonster"))
+                    specialAbility.run(gamePlayController, place);
         }
+        runSuccessSpecialAbility(place);
     }
 
     public void activateEffectWithoutChain(Place place) {
@@ -187,9 +190,10 @@ public class SpecialAbilityActivationController implements StringMessages {
     }
 
     public void handleScanner(Place place) {
+        STATUS status = place.getStatus();
         gamePlayController.getGamePlay().getMyGameBoard().killCards(gamePlayController, place);
         place.setCard(Cards.getCard("Scanner"));
-        place.setStatus(STATUS.ATTACK);
+        place.setStatus(status);
         printerAndScanner.printNextLine(askActivateScanner);
         if (printerAndScanner.scanNextLine().equals("yes")) {
             place.getCard().getSpecial().get(0).run(gamePlayController, place);
@@ -295,5 +299,39 @@ public class SpecialAbilityActivationController implements StringMessages {
                 if (checkForConditions(place))
                     return true;
         return false;
+    }
+
+    public void runAttackSpecial(Place place, boolean defenderWasHidden){
+
+        for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
+            if (specialAbility instanceof AttackSpecial)
+                if (specialAbility.getMethodName().equals("reduceAttackerLPIfItWasFacingDown")) {
+                    if (defenderWasHidden)
+                        specialAbility.run(gamePlayController, place);
+                } else specialAbility.run(gamePlayController, place);
+        }
+        runSuccessSpecialAbility(place);
+    }
+
+    public void runAttackAmountByQuantifier(){
+        Place place;
+        for (int i = 1; i < 6; i++) {
+            place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER);
+            for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
+                if (specialAbility.getMethodName().equals("attackAmountByQuantifier")) {
+                    specialAbility.run(gamePlayController, place);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void checkSummonAMonsterUponNormalSummon(Place place){
+        for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
+            if (specialAbility.getMethodName().equals("summonAMonster")){
+                specialAbility.run(gamePlayController, place);
+                break;
+            }
+        }
     }
 }

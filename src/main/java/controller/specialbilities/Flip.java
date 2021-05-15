@@ -37,7 +37,7 @@ public class Flip implements SpecialAbility, StringMessages {
         return methodName;
     }
 
-    public void destroyAMonster(){
+    public void destroyAMonster(){//TODO ++
         int i;
         for (i = 1; i < 6; i++) {
             if (gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
@@ -57,15 +57,15 @@ public class Flip implements SpecialAbility, StringMessages {
                 .getPlace(i, PLACE_NAME.MONSTER).killCard();
     }
 
-    public void reduceAttackerLP(){
-        if (place.getAffect() != null) {
-            gamePlayController.getGamePlay().getOpponentGamePlayController()
-                    .getGamePlay().getMyGameBoard().changeHealth(amount * -1);
-        }
-    }
+//    public void reduceAttackerLP(){
+//        if (place.getAffect() != null) {
+//            gamePlayController.getGamePlay().getOpponentGamePlayController()
+//                    .getGamePlay().getMyGameBoard().changeHealth(amount * -1);
+//        }
+//    }
 
-    public void cannotActivateTrap(){
-        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
-                .getUniversalHistory().add("cannotActivateTrap");
-    }
+//    public void cannotActivateTrap(){
+//        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
+//                .getUniversalHistory().add("cannotActivateTrap");
+//    }
 }

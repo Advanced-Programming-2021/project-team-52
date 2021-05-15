@@ -43,11 +43,11 @@ public class Continuous implements SpecialAbility, StringMessages {
 //            ((MonsterZone) place).changeToThisCard(Cards.getCard("Scanner"));
 //    }
 
-    public void cannotBeNormallyDestroyed(){
+    public void cannotBeNormallyDestroyed(){//TODO++
         gamePlayController.getGamePlay().getHistory().get(place).add("cannotBeNormallyDestroyed");
     }
 
-    public void attackAmountByQuantifier(){
+    public void attackAmountByQuantifier(){ //TODO ++
         int sumOfLevels = 0;
         for (int i = 1; i < 6; i++) {
             Place monsterPlace = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER);
@@ -58,19 +58,19 @@ public class Continuous implements SpecialAbility, StringMessages {
         ((MonsterZone) place).setAttackModifier(amount * sumOfLevels);
     }
 
-    public void drawCardIfAMonsterIsDestroyed(){
+    public void drawCardIfAMonsterIsDestroyed(){ //TODO ++
         gamePlayController.getGamePlay().getUniversalHistory().add("drawCardIfAMonsterIsDestroyed");
     }
 
-    public void getLPIfEnemySpellIsActivated(){
+    public void getLPIfEnemySpellIsActivated(){ //TODO ++
         gamePlayController.getGamePlay().getUniversalHistory().add("getLPIfEnemySpellIsActivated" + amount);
     }
 
-    public void payHealthEveryRound(){
+    public void payHealthEveryRound(){ //TODO ++
         gamePlayController.getGamePlay().getHistory().get(place).add("payHealthEveryRound" + amount);
     }
 
-    public void monstersCannotAttack(){
+    public void monstersCannotAttack(){ //TODO ++
         gamePlayController.getGamePlay().getUniversalHistory().add("monstersCannotAttack" + amount);
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
                 .getUniversalHistory().add("monstersCannotAttack" + amount);

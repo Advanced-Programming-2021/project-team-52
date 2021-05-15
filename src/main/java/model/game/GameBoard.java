@@ -44,8 +44,10 @@ public class GameBoard {
         return graveyard;
     }
 
+    //TODO move shuffling to
     public void shuffleCards() {
-        Collections.shuffle(mainCards);
+        if (cardsPicked.isEmpty())
+            Collections.shuffle(mainCards);
         lastCardNumberPicked = mainCards.size();
     }
 
@@ -62,8 +64,13 @@ public class GameBoard {
     public Cards drawCard() {
         while (cardsPicked.contains(lastCardNumberPicked))
             lastCardNumberPicked--;
-        cardsPicked.add(lastCardNumberPicked);
-        return (mainCards.get(lastCardNumberPicked--));
+        if (lastCardNumberPicked == 0 && cardsPicked.size() != mainCards.size()){
+                lastCardNumberPicked = mainCards.size() - 1;
+                return drawCard();
+        } else {
+            cardsPicked.add(lastCardNumberPicked);
+            return (mainCards.get(lastCardNumberPicked--));
+        }
     }
 
     public boolean noCardToDraw(){
@@ -74,6 +81,22 @@ public class GameBoard {
         return getPlace(number, name).getCard();
     }
 
+    public ArrayList<Cards> getMainCards() {
+        return mainCards;
+    }
+
+    public void setMainCards(ArrayList<Cards> mainCards) {
+        this.mainCards = mainCards;
+        lastCardNumberPicked = mainCards.size() - 1;
+    }
+
+    public ArrayList<Integer> getCardsPicked() {
+        return cardsPicked;
+    }
+
+    public void setCardsPicked(ArrayList<Integer> cardsPicked) {
+        this.cardsPicked = cardsPicked;
+    }
 
     ///////////////////////////////////////////////
     // todo : fix equal() for Cards class
@@ -196,6 +219,7 @@ public class GameBoard {
         specialAbilityActivationController.deathWishWithoutKillCard(place);
         if (place instanceof MonsterZone) {
             specialAbilityActivationController.removeMonsterFromFieldAndEffect(place);
+            specialAbilityActivationController.runAttackAmountByQuantifier();
             monsterCardDestroyed = true;
         }
         graveyard.add(place.getCard());

@@ -37,7 +37,7 @@ public class ActivateChain implements SpecialAbility, StringMessages {
         return methodName;
     }
 
-    public void destroySpellAndTraps(){
+    public void destroySpellAndTraps(){ //TODO ++
         int amount = this.amount;
         int spellAndTrapCards = 0;
         for (int i = 1; i < 6; i++) {
@@ -69,7 +69,7 @@ public class ActivateChain implements SpecialAbility, StringMessages {
                 gamePlayController.getGamePlay().getOpponentGamePlayController(), place);
     }
 
-    public void neutralizeTrap(){
+    public void neutralizeTrap(){ //TODO ++
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getUniversalHistory().add("neutralizeTrap");
     }
 
