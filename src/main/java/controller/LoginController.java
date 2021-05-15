@@ -11,6 +11,8 @@ import java.util.regex.Matcher;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static model.tools.StringMessages.*;
+
 // todo : fix problems of pattern for username, password and nickname in Pattern regexes
 public class LoginController implements RegexPatterns {
     static LoginController loginController = null;
@@ -58,15 +60,15 @@ public class LoginController implements RegexPatterns {
                 } else if (RegexController.hasField(matcher, "exit")) {
                     break;
                 } else if (RegexController.hasField(matcher, "enter")) {
-                    System.out.println("please login first");
+                    printerAndScanner.printNextLine(loginFirst);
 //                    if (loginChecker) {
 //                        MainController mainController = MainController.getInstance();
 //                        mainController.run(user);
 //                    } else {
 //                        System.out.println("please login first");
 //                    }
-                } else System.out.println("invalid command");
-            } else System.out.println("invalid command");
+                } else printerAndScanner.printNextLine(invalidCommand);
+            } else printerAndScanner.printNextLine(invalidCommand);
             command = printerAndScanner.scanNextLine();
         }
     }
@@ -92,43 +94,37 @@ public class LoginController implements RegexPatterns {
 //    }
 
     private void showCurrentMenu() {
-        System.out.println("Login menu :\n" +
-                "user create --username <username> --nickname <nickname> --password <password> :\n" +
-                "user login --username <username> --password <password>\n" +
-                "menu show-current\n" +
-                "menu enter <menu name>\n" +
-                "menu exit");
+        printerAndScanner.printNextLine(showLoginMenu);
     }
 
     public void createUser(String username, String password, String nickname) {
         Matcher matcher;
         if ((matcher = RegexController.getMatcher(username, standardUsernameAndNickname)) == null)
-            System.out.println("create user failed! only letter, digit or underscore are valid for username");
+            printerAndScanner.printNextLine(createUserFailedBecauseOfUsername);
         else if ((matcher = RegexController.getMatcher(nickname, standardUsernameAndNickname)) == null)
-            System.out.println("create user failed! only letter, digit or underscore are valid for nickname");
+            printerAndScanner.printNextLine(createUserFailedBecauseOfNickname);
         else if ((matcher = RegexController.getMatcher(password, standardPassword)) == null)
-            System.out.println("weak password! please choose a password with\n" +
-                    "minimum eight characters, at least one uppercase letter, one lowercase letter and  one number");
+            printerAndScanner.printNextLine(createUserFailedBecauseOfPasswordWeakness);
         else if (userNames.contains(username)) {
-            System.out.println("user with username " + username + " already exist");
+            printBuilderController.thisUsernameAlreadyExists(username);
         } else if (nickNames.contains(nickname)) {
-            System.out.println("user with nickname " + nickname + " already exist");
+            printBuilderController.thisNicknameAlreadyExists(nickname);
         } else {
             User user = User.createUser(username, password, nickname);
             userNames.add(username);
             nickNames.add(nickname);
             users.put(username, user);
-            System.out.println("user created successfully!");
+            printerAndScanner.printNextLine(createUserSuccessfully);
         }
     }
 
     public boolean loginUser(String username, String password) {
         User user = users.get(username);
         if (user == null || !user.getPassword().equals(password)) {
-            System.out.println("Username and password didn't match!");
+            printerAndScanner.printNextLine(usernameAndPasswordDoNotMatch);
             return false;
         }
-        System.out.println("user logged in successfully!");
+        printerAndScanner.printNextLine(userLoggedInSuccessfully);
         return true;
 //        if (userNames.contains(username)) {
 //            System.out.println("Username and password didn't match!");

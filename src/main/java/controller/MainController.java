@@ -5,6 +5,7 @@ import model.User;
 import view.PrinterAndScanner;
 
 import static model.tools.RegexPatterns.*;
+import static model.tools.StringMessages.*;
 import static view.PrinterAndScanner.*;
 
 import java.util.regex.Matcher;
@@ -50,24 +51,21 @@ public class MainController {
                         ShopController shopController = ShopController.getInstance();
                         shopController.run(user);
                     } else if (matcher.group("enter").equals("login")) {
-                        System.out.println("menu navigation is not possible");
+                        printerAndScanner.printNextLine(impossibilityOfMenuNavigation);
                     } else {
-                        System.out.println("invalid menu");
+                        printerAndScanner.printNextLine(invalidMenu);
                     }
                 } else if (RegexController.hasField(matcher, "showCurrent")) {
-                    System.out.println("Main menu :\n" +
-                            "menu show-current\n" +
-                            "menu enter <menu name>\n" +
-                            "menu exit");
+                    printerAndScanner.printNextLine(showMainMenu);
                 } else if (RegexController.hasField(matcher, "exit")) {
-                    System.out.println("You have to logout to exit");
+                    printerAndScanner.printNextLine(shouldLogoutToExit);
                 } else
-                    System.out.println("invalid command");
+                    printerAndScanner.printNextLine(invalidCommand);
             }else
-                System.out.println("invalid command");
+                printerAndScanner.printNextLine(invalidCommand);
             command = printerAndScanner.scanNextLine().toLowerCase();
         }
-        System.out.println("user logged out successfully!");
+        printerAndScanner.printNextLine(userLoggedoutSuccessfully);
         // testing
     }
 }
