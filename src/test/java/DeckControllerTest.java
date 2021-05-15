@@ -107,7 +107,8 @@ public class DeckControllerTest {
         System.setOut(new PrintStream(outContent));
         outContent.reset();
         deckController.addCardToDeck("unreal card", "perfectDeck",false, user);
-        Assertions.assertEquals("card with name " + "unreal card" + " does not exist\r\n", outContent.toString());
+        Assertions.assertEquals("card with name " + "unreal card" +
+                " does not exist\r\n", outContent.toString());
     }
 
     @Test
@@ -193,13 +194,16 @@ public class DeckControllerTest {
         deckController.addCardToDeck("Alexandrite Dragon", "perfectDeck", false, user);
         outContent.reset();
         deckController.activateDeck("perfectDeck", user);
+        Assertions.assertEquals("deck activated successfully",
+                outContent.toString().trim().replace("\r",""));
         deckController.showAllDecks(user);
         Assertions.assertEquals("deck activated successfully\n" +
                 "Decks:\n" +
                 "Active deck:\n" +
                 "perfectDeck: main deck 1, side deck 0, invalid\n" +
                 "Other decks:\n" +
-                "goodDeck: main deck 0, side deck 0, invalid", outContent.toString().trim().replace("\r",""));
+                "goodDeck: main deck 0, side deck 0, invalid",
+                outContent.toString().trim().replace("\r",""));
     }
 
     @Test
@@ -208,7 +212,8 @@ public class DeckControllerTest {
         deckController.addCardToDeck("Yomi Ship", "perfectDeck", false, user);
         outContent.reset();
         deckController.showAllUserCards(user);
-        Assertions.assertEquals("Alexandrite Dragon: Many of the czars' lost jewels can be found in the scales " +
+        Assertions.assertEquals("Alexandrite Dragon: Many of the czars'" +
+                " lost jewels can be found in the scales " +
                 "of this priceless dragon. Its creator remains a mystery, along with how they acquired the imperial " +
                 "treasures. But whosoever finds this dragon has hit the jackpot... whether they know it or not.\n" +
                 "Axe Raider: An axe-wielding monster of tremendous strength and agility.\n" +
@@ -216,8 +221,29 @@ public class DeckControllerTest {
                 "Battle OX: A monster with tremendous power, it destroys enemies with a swing of its axe.\n" +
                 "Curtain of the dark ones: A curtain that a spellcaster made, it is said to raise a dark power.\n" +
                 "Man_Eater Bug: FLIP: Target 1 monster on the field; destroy that target.\n" +
-                "Yomi Ship: If this card is destroyed by battle and sent to the GY: Destroy the monster that destroyed " +
+                "Yomi Ship: If this card is destroyed by battle and sent to the GY:" +
+                " Destroy the monster that destroyed " +
                 "this card.\n\r\n", outContent.toString());
+
+    }
+
+    @Test
+    public void removeCardFromDeckTest(){
+        System.setOut(new PrintStream(outContent));
+        deckController.addCardToDeck("Yomi Ship", "perfectDeck", false, user);
+        outContent.reset();
+        deckController.removeCardFromDeck("Yomi Ship", "perfectDeck", true, user);
+        Assertions.assertEquals("card with name " + "Yomi Ship" + " does not exist in side deck",
+                outContent.toString().trim().replace("\r",""));
+        outContent.reset();
+        deckController.removeCardFromDeck("Yomi Ship", "perfectDeck", false, user);
+        Assertions.assertEquals("card removed form deck successfully",
+                outContent.toString().trim().replace("\r",""));
+        outContent.reset();
+
+        deckController.removeCardFromDeck("Alexandrite Dragon", "perfectDeck", false, user);
+        Assertions.assertEquals("card with name " + "Alexandrite Dragon" + " does not exist in main deck",
+                outContent.toString().trim().replace("\r",""));
 
     }
 }

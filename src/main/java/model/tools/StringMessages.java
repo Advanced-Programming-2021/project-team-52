@@ -89,11 +89,13 @@ public interface StringMessages {
 
     // ProfileController
     String nicknameChangedSuccessfully = "nickname changed successfully";
+    String usernameChangedSuccessfully = "username changed successfully";
     String currentPasswordIsInvalid = "current password is invalid";
     String enterNewPassword = "please enter a new password";
     String passwordChangedSuccessfully = "password changed successfully";
     String menuNavigationIsNotPossible = "menu navigation is not possible";
     String nonStandardNickname = "only letter, digit or underscore are valid for nickname";
+    String nonStandardUsername = "only letter, digit or underscore are valid for username";
     String nonStandardPassword = "weak password! please choose a password with\n" +
             "minimum eight characters, at least one uppercase letter, one lowercase letter and  one number";
 

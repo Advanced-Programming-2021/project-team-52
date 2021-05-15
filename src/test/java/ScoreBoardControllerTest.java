@@ -1,4 +1,5 @@
 import controller.LoginController;
+import controller.ProfileController;
 import controller.ScoreBoardController;
 import model.User;
 import org.junit.jupiter.api.Assertions;
@@ -65,5 +66,18 @@ public class ScoreBoardControllerTest {
                 "2- aziRahim: 20\n" +
                 "7- mamad: 10\n" +
                 "8- akbar: 9", ScoreBoardController.getInstance().toString().trim().replace("\r",""));
+
+        ProfileController.getInstance().changeNickname("parsa", LoginController.getUserByUsername("asghar"));
+
+        outContent.reset();
+        Assertions.assertEquals("1- parsa: 90\n" +
+                "2- AliRahim: 20\n" +
+                "2- BliRahim: 20\n" +
+                "2- aliRahim: 20\n" +
+                "2- aliRahjm: 20\n" +
+                "2- aziRahim: 20\n" +
+                "7- mamad: 10\n" +
+                "8- akbar: 9", ScoreBoardController.getInstance().toString().trim().replace("\r",""));
+
     }
 }
