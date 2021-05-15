@@ -28,15 +28,8 @@ public class Shop {
         return shop;
     }
 
-    //todo : should be tested
-    public TreeMap<String, Integer> getAllShopItems() {
-        return new TreeMap<String, Integer>(items);
-    }
-
     public int getItemPrize(String name) {
-        if (items.containsKey(name))
             return items.get(name);
-        return -1;
     }
 
     public String toString() {

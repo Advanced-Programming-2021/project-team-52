@@ -74,12 +74,10 @@ public class ShopController implements StringMessages, RegexPatterns {
 
     private boolean checkBeforeTransaction(String cardName, int balance) {
         int cardPrice = Shop.getInstance().getItemPrize(cardName);
-        if (cardPrice == -1)
-            return false;  //card doesn't exists
         return cardPrice <= balance;
     }
 
-    private static void showCurrent() {
+    public static void showCurrent() {
         printerAndScanner.printNextLine(showCurrentInShopController);
     }
 }
