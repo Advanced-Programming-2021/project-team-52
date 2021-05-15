@@ -84,5 +84,33 @@ public interface StringMessages {
     String cardRemovedFormDeckSuccessfully = "card removed form deck successfully";
     //just add this delete it in term of conff
     String userLoggedoutSuccessfully = "user Loggedout Successfully!";
+    
+    /*
+     //MainController
+    String impossibilityOfMenuNavigation = "menu navigation is not possible";
+    String invalidMenu = "invalid menu";
+    String showMainMenu = "Main menu :\n" +
+            "menu show-current\n" +
+            "menu enter <menu name>\n" +
+            "menu exit";
+    String shouldLogoutToExit = "You have to logout to exit";
+    String userLoggedOutSuccessfully = "user logged out successfully!";
+
+    //LoginController
+    String loginFirst = "please login first";
+    String showLoginMenu = "Login menu :\n" +
+            "user create --username <username> --nickname <nickname> --password <password> :\n" +
+            "user login --username <username> --password <password>\n" +
+            "menu show-current\n" +
+            "menu enter <menu name>\n" +
+            "menu exit";
+    String createUserFailedBecauseOfUsername = "create user failed! only letter, digit or underscore are valid for username";
+    String createUserFailedBecauseOfNickname = "create user failed! only letter, digit or underscore are valid for nickname";
+    String createUserFailedBecauseOfPasswordWeakness = "weak password! please choose a password with\n" +
+            "minimum eight characters, at least one uppercase letter, one lowercase letter and  one number";
+    String createUserSuccessfully = "user created successfully!";
+    String usernameAndPasswordDoNotMatch = "Username and password didn't match!";
+    String userLoggedInSuccessfully = "user logged in successfully!";
+    */
 
 }
