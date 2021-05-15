@@ -88,7 +88,6 @@ public class DeckController implements RegexPatterns, StringMessages {
         ArrayList<String> userCards = user.getCards();
         userCards.addAll(deck.getAllMainCards());
         userCards.addAll(deck.getAllSideCards());
-
         user.deleteDeck(deckName);
         printerAndScanner.printNextLine(deckDeletedSuccessfully);
     }
@@ -157,7 +156,7 @@ public class DeckController implements RegexPatterns, StringMessages {
     public void removeCardFromDeck(String cardName, String deckName, boolean isSide, User user) {
         Deck deck = user.getDeckByName(deckName);
         if (deckDoesNotExists(deckName, deck)) return;
-        if (deck.isCardWithThisNameExists(cardName, isSide)) {
+        if (!deck.isCardWithThisNameExists(cardName, isSide)) {
             printerAndScanner.printNextLine(printBuilderController
                     .cardWithThisNameDoesNotExistInThisDeck(cardName, isSide));
             return;

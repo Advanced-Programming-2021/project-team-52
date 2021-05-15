@@ -11,8 +11,8 @@ public interface RegexPatterns {
     Pattern userCreatPattern = Pattern.compile("^user create(?!.*(?:--password|-p).*(?:--password|-p))(?!.*(?:--user" +
             "name|-u).*(?:--username|-u))(?!.*(?:--nickname|-n).*(?:--nickname|-n))(?=.*(?:--username|-u))(?=.*(?:--" +
             "password|-p))(?=.*(?:--nickname|-n))(?: (?:(?:--password|-p) (?<password>\\S+)|(?:--username|-u) (?<use" +
-            "rname>\\S+)|(?:--nickname|-n) (?<nickname>\\w+)))+$");
-    Pattern profileChangeNickNamePattern = Pattern.compile("^profile change --nickname (?<nickname>\\w+)$");
+            "rname>\\S+)|(?:--nickname|-n) (?<nickname>\\S+)))+$");
+    Pattern profileChangeNickNamePattern = Pattern.compile("^profile change --nickname (?<nickname>\\S+)$");
     Pattern profileChangePasswordPattern = Pattern.compile("^profile change(?!.*(?:--current|-c).*(?:--current|-c))(" +
             "?!.*(?:--new|-new).*(?:--new|-n))(?!.*(?:--password|-p).*(?:--password|-p))(?=.*(?:--current|-c))(?=.*(" +
             "?:--password|-p))(?=.*(?:--new|-n))(?: (?:(?:--current|-c) (?<current>\\S+)|(?:--new|-n) (?<new>\\S+)|(" +
@@ -55,7 +55,7 @@ public interface RegexPatterns {
     Pattern extractEndingNumber = Pattern.compile("^\\w+(-?\\d+)$");
 
     Pattern standardPassword = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");
-    Pattern standardUsernameAndNickname = Pattern.compile("\\w");
+    Pattern standardUsernameAndNickname = Pattern.compile("^\\w+$");
 
 
 }

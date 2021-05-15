@@ -68,8 +68,12 @@ public class PrintBuilderController {
         return "opponent’s monster card was " + cardName + " and ";
     }
 
+    public String thisUsernameAlreadyExists(String newUsername) {
+        return "user with this username " + newUsername + " already exists";
+    }
+
     public String thisNicknameAlreadyExists(String newNickname) {
-        return "user with nickname " + newNickname + " already exists";
+        return "user with this nickname " + newNickname + " already exists";
     }
 
     public String DeckWithThisNameAlreadyExists(String deckName) {
