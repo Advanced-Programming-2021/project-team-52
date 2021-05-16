@@ -88,9 +88,11 @@ public class LoginController implements RegexPatterns {
         else if ( RegexController.getMatcher(password, standardPassword) == null)
             printerAndScanner.printNextLine(createUserFailedBecauseOfPasswordWeakness);
         else if (userNames.contains(username)) {
-            printBuilderController.thisUsernameAlreadyExists(username);
+            //bug fixed
+            printerAndScanner.printNextLine(printBuilderController.thisUsernameAlreadyExists(username));
         } else if (nickNames.contains(nickname)) {
-            printBuilderController.thisNicknameAlreadyExists(nickname);
+            //bug fixed
+            printerAndScanner.printNextLine(printBuilderController.thisNicknameAlreadyExists(nickname));
         } else {
             User user = User.createUser(username, password, nickname);
             userNames.add(username);
