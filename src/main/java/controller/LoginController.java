@@ -25,7 +25,7 @@ public class LoginController implements RegexPatterns {
 
     {
         printBuilderController = PrintBuilderController.getInstance();
-        printerAndScanner = PrinterAndScanner.getInstance();
+        printerAndScanner = PrinterAndScanner.getInstance(System.in);
         userNames = new ArrayList<>();
         nickNames = new ArrayList<>();
         users = new HashMap<>();

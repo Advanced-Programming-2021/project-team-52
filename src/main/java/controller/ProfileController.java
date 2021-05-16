@@ -12,7 +12,6 @@ public class ProfileController implements RegexPatterns, StringMessages {
     private static PrintBuilderController printBuilderController = PrintBuilderController.getInstance();
     private static PrinterAndScanner printerAndScanner = PrinterAndScanner.getInstance();
 
-
     private ProfileController() {
     }
 
@@ -22,8 +21,9 @@ public class ProfileController implements RegexPatterns, StringMessages {
         return profile;
     }
 
+
     public void run(User user) {
-        String command = printerAndScanner.scanNextLine().toLowerCase();
+        String command = printerAndScanner.scanNextLine();
         Matcher matcher;
         while (true) {
             if ((matcher = RegexController.getMatcher(command, profileChangeNickNamePattern)) != null) {
@@ -44,6 +44,7 @@ public class ProfileController implements RegexPatterns, StringMessages {
             command = printerAndScanner.scanNextLine().toLowerCase();
         }
     }
+
 
     public void changeNickname(String newNickname, User user) {
         if (LoginController.nickNames.contains(newNickname)) {
@@ -76,7 +77,6 @@ public class ProfileController implements RegexPatterns, StringMessages {
         LoginController.users.put(newUsername, user);
         printerAndScanner.printNextLine(usernameChangedSuccessfully);
     }
-
 
     public void changePassword(String newPassword, String oldPassword, User user) {
         if (RegexController.getMatcher(newPassword, RegexPatterns.standardPassword) == null) {

@@ -31,7 +31,7 @@ public class ShopControllerTest extends PrintBuilderController implements String
     }
 
     @Test
-    public void buyTest(){
+    public void buyTest() {
         System.setOut(new PrintStream(outContent));
 
         outContent.reset();
@@ -53,7 +53,7 @@ public class ShopControllerTest extends PrintBuilderController implements String
     }
 
     @Test
-    public void showCurrent(){
+    public void showCurrent() {
         System.setOut(new PrintStream(outContent));
         outContent.reset();
         ShopController.showCurrent();
@@ -63,7 +63,7 @@ public class ShopControllerTest extends PrintBuilderController implements String
 
 
     @Test
-    public void showAllCards(){
+    public void showAllCards() {
         Assertions.assertEquals("Advanced Ritual Art:3000\n" +
                         "Alexandrite Dragon:2600\n" +
                         "Axe Raider:3100\n" +

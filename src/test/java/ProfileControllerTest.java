@@ -13,6 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Scanner;
 
 public class ProfileControllerTest extends PrintBuilderController implements StringMessages {
     ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -157,5 +158,13 @@ public class ProfileControllerTest extends PrintBuilderController implements Str
         System.setOut(new PrintStream(outContent));
         ProfileController.showCurrent();
         Assertions.assertEquals(showCurrentInProfileController, outContent.toString().trim().replace("\r", ""));
+    }
+
+    @Test
+    public void testRegexes(){
+        String s = "create user --username ali --password 1234 --nickname ali";
+        ByteArrayInputStream bais = new ByteArrayInputStream(s.getBytes());
+        System.setIn(bais);
+        profileController.run(user);
     }
 }
