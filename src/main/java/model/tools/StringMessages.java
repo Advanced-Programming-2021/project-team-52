@@ -68,8 +68,9 @@ public interface StringMessages {
     String cantSetThisCard = "you can't set this card";
     String spellCardZoneIsFull = "spell card zone is full";
     String cantDoInThisPhase = "you can’t do this action in this phase";
+    String invalidInput = "your input is invalid please check it"; //TODO is different from invalid command, only used in specialSummonFromGraveYard in ActivateNoChain
 
-    String askActivateChain = "do you want to activate your trap and spell?";
+    String askActivateChain = "do you want to activate your trap or spell?";
     String cardNumber = "please enter the card number";
     String activateEffectIsOnlyForSpells = "activate effect is only for spell cards.";
     String youCantActivateOnThisTurn = "you can’t activate an effect on this turn";

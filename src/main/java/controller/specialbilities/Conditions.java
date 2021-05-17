@@ -4,6 +4,7 @@ import controller.GamePlayController;
 import model.cards.monster.MonsterCards;
 import model.cards.spell.SpellCards;
 import model.cards.trap.TrapCards;
+import model.game.MonsterZone;
 import model.game.PLACE_NAME;
 import model.game.Place;
 
@@ -98,15 +99,6 @@ public class Conditions implements SpecialAbility{
         met = gamePlayController.getGamePlay().getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER) != -1;
     }
 
-    private void playLPForActivation(){
-        printerAndScanner.printNextLine(printBuilderController.askForLpForActivation(amount).toString());
-        if (printerAndScanner.scanNextLine().equals("yes")){
-            gamePlayController.getGamePlay().getMyGameBoard().changeHealth(amount * -1);
-            met = true;
-        } else
-            met = false;
-    }
-
     private void affectIsMonster(){
         met = place.getAffect().getCard() instanceof MonsterCards;
     }
@@ -117,5 +109,20 @@ public class Conditions implements SpecialAbility{
 
     private void affectIsTrap(){
         met = place.getAffect().getCard() instanceof TrapCards;
+    }
+
+    private void checkBeforeKillingAMonsterInFlipSummonOrSummon(Place place){
+        met = false;
+        if (place.getCard() != null)
+            if (place.getCard() instanceof MonsterCards)
+                if (((MonsterCards) place.getCard()).getAttack() >= amount)
+                    met = true;
+    }
+
+    private void affectHasAtLeastThisDamage(){ //TODO ++
+        met = false;
+        if (place.getAffect().getCard() instanceof MonsterCards)
+            if (((MonsterZone) place.getAffect()).getAttack() >= amount)
+                met = true;
     }
 }

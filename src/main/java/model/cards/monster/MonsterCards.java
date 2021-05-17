@@ -1,6 +1,9 @@
 package model.cards.monster;
 
 import model.cards.Cards;
+import model.game.Place;
+
+import java.util.HashMap;
 
 public class MonsterCards extends Cards{
 //TODO add speed

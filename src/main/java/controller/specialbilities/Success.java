@@ -4,6 +4,7 @@ import controller.GamePlayController;
 import model.cards.Cards;
 import model.game.PLACE_NAME;
 import model.game.Place;
+import model.game.STATUS;
 import model.tools.StringMessages;
 
 import java.lang.reflect.Method;
@@ -39,7 +40,7 @@ public class Success implements SpecialAbility, StringMessages {
         return methodName;
     }
 
-    public void killCard(){
+    public void killAffect(){ //TODO ++
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
                 .killCards(
                         gamePlayController.getGamePlay().getOpponentGamePlayController(), place.getAffect());
@@ -97,7 +98,7 @@ public class Success implements SpecialAbility, StringMessages {
         graveYard.remove(toSummon);
         Place toPlace = new Place(PLACE_NAME.HAND);
         toPlace.setCard(toSummon);
-        gamePlayController.summon(toPlace, false);
+        gamePlayController.placeCard(toPlace, false, STATUS.ATTACK);
     }
 
     private void summonFromHand(){
@@ -107,7 +108,7 @@ public class Success implements SpecialAbility, StringMessages {
             if (cardNumber <6 && cardNumber >= 0){
                 Place place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(cardNumber, PLACE_NAME.HAND);
                 if (place.getCard().getType().equals(monsterType)){
-                    gamePlayController.summon(place, false);
+                    gamePlayController.placeCard(place, false, STATUS.ATTACK);
                     break;
                 }
             }
@@ -129,7 +130,7 @@ public class Success implements SpecialAbility, StringMessages {
                     if (mainCards.get(i).equals(card) && !cardsPicked.contains(i)){
                         Place toSummon = new Place(PLACE_NAME.HAND);
                         toSummon.setCard(card);
-                        gamePlayController.summon(place, false);
+                        gamePlayController.placeCard(place, false, STATUS.ATTACK);
                         cardsPicked.add(i);
                         gamePlayController.shuffleDeck();
                         break outerLoop;

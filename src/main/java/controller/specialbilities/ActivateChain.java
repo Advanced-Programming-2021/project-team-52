@@ -73,12 +73,12 @@ public class ActivateChain implements SpecialAbility, StringMessages {
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getUniversalHistory().add("neutralizeTrap");
     }
 
-    public void redirectAttack(){
+    public void redirectAttack(){ //TODO ++
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
                 .changeHealth(((MonsterZone) place).getAttack() * -1);
     }
 
-    public void destroyAllEnemyMonstersInThisStatus(){
+    public void destroyAllEnemyMonstersInThisStatus(){ //TODO ++
         GeneralSpecialAbility.killAllMonsters(true, gamePlayController, false, status);
     }
 
@@ -89,27 +89,24 @@ public class ActivateChain implements SpecialAbility, StringMessages {
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getUniversalHistory().add("cannotSummon");
     }
 
-    public void destroySpellWhileActivating(){
-        boolean handIsNotEmpty = false;
-        for (int i = 0; i < 6; i++) {
-            if (gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.HAND).getCard() != null)
-                handIsNotEmpty = true;
-        }
-        if (handIsNotEmpty) {
-            printerAndScanner.printNextLine(askForPlace);
-            int toRemove = printerAndScanner.scanNextInt();
-            while (gamePlayController.getGamePlay().getMyGameBoard().getPlace(toRemove, PLACE_NAME.HAND) == null){
-                printerAndScanner.printNextLine(wrongCard);
-                toRemove = printerAndScanner.scanNextInt();
-            }
-            gamePlayController.getGamePlay().getMyGameBoard().getGraveyard().add(
-                    gamePlayController.getGamePlay().getMyGameBoard().getPlace(toRemove, PLACE_NAME.HAND).getCard());
-            gamePlayController.getGamePlay().getMyGameBoard().getPlace(toRemove, PLACE_NAME.HAND).setCard(null);
+    public void destroySpellWhileActivating(){ //TODO ++
             place.killCard();
-        }
     }
 
-    public void endBattlePhase(){
+    public void endBattlePhase(){ //TODO ++
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getUniversalHistory().add("endBattlePhase");
+    }
+
+    public void killAffect(){ //TODO ++
+        GamePlayController opponentGamePlayController = gamePlayController.getGamePlay().getOpponentGamePlayController();
+        opponentGamePlayController.getGamePlay().getMyGameBoard().killCards(opponentGamePlayController, place.getAffect());
+    }
+
+    public void preventAttack(){ //TODO ++
+        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getUniversalHistory().add("preventAttack");
+    }
+
+    public void preventNextChain(){
+        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getUniversalHistory().add("preventChain");
     }
 }

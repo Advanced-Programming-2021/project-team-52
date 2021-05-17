@@ -4,6 +4,7 @@ import controller.GamePlayController;
 import model.cards.monster.MonsterCards;
 import model.game.PLACE_NAME;
 import model.game.Place;
+import model.game.STATUS;
 import model.tools.StringMessages;
 
 import java.lang.reflect.Method;
@@ -38,7 +39,7 @@ public class RitualSummon implements SpecialAbility, StringMessages {
     }
 
     //TODO in dock it says that this can be cancelled but doest say how
-    public void ritualSummon(){
+    public void ritualSummon(){//TODO ++
         Place toSummon = getRitualCard();
         String[] tributes;
         while(true){
@@ -48,7 +49,7 @@ public class RitualSummon implements SpecialAbility, StringMessages {
                 break;
         }
         sacrificeTributes(tributes);
-        gamePlayController.summon(toSummon, true);
+        gamePlayController.placeCard(toSummon, true, STATUS.ATTACK);
     }
 
     private Place getRitualCard() {

@@ -221,7 +221,8 @@ public class GameBoard {
             specialAbilityActivationController.removeMonsterFromFieldAndEffect(place);
             specialAbilityActivationController.runAttackAmountByQuantifier();
             monsterCardDestroyed = true;
-        }
+        } else if (place instanceof Field)
+            specialAbilityActivationController.deactivateField();
         graveyard.add(place.getCard());
         place.killCard();
     }

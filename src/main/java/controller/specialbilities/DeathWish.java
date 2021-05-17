@@ -36,10 +36,6 @@ public class DeathWish implements SpecialAbility {
         this.method = method;
     }
 
-    public Method getMethod() {
-        return method;
-    }
-
     public void killAttacker(){ //TODO ++
         if (place.getAffect().getCard() instanceof MonsterCards)
             gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().killCards(

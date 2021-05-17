@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 //TODO add conditions
 
-public class Chain implements StringMessages {
+public class OldChain implements StringMessages {
 
     //TODO remove this comment
     private static PrinterAndScanner printerAndScanner = null;
@@ -32,7 +32,7 @@ public class Chain implements StringMessages {
         specialAbilityActivationController = SpecialAbilityActivationController.getInstance();
     }
 
-    public Chain (GamePlayController gamePlayController, Place place, int speed, boolean attackChain){
+    public OldChain (GamePlayController gamePlayController, Place place, int speed, boolean attackChain){
         this.gamePlayController = gamePlayController;
         this.place = place;
         this.previousSpeed = speed;
@@ -95,7 +95,7 @@ public class Chain implements StringMessages {
                 Place selectedCard = gamePlayController.getGamePlay().getSelectedCard();
                 if (chainable.contains(selectedCard)) {
                     selectedCard.setAffect(place);
-                    new Chain(gamePlayController.getGamePlay().getOpponentGamePlayController(), selectedCard,
+                    new OldChain(gamePlayController.getGamePlay().getOpponentGamePlayController(), selectedCard,
                             selectedCard.getCard().getSpecialSpeed(), false);
                 }
                 break;

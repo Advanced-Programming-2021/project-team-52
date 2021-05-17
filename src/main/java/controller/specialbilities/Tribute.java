@@ -1,9 +1,9 @@
 package controller.specialbilities;
 
 import controller.GamePlayController;
-import model.cards.Cards;
 import model.game.PLACE_NAME;
 import model.game.Place;
+import model.game.STATUS;
 import model.tools.StringMessages;
 
 import java.lang.reflect.Method;
@@ -49,7 +49,7 @@ public class Tribute implements SpecialAbility, StringMessages {
 
     private void summonWithReducingAttack(){
         GeneralSpecialAbility.attackBoost(place, amount, true);
-        gamePlayController.summon(place, specialSummon);
+        gamePlayController.placeCard(place, specialSummon, STATUS.ATTACK);
     }
 
     private void summonWithSacrificingCardFromHand(){
@@ -64,7 +64,7 @@ public class Tribute implements SpecialAbility, StringMessages {
             } else break;
         }
         gamePlayController.getGamePlay().getMyGameBoard().killCards(gamePlayController, place);
-        gamePlayController.summon(this.place, specialSummon);
+        gamePlayController.placeCard(this.place, specialSummon, STATUS.ATTACK);
     }
 
     public void summonWithTribute(){ //TODO ++ ++ ++
@@ -86,7 +86,7 @@ public class Tribute implements SpecialAbility, StringMessages {
                     gamePlayController.getGamePlay().getMyGameBoard().killCards(
                             gamePlayController, place);
                 }
-                gamePlayController.summon(place, specialSummon);
+                gamePlayController.placeCard(place, specialSummon, STATUS.ATTACK);
                 if (place.getCard() != null){
                     SpecialAbilityActivationController specialAbilityActivationController =
                             SpecialAbilityActivationController.getInstance();

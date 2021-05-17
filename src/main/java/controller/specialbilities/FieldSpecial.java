@@ -1,6 +1,7 @@
 package controller.specialbilities;
 
 import controller.GamePlayController;
+import model.game.Field;
 import model.game.PLACE_NAME;
 import model.game.Place;
 
@@ -23,6 +24,7 @@ public class FieldSpecial implements SpecialAbility {
     public void run(GamePlayController gamePlayController, Place place){
         this.gamePlayController = gamePlayController;
         this.place = place;
+        this.affected = ((Field) place).getAffected();
         try {
             method.invoke(this);
         } catch (Exception e) {
@@ -41,19 +43,19 @@ public class FieldSpecial implements SpecialAbility {
         return methodName;
     }
 
-    public void setAffected(ArrayList<Place> affected) {
-        this.affected = affected;
+    public void setOnDeath(boolean onDeath) {
+        this.onDeath = onDeath;
     }
 
-    private void attackChange(){
+    private void attackChange(){//TODO ++
         changeAttackModifier(amount);
     }
 
-    private void defenseChange(){
+    private void defenseChange(){//TODO ++
         changeDefenseModifier(amount);
     }
 
-    private void attackBoostForGraveYard(){
+    private void attackBoostForGraveYard(){//TODO ++
         int amount = calculateAmountOfChange();
         changeAttackModifier(amount);
     }
