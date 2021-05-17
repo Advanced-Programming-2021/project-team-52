@@ -11,10 +11,8 @@ import java.util.Locale;
 
 public class CommunicatorBetweenAIAndGame {
     private static CommunicatorBetweenAIAndGame communicatorBetweenAIAndGame = null;
-    private GameBoard AIGameBoard;
-    private GameBoard opponentGameBoard;
 
-    private CommunicatorBetweenAIAndGame() {
+    protected CommunicatorBetweenAIAndGame() {
     }
 
     public static CommunicatorBetweenAIAndGame getInstance() {
@@ -65,7 +63,7 @@ public class CommunicatorBetweenAIAndGame {
         return places;
     }
 
-    public ArrayList<Place> getSpellAndTrapZone(GameBoard gameBoard){
+    public ArrayList<Place> getSpellAndTrapZone(GameBoard gameBoard) {
         ArrayList<Place> places = new ArrayList<>();
         for (int i = 1; i < 5; i++) {
             Place place = gameBoard.getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
@@ -205,5 +203,47 @@ public class CommunicatorBetweenAIAndGame {
                 return secondCard;
             else return firstCard;
         }
+    }
+
+    public int numberThisTypeMonsterInThisZone(GameBoard gameBoard, String type){
+        ArrayList<Place> monsterZone = getMonsterZone(gameBoard);
+        int cardCounter = 0;
+        for (Place place : monsterZone) {
+            if(place != null){
+                Cards card = place.getCard();
+                if(card instanceof MonsterCards){
+                    MonsterCards monsterCard = (MonsterCards) card;
+                    if(monsterCard.getMonsterType().equals(type))
+                        ++cardCounter;
+                }
+            }
+        }
+        return cardCounter;
+    }
+
+    public boolean weightedCardCounter(ArrayList<String> goodCards, ArrayList<String> badCards,
+                                       GameBoard AIGameBoard, GameBoard opponentGameBoard){
+        int AIGoodCardCounter = 0;
+        AIGoodCardCounter = getGoodCardCounter(goodCards, AIGameBoard, AIGoodCardCounter);
+        AIGoodCardCounter = getBadCardCounter(badCards, AIGameBoard, AIGoodCardCounter);
+
+        int opponentGoodCardCounter = 0;
+        AIGoodCardCounter = getGoodCardCounter(goodCards, opponentGameBoard, AIGoodCardCounter);
+        AIGoodCardCounter = getBadCardCounter(badCards, opponentGameBoard, AIGoodCardCounter);
+        return AIGoodCardCounter >= opponentGoodCardCounter;
+    }
+
+    private int getBadCardCounter(ArrayList<String> badCards, GameBoard AIGameBoard, int AIGoodCardCounter) {
+        for (String badCard : badCards) {
+            AIGoodCardCounter -= numberThisTypeMonsterInThisZone(AIGameBoard, badCard);
+        }
+        return AIGoodCardCounter;
+    }
+
+    private int getGoodCardCounter(ArrayList<String> goodCards, GameBoard AIGameBoard, int AIGoodCardCounter) {
+        for (String goodCard : goodCards) {
+            AIGoodCardCounter += numberThisTypeMonsterInThisZone(AIGameBoard, goodCard);
+        }
+        return AIGoodCardCounter;
     }
 }
