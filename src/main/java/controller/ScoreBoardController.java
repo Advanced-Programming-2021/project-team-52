@@ -14,15 +14,11 @@ import java.util.regex.Matcher;
 
 public class ScoreBoardController implements RegexPatterns, StringMessages {
     private static ScoreBoardController scoreBoard = null;
-    private static PrintBuilderController printBuilderController;
-    private static PrinterAndScanner printerAndScanner;
+    private static PrintBuilderController printBuilderController = PrintBuilderController.getInstance();
+    private static PrinterAndScanner printerAndScanner = PrinterAndScanner.getInstance();
     Collection<User> collection;
     ArrayList<User> usersInScoreOrder;
 
-    {
-        printBuilderController = PrintBuilderController.getInstance();
-        printerAndScanner = PrinterAndScanner.getInstance();
-    }
 
     private ScoreBoardController(){
     }
@@ -70,7 +66,7 @@ public class ScoreBoardController implements RegexPatterns, StringMessages {
         }
     }
 
-    private static void showCurrent() {
+    public static void showCurrent() {
         printerAndScanner.printNextLine(getShowCurrentInScoreboardController);
     }
 

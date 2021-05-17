@@ -1,11 +1,13 @@
 import com.opencsv.exceptions.CsvException;
 import controller.DeckController;
 import controller.LoginController;
+import controller.PrintBuilderController;
 import controller.ShopController;
 import model.Deck;
 import model.Shop;
 import model.User;
 import model.cards.Cards;
+import model.tools.StringMessages;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,11 +17,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-public class DeckControllerTest {
+public class DeckControllerTest extends PrintBuilderController implements StringMessages {
 
     ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     User user;
     DeckController deckController = DeckController.getInstance();
+
     @BeforeEach
     public void init() throws IOException, CsvException {
         LoginController.instantiateCards();
@@ -51,7 +54,7 @@ public class DeckControllerTest {
     }
 
     @Test
-    public void createDeckTest(){
+    public void createDeckTest() {
         System.setOut(new PrintStream(outContent));
         outContent.reset();
         deckController.createDeck("testDeck", user);
@@ -60,12 +63,11 @@ public class DeckControllerTest {
     }
 
     @Test
-    public void showAllDeckOrderTest(){
+    public void showAllDeckOrderTest() {
         System.setOut(new PrintStream(outContent));
         deckController.createDeck("ZerfectDeck", user);
         deckController.createDeck("GoodDeck", user);
         deckController.createDeck("1oodDeck", user);
-        deckController.createDeck("PerfectDeck", user);
         outContent.reset();
         deckController.showAllDecks(user);
         Assertions.assertEquals("Decks:\n" +
@@ -75,22 +77,21 @@ public class DeckControllerTest {
                 "GoodDeck: main deck 0, side deck 0, invalid\n" +
                 "PerfectDeck: main deck 0, side deck 0, invalid\n" +
                 "ZerfectDeck: main deck 0, side deck 0, invalid\n" +
-                "goodDeck: main deck 0, side deck 0, invalid\n" +
-                "perfectDeck: main deck 0, side deck 0, invalid\n\r\n", outContent.toString());
+                "goodDeck: main deck 0, side deck 0, invalid\n\n", outContent.toString());
     }
 
     @Test
-    public void showOneDeckTest(){
+    public void showOneDeckTest() {
         System.setOut(new PrintStream(outContent));
-        deckController.addCardToDeck("Battle OX", "perfectDeck",false, user);
+        deckController.addCardToDeck("Battle OX", "perfectDeck", false, user);
         deckController.addCardToDeck("Battle OX", "perfectDeck", false, user);
         deckController.addCardToDeck("Baby dragon", "perfectDeck", true, user);
         deckController.addCardToDeck("Alexandrite Dragon", "perfectDeck", true, user);
-        deckController.addCardToDeck("Unreal card", "perfectDeck",false, user);
+        deckController.addCardToDeck("Unreal card", "perfectDeck", false, user);
         deckController.addCardToDeck("Alexandrite Dragon", "perfectDeck", false, user);
-        deckController.addCardToDeck("Alexandrite Dragon", "perfectDeck",false, user);
+        deckController.addCardToDeck("Alexandrite Dragon", "perfectDeck", false, user);
         outContent.reset();
-        deckController.showDeck(user,"perfectDeck", true);
+        deckController.showDeck(user, "perfectDeck", true);
         Assertions.assertEquals("Deck: perfectDeck\n" +
                 "Monsters: \n" +
                 "Alexandrite Dragon: Many of the czars' lost jewels can be found in the scales of this priceless " +
@@ -103,52 +104,52 @@ public class DeckControllerTest {
     }
 
     @Test
-    public void addCardToDeckUnrealCardTest(){
+    public void addCardToDeckUnrealCardTest() {
         System.setOut(new PrintStream(outContent));
         outContent.reset();
-        deckController.addCardToDeck("unreal card", "perfectDeck",false, user);
+        deckController.addCardToDeck("unreal card", "perfectDeck", false, user);
         Assertions.assertEquals("card with name " + "unreal card" +
                 " does not exist\r\n", outContent.toString());
     }
 
     @Test
-    public void addCardToUnrealDeck(){
+    public void addCardToUnrealDeck() {
         System.setOut(new PrintStream(outContent));
         outContent.reset();
-        deckController.addCardToDeck("Battle OX", "unreal deck",false, user);
+        deckController.addCardToDeck("Battle OX", "unreal deck", false, user);
         Assertions.assertEquals("deck with name " + "unreal deck" + " does not exist\r\n",
                 outContent.toString());
     }
 
     @Test
-    public void addCardToFullDeck(){
+    public void addCardToFullDeck() {
         // at first change 2 numbers of isDeckFull() from 60 and 15 to 3 and 2
         System.setOut(new PrintStream(outContent));
 
-        deckController.addCardToDeck("Battle OX", "perfectDeck",true, user);
-        deckController.addCardToDeck("Axe Raider", "perfectDeck",true, user);
+        deckController.addCardToDeck("Battle OX", "perfectDeck", true, user);
+        deckController.addCardToDeck("Axe Raider", "perfectDeck", true, user);
         outContent.reset();
 
-        deckController.addCardToDeck("Baby dragon", "perfectDeck",true, user);
-        Assertions.assertEquals( "side deck is full\r\n", outContent.toString());
+        deckController.addCardToDeck("Baby dragon", "perfectDeck", true, user);
+        Assertions.assertEquals("side deck is full\r\n", outContent.toString());
     }
 
     @Test
-    public void addCardMoreThanItStatusToDeck(){
+    public void addCardMoreThanItStatusToDeck() {
         System.setOut(new PrintStream(outContent));
 
         Cards card = Cards.getCard("Alexandrite Dragon");
         card.setStatus("Limited");
-        deckController.addCardToDeck("Alexandrite Dragon", "perfectDeck",true, user);
+        deckController.addCardToDeck("Alexandrite Dragon", "perfectDeck", true, user);
         outContent.reset();
 
-        deckController.addCardToDeck("Alexandrite Dragon", "perfectDeck",false, user);
-        Assertions.assertEquals( "there are already "+"1" +" cards with name " + "Alexandrite Dragon" +
+        deckController.addCardToDeck("Alexandrite Dragon", "perfectDeck", false, user);
+        Assertions.assertEquals("there are already " + "1" + " cards with name " + "Alexandrite Dragon" +
                 " in deck " + "perfectDeck\r\n", outContent.toString());
     }
 
     @Test
-    public void deleteDeckTest(){
+    public void deleteDeckTest() {
         System.setOut(new PrintStream(outContent));
         deckController.deleteDeck("perfectDeck", user);
         outContent.reset();
@@ -157,25 +158,25 @@ public class DeckControllerTest {
     }
 
     @Test
-    public void cardsDestinationAfterDeletingDeckTest(){
+    public void cardsDestinationAfterDeletingDeckTest() {
         System.setOut(new PrintStream(outContent));
-        deckController.addCardToDeck("Yomi Ship", "perfectDeck",false, user);
+        deckController.addCardToDeck("Yomi Ship", "perfectDeck", false, user);
         deckController.deleteDeck("perfectDeck", user);
         outContent.reset();
-        deckController.addCardToDeck("Yomi Ship", "goodDeck",false, user);
+        deckController.addCardToDeck("Yomi Ship", "goodDeck", false, user);
         Assertions.assertEquals("card added to deck successfully\r\n", outContent.toString());
     }
 
     @Test
-    public void deckWithThisNameAlreadyExists(){
+    public void deckWithThisNameAlreadyExists() {
         System.setOut(new PrintStream(outContent));
         outContent.reset();
-        deckController.addCardToDeck("Yomi Ship", "tt",false, user);
+        deckController.addCardToDeck("Yomi Ship", "tt", false, user);
         Assertions.assertEquals("deck with name " + "tt" + " does not exist\r\n", outContent.toString());
     }
 
     @Test
-    public void validDeckTest(){
+    public void validDeckTest() {
         // first isDeckValid() numbers from 40 to 4
         Deck deck = user.getDeckByName("perfectDeck");
         deckController.addCardToDeck("Alexandrite Dragon", "perfectDeck", false, user);
@@ -188,26 +189,26 @@ public class DeckControllerTest {
     }
 
     @Test
-    public void activeDeckTest(){
+    public void activeDeckTest() {
         System.setOut(new PrintStream(outContent));
         Deck deck = user.getDeckByName("perfectDeck");
         deckController.addCardToDeck("Alexandrite Dragon", "perfectDeck", false, user);
         outContent.reset();
         deckController.activateDeck("perfectDeck", user);
         Assertions.assertEquals("deck activated successfully",
-                outContent.toString().trim().replace("\r",""));
+                outContent.toString().trim().replace("\r", ""));
         deckController.showAllDecks(user);
         Assertions.assertEquals("deck activated successfully\n" +
-                "Decks:\n" +
-                "Active deck:\n" +
-                "perfectDeck: main deck 1, side deck 0, invalid\n" +
-                "Other decks:\n" +
-                "goodDeck: main deck 0, side deck 0, invalid",
-                outContent.toString().trim().replace("\r",""));
+                        "Decks:\n" +
+                        "Active deck:\n" +
+                        "perfectDeck: main deck 1, side deck 0, invalid\n" +
+                        "Other decks:\n" +
+                        "goodDeck: main deck 0, side deck 0, invalid",
+                outContent.toString().trim().replace("\r", ""));
     }
 
     @Test
-    public void showAllCardsOfUserTest(){
+    public void showAllCardsOfUserTest() {
         System.setOut(new PrintStream(outContent));
         deckController.addCardToDeck("Yomi Ship", "perfectDeck", false, user);
         outContent.reset();
@@ -228,22 +229,53 @@ public class DeckControllerTest {
     }
 
     @Test
-    public void removeCardFromDeckTest(){
+    public void removeCardFromDeckTest() {
         System.setOut(new PrintStream(outContent));
         deckController.addCardToDeck("Yomi Ship", "perfectDeck", false, user);
         outContent.reset();
         deckController.removeCardFromDeck("Yomi Ship", "perfectDeck", true, user);
         Assertions.assertEquals("card with name " + "Yomi Ship" + " does not exist in side deck",
-                outContent.toString().trim().replace("\r",""));
+                outContent.toString().trim().replace("\r", ""));
         outContent.reset();
         deckController.removeCardFromDeck("Yomi Ship", "perfectDeck", false, user);
         Assertions.assertEquals("card removed form deck successfully",
-                outContent.toString().trim().replace("\r",""));
+                outContent.toString().trim().replace("\r", ""));
         outContent.reset();
 
         deckController.removeCardFromDeck("Alexandrite Dragon", "perfectDeck", false, user);
         Assertions.assertEquals("card with name " + "Alexandrite Dragon" + " does not exist in main deck",
-                outContent.toString().trim().replace("\r",""));
+                outContent.toString().trim().replace("\r", ""));
 
     }
+
+    @Test
+    public void removeCardFromSideDeckTest() {
+        System.setOut(new PrintStream(outContent));
+        ShopController.getInstance().buy(user, "Bitron");
+        deckController.addCardToDeck("Bitron", "perfectDeck", true, user);
+        outContent.reset();
+        deckController.removeCardFromDeck("Bitron", "perfectDeck", true, user);
+        Assertions.assertEquals(cardRemovedFormDeckSuccessfully,
+                outContent.toString().trim().replace("\r", ""));
+    }
+
+    @Test
+    public void test() {
+        LoginController.getInstance().createUser("mamadGhole", "12345aaAA", "gholi");
+        User user = LoginController.getUserByUsername("mamadGhole");
+        deckController.createDeck("gholiDeck", user);
+        ShopController shopController = ShopController.getInstance();
+        shopController.buy(user, "Marshmallon");
+        Deck deck = user.getDeck("gholiDeck");
+
+        Assertions.assertEquals("gholiDeck", deck.getName());
+
+        deck.addCard("Marshmallon", true);
+        deck.removeCard("Marshmallon", true);
+        Assertions.assertEquals(deck.getSideDeckCardCount(), 0);
+
+        Assertions.assertFalse(deck.isDeckValid());
+
+    }
+
 }

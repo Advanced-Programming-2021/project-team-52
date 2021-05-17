@@ -69,17 +69,14 @@ public class ShopController implements StringMessages, RegexPatterns {
         user.addCards(cardName);
         user.addCardToJustShowCards(cardName);
         printerAndScanner.printNextLine(cardBoughtSuccessfully); // This message does not exists
-//        System.out.println(user.getBalance());
     }
 
     private boolean checkBeforeTransaction(String cardName, int balance) {
         int cardPrice = Shop.getInstance().getItemPrize(cardName);
-        if (cardPrice == -1)
-            return false;  //card doesn't exists
         return cardPrice <= balance;
     }
 
-    private static void showCurrent() {
+    public static void showCurrent() {
         printerAndScanner.printNextLine(showCurrentInShopController);
     }
 }

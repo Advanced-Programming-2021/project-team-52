@@ -1,20 +1,25 @@
 import controller.LoginController;
+import controller.PrintBuilderController;
 import controller.ProfileController;
 import controller.ScoreBoardController;
 import model.User;
+import model.tools.StringMessages;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import view.PrinterAndScanner;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 
-public class ScoreBoardControllerTest {
+public class ScoreBoardControllerTest extends PrintBuilderController implements StringMessages {
     ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private static PrinterAndScanner printerAndScanner = PrinterAndScanner.getInstance();
+
 
     @Test
-    public void sortUserByScoreTest(){
+    public void sortUserByScoreTest() {
         System.setOut(new PrintStream(outContent));
 
         LoginController loginController = LoginController.getInstance();
@@ -65,7 +70,7 @@ public class ScoreBoardControllerTest {
                 "2- aliRahjm: 20\n" +
                 "2- aziRahim: 20\n" +
                 "7- mamad: 10\n" +
-                "8- akbar: 9", ScoreBoardController.getInstance().toString().trim().replace("\r",""));
+                "8- akbar: 9", ScoreBoardController.getInstance().toString().trim().replace("\r", ""));
 
         ProfileController.getInstance().changeNickname("parsa", LoginController.getUserByUsername("asghar"));
 
@@ -77,7 +82,16 @@ public class ScoreBoardControllerTest {
                 "2- aliRahjm: 20\n" +
                 "2- aziRahim: 20\n" +
                 "7- mamad: 10\n" +
-                "8- akbar: 9", ScoreBoardController.getInstance().toString().trim().replace("\r",""));
+                "8- akbar: 9", ScoreBoardController.getInstance().toString().trim().replace("\r", ""));
 
+    }
+
+    @Test
+    public void showCurrent() {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+        ScoreBoardController.showCurrent();
+        Assertions.assertEquals(getShowCurrentInScoreboardController,
+                outContent.toString().trim().replace("\r", ""));
     }
 }

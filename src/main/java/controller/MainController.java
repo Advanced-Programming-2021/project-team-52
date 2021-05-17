@@ -65,7 +65,7 @@ public class MainController {
                 printerAndScanner.printNextLine(invalidCommand);
             command = printerAndScanner.scanNextLine().toLowerCase();
         }
-        printerAndScanner.printNextLine(userLoggedoutSuccessfully);
+        printerAndScanner.printNextLine(userLoggedOutSuccessfully);
         // testing
     }
 }
