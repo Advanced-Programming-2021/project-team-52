@@ -7,18 +7,17 @@ import model.cards.trap.TrapCards;
 import model.game.*;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
-public class CommunicatorBetweenAIAndGame {
-    private static CommunicatorBetweenAIAndGame communicatorBetweenAIAndGame = null;
+public class CommunicatorBetweenAIAndGameBoard {
+    private static CommunicatorBetweenAIAndGameBoard communicatorBetweenAIAndGameBoard = null;
 
-    protected CommunicatorBetweenAIAndGame() {
+    protected CommunicatorBetweenAIAndGameBoard() {
     }
 
-    public static CommunicatorBetweenAIAndGame getInstance() {
-        if (communicatorBetweenAIAndGame == null)
-            communicatorBetweenAIAndGame = new CommunicatorBetweenAIAndGame();
-        return communicatorBetweenAIAndGame;
+    public static CommunicatorBetweenAIAndGameBoard getInstance() {
+        if (communicatorBetweenAIAndGameBoard == null)
+            communicatorBetweenAIAndGameBoard = new CommunicatorBetweenAIAndGameBoard();
+        return communicatorBetweenAIAndGameBoard;
     }
 
     public Place getWeakestOpponentFaceUpMonsterPlace(ArrayList<Place> opponentMonsterZone) {
@@ -29,9 +28,12 @@ public class CommunicatorBetweenAIAndGame {
                     weakestOpponentFaceUpMonsterPlace = opponentMonsterPlace;
                 else {
                     MonsterCards opponentMonsterCards = (MonsterCards) opponentMonsterPlace.getCard();
-                    int opponentMonsterCardStrength = getMonsterCardStrengthInMonsterZone(weakestOpponentFaceUpMonsterPlace);
-                    MonsterCards weakestOpponentFaceUpMonster = (MonsterCards) weakestOpponentFaceUpMonsterPlace.getCard();
-                    int weakestOpponentFaceUpMonsterStrength = getMonsterCardStrengthInMonsterZone(opponentMonsterPlace);
+                    int opponentMonsterCardStrength = getMonsterCardStrengthInMonsterZone
+                            (weakestOpponentFaceUpMonsterPlace);
+                    MonsterCards weakestOpponentFaceUpMonster = (MonsterCards)
+                            weakestOpponentFaceUpMonsterPlace.getCard();
+                    int weakestOpponentFaceUpMonsterStrength = getMonsterCardStrengthInMonsterZone
+                            (opponentMonsterPlace);
                     if (opponentMonsterCardStrength != -1) {
                         if (opponentMonsterCardStrength < weakestOpponentFaceUpMonsterStrength) {
                             weakestOpponentFaceUpMonster = opponentMonsterCards;
@@ -130,14 +132,15 @@ public class CommunicatorBetweenAIAndGame {
                             AIBestCard = AIMonsterInHand;
                         } else {
                             if (isBest)
-                                if (((MonsterCards) AIMonsterInHand.getCard()).getAttack() > ((MonsterCards) AIBestCard.getCard()).getAttack())
+                                if (((MonsterCards) AIMonsterInHand.getCard()).getAttack() >
+                                        ((MonsterCards) AIBestCard.getCard()).getAttack())
                                     AIBestCard = AIMonsterInHand;
-                                else if (((MonsterCards) AIMonsterInHand.getCard()).getAttack() < ((MonsterCards) AIBestCard.getCard()).getAttack())
+                                else if (((MonsterCards) AIMonsterInHand.getCard()).getAttack() <
+                                        ((MonsterCards) AIBestCard.getCard()).getAttack())
                                     AIBestCard = AIMonsterInHand;
                         }
                     }
                 }
-
             }
         }
         return AIBestCard;
@@ -154,23 +157,32 @@ public class CommunicatorBetweenAIAndGame {
         return monsterCards;
     }
 
-    public ArrayList<Cards> monsterFinderByCard(ArrayList<Cards> cards) {
-        ArrayList<Cards> monsterCards = new ArrayList<>();
+    public ArrayList<MonsterCards> monsterFinderByCard(ArrayList<Cards> cards) {
+        ArrayList<MonsterCards> monsterCards = new ArrayList<>();
         for (Cards card : cards) {
             if (card != null)
                 if (card instanceof MonsterCards)
-                    monsterCards.add(card);
+                    monsterCards.add((MonsterCards) card);
         }
         return monsterCards;
     }
 
+    // until now just used for finding best monster card of graveyard
     public MonsterCards findBestMonsterCardByCard(ArrayList<Cards> cards) {
-        ArrayList<Cards> monsterCards = monsterFinderByCard(cards);
-        for (Object monsterCard : monsterCards) {
-            // fill this place
+        ArrayList<MonsterCards> monsterCards = monsterFinderByCard(cards);
+        MonsterCards bestMonsterCard = null;
+        for (MonsterCards monsterCard : monsterCards) {
+            if (monsterCard != null) {
+                if (bestMonsterCard == null)
+                    bestMonsterCard = monsterCard;
+                else if (monsterCard.getAttack() + (0.7 * monsterCard.getDefense()) >
+                        bestMonsterCard.getAttack() + (0.7 * bestMonsterCard.getDefense()))
+                    bestMonsterCard = monsterCard;
+            }
         }
-        return null;
+        return bestMonsterCard;
     }
+
 
     public Place findBestMonsterCardByAttackByPlace(ArrayList<Place> places) {
         Place bestMonsterPlace = null;
@@ -178,7 +190,8 @@ public class CommunicatorBetweenAIAndGame {
             if (place != null) {
                 if (bestMonsterPlace == null)
                     bestMonsterPlace = place;
-                else if (((MonsterCards) place.getCard()).getAttack() > ((MonsterCards) bestMonsterPlace.getCard()).getAttack())
+                else if (((MonsterCards) place.getCard()).getAttack() >
+                        ((MonsterCards) bestMonsterPlace.getCard()).getAttack())
                     bestMonsterPlace = place;
             }
         }
@@ -205,15 +218,15 @@ public class CommunicatorBetweenAIAndGame {
         }
     }
 
-    public int numberThisTypeMonsterInThisZone(GameBoard gameBoard, String type){
+    public int numberThisTypeMonsterInThisZone(GameBoard gameBoard, String type) {
         ArrayList<Place> monsterZone = getMonsterZone(gameBoard);
         int cardCounter = 0;
         for (Place place : monsterZone) {
-            if(place != null){
+            if (place != null) {
                 Cards card = place.getCard();
-                if(card instanceof MonsterCards){
+                if (card instanceof MonsterCards) {
                     MonsterCards monsterCard = (MonsterCards) card;
-                    if(monsterCard.getMonsterType().equals(type))
+                    if (monsterCard.getMonsterType().equals(type))
                         ++cardCounter;
                 }
             }
@@ -222,7 +235,7 @@ public class CommunicatorBetweenAIAndGame {
     }
 
     public boolean weightedCardCounter(ArrayList<String> goodCards, ArrayList<String> badCards,
-                                       GameBoard AIGameBoard, GameBoard opponentGameBoard){
+                                       GameBoard AIGameBoard, GameBoard opponentGameBoard) {
         int AIGoodCardCounter = 0;
         AIGoodCardCounter = getGoodCardCounter(goodCards, AIGameBoard, AIGoodCardCounter);
         AIGoodCardCounter = getBadCardCounter(badCards, AIGameBoard, AIGoodCardCounter);
