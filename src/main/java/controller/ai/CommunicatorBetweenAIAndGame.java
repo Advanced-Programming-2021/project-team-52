@@ -74,7 +74,7 @@ public class CommunicatorBetweenAIAndGame {
         }
         return places;
     }
-    }
+
 
     public void getMonstersOfHand(ArrayList<Place> places, GameBoard gameBoard) {
         for (int i = 0; i < 5; i++) {

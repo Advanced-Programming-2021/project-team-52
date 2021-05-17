@@ -122,8 +122,8 @@ public class MainPhaseOne {
         }
     }
 
-    public void MysticalSpaceTyphoon(){
-        ArrayList<Place> opponentSpellAndTrapPlace = communicator.getSpellAndTrapZone(opponentGameBoard);
-        if()
-    }
+//    public void MysticalSpaceTyphoon(){
+//        ArrayList<Place> opponentSpellAndTrapPlace = communicator.getSpellAndTrapZone(opponentGameBoard);
+//        if()
+//    }
 }
