@@ -16,8 +16,8 @@ public class FieldSpecial implements SpecialAbility {
     private Place place;
     private int amount, quantifier;
     private ArrayList<String> type;
-    public ArrayList<Place> affected;
     private boolean enemyAsWell;
+    public ArrayList<Place> affected;
     public boolean onDeath = false;
 
     @Override
@@ -43,6 +43,22 @@ public class FieldSpecial implements SpecialAbility {
         return methodName;
     }
 
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void setType(ArrayList<String> type) {
+        this.type = type;
+    }
+
+    public void setQuantifier(int quantifier) {
+        this.quantifier = quantifier;
+    }
+
+    public void setEnemyAsWell(boolean enemyAsWell) {
+        this.enemyAsWell = enemyAsWell;
+    }
+
     public void setOnDeath(boolean onDeath) {
         this.onDeath = onDeath;
     }
@@ -66,13 +82,14 @@ public class FieldSpecial implements SpecialAbility {
     }
 
     private int calculateAmountOfChange() {
+        Field field = (Field) place;
         int amount = 0;
         amount += gamePlayController.getGamePlay().getMyGameBoard().getGraveyard().size();
         amount += gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
                 .getGraveyard().size();
         if (amount != this.amount)
-            amount = amount - this.amount;
-        this.amount = amount;
+            amount = amount - field.getNumberOfCardsAffected();
+        field.setNumberOfCardsAffected(amount);
         amount *= quantifier;
         return amount;
     }

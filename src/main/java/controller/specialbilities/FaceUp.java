@@ -39,6 +39,10 @@ public class FaceUp implements SpecialAbility, StringMessages {
         return methodName;
     }
 
+    public void setBoostAmount(int boostAmount) {
+        this.boostAmount = boostAmount;
+    }
+
     public void boostAllAttack(){ //TODO ++
         gamePlayController.getGamePlay().getUniversalHistory().add("attackBoost" + boostAmount);
         GeneralSpecialAbility.boostAllAttack(gamePlayController, boostAmount, false);

@@ -36,16 +36,18 @@ public class DeathWish implements SpecialAbility {
         this.method = method;
     }
 
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
     public void killAttacker(){ //TODO ++
         if (place.getAffect().getCard() instanceof MonsterCards)
-            gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().killCards(
-                    gamePlayController.getGamePlay().getOpponentGamePlayController(), place.getAffect());
+            gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place.getAffect());
     }
 
     public void killDestroyer(){//TODO ++
         if (place.getAffect().getCard() instanceof MonsterCards)
-            gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().killCards(
-                    gamePlayController.getGamePlay().getOpponentGamePlayController(), place.getAffect());
+            gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place.getAffect());
     }
 
     public void removeAllAttackBoost(){ //TODO ++

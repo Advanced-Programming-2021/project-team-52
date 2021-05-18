@@ -2,6 +2,7 @@ package controller;
 
 import controller.specialbilities.SpecialAbilityActivationController;
 import model.cards.spell.SpellCards;
+import model.cards.trap.TrapCards;
 import model.game.*;
 import model.tools.CHAIN_JOB;
 import model.tools.RegexPatterns;
@@ -40,7 +41,9 @@ public class NewChain implements StringMessages, RegexPatterns {
     private void run(){
         ArrayList<Place> opponentChainable = new ArrayList<>();
         ArrayList<Place> myChainable = new ArrayList<>();
-        findChainableCards(opponentChainable, myChainable);
+//        findChainableCards(opponentChainable, myChainable);
+        searchForChainable(gamePlayController, myChainable);
+        searchForChainable(gamePlayController.getGamePlay().getOpponentGamePlayController(), opponentChainable);
         if (myChainable.size() > 0)
             addChain(myChainable, gamePlayController);
         if (opponentChainable.size() > 0) {
@@ -54,33 +57,55 @@ public class NewChain implements StringMessages, RegexPatterns {
                     gamePlayController.getGamePlay().getMyGameBoard(),
                     gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
             ));
+            myChainable.clear();
+            searchForChainable(gamePlayController, myChainable);
+            if (myChainable.size() > 0)
+                addChain(myChainable, gamePlayController);
         }
         if (gamePlayController.getGamePlay().getUniversalHistory().contains("preventChain"))
             gamePlayController.getGamePlay().getUniversalHistory().remove("preventChain");
-        else doChain();
+        else if (!gamePlayController.getGamePlay().getGameEnded())
+            doChain();
     }
 
-    private void findChainableCards(ArrayList<Place> opponentChainable, ArrayList<Place> myChainable) {
+//    private void findChainableCards(ArrayList<Place> opponentChainable, ArrayList<Place> myChainable) {
+//        Place place;
+//        specialAbilityActivationController.setGamePlayController(gamePlayController);
+//        for (int i = 1; i < 6; i++) {
+//            place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
+//            if (place.getCard() != null)
+//                if (place.getCard().getSpecialSpeed() >= previousSpeed)
+//                    if (place.getCard().getChainAfter().contains(chainJob) || place.getCard().getChainAfter().size() == 0) {
+//                        if (specialAbilityActivationController.checkForConditions(place))
+//                            myChainable.add(place);
+//                    }
+//        }
+//        for (int i = 1; i < 6; i++) {
+//            place = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().
+//                    getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
+//            if (place.getCard() != null)
+//                if (place.getCard().getSpecialSpeed() >= previousSpeed)
+//                    if (place.getCard().getChainAfter().contains(chainJob) || place.getCard().getChainAfter().size() == 0) {
+//                        if (specialAbilityActivationController.checkForConditions(place))
+//                            opponentChainable.add(place);
+//                    }
+//        }
+//    }
+
+    private void searchForChainable(GamePlayController gamePlayController, ArrayList<Place> chainable){
         Place place;
         specialAbilityActivationController.setGamePlayController(gamePlayController);
         for (int i = 1; i < 6; i++) {
             place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
             if (place.getCard() != null)
-                if (place.getCard().getSpecialSpeed() >= previousSpeed)
-                    if (place.getCard().getChainAfter().contains(chainJob)) {
+                if (place.getCard().getSpecialSpeed() >= previousSpeed){
+                    ArrayList<CHAIN_JOB> jobs = place.getCard() instanceof SpellCards
+                            ? ((SpellCards) place.getCard()).getChainJobs() : ((TrapCards) place.getCard()).getChainJobs();//place.getCard().getChainJob();
+                    if ((jobs.contains(chainJob) || jobs.size() == 0) && !jobs.contains(CHAIN_JOB.ALONE)) {
                         if (specialAbilityActivationController.checkForConditions(place))
-                            myChainable.add(place);
+                            chainable.add(place);
                     }
-        }
-        for (int i = 1; i < 6; i++) {
-            place = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().
-                    getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
-            if (place.getCard() != null)
-                if (place.getCard().getSpecialSpeed() >= previousSpeed)
-                    if (place.getCard().getChainAfter().contains(chainJob)) {
-                        if (specialAbilityActivationController.checkForConditions(place))
-                            opponentChainable.add(place);
-                    }
+            }
         }
     }
 
@@ -248,14 +273,14 @@ public class NewChain implements StringMessages, RegexPatterns {
                 specialAbilityActivationController.setGamePlayController(gamePlayController);
                 specialAbilityActivationController.runKillCardDeathWishes(defender, runKillAttacker);
             }
-            gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().killCards(
-                    gamePlayController.getGamePlay().getOpponentGamePlayController(), defender);
+            gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(defender);
         }
     }
 
     private boolean reduceHealth(int amount, GameBoard board, GamePlayController gamePlayController){
         if (!gamePlayController.getGamePlay().getUniversalHistory().contains("noHealthReduction")){
             board.changeHealth(amount);
+
             return true;
         } else {
             gamePlayController.getGamePlay().getUniversalHistory().remove("noHealthReduction");
@@ -280,11 +305,11 @@ public class NewChain implements StringMessages, RegexPatterns {
         specialAbilityActivationController.activateEffectWithoutChain(place);
         specialAbilityActivationController.runSuccessSpecialAbility(place);
         if (!place.getCard().getType().equals("Equip"))
-            gamePlayController.getGamePlay().getMyGameBoard().killCards(gamePlayController, place);
+            gamePlayController.killCard(place);
     }
 
     private void specialSummon(){
-        gamePlayController.placeCard(place, false, askStatus());
+        gamePlayController.placeCard(place, false, place.getStatus() != null ? place.getStatus() : askStatus());
     }
 
     private STATUS askStatus(){
@@ -301,5 +326,13 @@ public class NewChain implements StringMessages, RegexPatterns {
     private void flipSummon(){
         place.addTemporaryFeatures(TEMPORARY_FEATURES.CARD_POSITION_CHANGED_IN_THIS_TURN);
         gamePlayController.flip(place, STATUS.ATTACK);
+    }
+
+    private void checkIfTheGameEnded(){
+        if (gamePlayController.getGamePlay().getMyGameBoard().getHealth() == 0 ||
+        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().getHealth() == 0){
+            gamePlayController.getGamePlay().setGameEnded(true);
+            gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().setGameEnded(true);
+        }
     }
 }

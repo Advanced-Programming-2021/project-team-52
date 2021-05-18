@@ -180,8 +180,8 @@ public class SpecialAbilityActivationController implements StringMessages {
         for (int i = 1; i < 6; i++) {
             effectCheck = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
             if (effectCheck.getCard() != null)
-                if (effectCheck.getCard().getType().equals("Equip") && effectCheck.getAffect() == place)
-                    gamePlayController.getGamePlay().getMyGameBoard().killCards(gamePlayController, effectCheck);
+                if (effectCheck.getAffect() == place)
+                    gamePlayController.killCard(effectCheck);
 
         }
     }
@@ -198,13 +198,13 @@ public class SpecialAbilityActivationController implements StringMessages {
                 toPlace.setCard(opponent.getCard());
                 toPlace.setStatus(opponent.getStatus());
             }
-            opponentGamePlayController.getGamePlay().getMyGameBoard().killCards(opponentGamePlayController, opponent);
+            opponentGamePlayController.killCard(opponent);
         }
     }
 
     public void handleScanner(Place place) {
         STATUS status = place.getStatus();
-        gamePlayController.getGamePlay().getMyGameBoard().killCards(gamePlayController, place);
+        gamePlayController.killCard(place);
         place.setCard(Cards.getCard("Scanner"));
         place.setStatus(status);
         printerAndScanner.printNextLine(askActivateScanner);
@@ -222,7 +222,7 @@ public class SpecialAbilityActivationController implements StringMessages {
             gamePlayController.getGamePlay().getMyGameBoard().changeHealth(Integer.parseInt(matcher.group(1)) * -1);
             return false;
         } else {
-            gamePlayController.getGamePlay().getMyGameBoard().killCards(gamePlayController, place);
+            gamePlayController.killCard(place);
             return true;
         }
     }

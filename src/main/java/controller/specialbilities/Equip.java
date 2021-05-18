@@ -42,6 +42,18 @@ public class Equip implements SpecialAbility, StringMessages {
         this.method = method;
     }
 
+    public void setAttackChange(int attackChange) {
+        this.attackChange = attackChange;
+    }
+
+    public void setDefenseChange(int defenseChange) {
+        this.defenseChange = defenseChange;
+    }
+
+    public void setTypes(ArrayList<String> types) {
+        this.types = types;
+    }
+
     public void setOnDeath(boolean onDeath) {
         this.onDeath = onDeath;
     }

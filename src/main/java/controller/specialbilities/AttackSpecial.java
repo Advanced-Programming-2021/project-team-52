@@ -3,10 +3,11 @@ package controller.specialbilities;
 import controller.GamePlayController;
 import model.game.MonsterZone;
 import model.game.Place;
+import model.tools.StringMessages;
 
 import java.lang.reflect.Method;
 
-public class AttackSpecial implements SpecialAbility {
+public class AttackSpecial implements SpecialAbility, StringMessages {
 
     private Method method;
     private String methodName;
@@ -35,13 +36,20 @@ public class AttackSpecial implements SpecialAbility {
         this.method = method;
     }
 
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
     public void reduceAttackToZero(){ //TODO ++
         if (!gamePlayController.getGamePlay().getHistory().get(place).contains("noSpecial")) {
-            gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
-                    .getHistory().get(place.getAffect()).add(
-                    "temporaryAttackBoost" + ((MonsterZone) place.getAffect()).getAttack());
-            GeneralSpecialAbility.attackBoost(place.getAffect(), ((MonsterZone) place.getAffect()).getAttack(), true);
-            gamePlayController.getGamePlay().getHistory().get(place).add("noSpecial");
+            printerAndScanner.printNextLine(askActivateSpecial);
+            if (printerAndScanner.scanNextLine().equals("yes")) {
+                gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
+                        .getHistory().get(place.getAffect()).add(
+                        "temporaryAttackBoost" + ((MonsterZone) place.getAffect()).getAttack());
+                GeneralSpecialAbility.attackBoost(place.getAffect(), ((MonsterZone) place.getAffect()).getAttack(), true);
+                gamePlayController.getGamePlay().getHistory().get(place).add("noSpecial");
+            }
         }
     }
 

@@ -48,6 +48,18 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
         return methodName;
     }
 
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void setOnlyForOnePlayer(boolean onlyForOnePlayer) {
+        this.onlyForOnePlayer = onlyForOnePlayer;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public void sacrificeToGetFromGraveYard(){ //TODO ++ when does this get activated???
         if (!gamePlayController.getGamePlay().getHistory().get(place).contains("noSpecialThisRound")) {
             printerAndScanner.printString(PrintBuilderController.getInstance().buildGraveyard(
@@ -144,6 +156,8 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
                 graveYard.remove(card);
                 Place temporary = new Place(PLACE_NAME.HAND);
                 temporary.setCard(card);
+                temporary.setStatus(STATUS.getStatusByString(type));
+                temporary.setAffect(place);
                 new NewChain(gamePlayController, temporary, CHAIN_JOB.SPECIAL_SUMMON, spell.getCard().getSpecialSpeed());
                 return true;
             }
@@ -195,7 +209,7 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
                 myPlace.setCard(opponentPlace.getCard());
                 myPlace.setStatus(opponentPlace.getStatus());
                 gamePlayController.getGamePlay().getHistory().get(myPlace).add("forEnemy");
-                opponentGamePlayController.getGamePlay().getMyGameBoard().killCards(opponentGamePlayController, opponentPlace);
+                opponentGamePlayController.killCard(opponentPlace);
                 opponentGamePlayController.getGamePlay().getUniversalHistory()
                         .add("MyMonsterCard" + myEmptyMonsterPlace);
             } else printerAndScanner.printNextLine(fullMonsterPlaces);
@@ -208,7 +222,7 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
         GameBoard opponentGameBoard = opponentGamePlayController.getGamePlay().getMyGameBoard();
         for (int i = 1; i < 6; i++) {
             Place toKill = opponentGameBoard.getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
-            opponentGameBoard.killCards(opponentGamePlayController, toKill);
+            opponentGamePlayController.killCard(toKill);
         }
     }
 

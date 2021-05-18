@@ -53,8 +53,10 @@ public class Flip implements SpecialAbility, StringMessages {
             printerAndScanner.printNextLine(wrongCard);
             i = printerAndScanner.scanNextInt();
         }
-        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
-                .getPlace(i, PLACE_NAME.MONSTER).killCard();
+        gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(
+                gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().
+                        getPlace(i, PLACE_NAME.MONSTER)
+        );
     }
 
 //    public void reduceAttackerLP(){

@@ -1,0 +1,26 @@
+Name,Type ,Icon (Property),Description,Status,Price,Speed,Special Ability,Acctivate Time
+Monster Reborn,Spell,Normal,Target 1 monster in either GY; Special Summon it.,Limited,2500,1,ActivateNoChain : specialSummonFromGraveYard/both&&Conditions : graveYardIsNotEmpty,alone
+Terraforming,Spell,Normal,Add 1 Field Spell from your Deck to your hand.,Limited,2500,1,ActivateNoChain : addFieldSpellToHand,nothing
+Pot of Greed,Spell,Normal,Draw 2 cards.,Limited,2500,1,ActivateNoChain : drawCard/2,nothing
+Raigeki,Spell,Normal,Destroy all monsters your opponent controls.,Limited,2500,1,ActivateNoChain : killAllMonsters/enemyOnly,nothing
+Change of Heart,Spell,Normal,Target 1 monster your opponent controls; take control of it until the End Phase.,Limited,2500,1,ActivateNoChain : controlEnemyMonster&&Conditions : opponentHasMonster,nothing
+Swords of Revealing Light,Spell,Normal,"After this card's activation, it remains on the field, but destroy it during the End Phase of your opponent's 3rd turn. When this card is activated: If your opponent controls a face-down monster, flip all monsters they control face-up. While this card is face-up on the field, your opponent's monsters cannot declare an attack.",Unlimited,2500,1,ActivateNoChain : destroyAllEnemySpellAndTrap,nothing
+Harpie's Feather Duster,Spell,Normal,Destroy all Spells and Traps your opponent controls.,Limited,2500,1,ActivateNoChain : killAllMonsters/everyone,nothing
+Dark Hole,Spell,Normal,Destroy all monsters on the field.,Unlimited,2500,1,ActivateNoChain : showSetOpponentCards&&ActivateNoChain : cannotAttack&&ActivateNoChain : turnsRemaining/3&&DeathWish : canAttack,nothing
+Supply Squad,Spell,Continuous,"Once per turn, if a monster(s) you control is destroyed by battle or card effect: Draw 1 card.",Unlimited,4000,1,Continuous : drawCardIfAMonsterIsDestroyed,nothing
+Spell Absorption,Spell,Continuous,"Each time a Spell Card is activated, gain 500 Life Points immediately after it resolves.",Unlimited,4000,1,Continuous : getLPIfEnemySpellIsActivated/500,nothing
+Messenger of peace,Spell,Continuous,"Monsters with 1500 or more ATK cannot declare an attack. Once per turn, during your Standby Phase, pay 100 LP or destroy this card.",Unlimited,4000,1,Continuous : monstersCannotAttack/1500&&Continuous : payHealthEveryRound/100,nothing
+Twin Twisters,Spell,Quick-play,"Discard 1 card, then target up to 2 Spells/Traps on the field; destroy them.",Unlimited,3500,2,ActivateChain : destroySpellAndTraps/2&&Conditions : handIsNotEmpty,nothing
+Mystical space typhoon,Spell,Quick-play,Target 1 Spell/Trap on the field; destroy that target.,Unlimited,3500,2,ActivateChain : destroySpellAndTraps/1,nothing
+Ring of defense,Spell,Quick-play,When a Trap effect that inflicts damage is activated: Make that effect damage 0.,Unlimited,3500,2,ActivateChain : neutralizeTrap,nothing
+Yami,Spell,Field,"All Fiend and Spellcaster monsters on the field gain 200 ATK/DEF, also all Fairy monsters on the field lose 200 ATK/DEF.",Unlimited,4300,1,FieldSpecial : attackChange/200/enemyAsWell/Fiend+Spellcaster&&FieldSpecial : defenseChange/200/enemyAsWell/Fiend+Spellcaster&&FieldSpecial : attackChange/-200/enemyAsWell/Fairy&&FieldSpecial : defenseChange/-200/enemyAsWell/Fairy,nothing
+Forest,Spell,Field,"All Insect, Beast, Plant, and Beast-Warrior monsters on the field gain 200 ATK/DEF.",Unlimited,4300,1,FieldSpecial : attackChange/200/enemyAsWell/Insect+Beast+Beast_Warrior&&FieldSpecial : defenseChange/200/enemyAsWell/Insect+Beast+Beast_Warrior,nothing
+Closed Forest,Spell,Field,All Beast-Type monsters you control gain 100 ATK for each monster in your Graveyard. Field Spell Cards cannot be activated. Field Spell Cards cannot be activated during the turn this card is destroyed.,Unlimited,4300,1,FieldSpecial : attackBoostForGraveYard/100/meOnly/Beast+Beast_Warrior,nothing
+Umiiruka,Spell,Field,Increase the ATK of all WATER monsters by 500 points and decrease their DEF by 400 points.,Unlimited,4300,1,FieldSpecial : attackChange/500/enemyAsWell/Aqua&&FieldSpecial : defenseChange/-400/enemyAsWell/Aqua,nothing
+Sword of dark destruction,Spell,Equip,A DARK monster equipped with this card increases its ATK by 400 points and decreases its DEF by 200 points.,Unlimited,4300,1,Equip : normalEquip/400/200/Spellcaster+Fiend,nothing
+Black Pendant,Spell,Equip,The equipped monster gains 500 ATK. When this card is sent from the field to the Graveyard: Inflict 500 damage to your opponent.,Unlimited,4300,1,Equip : normalEquip/500/0,nothing
+United We Stand,Spell,Equip,The equipped monster gains 800 ATK/DEF for each face-up monster you control.,Unlimited,4300,1,Equip : boostByControlledMonsters/800,nothing
+Magnum Shield,Spell,Equip,"Equip only to a Warrior-Type monster. Apply this effect, depending on its battle position.
+● Attack Position: It gains ATK equal to its original DEF.
+● Defense Position: It gains DEF equal to its original ATK.",Unlimited,4300,1,Equip : dynamicEquip/Warrior,nothing
+Advanced Ritual Art,Spell,Ritual,This card can be used to Ritual Summon any 1 Ritual Monster. You must also send Normal Monsters from your Deck to the Graveyard whose total Levels equal the Level of that Ritual Monster.,Unlimited,3000,1,RitualSummon : ritualSummon,nothing

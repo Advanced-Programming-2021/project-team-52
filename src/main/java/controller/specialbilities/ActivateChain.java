@@ -37,6 +37,14 @@ public class ActivateChain implements SpecialAbility, StringMessages {
         return methodName;
     }
 
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void setStatus(STATUS status) {
+        this.status = status;
+    }
+
     public void destroySpellAndTraps(){ //TODO ++
         int amount = this.amount;
         int spellAndTrapCards = 0;
@@ -65,8 +73,7 @@ public class ActivateChain implements SpecialAbility, StringMessages {
     private void destroyASpellOrTrap(int number){
         Place toKill = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().getPlace
                 (number, PLACE_NAME.SPELL_AND_TRAP);
-        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().killCards(
-                gamePlayController.getGamePlay().getOpponentGamePlayController(), place);
+        gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place);
     }
 
     public void neutralizeTrap(){ //TODO ++
@@ -90,7 +97,7 @@ public class ActivateChain implements SpecialAbility, StringMessages {
     }
 
     public void destroySpellWhileActivating(){ //TODO ++
-            place.killCard();
+            gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place.getAffect());
     }
 
     public void endBattlePhase(){ //TODO ++
@@ -98,8 +105,7 @@ public class ActivateChain implements SpecialAbility, StringMessages {
     }
 
     public void killAffect(){ //TODO ++
-        GamePlayController opponentGamePlayController = gamePlayController.getGamePlay().getOpponentGamePlayController();
-        opponentGamePlayController.getGamePlay().getMyGameBoard().killCards(opponentGamePlayController, place.getAffect());
+        gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place.getAffect());
     }
 
     public void preventAttack(){ //TODO ++

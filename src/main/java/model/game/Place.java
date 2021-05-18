@@ -74,8 +74,6 @@ public class Place {
         if (this instanceof MonsterZone){
             ((MonsterZone) this).setAttackModifier(0);
             ((MonsterZone) this).setDefenseModifier(0);
-            //TODO remove this from affected in field
-            //TODO remove equipped cards
         }
         this.card = null;
         this.status = null;
@@ -84,7 +82,6 @@ public class Place {
         this.affect = null;
         history.get(this).clear();
         temporaryFeatures.clear();
-        //TODO add to graveYard
     }
 
     public ArrayList<TEMPORARY_FEATURES> getTemporaryFeatures() {

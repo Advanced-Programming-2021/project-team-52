@@ -58,7 +58,7 @@ public interface RegexPatterns {
     Pattern standardPassword = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");
     Pattern standardUsernameAndNickname = Pattern.compile("^\\w+$");
 
-
+    Pattern extractSpecial = Pattern.compile("[a-zA-Z]+ : (?<methodName>[a-zA-Z]+)(?:/(.*))?");
 }
 
 

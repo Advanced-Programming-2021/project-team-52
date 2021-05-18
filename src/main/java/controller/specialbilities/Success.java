@@ -41,17 +41,16 @@ public class Success implements SpecialAbility, StringMessages {
     }
 
     public void killAffect(){ //TODO ++
-        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
-                .killCards(
-                        gamePlayController.getGamePlay().getOpponentGamePlayController(), place.getAffect());
+        gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place.getAffect());
     }
 
     public void destroyAllEnemyCards(){ //TODO ++
+        GamePlayController opponentGamePlayController = gamePlayController.getGamePlay().getOpponentGamePlayController();
         for (int i = 1; i < 6; i++) {
-            gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
-                    .getPlace(i, PLACE_NAME.MONSTER).killCard();
-            gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
-                    .getPlace(i, PLACE_NAME.SPELL_AND_TRAP).killCard();
+            opponentGamePlayController.killCard(
+                    opponentGamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER));
+            opponentGamePlayController.killCard(
+                    opponentGamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP));
         }
     }
 

@@ -100,8 +100,7 @@ public class RitualSummon implements SpecialAbility, StringMessages {
 
     private void sacrificeTributes(String[] tributes){
         for (String tribute : tributes) {
-            gamePlayController.getGamePlay().getMyGameBoard().killCards(
-                    gamePlayController,
+            gamePlayController.killCard(
                     gamePlayController.getGamePlay().getMyGameBoard().getPlace(
                             Integer.parseInt(tribute), PLACE_NAME.MONSTER
                     )

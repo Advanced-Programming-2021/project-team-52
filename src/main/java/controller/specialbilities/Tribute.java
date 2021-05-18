@@ -40,6 +40,18 @@ public class Tribute implements SpecialAbility, StringMessages {
         return methodName;
     }
 
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void setSpecialSummon(boolean specialSummon) {
+        this.specialSummon = specialSummon;
+    }
+
+    public void setKey(int key) {
+        this.key = key;
+    }
+
     public void canSummonNormally(){ //TODO ++ ++
         switch (key) {
             case 1 : summonWithReducingAttack();
@@ -63,7 +75,7 @@ public class Tribute implements SpecialAbility, StringMessages {
                 handNumberToSacrifice = printerAndScanner.scanNextInt();
             } else break;
         }
-        gamePlayController.getGamePlay().getMyGameBoard().killCards(gamePlayController, place);
+        gamePlayController.killCard(place);
         gamePlayController.placeCard(this.place, specialSummon, STATUS.ATTACK);
     }
 
@@ -83,8 +95,7 @@ public class Tribute implements SpecialAbility, StringMessages {
                 while (!validForTribute(cardsToTribute));
                 for (int i : cardsToTribute) {
                     Place toKill = gamePlayController.getGamePlay().getMyGameBoard().getPlace(cardsToTribute[i], PLACE_NAME.MONSTER);
-                    gamePlayController.getGamePlay().getMyGameBoard().killCards(
-                            gamePlayController, place);
+                    gamePlayController.killCard(place);
                 }
                 gamePlayController.placeCard(place, specialSummon, STATUS.ATTACK);
                 if (place.getCard() != null){

@@ -41,6 +41,10 @@ public class Conditions implements SpecialAbility{
         this.method = method;
     }
 
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
     public void setMet(boolean met) {
         this.met = met;
     }
@@ -49,13 +53,13 @@ public class Conditions implements SpecialAbility{
         return met;
     }
 
-    private void graveYardIsNotEmpty(){
+    public void graveYardIsNotEmpty(){ //TODO ++
         met = !gamePlayController.getGamePlay().getMyGameBoard().getGraveyard().isEmpty() ||
                 ! gamePlayController.getGamePlay().
                         getOpponentGamePlayController().getGamePlay().getMyGameBoard().getGraveyard().isEmpty();
     }
 
-    private void thereIsMonsterInGraveYard(){
+    public void thereIsMonsterInGraveYard(){ //TODO ++
         for (int i = 1; i < 6; i++) {
             if (gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER).getCard() != null) {
                 met = true;
@@ -63,7 +67,7 @@ public class Conditions implements SpecialAbility{
         }
     }
 
-    private void opponentHasMonster(){
+    public void opponentHasMonster(){ //TODO ++
         for (int i = 1; i < 6; i++) {
             if (gamePlayController.getGamePlay().getOpponentGamePlayController().
                     getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER) != null) {
@@ -74,7 +78,7 @@ public class Conditions implements SpecialAbility{
         met = false;
     }
 
-    private void handIsNotEmpty(){
+    public void handIsNotEmpty(){//TODO ++
         for (int i = 0; i < 6; i++) {
             if (gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.HAND).getCard() != null) {
                 met = true;
@@ -84,7 +88,7 @@ public class Conditions implements SpecialAbility{
         met = false;
     }
 
-    private void opponentHasSpell(){
+    public void opponentHasSpell(){
         for (int i = 1; i < 6; i++) {
             if (gamePlayController.getGamePlay().getOpponentGamePlayController().
                     getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP) != null) {
@@ -95,23 +99,23 @@ public class Conditions implements SpecialAbility{
         met = false;
     }
 
-    private void monsterPlaceIsEmpty(){
+    public void monsterPlaceIsEmpty(){
         met = gamePlayController.getGamePlay().getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER) != -1;
     }
 
-    private void affectIsMonster(){
+    public void affectIsMonster(){
         met = place.getAffect().getCard() instanceof MonsterCards;
     }
 
-    private void affectIsSpell(){
+    public void affectIsSpell(){
         met = place.getAffect().getCard() instanceof SpellCards;
     }
 
-    private void affectIsTrap(){
+    public void affectIsTrap(){
         met = place.getAffect().getCard() instanceof TrapCards;
     }
 
-    private void checkBeforeKillingAMonsterInFlipSummonOrSummon(Place place){
+    public void checkBeforeKillingAMonsterInFlipSummonOrSummon(Place place){
         met = false;
         if (place.getCard() != null)
             if (place.getCard() instanceof MonsterCards)
@@ -119,10 +123,22 @@ public class Conditions implements SpecialAbility{
                     met = true;
     }
 
-    private void affectHasAtLeastThisDamage(){ //TODO ++
+    public void affectHasAtLeastThisDamage(){ //TODO ++
         met = false;
         if (place.getAffect().getCard() instanceof MonsterCards)
             if (((MonsterZone) place.getAffect()).getAttack() >= amount)
                 met = true;
+    }
+
+    public void otherCardsInHand(){ //TODO ++
+        met = false;
+        Place place;
+        for (int i = 0; i < 6; i++) {
+            place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.HAND);
+            if (place.getCard() != null && place != this.place){
+                met = true;
+                break;
+            }
+        }
     }
 }

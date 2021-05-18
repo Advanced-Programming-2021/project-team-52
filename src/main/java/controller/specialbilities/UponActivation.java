@@ -38,6 +38,10 @@ public class UponActivation implements SpecialAbility, StringMessages {
         this.method = method;
     }
 
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
     public boolean getMet(){
         return met;
     }
@@ -58,8 +62,6 @@ public class UponActivation implements SpecialAbility, StringMessages {
             printerAndScanner.printNextLine(wrongCard);
             toRemove = printerAndScanner.scanNextInt();
         }
-        gamePlayController.getGamePlay().getMyGameBoard().getGraveyard().add(
-                gamePlayController.getGamePlay().getMyGameBoard().getPlace(toRemove, PLACE_NAME.HAND).getCard());//TODO change to new type to kill card
-        gamePlayController.getGamePlay().getMyGameBoard().getPlace(toRemove, PLACE_NAME.HAND).setCard(null);
+        gamePlayController.killCard(gamePlayController.getGamePlay().getMyGameBoard().getPlace(toRemove, PLACE_NAME.HAND));
     }
 }
