@@ -41,7 +41,7 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard {
             setAllTrapCars(trapCards);
         }
         if (monsterCards != null) {
-            boolean isSetOrSummoned = false;
+            boolean isSetOrSummoned = true;
             while (isSetOrSummoned) {
                 isSetOrSummoned = setOrSummonMonster();
             }
@@ -60,7 +60,7 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard {
 
         boolean opponentHasSetCard = gameBoardCommunicator.doesOpponentHaveSetCard(opponentMonsterZone);
         if (opponentHasSetCard) {
-            AIBestCardPlace = gameBoardCommunicator.getBestCardByAttack(AIHand, true, ignoreCards);
+            AIBestCardPlace = gameBoardCommunicator.getBestCardByAttack(AIHand, true);
 
             // summon AIBestCardPlace
             // check for AIBestCardPlace being null
@@ -70,13 +70,13 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard {
             Place weakestOpponentFaceUpMonsterPlace = gameBoardCommunicator
                     .getWeakestOpponentFaceUpMonsterPlace(opponentMonsterZone);
             if (weakestOpponentFaceUpMonsterPlace == null) {
-                AIBestCardPlace = gameBoardCommunicator.getBestCardByAttack(AIHand, true, ignoreCards);
+                AIBestCardPlace = gameBoardCommunicator.getBestCardByAttack(AIHand, true);
                 // summon best card
                 // check for AIBestCardPlace being null
                 //  direct attack
                 return true;
             } else {
-                AIBestCardPlace = gameBoardCommunicator.getBestCardByAttack(AIHand, true, ignoreCards);
+                AIBestCardPlace = gameBoardCommunicator.getBestCardByAttack(AIHand, true);
                 if (AIBestCardPlace == null) {
                     // there is nothing to set or summon
                     return true;
@@ -87,7 +87,7 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard {
                     // else add AIBestCardPlace to ignoreCards and return false
                     return false; // just to avoid syntax error
                 } else {
-                    AIBestCardPlace = gameBoardCommunicator.getBestCardByAttack(AIHand, false, ignoreCards);
+                    AIBestCardPlace = gameBoardCommunicator.getBestCardByAttack(AIHand, false);
                     // set AIBestCardPlace
                     return true;
                 }

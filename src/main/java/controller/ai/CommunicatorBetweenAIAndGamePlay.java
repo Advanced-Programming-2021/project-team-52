@@ -15,22 +15,26 @@ public class CommunicatorBetweenAIAndGamePlay {
         return communicatorBetweenAIAndGamePlay;
     }
 
-    public void summonMonster(){}
+    public void summonMonster() {
+    }
 
-    public void setMonster(){}
+    public void setMonster() {
+    }
 
     public void activeSpell(Place place) {
     }
 
-    public void setSpell(Place place){}
+    public void setSpell(Place place) {
+    }
 
     public boolean isGamePlayLookingForCommand() {
         return true;
     }
 
-    public void setTrap(Place place){
+    public void setTrap(Place place) {
 
     }
 
-    public void endPhase(){}
+    public void endPhase() {
+    }
 }

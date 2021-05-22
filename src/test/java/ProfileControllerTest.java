@@ -9,10 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import view.PrinterAndScanner;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class ProfileControllerTest extends PrintBuilderController implements StringMessages {
@@ -162,9 +160,14 @@ public class ProfileControllerTest extends PrintBuilderController implements Str
 
     @Test
     public void testRegexes(){
-        String s = "create user --username ali --password 1234 --nickname ali";
-        ByteArrayInputStream bais = new ByteArrayInputStream(s.getBytes());
-        System.setIn(bais);
+//        String s = "create user --username ali --password 1234 --nickname ali";
+//        ByteArrayInputStream bais = new ByteArrayInputStream(s.getBytes());
+//        System.setIn(bais);
+//        profileController.run(user);
+
+        String input = "menu exit";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
         profileController.run(user);
     }
 }

@@ -75,7 +75,6 @@ public class CommunicatorBetweenAIAndGameBoard {
         return places;
     }
 
-
     public void getMonstersOfHand(ArrayList<Place> places, GameBoard gameBoard) {
         for (int i = 0; i < 5; i++) {
             Place place = gameBoard.getPlace(i, PLACE_NAME.HAND);
@@ -122,24 +121,36 @@ public class CommunicatorBetweenAIAndGameBoard {
         else return -1; // card is set
     }
 
-    public Place getBestCardByAttack(ArrayList<Place> AIHand, boolean isBest, ArrayList<Place> ignoreCards) {
+    public Place getBestMonsterCardStrengthInMonsterZoneForAttack(ArrayList<Place> places, Place AICardForAttack) {
+        ArrayList<Place> monsterPlaces = monsterFinderByPlace(places);
+        Place bestCardToAttack = null;
+        for (Place monsterPlace : monsterPlaces) {
+            if (monsterPlace != null) {
+                if (((MonsterZone) AICardForAttack).getAttack() > getMonsterCardStrengthInMonsterZone(monsterPlace)) {
+                    if (bestCardToAttack == null)
+                        bestCardToAttack = monsterPlace;
+                    else if (getMonsterCardStrengthInMonsterZone(monsterPlace) > getMonsterCardStrengthInMonsterZone(bestCardToAttack))
+                        bestCardToAttack = monsterPlace;
+                }
+            }
+        }
+        return bestCardToAttack;
+    }
+
+    public Place getBestCardByAttack(ArrayList<Place> AIHand, boolean isBest) {
         Place AIBestCard = null;
         for (Place AIMonsterInHand : AIHand) {
             if (AIMonsterInHand != null) {
-                for (Place ignoreCard : ignoreCards) {
-                    if (AIMonsterInHand != ignoreCard) {
-                        if (AIBestCard == null) {
+                if (AIBestCard == null) {
+                    AIBestCard = AIMonsterInHand;
+                } else {
+                    if (isBest)
+                        if (((MonsterCards) AIMonsterInHand.getCard()).getAttack() >
+                                ((MonsterCards) AIBestCard.getCard()).getAttack())
                             AIBestCard = AIMonsterInHand;
-                        } else {
-                            if (isBest)
-                                if (((MonsterCards) AIMonsterInHand.getCard()).getAttack() >
-                                        ((MonsterCards) AIBestCard.getCard()).getAttack())
-                                    AIBestCard = AIMonsterInHand;
-                                else if (((MonsterCards) AIMonsterInHand.getCard()).getAttack() <
-                                        ((MonsterCards) AIBestCard.getCard()).getAttack())
-                                    AIBestCard = AIMonsterInHand;
-                        }
-                    }
+                        else if (((MonsterCards) AIMonsterInHand.getCard()).getAttack() <
+                                ((MonsterCards) AIBestCard.getCard()).getAttack())
+                            AIBestCard = AIMonsterInHand;
                 }
             }
         }
@@ -182,7 +193,6 @@ public class CommunicatorBetweenAIAndGameBoard {
         }
         return bestMonsterCard;
     }
-
 
     public Place findBestMonsterCardByAttackByPlace(ArrayList<Place> places) {
         Place bestMonsterPlace = null;
@@ -258,5 +268,16 @@ public class CommunicatorBetweenAIAndGameBoard {
             AIGoodCardCounter += numberThisTypeMonsterInThisZone(AIGameBoard, goodCard);
         }
         return AIGoodCardCounter;
+    }
+
+
+    public Place getFirstSetMonsterCard(ArrayList<Place> places) {
+        if (places != null) {
+            for (Place place : places) {
+                if (place.getStatus() == STATUS.SET)
+                    return place;
+            }
+        }
+        return null;
     }
 }
