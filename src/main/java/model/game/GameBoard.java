@@ -17,7 +17,7 @@ public class GameBoard {
     private ArrayList<Integer> cardsPicked;
     private int lastCardNumberPicked;
     private int health;
-    private boolean monsterCardDestroyed = false;
+//    private boolean monsterCardDestroyed = false;
 
     public GameBoard(ArrayList<Cards> mainCards, ArrayList<Cards> sideCards) {
         place = new HashMap<>();
@@ -125,13 +125,13 @@ public class GameBoard {
         return -1;
     }
 
-    public void setMonsterCardDestroyed(boolean monsterCardDestroyed) {
-        this.monsterCardDestroyed = monsterCardDestroyed;
-    }
-
-    public boolean getMonsterCardDestroyed(){
-        return monsterCardDestroyed;
-    }
+//    public void setMonsterCardDestroyed(boolean monsterCardDestroyed) {
+//        this.monsterCardDestroyed = monsterCardDestroyed;
+//    }
+//
+//    public boolean getMonsterCardDestroyed(){
+//        return monsterCardDestroyed;
+//    }
 
     public Cards getCardByAddressAndPlace(int placeNumber, PLACE_NAME name) {
         return getPlace(placeNumber, name).getCard();
@@ -213,21 +213,28 @@ public class GameBoard {
         return null;
     }
 
-    public void killCards(GamePlayController gamePlayController, Place place){
-        SpecialAbilityActivationController specialAbilityActivationController = SpecialAbilityActivationController.getInstance();
-        specialAbilityActivationController.setGamePlayController(gamePlayController);
-        specialAbilityActivationController.deathWishWithoutKillCard(place);
-        if (place instanceof MonsterZone) {
-            specialAbilityActivationController.removeMonsterFromFieldAndEffect(place);
-            specialAbilityActivationController.runAttackAmountByQuantifier();
-            monsterCardDestroyed = true;
-        }
+    public int getHealth() {
+        return health;
+    }
+
+    public void killCards(Place place){
+//        SpecialAbilityActivationController specialAbilityActivationController = SpecialAbilityActivationController.getInstance();
+//        specialAbilityActivationController.setGamePlayController(gamePlayController);
+//        specialAbilityActivationController.deathWishWithoutKillCard(place);
+//        if (place instanceof MonsterZone) {
+//            specialAbilityActivationController.removeMonsterFromFieldAndEffect(place);
+//            specialAbilityActivationController.runAttackAmountByQuantifier();
+//            monsterCardDestroyed = true;
+//        } else if (place instanceof Field)
+//            specialAbilityActivationController.deactivateField();
         graveyard.add(place.getCard());
         place.killCard();
     }
 
      public void changeHealth(int amount){
         health += amount;
+        if (health < 0)
+            health = 0;
      }
 
      public boolean fromThisGameBoard(Place place){

@@ -28,17 +28,21 @@ public class Continuous implements SpecialAbility, StringMessages {
         }
     }
 
-    public void setMethod(Method method) {
-        this.methodName = method.getName();
-        this.method = method;
-    }
-
     @Override
     public String getMethodName() {
         return methodName;
     }
 
-//    public void scanner(){
+    public void setMethod(Method method) {
+        this.methodName = method.getName();
+        this.method = method;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    //    public void scanner(){
 //        if (place.getCard() != Cards.getCard("Scanner"))
 //            ((MonsterZone) place).changeToThisCard(Cards.getCard("Scanner"));
 //    }

@@ -3,6 +3,7 @@ package model.cards;
 import controller.specialbilities.SpecialAbility;
 import model.cards.monster.MonsterCards;
 import model.cards.spell.SpellCards;
+import model.tools.CHAIN_JOB;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,16 +15,21 @@ public class Cards {
     private String name, type, description, status;
     private ArrayList<SpecialAbility> special;
     private int specialSpeed;//TODO add special speed to csv
+//    private ArrayList<CHAIN_JOB> chainAfter;
 
     static{
         ALL_CARDS = new HashMap<>();
     }
 
-    protected Cards(String name, String type, String description, String status){
+    protected Cards(String name, String type, String description, String status, int specialSpeed,
+                    ArrayList<SpecialAbility> special/*, ArrayList<CHAIN_JOB> chainAfter*/){
         this.name = name;
         this.type = type;
         this.description = description;
         this.status = status;
+        this.special = special;
+        this.specialSpeed = specialSpeed;
+//        this.chainAfter = chainAfter;
     }
 
     protected static void addCard(Cards card, String name){
@@ -70,6 +76,10 @@ public class Cards {
     public int getSpecialSpeed() {
         return specialSpeed;
     }
+
+//    public ArrayList<CHAIN_JOB> getChainJob() {
+//        return chainAfter;
+//    }
 
     @Override
     public String toString() {

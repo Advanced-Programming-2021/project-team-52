@@ -48,6 +48,7 @@ public interface RegexPatterns {
 
 
     Pattern attackBoostPattern = Pattern.compile("attack boost (?<amount>\\d+) (?<all>all)");
+    Pattern getCardName = Pattern.compile("^select card (?<opponent>opponent)? (?<name>\\w+)$");
     Pattern reduceAttackerAttackPattern = Pattern.compile("reduce attacker attack (?<amount>all|\\d+) (?<oneRound>oneRound)? (?<oneUse>oneUse)? (?<faceUp>faceUp)?");
     Pattern tributePattern = Pattern.compile("tribute (?<amount>\\d+) (?<faceUpOnly>face up only)? (?<alternative>.+)?");
     Pattern drawCardPattern = Pattern.compile("draw card (?<amount>\\d+)");
@@ -57,7 +58,7 @@ public interface RegexPatterns {
     Pattern standardPassword = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");
     Pattern standardUsernameAndNickname = Pattern.compile("^\\w+$");
 
-
+    Pattern extractSpecial = Pattern.compile("[a-zA-Z]+ : (?<methodName>[a-zA-Z]+)(?:/(.*))?");
 }
 
 

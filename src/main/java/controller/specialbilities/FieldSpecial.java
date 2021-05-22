@@ -1,6 +1,7 @@
 package controller.specialbilities;
 
 import controller.GamePlayController;
+import model.game.Field;
 import model.game.PLACE_NAME;
 import model.game.Place;
 
@@ -15,14 +16,15 @@ public class FieldSpecial implements SpecialAbility {
     private Place place;
     private int amount, quantifier;
     private ArrayList<String> type;
-    public ArrayList<Place> affected;
     private boolean enemyAsWell;
+    public ArrayList<Place> affected;
     public boolean onDeath = false;
 
     @Override
     public void run(GamePlayController gamePlayController, Place place){
         this.gamePlayController = gamePlayController;
         this.place = place;
+        this.affected = ((Field) place).getAffected();
         try {
             method.invoke(this);
         } catch (Exception e) {
@@ -41,19 +43,35 @@ public class FieldSpecial implements SpecialAbility {
         return methodName;
     }
 
-    public void setAffected(ArrayList<Place> affected) {
-        this.affected = affected;
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
-    private void attackChange(){
+    public void setType(ArrayList<String> type) {
+        this.type = type;
+    }
+
+    public void setQuantifier(int quantifier) {
+        this.quantifier = quantifier;
+    }
+
+    public void setEnemyAsWell(boolean enemyAsWell) {
+        this.enemyAsWell = enemyAsWell;
+    }
+
+    public void setOnDeath(boolean onDeath) {
+        this.onDeath = onDeath;
+    }
+
+    private void attackChange(){//TODO ++
         changeAttackModifier(amount);
     }
 
-    private void defenseChange(){
+    private void defenseChange(){//TODO ++
         changeDefenseModifier(amount);
     }
 
-    private void attackBoostForGraveYard(){
+    private void attackBoostForGraveYard(){//TODO ++
         int amount = calculateAmountOfChange();
         changeAttackModifier(amount);
     }
@@ -64,13 +82,14 @@ public class FieldSpecial implements SpecialAbility {
     }
 
     private int calculateAmountOfChange() {
+        Field field = (Field) place;
         int amount = 0;
         amount += gamePlayController.getGamePlay().getMyGameBoard().getGraveyard().size();
         amount += gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
                 .getGraveyard().size();
         if (amount != this.amount)
-            amount = amount - this.amount;
-        this.amount = amount;
+            amount = amount - field.getNumberOfCardsAffected();
+        field.setNumberOfCardsAffected(amount);
         amount *= quantifier;
         return amount;
     }

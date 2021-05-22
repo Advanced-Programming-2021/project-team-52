@@ -37,6 +37,14 @@ public class ActivateChain implements SpecialAbility, StringMessages {
         return methodName;
     }
 
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void setStatus(STATUS status) {
+        this.status = status;
+    }
+
     public void destroySpellAndTraps(){ //TODO ++
         int amount = this.amount;
         int spellAndTrapCards = 0;
@@ -65,20 +73,19 @@ public class ActivateChain implements SpecialAbility, StringMessages {
     private void destroyASpellOrTrap(int number){
         Place toKill = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().getPlace
                 (number, PLACE_NAME.SPELL_AND_TRAP);
-        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().killCards(
-                gamePlayController.getGamePlay().getOpponentGamePlayController(), place);
+        gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place);
     }
 
     public void neutralizeTrap(){ //TODO ++
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getUniversalHistory().add("neutralizeTrap");
     }
 
-    public void redirectAttack(){
+    public void redirectAttack(){ //TODO ++
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
                 .changeHealth(((MonsterZone) place).getAttack() * -1);
     }
 
-    public void destroyAllEnemyMonstersInThisStatus(){
+    public void destroyAllEnemyMonstersInThisStatus(){ //TODO ++
         GeneralSpecialAbility.killAllMonsters(true, gamePlayController, false, status);
     }
 
@@ -89,27 +96,23 @@ public class ActivateChain implements SpecialAbility, StringMessages {
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getUniversalHistory().add("cannotSummon");
     }
 
-    public void destroySpellWhileActivating(){
-        boolean handIsNotEmpty = false;
-        for (int i = 0; i < 6; i++) {
-            if (gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.HAND).getCard() != null)
-                handIsNotEmpty = true;
-        }
-        if (handIsNotEmpty) {
-            printerAndScanner.printNextLine(askForPlace);
-            int toRemove = printerAndScanner.scanNextInt();
-            while (gamePlayController.getGamePlay().getMyGameBoard().getPlace(toRemove, PLACE_NAME.HAND) == null){
-                printerAndScanner.printNextLine(wrongCard);
-                toRemove = printerAndScanner.scanNextInt();
-            }
-            gamePlayController.getGamePlay().getMyGameBoard().getGraveyard().add(
-                    gamePlayController.getGamePlay().getMyGameBoard().getPlace(toRemove, PLACE_NAME.HAND).getCard());
-            gamePlayController.getGamePlay().getMyGameBoard().getPlace(toRemove, PLACE_NAME.HAND).setCard(null);
-            place.killCard();
-        }
+    public void destroySpellWhileActivating(){ //TODO ++
+            gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place.getAffect());
     }
 
-    public void endBattlePhase(){
+    public void endBattlePhase(){ //TODO ++
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getUniversalHistory().add("endBattlePhase");
+    }
+
+    public void killAffect(){ //TODO ++
+        gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place.getAffect());
+    }
+
+    public void preventAttack(){ //TODO ++
+        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getUniversalHistory().add("preventAttack");
+    }
+
+    public void preventNextChain(){
+        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getUniversalHistory().add("preventChain");
     }
 }

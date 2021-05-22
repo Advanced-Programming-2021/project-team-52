@@ -1,15 +1,20 @@
 package controller.specialbilities;
 
 import controller.GamePlayController;
+import controller.NewChain;
 import controller.PrintBuilderController;
+import controller.RegexController;
 import model.cards.Cards;
 import model.cards.monster.MonsterCards;
 import model.game.*;
+import model.tools.CHAIN_JOB;
+import model.tools.RegexPatterns;
 import model.tools.StringMessages;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.regex.Matcher;
 
 public class ActivateNoChain implements SpecialAbility, StringMessages {
 
@@ -18,7 +23,7 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
     private GamePlayController gamePlayController;
     private Place place;
     private int amount;
-    private boolean enemyOnly;
+    private boolean onlyForOnePlayer;
     private String type;
 
     @Override
@@ -41,6 +46,18 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
     @Override
     public String getMethodName() {
         return methodName;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void setOnlyForOnePlayer(boolean onlyForOnePlayer) {
+        this.onlyForOnePlayer = onlyForOnePlayer;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void sacrificeToGetFromGraveYard(){ //TODO ++ when does this get activated???
@@ -76,27 +93,75 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
         }
     }
 
-    public void specialSummonFromGraveYard(){ //TODO ++
-        if (!gamePlayController.getGamePlay().getMyGameBoard().getGraveyard().isEmpty() && !
-                gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
-                        .getGraveyard().isEmpty()){
+//    public void specialSummonFromGraveYard(){ //TODO ++
+//        if (!gamePlayController.getGamePlay().getMyGameBoard().getGraveyard().isEmpty() && !
+//                gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
+//                        .getGraveyard().isEmpty()){
+//            int emptyPlace = gamePlayController.getGamePlay().getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER);
+//            if (emptyPlace != -1){
+//                printerAndScanner.printString(PrintBuilderController.getInstance().buildGraveyard(
+//                        gamePlayController.getGamePlay().getMyGameBoard().getGraveyard()));
+//                printerAndScanner.printString(PrintBuilderController.getInstance().buildGraveyard(
+//                        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
+//                                .getMyGameBoard().getGraveyard()));
+//                printerAndScanner.printNextLine(askForName);
+//                String cardName = printerAndScanner.scanNextLine();
+//                while (!(Cards.getCard(cardName) instanceof MonsterCards) ){
+//                    printerAndScanner.printNextLine(wrongCard);
+//                    cardName = printerAndScanner.scanNextLine();
+//                }
+//                Place temporaryPlace = new Place(PLACE_NAME.HAND);
+//
+//                gamePlayController.summon(temporaryPlace, false);
+//                new NewChain(gamePlayController, )
+//            } else printerAndScanner.printNextLine(cantSpecialSummon);
+//        } else printerAndScanner.printNextLine(cantSpecialSummon);
+//    }
+
+    public void specialSummonFromGraveYard() { //TODO ++ ++
+        if (!gamePlayController.getGamePlay().getMyGameBoard().getGraveyard().isEmpty() ||
+        !gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().getGraveyard().isEmpty()) {
             int emptyPlace = gamePlayController.getGamePlay().getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER);
             if (emptyPlace != -1){
-                printerAndScanner.printString(PrintBuilderController.getInstance().buildGraveyard(
-                        gamePlayController.getGamePlay().getMyGameBoard().getGraveyard()));
-                printerAndScanner.printString(PrintBuilderController.getInstance().buildGraveyard(
-                        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
-                                .getMyGameBoard().getGraveyard()));
-                printerAndScanner.printNextLine(askForName);
-                String cardName = printerAndScanner.scanNextLine();
-                while (!(Cards.getCard(cardName) instanceof MonsterCards) ){
-                    printerAndScanner.printNextLine(wrongCard);
-                    cardName = printerAndScanner.scanNextLine();
+                for (String command = printerAndScanner.scanNextLine(); true; command = printerAndScanner.scanNextLine()) {
+                    if (command.equals("show graveyard")) {
+                        gamePlayController.showGraveYard();
+                        continue;
+                    }
+                    else if (command.equals("show opponent graveyard")) {
+                        gamePlayController.getGamePlay().getOpponentGamePlayController().showGraveYard();
+                        continue;
+                    }
+                    else if (command.startsWith("selectCard")){
+                        Matcher matcher = RegexController.getMatcher(command, RegexPatterns.getCardName);
+                        if (matcher != null)
+                            if (!(onlyForOnePlayer && RegexController.hasField(matcher, "opponent")))
+                            if (tryToSpecialSummon(RegexController.hasField(matcher, "opponent") ?
+                                    gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().
+                                            getMyGameBoard().getGraveyard() :
+                                    gamePlayController.getGamePlay().getMyGameBoard().getGraveyard(),
+                                    matcher.group("name"), place))
+                                        break;
+                    }
+                    printerAndScanner.printNextLine(invalidInput);
                 }
-                Place temporaryPlace = new Place(PLACE_NAME.HAND);
-                gamePlayController.summon(temporaryPlace, false);
-            } else printerAndScanner.printNextLine(cantSpecialSummon);
-        } else printerAndScanner.printNextLine(cantSpecialSummon);
+            }
+        }
+    }
+
+    private boolean tryToSpecialSummon(ArrayList<Cards> graveYard, String cardName, Place spell){
+        Cards card = Cards.getCard(cardName);
+        if (card != null)
+            if (graveYard.contains(card)){
+                graveYard.remove(card);
+                Place temporary = new Place(PLACE_NAME.HAND);
+                temporary.setCard(card);
+                temporary.setStatus(STATUS.getStatusByString(type));
+                temporary.setAffect(place);
+                new NewChain(gamePlayController, temporary, CHAIN_JOB.SPECIAL_SUMMON, spell.getCard().getSpecialSpeed());
+                return true;
+            }
+        return false;
     }
 
     public void addFieldSpellToHand(){//TODO ++
@@ -117,8 +182,8 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
             gamePlayController.drawCard();
     }
 
-    public void killAllMonsters(){//TODO ++ ++
-        GeneralSpecialAbility.killAllMonsters(enemyOnly, gamePlayController, true, null);
+    public void killAllMonsters(){//TODO ++ ++ ++
+        GeneralSpecialAbility.killAllMonsters(onlyForOnePlayer, gamePlayController, true, null);
     }
 
     public void controlEnemyMonster(){ //TODO ++
@@ -144,7 +209,7 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
                 myPlace.setCard(opponentPlace.getCard());
                 myPlace.setStatus(opponentPlace.getStatus());
                 gamePlayController.getGamePlay().getHistory().get(myPlace).add("forEnemy");
-                opponentGamePlayController.getGamePlay().getMyGameBoard().killCards(opponentGamePlayController, opponentPlace);
+                opponentGamePlayController.killCard(opponentPlace);
                 opponentGamePlayController.getGamePlay().getUniversalHistory()
                         .add("MyMonsterCard" + myEmptyMonsterPlace);
             } else printerAndScanner.printNextLine(fullMonsterPlaces);
@@ -157,7 +222,7 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
         GameBoard opponentGameBoard = opponentGamePlayController.getGamePlay().getMyGameBoard();
         for (int i = 1; i < 6; i++) {
             Place toKill = opponentGameBoard.getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
-            opponentGameBoard.killCards(opponentGamePlayController, toKill);
+            opponentGamePlayController.killCard(toKill);
         }
     }
 
@@ -167,7 +232,8 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
                     .getPlace(i, PLACE_NAME.MONSTER);
             if (place.getCard() != null){
                 if (place.getStatus() == STATUS.SET){
-                    gamePlayController.getGamePlay().getOpponentGamePlayController().flip(place);
+                    gamePlayController.getGamePlay().getOpponentGamePlayController().flip(place,
+                            place instanceof MonsterZone ? STATUS.DEFENCE : STATUS.ATTACK);
                 }
             }
         }
@@ -196,7 +262,7 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
         } else printerAndScanner.printNextLine(emptyOpponentGraveYard);
     }
 
-    public void mindCrush(){
+    public void mindCrush(){ //TODO ++
         printerAndScanner.printNextLine(askForName);
         if (removeAllOfThisCardFromHand(printerAndScanner.scanNextLine())){
             for (int i = 0; i < 7; i++) {
@@ -237,7 +303,7 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
         gamePlayController.getGamePlay().getMyGameBoard().getPlace(toRemove, PLACE_NAME.HAND).setCard(null);
     }
 
-    public void enemyCannotDraw(){
+    public void enemyCannotDraw(){ //TODO ++
         gamePlayController.getGamePlay().getUniversalHistory().add("cannotDraw");
     }
 

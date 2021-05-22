@@ -20,6 +20,7 @@ public class GamePlay {
     private Place selectedCard;
     private String name;
     private GamePlayController opponentGamePlayController;
+    private boolean gameEnded;
 
     public GamePlay(boolean isHost, GameBoard myGameBoard, boolean isAi, String name){
         this.isHost = isHost;
@@ -31,10 +32,19 @@ public class GamePlay {
         this.selectedCard = null;
         this.universalHistory = new ArrayList<>();
         this.name = name;
+        this.gameEnded = false;
     }
 
     public void setOpponentGamePlayController(GamePlayController opponentGamePlayController) {
         this.opponentGamePlayController = opponentGamePlayController;
+    }
+
+    public void setGameEnded(boolean gameEnded) {
+        this.gameEnded = gameEnded;
+    }
+
+    public boolean getGameEnded(){
+        return gameEnded;
     }
 
     public GamePlayController getOpponentGamePlayController() {

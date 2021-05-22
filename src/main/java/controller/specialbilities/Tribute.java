@@ -1,9 +1,9 @@
 package controller.specialbilities;
 
 import controller.GamePlayController;
-import model.cards.Cards;
 import model.game.PLACE_NAME;
 import model.game.Place;
+import model.game.STATUS;
 import model.tools.StringMessages;
 
 import java.lang.reflect.Method;
@@ -40,6 +40,18 @@ public class Tribute implements SpecialAbility, StringMessages {
         return methodName;
     }
 
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void setSpecialSummon(boolean specialSummon) {
+        this.specialSummon = specialSummon;
+    }
+
+    public void setKey(int key) {
+        this.key = key;
+    }
+
     public void canSummonNormally(){ //TODO ++ ++
         switch (key) {
             case 1 : summonWithReducingAttack();
@@ -49,7 +61,7 @@ public class Tribute implements SpecialAbility, StringMessages {
 
     private void summonWithReducingAttack(){
         GeneralSpecialAbility.attackBoost(place, amount, true);
-        gamePlayController.summon(place, specialSummon);
+        gamePlayController.placeCard(place, specialSummon, STATUS.ATTACK);
     }
 
     private void summonWithSacrificingCardFromHand(){
@@ -63,8 +75,8 @@ public class Tribute implements SpecialAbility, StringMessages {
                 handNumberToSacrifice = printerAndScanner.scanNextInt();
             } else break;
         }
-        gamePlayController.getGamePlay().getMyGameBoard().killCards(gamePlayController, place);
-        gamePlayController.summon(this.place, specialSummon);
+        gamePlayController.killCard(place);
+        gamePlayController.placeCard(this.place, specialSummon, STATUS.ATTACK);
     }
 
     public void summonWithTribute(){ //TODO ++ ++ ++
@@ -83,10 +95,9 @@ public class Tribute implements SpecialAbility, StringMessages {
                 while (!validForTribute(cardsToTribute));
                 for (int i : cardsToTribute) {
                     Place toKill = gamePlayController.getGamePlay().getMyGameBoard().getPlace(cardsToTribute[i], PLACE_NAME.MONSTER);
-                    gamePlayController.getGamePlay().getMyGameBoard().killCards(
-                            gamePlayController, place);
+                    gamePlayController.killCard(place);
                 }
-                gamePlayController.summon(place, specialSummon);
+                gamePlayController.placeCard(place, specialSummon, STATUS.ATTACK);
                 if (place.getCard() != null){
                     SpecialAbilityActivationController specialAbilityActivationController =
                             SpecialAbilityActivationController.getInstance();
