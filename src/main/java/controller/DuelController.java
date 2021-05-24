@@ -80,7 +80,6 @@ public class DuelController implements RegexPatterns, StringMessages {
 
     public void setDuelWinnerByCheat() {}
 
-    // todo : player number 2 ??????
     public void startDuel(User user, String opponentName, String numberOfRounds) {
         User opponentUser = LoginController.getUserByUsername(opponentName);
         if (opponentUser == null) {

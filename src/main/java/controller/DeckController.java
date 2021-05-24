@@ -10,7 +10,6 @@ import model.tools.RegexPatterns;
 import model.tools.StringMessages;
 import view.PrinterAndScanner;
 
-// todo : ask for lexicography order
 public class DeckController implements RegexPatterns, StringMessages {
     private static DeckController deckController = null;
     private static ArrayList<String> deckNames;
@@ -121,7 +120,6 @@ public class DeckController implements RegexPatterns, StringMessages {
         Cards card = Cards.getCard(cardName);
 
         if (!addCardCheat) {
-            // todo : ask how to get status
             if (card.getStatus().equals("Unlimited")) {
                 if (checkNumberOfCardsWithDifferentStatus(cardName, deckName, deck, 3)) return;
             }else if (card.getStatus().equals("Half limited")) {

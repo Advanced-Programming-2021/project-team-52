@@ -53,6 +53,7 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard {
     public boolean setOrSummonMonster() {
         ArrayList<Place> AIHand = new ArrayList<>();
         gameBoardCommunicator.getMonstersOfHand(AIHand, AIGameBoard);
+        AIHand.removeIf(place -> ignoreCards.contains(place));
         Place AIBestCardPlace;
 
         ArrayList<Place> opponentMonsterZone = gameBoardCommunicator.getMonsterZone(opponentGameBoard);
@@ -71,6 +72,7 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard {
                     .getWeakestOpponentFaceUpMonsterPlace(opponentMonsterZone);
             if (weakestOpponentFaceUpMonsterPlace == null) {
                 AIBestCardPlace = gameBoardCommunicator.getBestCardByAttack(AIHand, true);
+                ignoreCards.add(AIBestCardPlace);
                 // summon best card
                 // check for AIBestCardPlace being null
                 //  direct attack
@@ -82,12 +84,14 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard {
                     return true;
                 } else if (((MonsterCards) AIBestCardPlace.getCard()).getAttack() > gameBoardCommunicator
                         .getMonsterCardStrengthInMonsterZone(weakestOpponentFaceUpMonsterPlace)) {
+                    ignoreCards.add(AIBestCardPlace);
                     // summon AIBestCardPlace
                     // if summon successful --> return true;
                     // else add AIBestCardPlace to ignoreCards and return false
                     return false; // just to avoid syntax error
                 } else {
                     AIBestCardPlace = gameBoardCommunicator.getBestCardByAttack(AIHand, false);
+                    ignoreCards.add(AIBestCardPlace);
                     // set AIBestCardPlace
                     return true;
                 }
@@ -95,8 +99,10 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard {
         }
     }
 
-    public void tribute(int numberOfCardsToTribute) {
+    public void tribute(Place place) {
         ArrayList<Place> AIMonsterZonePlaces = gameBoardCommunicator.getMonsterZone(AIGameBoard);
+        int monsterLevel = ((MonsterCards)place.getCard()).getLevel();
+
 
     }
 
@@ -217,6 +223,7 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard {
             return true;
         }
         return false;
+
     }
 
     // checker
@@ -281,5 +288,4 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard {
             // activate trap
         }
     }
-
 }

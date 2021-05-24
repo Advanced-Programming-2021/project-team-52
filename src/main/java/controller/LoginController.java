@@ -71,7 +71,6 @@ public class LoginController implements RegexPatterns {
     }
 
     public static void instantiateCards() throws IOException, CsvException {
-        //todo: should be written after handling the cards
         InstantiateCards.start();
 
     }

@@ -51,7 +51,7 @@ public class ProfileController implements RegexPatterns, StringMessages {
             printerAndScanner.printNextLine(printBuilderController.thisNicknameAlreadyExists(newNickname));
             return;
         }
-        if ( RegexController.getMatcher(newNickname, standardUsernameAndNickname) == null) {
+        if (RegexController.getMatcher(newNickname, standardUsernameAndNickname) == null) {
             printerAndScanner.printNextLine(nonStandardNickname);
             return;
         }
@@ -61,12 +61,12 @@ public class ProfileController implements RegexPatterns, StringMessages {
         printerAndScanner.printNextLine(nicknameChangedSuccessfully);
     }
 
-    public void changeUsername(String newUsername, User user){
+    public void changeUsername(String newUsername, User user) {
         if (LoginController.userNames.contains(newUsername)) {
             printerAndScanner.printNextLine(printBuilderController.thisUsernameAlreadyExists(newUsername));
             return;
         }
-        if ( RegexController.getMatcher(newUsername, standardUsernameAndNickname) == null) {
+        if (RegexController.getMatcher(newUsername, standardUsernameAndNickname) == null) {
             printerAndScanner.printNextLine(nonStandardUsername);
             return;
         }
