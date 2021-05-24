@@ -20,7 +20,7 @@ public class ShopController implements StringMessages, RegexPatterns {
         printBuilderController = PrintBuilderController.getInstance();
         printerAndScanner = PrinterAndScanner.getInstance();
     }
-
+//
     private ShopController() {
     }
 
