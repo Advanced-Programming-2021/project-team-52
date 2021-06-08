@@ -16,6 +16,8 @@ public class TrapCards extends Cards{
         super( name, type, description, status, specialSpeed, special);
         this.icon = icon;
         this.chainJobs = chainJobs;
+        addCard(this, name);
+
     }
 
     public String getIcon() {

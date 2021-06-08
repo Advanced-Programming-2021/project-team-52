@@ -24,7 +24,7 @@ public class Continuous implements SpecialAbility, StringMessages {
         try {
             method.invoke(this);
         } catch (Exception e) {
-            System.out.println("error : " + e);
+            e.printStackTrace();
         }
     }
 
@@ -57,8 +57,10 @@ public class Continuous implements SpecialAbility, StringMessages {
             Place monsterPlace = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER);
             if (monsterPlace.getCard() != null)
                 if (monsterPlace.getStatus() != STATUS.SET)
-                    sumOfLevels += ((MonsterCards) monsterPlace.getCard()).getLevel();
+                    if (monsterPlace != place)
+                        sumOfLevels += ((MonsterCards) monsterPlace.getCard()).getLevel();
         }
+        sumOfLevels -= 2;
         ((MonsterZone) place).setAttackModifier(amount * sumOfLevels);
     }
 

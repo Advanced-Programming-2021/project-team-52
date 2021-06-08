@@ -47,10 +47,12 @@ public class GamePlayController extends RegexController implements RegexPatterns
     public void run(){
         didBattlePhase = false;
         drawPhase();
-        for (String command = ""; phase != PHASE.END && !gamePlay.getGameEnded(); command = printerAndScanner.scanNextLine()){
+        for (String command = printerAndScanner.scanNextLine(); true; command = printerAndScanner.scanNextLine()){
             if (gamePlay.getUniversalHistory().contains("endBattlePhase") && phase == PHASE.BATTLE)
                 nextPhase();
             handleCommands(command);
+            if (phase == PHASE.END || gamePlay.getGameEnded())
+                break;
         }
         if (!gamePlay.getGameEnded())
             end();
@@ -129,6 +131,7 @@ public class GamePlayController extends RegexController implements RegexPatterns
         phase = PHASE.STAND_BY;
         printerAndScanner.printNextLine(phase.getValue());
         new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2);
+        phase = PHASE.MAIN;
     }
 
     private void end(){
@@ -143,9 +146,9 @@ public class GamePlayController extends RegexController implements RegexPatterns
             gamePlay.getMyGameBoard().changeHealth(-8000);
         } else {
             Place emptyHandPlace = null;
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < 6; i++) {
                 Place place = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.HAND);
-                if (place.getCard() != null)
+                if (place.getCard() == null)
                     emptyHandPlace = place;
             }
             if (emptyHandPlace != null) {
@@ -166,7 +169,7 @@ public class GamePlayController extends RegexController implements RegexPatterns
         }
         else if (hasField(matcher, "type")) {
             int number =  Integer.parseInt(matcher.group("select"));
-            if (number < 6)
+            if (number < 6 && number > 0)
                 if (gamePlay.getMyGameBoard().getPlace(number, PLACE_NAME.getEnumByString(matcher.group("type"))) != null)
                     selectCard(matcher);
                 else printerAndScanner.printNextLine(noCardInGivenPosition);
@@ -202,6 +205,8 @@ public class GamePlayController extends RegexController implements RegexPatterns
             }
             printerAndScanner.printNextLine(cardSelected);
         }
+        //TODO do something about next line
+        System.out.println(gamePlay.getSelectedCard().getCard().getName());
     }
 
     private void summonCredibility(){
@@ -233,7 +238,8 @@ public class GamePlayController extends RegexController implements RegexPatterns
         placeTo.setCard(place.getCard());
         placeTo.setStatus(status);
         placeTo.addTemporaryFeatures(TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN);
-        killCard(place);
+//        killCard(place);
+        place.setCard(null);
         if (normalSummon)
             alreadySummonedOrSet = true;
         specialAbilityActivationController.setGamePlayController(this);
@@ -256,7 +262,7 @@ public class GamePlayController extends RegexController implements RegexPatterns
         if (selectedCard.getCard() != null){
             if (gamePlay.getMyGameBoard().fromThisGameBoard(selectedCard) &&
                     selectedCard.getType() == PLACE_NAME.HAND &&
-                    specialAbilityActivationController.hasTributeMethod(selectedCard.getCard())) {
+                    !specialAbilityActivationController.hasTributeMethod(selectedCard.getCard())) {
                 if (phase == PHASE.MAIN) {
                     if (selectedCard.getCard() instanceof MonsterCards)
                         setMonsterCard(selectedCard);
@@ -377,7 +383,7 @@ public class GamePlayController extends RegexController implements RegexPatterns
         if (selectedCard != null){
             if (selectedCard instanceof MonsterZone){
                 if (phase == PHASE.BATTLE){
-                    if (selectedCard.getTemporaryFeatures().contains(TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN)){
+                    if (!selectedCard.getTemporaryFeatures().contains(TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN)){
                         if (opponentHasMonsterCard()){
                             selectedCard.setAffect(selectedCard);
                             new NewChain(this, selectedCard, CHAIN_JOB.ATTACK_DIRECT, 0);
@@ -469,14 +475,19 @@ public class GamePlayController extends RegexController implements RegexPatterns
 
     private boolean checkBeforeRitualSummon(Place place){
         boolean canRitual = false;
+        Cards card;
         for (int i = 1; i < 6 && !canRitual; i++) {
-            if (gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP).getCard().getType().equals("Ritual"))
-                canRitual = true;
+            card = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP).getCard();
+            if (card != null)
+                if (card.getType().equals("Ritual"))
+                    canRitual = true;
         }
         if (!canRitual){
             for (int i = 0; i < 6 && !canRitual; i++) {
-                if (gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.HAND).getCard().getType().equals("Ritual"))
-                    canRitual = true;
+                card = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.HAND).getCard();
+                if (card != null)
+                    if (card.getType().equals("Ritual"))
+                        canRitual = true;
             }
         }
         if (!canRitual)
@@ -487,12 +498,13 @@ public class GamePlayController extends RegexController implements RegexPatterns
     }
 
     private boolean calculateLevel(int toReach, int sum, int upperLimit){
+        Cards card;
         if (sum == toReach)
             return true;
         for (int i = upperLimit; i > 0; i--) {
-            if (calculateLevel(toReach,
-                    sum - ((MonsterCards) gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER).getCard()).getLevel(),
-                    upperLimit - 1))
+            card = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER).getCard();
+            if (card != null)
+            if (calculateLevel(toReach, sum - ((MonsterCards) card).getLevel(), upperLimit - 1))
                 return true;
         }
         return false;
@@ -728,21 +740,23 @@ public class GamePlayController extends RegexController implements RegexPatterns
     }
 
     public void killCard(Place place){
-        specialAbilityActivationController.setGamePlayController(this);
-        specialAbilityActivationController.deathWishWithoutKillCard(place);
-        if (place instanceof MonsterZone) {
-            specialAbilityActivationController.removeMonsterFromFieldAndEffect(place);
-            specialAbilityActivationController.runAttackAmountByQuantifier();
-            monsterCardDestroyed = true;
-        } else if (place instanceof Field)
-            specialAbilityActivationController.deactivateField();
-        specialAbilityActivationController.deathWishWithoutKillCard(place);
-        if (place instanceof MonsterZone) {
-            specialAbilityActivationController.removeMonsterFromFieldAndEffect(place);
-            specialAbilityActivationController.runAttackAmountByQuantifier();
-            monsterCardDestroyed = true;
-        } else if (place instanceof Field)
-            specialAbilityActivationController.deactivateField();
-        gamePlay.getMyGameBoard().killCards(place);
+        if (place.getCard() != null) {
+            specialAbilityActivationController.setGamePlayController(this);
+            specialAbilityActivationController.deathWishWithoutKillCard(place);
+            if (place instanceof MonsterZone) {
+                specialAbilityActivationController.removeMonsterFromFieldAndEffect(place);
+                specialAbilityActivationController.runAttackAmountByQuantifier();
+                monsterCardDestroyed = true;
+            } else if (place instanceof Field)
+                specialAbilityActivationController.deactivateField();
+//            specialAbilityActivationController.deathWishWithoutKillCard(place);
+//            if (place instanceof MonsterZone) {
+//                specialAbilityActivationController.removeMonsterFromFieldAndEffect(place);
+//                specialAbilityActivationController.runAttackAmountByQuantifier();
+//                monsterCardDestroyed = true;
+//            } else if (place instanceof Field)
+//                specialAbilityActivationController.deactivateField();
+            gamePlay.getMyGameBoard().killCards(place);
+        }
     }
 }

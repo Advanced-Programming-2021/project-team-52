@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class Place {
 
     protected Cards card;
-    protected HashMap<Place, ArrayList<String>> history;
+    protected ArrayList<String> history;
     private STATUS status;
     private PLACE_NAME type;
     private ArrayList<TEMPORARY_FEATURES> temporaryFeatures;
@@ -21,9 +21,8 @@ public class Place {
         temporaryFeatures = new ArrayList<>();
     }
 
-    public void setHistory(HashMap<Place, ArrayList<String>> history) {
+    public void setHistory(ArrayList<String> history) {
         this.history = history;
-        this.history.put(this, new ArrayList<String>());
     }
 
     public void setStatus(STATUS status) {
@@ -80,8 +79,7 @@ public class Place {
         this.type = null;
         this.temporaryFeatures.clear();
         this.affect = null;
-        history.get(this).clear();
-        temporaryFeatures.clear();
+        history.clear();
     }
 
     public ArrayList<TEMPORARY_FEATURES> getTemporaryFeatures() {

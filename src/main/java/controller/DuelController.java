@@ -9,23 +9,15 @@ import view.PrinterAndScanner;
 import java.util.regex.Matcher;
 
 public class DuelController implements RegexPatterns, StringMessages {
-    private static DuelController duelController;
-    private PrintBuilderController printBuilderController;
-    private PrinterAndScanner printerAndScanner;
+    private static PrintBuilderController printBuilderController;
+    private static PrinterAndScanner printerAndScanner;
 
-    {
+    static {
         printBuilderController = PrintBuilderController.getInstance();
         printerAndScanner = PrinterAndScanner.getInstance();
     }
 
     public DuelController() {
-    }
-
-    public static DuelController getInstance() {
-        if (duelController == null) {
-            duelController = new DuelController();
-        }
-        return duelController;
     }
 
     public void run(User user) {

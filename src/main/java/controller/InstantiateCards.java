@@ -2,6 +2,7 @@ package controller;
 
 import controller.specialbilities.*;
 import model.Shop;
+import model.cards.Cards;
 import model.cards.monster.MonsterCards;
 import model.cards.spell.SpellCards;
 import model.cards.trap.TrapCards;

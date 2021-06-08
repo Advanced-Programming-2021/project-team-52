@@ -1,5 +1,7 @@
 package model;
 
+import model.cards.Cards;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -99,6 +101,11 @@ public class Deck {
             allMainCards.remove(cardNameFromMainToSide);
             allSideCards.add(cardNameFromMainToSide);
         }
+    }
+
+    //TODO remove next functions
+    public void addAllCardsToDeck(){
+        allMainCards = new ArrayList<>(Cards.getAllNames());
     }
 
 }

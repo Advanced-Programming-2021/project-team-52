@@ -38,7 +38,7 @@ public abstract class GeneralSpecialAbility {
         for (int i = 1; i < 6; i++) {
             place = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
                     .getPlace(i, PLACE_NAME.MONSTER);
-            if (place.getStatus() == status || dontUseStatus)
+            if (place.getStatus() == status || !dontUseStatus)
                 gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place);
         }
         if (!enemyOnly)

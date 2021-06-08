@@ -113,7 +113,7 @@ public class SpecialAbilityActivationController implements StringMessages {
             if (specialAbility instanceof Conditions)
                 conditions.add((Conditions) specialAbility);
         }
-        boolean met = !conditions.isEmpty();
+        boolean met = true;
         for (Conditions condition : conditions) {
             condition.setMet(met);
             condition.run(gamePlayController, place);
@@ -129,7 +129,7 @@ public class SpecialAbilityActivationController implements StringMessages {
         }
         Place enemyField = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().
                 getMyGameBoard().getPlace(0, PLACE_NAME.FIELD);
-        if (enemyField != null) {
+        if (enemyField.getCard() != null) {
             doField(enemyField, false);
         }
     }
@@ -173,7 +173,7 @@ public class SpecialAbilityActivationController implements StringMessages {
 
     public void removeMonsterFromFieldAndEffect(Place place) {
         Place field = gamePlayController.getGamePlay().getMyGameBoard().getPlace(0, PLACE_NAME.FIELD);
-        if (field != null) {
+        if (field.getCard() != null) {
             ((Field) field).removeFromAffect(place);
         }
         Place effectCheck;
@@ -330,12 +330,13 @@ public class SpecialAbilityActivationController implements StringMessages {
         Place place;
         for (int i = 1; i < 6; i++) {
             place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER);
-            for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
-                if (specialAbility.getMethodName().equals("attackAmountByQuantifier")) {
-                    specialAbility.run(gamePlayController, place);
-                    break;
+            if (place.getCard() != null)
+                for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
+                   if (specialAbility.getMethodName().equals("attackAmountByQuantifier")) {
+                        specialAbility.run(gamePlayController, place);
+                     break;
+                   }
                 }
-            }
         }
     }
 

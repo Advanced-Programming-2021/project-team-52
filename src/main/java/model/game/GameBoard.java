@@ -24,13 +24,13 @@ public class GameBoard {
         place.put(0, new Place(PLACE_NAME.HAND));
         for (int i = 1; i < 6; i++) {
             place.put(PLACE_NAME.HAND.getNumber() + i, new Place(PLACE_NAME.HAND));
-            place.put(PLACE_NAME.MONSTER.getNumber() + i, new Place(PLACE_NAME.MONSTER));
+            place.put(PLACE_NAME.MONSTER.getNumber() + i, new MonsterZone());
             place.put(PLACE_NAME.SPELL_AND_TRAP.getNumber() + i, new Place(PLACE_NAME.SPELL_AND_TRAP));//TODO instantiate History arrayList From place
         }
-        place.put(PLACE_NAME.FIELD.getNumber(), new Place(PLACE_NAME.FIELD));
+        place.put(PLACE_NAME.FIELD.getNumber(), new Field());
         graveyard = new ArrayList<>();
-        this.mainCards = new ArrayList<>(mainCards);
-        this.sideCards = new ArrayList<>(sideCards);
+        this.mainCards = mainCards;
+        this.sideCards = sideCards;
         this.lastCardNumberPicked = this.mainCards.size() - 1;
         this.cardsPicked = new ArrayList<>();
         this.health = 8000;
@@ -88,6 +88,10 @@ public class GameBoard {
     public void setMainCards(ArrayList<Cards> mainCards) {
         this.mainCards = mainCards;
         lastCardNumberPicked = mainCards.size() - 1;
+    }
+
+    public HashMap<Integer, Place> getPlace() {
+        return place;
     }
 
     public ArrayList<Integer> getCardsPicked() {
@@ -217,6 +221,10 @@ public class GameBoard {
         return health;
     }
 
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
     public void killCards(Place place){
 //        SpecialAbilityActivationController specialAbilityActivationController = SpecialAbilityActivationController.getInstance();
 //        specialAbilityActivationController.setGamePlayController(gamePlayController);
@@ -241,9 +249,15 @@ public class GameBoard {
         return this.place.containsValue(place);
      }
 
-    @Override
-    public String toString() {
-        //TODO change toString
-        return "GameBoard";
-    }
+     public int numberOfCardsRemainingToBePicked(){
+        return mainCards.size() - cardsPicked.size();
+     }
+
+
+//
+//    @Override
+//    public String toString() {
+//        //TODO change toString
+//        return "GameBoard";
+//    }
 }
