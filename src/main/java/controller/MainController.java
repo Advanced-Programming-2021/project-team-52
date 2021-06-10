@@ -36,8 +36,9 @@ public class MainController {
             if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
                 if (RegexController.hasField(matcher, "enter")) {
                     if (matcher.group("enter").equals("duel")) {
-                        DuelController dualController = DuelController.getInstance();
-                        dualController.run(user);
+//                        DuelController dualController = DuelController.getInstance();
+//                        dualController.run(user);
+                        new NewDuelController(user);
                     } else if (matcher.group("enter").equals("deck")) {
                         DeckController deckController = DeckController.getInstance();
                         deckController.run(user);

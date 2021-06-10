@@ -12,8 +12,8 @@ public class MonsterZone extends Place{
     private HashMap<Place, Integer[]> equippedCards;
 
 
-    protected MonsterZone(PLACE_NAME type) {
-        super(type);
+    protected MonsterZone() {
+        super(PLACE_NAME.MONSTER);
         equippedCards = new HashMap<>();
     }
 
@@ -45,10 +45,10 @@ public class MonsterZone extends Place{
         super.setAffect(null);
         super.setCard(card);
         String string = "";
-        for (int i = 0; i < super.history.get(this).size(); i++) {
-            string = super.history.get(this).get(i);
+        for (int i = 0; i < super.history.size(); i++) {
+            string = super.history.get(i);
             if (!string.equals("scanner"))
-                super.history.get(this).remove(string);
+                super.history.remove(string);
         }
         //TODO reverse the card before scanner special abilities
     }

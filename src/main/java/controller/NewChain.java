@@ -12,6 +12,7 @@ import view.PrinterAndScanner;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
+//TODO keep a history of cards in chain so they wont be used again
 public class NewChain implements StringMessages, RegexPatterns {
 
     private static PrintBuilderController printBuilderController;
@@ -144,6 +145,7 @@ public class NewChain implements StringMessages, RegexPatterns {
                         specialAbilityActivationController.setGamePlayController(gamePlayController);
                         if (specialAbilityActivationController.runUponActivation(place))
                             new NewChain(gamePlayController, place, findChainJob(place), place.getCard().getSpecialSpeed());
+                        break;
                     } else printerAndScanner.printNextLine(cannotDoThat);
                 } else printerAndScanner.printNextLine(invalidCommand);
             }
@@ -155,7 +157,8 @@ public class NewChain implements StringMessages, RegexPatterns {
     }
 
     private void doChain(){
-        if (place != null){
+        if (place != null)
+        if (place.getCard() != null){
 //            if (place.getCard() != null && place.getAffect() != null){
 //                if (place.getCard() instanceof MonsterCards ){
 //                    if (place == place.getAffect())

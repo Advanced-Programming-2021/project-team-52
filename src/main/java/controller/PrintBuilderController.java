@@ -7,6 +7,8 @@ import model.cards.spell.SpellCards;
 import model.cards.trap.TrapCards;
 import model.game.GameBoard;
 import model.cards.Cards;
+import model.game.PLACE_NAME;
+import model.game.Place;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +33,12 @@ public class PrintBuilderController {
     }
 
     public StringBuilder buildGraveyard(ArrayList<Cards> graveyard) {
-        return null;
+        StringBuilder results = new StringBuilder();
+        for (int i = 0; i < graveyard.size(); i++) {
+            results.append(graveyard.get(i));
+            results.append("\n");
+        }
+        return results;
     }
 
     public void buildGameWinner(String username, int score1, int score2) {
@@ -239,8 +246,8 @@ public class PrintBuilderController {
     }
 
     public StringBuilder turnComplete(String name, GameBoard myGameBoard, GameBoard opponentGameBoard) {
-        return new StringBuilder("now it will be ").append(name).append("’s turn\n").
-                append(gameBoardBuilder(myGameBoard, opponentGameBoard));
+        return new StringBuilder("now it will be ").append(name).append("’s turn\n")/*.
+                append(gameBoardBuilder(myGameBoard, opponentGameBoard))*/;
     }
 
     public StringBuilder gameBoardBuilder(GameBoard myGameBoard, GameBoard opponentGameBoard) {
@@ -253,6 +260,72 @@ public class PrintBuilderController {
 
     public StringBuilder askForLpForActivation(int amount){
         return new StringBuilder("do you want to pay ").append(amount).append(" LP to activate this special ability?");
+    }
+
+    public StringBuilder userDoesntHaveActiveDeck(String username){
+        return new StringBuilder(username).append(" has not active deck");
+    }
+
+    public StringBuilder thisPlayerWillStartTheGame(String username){
+        return new StringBuilder(username).append(" will start the game");
+    }
+
+    public StringBuilder buildGameBoard(GameBoard currentPlayer, GameBoard opponent, String currentPlayerUsername, String opponentUsername){
+        StringBuilder board = new StringBuilder(opponentUsername);
+        board.append(":").append(opponent.getHealth());
+        board.append("\n").append("\tc").append("\tc").append("\tc").append("\tc").append("\tc");
+        board.append("\n").append(opponent.numberOfCardsRemainingToBePicked());
+        board.append("\n\t").append(getTheThing(opponent.getPlace(4, PLACE_NAME.SPELL_AND_TRAP)));
+        board.append("\t").append(getTheThing(opponent.getPlace(2, PLACE_NAME.SPELL_AND_TRAP)));
+        board.append("\t").append(getTheThing(opponent.getPlace(1, PLACE_NAME.SPELL_AND_TRAP)));
+        board.append("\t").append(getTheThing(opponent.getPlace(3, PLACE_NAME.SPELL_AND_TRAP)));
+        board.append("\t").append(getTheThing(opponent.getPlace(5, PLACE_NAME.SPELL_AND_TRAP)));
+        board.append("\n\t").append(getTheThing(opponent.getPlace(4, PLACE_NAME.MONSTER)));
+        board.append("\t").append(getTheThing(opponent.getPlace(2, PLACE_NAME.MONSTER)));
+        board.append("\t").append(getTheThing(opponent.getPlace(1, PLACE_NAME.MONSTER)));
+        board.append("\t").append(getTheThing(opponent.getPlace(3, PLACE_NAME.MONSTER)));
+        board.append("\t").append(getTheThing(opponent.getPlace(5, PLACE_NAME.MONSTER)));
+        board.append("\n").append(opponent.getGraveyard().size() != 0 ? opponent.getGraveyard().size() : "E");
+        board.append("\t\t\t\t\t").append(getTheThing(opponent.getPlace(0, PLACE_NAME.FIELD)));
+        board.append("\n\n--------------------------\n");
+        board.append("\n").append(getTheThing(currentPlayer.getPlace(0, PLACE_NAME.FIELD)));
+        board.append("\t\t\t\t\t").append(currentPlayer.getGraveyard().size() != 0 ? currentPlayer.getGraveyard().size() : "E");
+        board.append("\n\t").append(getTheThing(currentPlayer.getPlace(5, PLACE_NAME.MONSTER)));
+        board.append("\t").append(getTheThing(currentPlayer.getPlace(3, PLACE_NAME.MONSTER)));
+        board.append("\t").append(getTheThing(currentPlayer.getPlace(1, PLACE_NAME.MONSTER)));
+        board.append("\t").append(getTheThing(currentPlayer.getPlace(2, PLACE_NAME.MONSTER)));
+        board.append("\t").append(getTheThing(currentPlayer.getPlace(4, PLACE_NAME.MONSTER)));
+        board.append("\n\t").append(getTheThing(currentPlayer.getPlace(5, PLACE_NAME.SPELL_AND_TRAP)));
+        board.append("\t").append(getTheThing(currentPlayer.getPlace(3, PLACE_NAME.SPELL_AND_TRAP)));
+        board.append("\t").append(getTheThing(currentPlayer.getPlace(1, PLACE_NAME.SPELL_AND_TRAP)));
+        board.append("\t").append(getTheThing(currentPlayer.getPlace(2, PLACE_NAME.SPELL_AND_TRAP)));
+        board.append("\t").append(getTheThing(currentPlayer.getPlace(4, PLACE_NAME.SPELL_AND_TRAP)));
+        board.append("\n\t\t\t\t\t").append(currentPlayer.numberOfCardsRemainingToBePicked());
+        board.append("\n").append("\tc").append("\tc").append("\tc").append("\tc").append("\tc");
+        board.append("\n").append(currentPlayerUsername).append(":").append(currentPlayer.getHealth());
+        return board;
+    }
+
+    private String getTheThing(Place place){
+        if (place.getCard() == null)
+            return "E";
+        if (place.getCard() instanceof MonsterCards){
+            switch (place.getStatus()){
+                case ATTACK:
+                    return "OO";
+                case DEFENCE:
+                    return "DO";
+                default:
+                    return "DH";
+            }
+        } else {
+            switch (place.getStatus()){
+                case ATTACK:
+                    return "O";
+                default:
+                    return "H";
+            }
+        }
     }
 
 

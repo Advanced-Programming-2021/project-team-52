@@ -21,10 +21,10 @@ public enum PLACE_NAME {
     public static PLACE_NAME getEnumByString(String enumString){
         switch (enumString){
             case "-m":
-            case "--m":
+            case "--monster":
                 return MONSTER;
             case "-s":
-            case "--s":
+            case "--spell":
                 return SPELL_AND_TRAP;
         }
         return null;

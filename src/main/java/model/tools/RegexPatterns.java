@@ -32,7 +32,7 @@ public interface RegexPatterns {
     Pattern newDuelPattern = Pattern.compile("^duel(?!.*(?:--second-player|-sp|--ai|-a).*(?:--second-player|-sp|--ai" +
             "|-a))(?!.*(?:--rounds|-r).*(?:--rounds|-r))(?!.*(?:--new|-n).*(?:--new|-n))(?=.*(?:--new|-n))(?=.*(?:--" +
             "rounds|-r))(?=.*(?:--second-player|-sp|--ai|-a))(?: (?:(?:(?:--second-player|-sp) (?<secondPlayer>\\w+)" +
-            "|(?:--ai|-a))|(?:--rounds|-r) (?<rounds>[13])|--new|-n))+$");
+            "|(?:--ai|-a))|(?:--rounds|-r) (?<rounds>\\d)|--new|-n))+$");
     Pattern selectCardPattern = Pattern.compile("^(?=\\w+ --?\\w+(?: \\w+)?)select(?:(?!.*(?:(?:--monster|-m|--spell" +
             "|-s)(?: --opponent| -o)?|(?:--hand|-h)|(?:--field|-f)).*(?:(?:--monster|-m|--spell|-s)(?: --opponent| -" +
             "o)?|(?:--hand|-h)|(?:--field|-f)))(?!.*(?:--opponent|-o).*(?:--opponent|-o))(?=.*(?:(?:--monster|-m|--s" +

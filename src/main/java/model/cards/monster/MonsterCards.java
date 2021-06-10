@@ -22,6 +22,7 @@ public class MonsterCards extends Cards{
         this.defense = defense;
         this.attribute = attribute;
         this.monsterType = monsterType;
+        addCard(this, name);
     }
 
     public int getLevel() {

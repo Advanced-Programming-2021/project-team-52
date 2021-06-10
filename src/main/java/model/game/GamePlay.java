@@ -29,10 +29,19 @@ public class GamePlay {
         this.history = new HashMap<>();
         this.alreadySummonedOrSet = false;
         this.flipSummonedInThisRound = false;
-        this.selectedCard = null;
+        this.selectedCard = new Place(PLACE_NAME.HAND);
         this.universalHistory = new ArrayList<>();
         this.name = name;
         this.gameEnded = false;
+        instantiateHistories();
+    }
+
+    private void instantiateHistories(){
+        for (Place value : myGameBoard.getPlace().values()) {
+            history.put(value, new ArrayList<>());
+            value.setHistory(history.get(value));
+        }
+
     }
 
     public void setOpponentGamePlayController(GamePlayController opponentGamePlayController) {
