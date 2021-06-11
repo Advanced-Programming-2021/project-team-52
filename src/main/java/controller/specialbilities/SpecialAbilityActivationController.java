@@ -64,7 +64,7 @@ public class SpecialAbilityActivationController implements StringMessages {
         }
         if (specials.contains("canSummonNormally")) {
             printerAndScanner.printNextLine(summonWithoutTribute);
-            if (!printerAndScanner.scanNextLine().equals("yes")) {
+            if (printerAndScanner.scanNextLine().equals("yes")) {
                 for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
                     if (specialAbility.getMethodName().equals("canSummonNormally")) {
                         specialAbility.run(gamePlayController, gamePlayController.getGamePlay().getSelectedCard());
@@ -228,10 +228,11 @@ public class SpecialAbilityActivationController implements StringMessages {
     }
 
     public void runSuccessSpecialAbility(Place place) {
-        for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
-            if (specialAbility instanceof Success)
-                specialAbility.run(gamePlayController, place);
-        }
+        if (place.getCard() != null)
+            for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
+                if (specialAbility instanceof Success)
+                    specialAbility.run(gamePlayController, place);
+            }
     }
 
 //    public void checkSummonDeactivation(Place placeToAffect) {
@@ -317,13 +318,14 @@ public class SpecialAbilityActivationController implements StringMessages {
     public void runAttackSpecial(Place place, boolean defenderWasHidden){
 
         for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
-            if (specialAbility instanceof AttackSpecial)
+            if (specialAbility instanceof AttackSpecial) {
                 if (specialAbility.getMethodName().equals("reduceAttackerLPIfItWasFacingDown")) {
                     if (defenderWasHidden)
                         specialAbility.run(gamePlayController, place);
                 } else specialAbility.run(gamePlayController, place);
+                runSuccessSpecialAbility(place);
+            }
         }
-        runSuccessSpecialAbility(place);
     }
 
     public void runAttackAmountByQuantifier(){

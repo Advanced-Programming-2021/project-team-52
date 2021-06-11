@@ -20,15 +20,16 @@ public class GamePlayController extends RegexController implements RegexPatterns
     //TODO move remove card from game board to here
     //TODO add onDeath to remove card function for fields
 
-    private static PrinterAndScanner printerAndScanner;
-    private static PrintBuilderController printBuilderController;
-    private static SpecialAbilityActivationController specialAbilityActivationController;
+    private static final PrinterAndScanner printerAndScanner;
+    private static final PrintBuilderController printBuilderController;
+    private static final SpecialAbilityActivationController specialAbilityActivationController;
 
-    private GamePlay gamePlay;
+    private final GamePlay gamePlay;
     private PHASE phase;
     private boolean alreadySummonedOrSet = false;
     private boolean didBattlePhase = false;
     private boolean monsterCardDestroyed;
+    private final ArrayList<Place> CHAINED_PLACES;
 
     static {
         printerAndScanner = PrinterAndScanner.getInstance();
@@ -38,6 +39,12 @@ public class GamePlayController extends RegexController implements RegexPatterns
 
     public GamePlayController(GamePlay gamePlay){
         this.gamePlay = gamePlay;
+        CHAINED_PLACES = new ArrayList<>();
+    }
+
+    public ArrayList<Place> sendChainedPlaces(){
+        CHAINED_PLACES.clear();
+        return CHAINED_PLACES;
     }
 
     public GamePlay getGamePlay() {
@@ -64,7 +71,7 @@ public class GamePlayController extends RegexController implements RegexPatterns
             if (matcher != null)
                 selectCardCredibility(matcher);
             else printerAndScanner.printNextLine(invalidCommand);
-        } else if (command.equals("nextPhase"))
+        } else if (command.equals("next phase"))
             nextPhase();
         else if (command.equals("summon"))
             summonCredibility();
@@ -84,7 +91,7 @@ public class GamePlayController extends RegexController implements RegexPatterns
                     if (matcher.group("type").equals("direct"))
                         attackDirect();
                     else attackMonster(Integer.parseInt(matcher.group("type")));
-                }
+                } else printerAndScanner.printNextLine(StringMessages.cannotAttackRightNow);
             } else printerAndScanner.printNextLine(invalidCommand);
         } else if (command.equals("activate effect"))
             activateEffect();
@@ -95,7 +102,7 @@ public class GamePlayController extends RegexController implements RegexPatterns
 
     private void nextPhase(){
         if (phase == PHASE.MAIN){
-            if (!didBattlePhase && canAttack()) {
+            if (!didBattlePhase && canAttack() && !gamePlay.getUniversalHistory().contains("starter")) {
                 phase = PHASE.BATTLE;
                 printerAndScanner.printNextLine(phase.getValue());
                 didBattlePhase = true;
@@ -122,7 +129,7 @@ public class GamePlayController extends RegexController implements RegexPatterns
         printerAndScanner.printNextLine(phase.getValue());
         if (!gamePlay.getOpponentGamePlayController().getGamePlay().getUniversalHistory().contains("cannotDraw"))
             drawCard();
-        new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2);
+        new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2, sendChainedPlaces());
         standByPhase();
     }
 
@@ -130,15 +137,17 @@ public class GamePlayController extends RegexController implements RegexPatterns
         checkIndividualHistory();
         phase = PHASE.STAND_BY;
         printerAndScanner.printNextLine(phase.getValue());
-        new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2);
-        phase = PHASE.MAIN;
+        new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2, sendChainedPlaces());
+        nextPhase();
     }
 
     private void end(){
         printerAndScanner.printNextLine(phase.getValue());
-        new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2);
+        new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2, sendChainedPlaces());
         printerAndScanner.printString(printBuilderController.playerTurn(gamePlay.
                 getOpponentGamePlayController().getGamePlay().getName()));
+        gamePlay.getUniversalHistory().remove("starter");
+        alreadySummonedOrSet = false;
     }
 
     public void drawCard(){
@@ -161,8 +170,8 @@ public class GamePlayController extends RegexController implements RegexPatterns
     public void selectCardCredibility(Matcher matcher){
         if (hasField(matcher, "typeHand")) {
             int number = Integer.parseInt(matcher.group("select"));
-            if (number < 7)
-                if (gamePlay.getMyGameBoard().getPlace(number, PLACE_NAME.HAND) != null)
+            if (number < 6 && number >= 0)
+                if (gamePlay.getMyGameBoard().getPlace(number, PLACE_NAME.HAND).getCard() != null)
                     selectCard(matcher);
                 else printerAndScanner.printNextLine(noCardInGivenPosition);
             else printerAndScanner.printNextLine(invalidSelection);
@@ -199,13 +208,17 @@ public class GamePlayController extends RegexController implements RegexPatterns
                     else gamePlay.setSelectedCard(gamePlay.getMyGameBoard().getPlace(0, PLACE_NAME.FIELD));
                 } else {
                     PLACE_NAME placeName = PLACE_NAME.getEnumByString(matcher.group("type"));
-                    gamePlay.setSelectedCard(gamePlay.getMyGameBoard().
+                    if (selectOpponent)
+                        gamePlay.setSelectedCard(gamePlay.getOpponentGamePlayController().getGamePlay().getMyGameBoard().
+                            getPlace(Integer.parseInt(matcher.group("select")), placeName));
+                    else gamePlay.setSelectedCard(gamePlay.getMyGameBoard().
                             getPlace(Integer.parseInt(matcher.group("select")), placeName));
                 }
             }
             printerAndScanner.printNextLine(cardSelected);
         }
         //TODO do something about next line
+        if (gamePlay.getSelectedCard().getCard() != null)
         System.out.println(gamePlay.getSelectedCard().getCard().getName());
     }
 
@@ -222,7 +235,8 @@ public class GamePlayController extends RegexController implements RegexPatterns
                                     if (selectedCard.getCard().getType().equals("Ritual"))
                                         ritualSummon(selectedCard);
                                     else //summon(getGamePlay().getSelectedCard(), true);
-                                        new NewChain(this, selectedCard, CHAIN_JOB.SUMMON, 0);
+                                        new NewChain(this, selectedCard,
+                                                CHAIN_JOB.SUMMON, 0, sendChainedPlaces());
                                 }
                             } else printerAndScanner.printNextLine(alreadySummonedORSetOnThisTurn);
                         } else printerAndScanner.printNextLine(monsterCardZoneIsFull);
@@ -293,7 +307,8 @@ public class GamePlayController extends RegexController implements RegexPatterns
                 Place placeTo = gamePlay.getMyGameBoard().getPlace(emptyPlace, PLACE_NAME.SPELL_AND_TRAP);
                 placeTo.setCard(selectedCard.getCard());
                 placeTo.setStatus(STATUS.SET);
-                placeTo.addTemporaryFeatures(TEMPORARY_FEATURES.SPELL_ACTIVATED);
+//                placeTo.addTemporaryFeatures(TEMPORARY_FEATURES.SPELL_ACTIVATED);
+            placeTo.addTemporaryFeatures(TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN);
                 selectedCard.setCard(null);
                 printerAndScanner.printNextLine(setSuccessfully);
         } else printerAndScanner.printNextLine(spellCardZoneIsFull);
@@ -339,7 +354,7 @@ public class GamePlayController extends RegexController implements RegexPatterns
 //                            specialAbilityActivationController.runFacUpSpecial(selectedCard);
 //                            specialAbilityActivationController.runFlipSpecial(selectedCard);
 //                        }
-                        new NewChain(this, selectedCard, CHAIN_JOB.FLIP_SUMMON, 0);
+                        new NewChain(this, selectedCard, CHAIN_JOB.FLIP_SUMMON, 0, sendChainedPlaces());
                     }
                 } else printerAndScanner.printNextLine(cantDoInThisPhase);
             } else printerAndScanner.printNextLine(cantChangeThisCardPosition);
@@ -354,10 +369,11 @@ public class GamePlayController extends RegexController implements RegexPatterns
             if (cardToAttack instanceof MonsterZone && selectedCard instanceof MonsterZone){
                 if (checkCannotBeAttacked(cardToAttack)) {
                     if (phase == PHASE.BATTLE) {
-                        if (selectedCard.getTemporaryFeatures().contains(TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN)) {
+                        if (!selectedCard.getTemporaryFeatures().contains(TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN)) {
                             if (cardToAttack.getCard() != null) {
                                 selectedCard.setAffect(cardToAttack);
-                                new NewChain(this, selectedCard,CHAIN_JOB.ATTACK_MONSTER, 0);
+                                new NewChain(this,
+                                        selectedCard,CHAIN_JOB.ATTACK_MONSTER, 0, sendChainedPlaces());
                             } else printerAndScanner.printNextLine(noCardToAttackHere);
                         } else printerAndScanner.printNextLine(cardAlreadyAttacked);
                     } else printerAndScanner.printNextLine(cantDoInThisPhase);
@@ -386,7 +402,8 @@ public class GamePlayController extends RegexController implements RegexPatterns
                     if (!selectedCard.getTemporaryFeatures().contains(TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN)){
                         if (opponentHasMonsterCard()){
                             selectedCard.setAffect(selectedCard);
-                            new NewChain(this, selectedCard, CHAIN_JOB.ATTACK_DIRECT, 0);
+                            new NewChain(this, selectedCard,
+                                    CHAIN_JOB.ATTACK_DIRECT, 0, sendChainedPlaces());
                         } else printerAndScanner.printNextLine(cantAttackTheOpponentDirectly);
                     } else printerAndScanner.printNextLine(cardAlreadyAttacked);
                 } else printerAndScanner.printNextLine(cantDoInThisPhase);
@@ -412,9 +429,10 @@ public class GamePlayController extends RegexController implements RegexPatterns
         if (selectedCard != null){
             if (gamePlay.getMyGameBoard().fromThisGameBoard(selectedCard)) {
                 if (selectedCard.getCard() instanceof SpellCards) {
-                    if (phase != PHASE.MAIN) {
+                    if (phase == PHASE.MAIN) {
                         if (!selectedCard.getTemporaryFeatures().contains(TEMPORARY_FEATURES.SPELL_ACTIVATED) &&
-                            !gamePlay.getHistory().get(selectedCard).contains("noSpecialThisRound")) {
+                            !gamePlay.getHistory().get(selectedCard).contains("noSpecialThisRound") &&
+                            !selectedCard.getTemporaryFeatures().contains(TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN)) {
                             if ((selectedCard.getType() == PLACE_NAME.HAND &&
 //                                    gamePlay.getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.SPELL_AND_TRAP) != -1 ||
                                     selectedCard.getCard().getSpecialSpeed() >= 2) ||
@@ -432,7 +450,8 @@ public class GamePlayController extends RegexController implements RegexPatterns
                                         else {
                                             selectedCard.setAffect(selectedCard);
                                             new NewChain(this, selectedCard,
-                                                    CHAIN_JOB.ACTIVATE_SPELL, selectedCard.getCard().getSpecialSpeed());
+                                                    CHAIN_JOB.ACTIVATE_SPELL,
+                                                    selectedCard.getCard().getSpecialSpeed(), sendChainedPlaces());
                                         }
                                     }
                                 } else printerAndScanner.printNextLine(preparationsAreNotDoneYet);
@@ -696,7 +715,8 @@ public class GamePlayController extends RegexController implements RegexPatterns
             temporaryFeatures = place.getTemporaryFeatures();
             for (int j = 0; j < temporaryFeatures.size(); j++) {
                 if (temporaryFeatures.get(j) != TEMPORARY_FEATURES.SPELL_ACTIVATED &&
-                        temporaryFeatures.get(j) != TEMPORARY_FEATURES.EQUIPPED)
+                        temporaryFeatures.get(j) != TEMPORARY_FEATURES.EQUIPPED ||
+                        temporaryFeatures.get(j) == TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN)
                     temporaryFeatures.remove(temporaryFeatures.get(j));
             }
             place = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);

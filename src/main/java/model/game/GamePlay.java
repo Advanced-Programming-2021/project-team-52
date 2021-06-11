@@ -38,8 +38,10 @@ public class GamePlay {
 
     private void instantiateHistories(){
         for (Place value : myGameBoard.getPlace().values()) {
-            history.put(value, new ArrayList<>());
-            value.setHistory(history.get(value));
+            if (value.getType() != PLACE_NAME.HAND) {
+                history.put(value, new ArrayList<>());
+                value.setHistory(history.get(value));
+            }
         }
 
     }

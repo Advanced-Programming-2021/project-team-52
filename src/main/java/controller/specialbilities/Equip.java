@@ -27,7 +27,7 @@ public class Equip implements SpecialAbility, StringMessages {
         try {
             method.invoke(this);
         } catch (Exception e) {
-            System.out.println("error : " + e);
+            e.printStackTrace();
         }
     }
 
