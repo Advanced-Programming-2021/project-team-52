@@ -33,7 +33,7 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
         try {
             method.invoke(this);
         } catch (Exception e) {
-            System.out.println("error : " + e);
+            e.printStackTrace();
         }
     }
 
@@ -158,7 +158,8 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
                 temporary.setCard(card);
                 temporary.setStatus(STATUS.getStatusByString(type));
                 temporary.setAffect(place);
-                new NewChain(gamePlayController, temporary, CHAIN_JOB.SPECIAL_SUMMON, spell.getCard().getSpecialSpeed());
+                new NewChain(gamePlayController, temporary, CHAIN_JOB.SPECIAL_SUMMON,
+                        spell.getCard().getSpecialSpeed(), gamePlayController.sendChainedPlaces());
                 return true;
             }
         return false;

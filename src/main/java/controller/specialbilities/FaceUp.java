@@ -25,7 +25,7 @@ public class FaceUp implements SpecialAbility, StringMessages {
         try {
             method.invoke(this);
         } catch (Exception e) {
-            System.out.println("error : " + e);
+            e.printStackTrace();
         }
     }
 
@@ -104,5 +104,9 @@ public class FaceUp implements SpecialAbility, StringMessages {
                 }
             }
         }
+    }
+
+    public void addScannerHistory(){
+        gamePlayController.getGamePlay().getHistory().get(place).add("scanner");
     }
 }

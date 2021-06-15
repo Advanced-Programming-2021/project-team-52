@@ -55,7 +55,7 @@ public class PrintBuilderController {
 
     public String winingAgainstOO(int damage) {
         return "your opponent’s monster is destroyed" +
-                " and your opponent receives" +
+                " and your opponent receives " +
                 damage +
                 "battle damage";
     }

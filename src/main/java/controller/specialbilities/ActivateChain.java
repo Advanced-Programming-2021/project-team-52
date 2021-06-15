@@ -22,7 +22,7 @@ public class ActivateChain implements SpecialAbility, StringMessages {
         try {
             method.invoke(this);
         } catch (Exception e) {
-            System.out.println("error : " + e);
+            e.printStackTrace();
         }
     }
 
@@ -82,7 +82,7 @@ public class ActivateChain implements SpecialAbility, StringMessages {
 
     public void redirectAttack(){ //TODO ++
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
-                .changeHealth(((MonsterZone) place).getAttack() * -1);
+                .changeHealth(((MonsterZone) place.getAffect()).getAttack() * -1);
     }
 
     public void destroyAllEnemyMonstersInThisStatus(){ //TODO ++

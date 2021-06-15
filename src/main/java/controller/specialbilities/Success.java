@@ -5,6 +5,7 @@ import model.cards.Cards;
 import model.game.PLACE_NAME;
 import model.game.Place;
 import model.game.STATUS;
+import model.game.TEMPORARY_FEATURES;
 import model.tools.StringMessages;
 
 import java.lang.reflect.Method;
@@ -25,7 +26,7 @@ public class Success implements SpecialAbility, StringMessages {
         try {
             method.invoke(this);
         } catch (Exception e) {
-            System.out.println("error : " + e);
+            e.printStackTrace();
         }
     }
 
@@ -150,9 +151,11 @@ public class Success implements SpecialAbility, StringMessages {
     }
 
     private boolean monsterOfThisTypeExistsInHand(){
+        Cards card;
         for (int i = 0; i < 6; i++) {
-            if (gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.HAND).getCard()
-                    .getType().equals(monsterType))
+            card = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.HAND).getCard();
+            if (card != null)
+            if (card.getType().equals(monsterType))
                 return true;
         }
         return false;
@@ -168,4 +171,7 @@ public class Success implements SpecialAbility, StringMessages {
         return false;
     }
 
+    public void preventAttack(){
+        place.getAffect().getTemporaryFeatures().add(TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN);
+    }
 }

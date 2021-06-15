@@ -28,7 +28,7 @@ public class FieldSpecial implements SpecialAbility {
         try {
             method.invoke(this);
         } catch (Exception e) {
-            System.out.println("error : " + e);
+            e.printStackTrace();
         }
     }
 

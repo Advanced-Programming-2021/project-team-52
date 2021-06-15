@@ -25,17 +25,21 @@ public class NewChain implements StringMessages, RegexPatterns {
         specialAbilityActivationController = SpecialAbilityActivationController.getInstance();
     }
 
+    private final ArrayList<Place> CHAINED_PLACES;
     private GamePlayController gamePlayController;
     private CHAIN_JOB chainJob;
     private boolean defenderWasHidden = false;
     private Place place;
     private int previousSpeed;
 
-    public NewChain(GamePlayController gamePlayController, Place place, CHAIN_JOB chainJob, int previousSpeed){
+    public NewChain(GamePlayController gamePlayController, Place place, CHAIN_JOB chainJob, int previousSpeed,
+                    ArrayList<Place> CHAINED_PLACES){
         this.gamePlayController = gamePlayController;
         this.place = place;
         this.chainJob = chainJob;
         this.previousSpeed = previousSpeed;
+        this.CHAINED_PLACES = CHAINED_PLACES;
+        CHAINED_PLACES.add(place);
         run();
     }
 
@@ -43,6 +47,10 @@ public class NewChain implements StringMessages, RegexPatterns {
         ArrayList<Place> opponentChainable = new ArrayList<>();
         ArrayList<Place> myChainable = new ArrayList<>();
 //        findChainableCards(opponentChainable, myChainable);
+        boolean doChainEarly = chainJob == CHAIN_JOB.SUMMON ||
+                chainJob == CHAIN_JOB.SPECIAL_SUMMON || chainJob == CHAIN_JOB.FLIP_SUMMON;
+        if (doChainEarly)
+            doChain();
         searchForChainable(gamePlayController, myChainable);
         searchForChainable(gamePlayController.getGamePlay().getOpponentGamePlayController(), opponentChainable);
         if (myChainable.size() > 0)
@@ -63,10 +71,11 @@ public class NewChain implements StringMessages, RegexPatterns {
             if (myChainable.size() > 0)
                 addChain(myChainable, gamePlayController);
         }
-        if (gamePlayController.getGamePlay().getUniversalHistory().contains("preventChain"))
-            gamePlayController.getGamePlay().getUniversalHistory().remove("preventChain");
-        else if (!gamePlayController.getGamePlay().getGameEnded())
-            doChain();
+        if (!doChainEarly)
+            if (gamePlayController.getGamePlay().getUniversalHistory().contains("preventChain"))
+                gamePlayController.getGamePlay().getUniversalHistory().remove("preventChain");
+            else if (!gamePlayController.getGamePlay().getGameEnded())
+                doChain();
     }
 
 //    private void findChainableCards(ArrayList<Place> opponentChainable, ArrayList<Place> myChainable) {
@@ -99,12 +108,14 @@ public class NewChain implements StringMessages, RegexPatterns {
         for (int i = 1; i < 6; i++) {
             place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
             if (place.getCard() != null)
-                if (place.getCard().getSpecialSpeed() >= previousSpeed){
-                    ArrayList<CHAIN_JOB> jobs = place.getCard() instanceof SpellCards
+                if (!CHAINED_PLACES.contains(place))
+                    if (place.getCard().getSpecialSpeed() >= previousSpeed){
+                        ArrayList<CHAIN_JOB> jobs = place.getCard() instanceof SpellCards
                             ? ((SpellCards) place.getCard()).getChainJobs() : ((TrapCards) place.getCard()).getChainJobs();//place.getCard().getChainJob();
-                    if ((jobs.contains(chainJob) || jobs.size() == 0) && !jobs.contains(CHAIN_JOB.ALONE)) {
-                        if (specialAbilityActivationController.checkForConditions(place))
-                            chainable.add(place);
+                        if ((jobs.contains(chainJob) || jobs.size() == 0) && !jobs.contains(CHAIN_JOB.ALONE) &&
+                                !place.getTemporaryFeatures().contains(TEMPORARY_FEATURES.SPELL_ACTIVATED)) {
+                            if (specialAbilityActivationController.checkForConditions(place))
+                                chainable.add(place);
                     }
             }
         }
@@ -136,7 +147,7 @@ public class NewChain implements StringMessages, RegexPatterns {
                     if (matcher != null)
                         gamePlayController.selectCardCredibility(matcher);
                     else printerAndScanner.printNextLine(invalidCommand);
-                } else if (command.matches("activate")){
+                } else if (command.matches("activate effect")){
                     Place place = gamePlayController.getGamePlay().getSelectedCard();
                     if (chainAble.contains(place)) {
                         place.setAffect(this.place);
@@ -144,7 +155,8 @@ public class NewChain implements StringMessages, RegexPatterns {
                             gamePlayController.flip(place, STATUS.ATTACK);
                         specialAbilityActivationController.setGamePlayController(gamePlayController);
                         if (specialAbilityActivationController.runUponActivation(place))
-                            new NewChain(gamePlayController, place, findChainJob(place), place.getCard().getSpecialSpeed());
+                            new NewChain(gamePlayController, place, findChainJob(place),
+                                    place.getCard().getSpecialSpeed(), CHAINED_PLACES);
                         break;
                     } else printerAndScanner.printNextLine(cannotDoThat);
                 } else printerAndScanner.printNextLine(invalidCommand);
@@ -175,12 +187,14 @@ public class NewChain implements StringMessages, RegexPatterns {
             else if (chainJob == CHAIN_JOB.ATTACK_DIRECT) {
                 if (gamePlayController.getGamePlay().getUniversalHistory().contains("preventAttack"))
                     gamePlayController.getGamePlay().getUniversalHistory().remove("preventAttack");
-                else attackDirectly();
+                else if (!place.getTemporaryFeatures().contains(TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN))
+                    attackDirectly();
             }
             else if (chainJob == CHAIN_JOB.ATTACK_MONSTER)
                 if (gamePlayController.getGamePlay().getUniversalHistory().contains("preventAttack"))
                     gamePlayController.getGamePlay().getUniversalHistory().remove("preventAttack");
-                else attackMonster();
+                else if (!place.getTemporaryFeatures().contains(TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN))
+                    attackMonster();
             else if (chainJob == CHAIN_JOB.ACTIVATE_SPELL || chainJob == CHAIN_JOB.ACTIVATE_TRAP)
                 activate();
         }
@@ -209,7 +223,7 @@ public class NewChain implements StringMessages, RegexPatterns {
         specialAbilityActivationController.setGamePlayController(gamePlayController.getGamePlay().getOpponentGamePlayController());
         specialAbilityActivationController.runAttackSpecial(defender, defenderWasHidden);
         defender.setAffect(previousAffect);
-        if (!gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getHistory().get(attacker)
+        if (!gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getHistory().get(defender)
                 .contains("neutralizeAttack")) {
             if (defenderInDefendingStatus) {
                 attackToDefensePosition(attackerAttack, defenderDefense, defenderName,
@@ -303,12 +317,15 @@ public class NewChain implements StringMessages, RegexPatterns {
                 opponentGamePlayController.getGamePlay().getMyGameBoard().changeHealth(Integer.parseInt(matcher.group(1)));
             }
         }
-        specialAbilityActivationController.setGamePlayController(gamePlayController);
-        specialAbilityActivationController.activateEffectWithChain(place);
-        specialAbilityActivationController.activateEffectWithoutChain(place);
-        specialAbilityActivationController.runSuccessSpecialAbility(place);
-        if (!place.getCard().getType().equals("Equip"))
+        if (place.getCard().getType().equals("equip"))
+            specialAbilityActivationController.activateEquip(place);
+        else {
+            specialAbilityActivationController.setGamePlayController(gamePlayController);
+            specialAbilityActivationController.activateEffectWithChain(place);
+            specialAbilityActivationController.activateEffectWithoutChain(place);
+            specialAbilityActivationController.runSuccessSpecialAbility(place);
             gamePlayController.killCard(place);
+        }
     }
 
     private void specialSummon(){

@@ -22,6 +22,7 @@ public interface StringMessages {
     String cantAttackWithThisCard = "you can’t attack with this card";
     String cantAttackTheOpponentDirectly = "you can’t attack the opponent directly";
     String cardAlreadyAttacked = "this card already attacked";
+    String cannotAttackRightNow = "you cannot attack right now";
 
     String cantChangeThisCardPosition = "you can’t change this card position";
     String cardIsAlreadyInTheWantedPosition = "this card is already in the wanted position";

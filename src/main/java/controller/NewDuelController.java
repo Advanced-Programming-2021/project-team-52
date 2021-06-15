@@ -74,10 +74,14 @@ public class NewDuelController implements RegexPatterns, StringMessages {
         for (String card : host.getActiveDeck().getAllMainCards()) {
             mainCards.add(Cards.getCard(card));
         }
+        mainCards.remove(Cards.getCard("Raigeki"));
+        mainCards.add(Cards.getCard("Raigeki"));
         sideCards = new ArrayList<>();
         for (String card : host.getActiveDeck().getAllSideCards()) {
             sideCards.add(Cards.getCard(card));
         }
+        sideCards.remove(Cards.getCard("Raigeki"));
+        sideCards.add(Cards.getCard("Raigeki"));
         hostGameBoard = new GameBoard(mainCards, sideCards);
         mainCards.clear();
         for (String card : guest.getActiveDeck().getAllMainCards()) {
@@ -94,6 +98,8 @@ public class NewDuelController implements RegexPatterns, StringMessages {
         guestGamePlayController = new GamePlayController(guestGamePlay);
         hostGamePlay.setOpponentGamePlayController(guestGamePlayController);
         guestGamePlay.setOpponentGamePlayController(hostGamePlayController);
+        hostGamePlayController.shuffleDeck();
+        guestGamePlayController.shuffleDeck();
     }
 
     private void startTheGame(int rounds){
@@ -125,9 +131,11 @@ public class NewDuelController implements RegexPatterns, StringMessages {
     private GamePlayController flipACoin(){
         if (RANDOM.nextBoolean()){
             PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.thisPlayerWillStartTheGame(host.getUsername()));
+            hostGamePlayController.getGamePlay().getUniversalHistory().add("starter");
             return hostGamePlayController;
         } else {
             PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.thisPlayerWillStartTheGame(guest.getUsername()));
+            guestGamePlayController.getGamePlay().getUniversalHistory().add("starter");
             return guestGamePlayController;
         }
     }
