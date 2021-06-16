@@ -104,7 +104,7 @@ public class Deck {
     }
 
     //TODO remove next functions
-    public void addAllCardsToDeck(){
+    public void addAllCardsToDeck() {
         allMainCards = new ArrayList<>(Cards.getAllNames());
     }
 

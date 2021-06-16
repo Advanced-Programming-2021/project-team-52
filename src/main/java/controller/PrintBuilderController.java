@@ -95,7 +95,8 @@ public class PrintBuilderController {
         return "card with name " + cardName + " does not exist";
     }
 
-    public String thereAreAlreadyThreeCardsWithThisNameInThisDeck(String cardName, String deckName, int numberOfCards) {
+    public String thereAreAlreadyThreeCardsWithThisNameInThisDeck
+            (String cardName, String deckName, int numberOfCards) {
         return "there are already "+numberOfCards+" cards with name " + cardName + " in deck " + deckName;
     }
 
@@ -219,14 +220,16 @@ public class PrintBuilderController {
 
     public StringBuilder attackToAttackResult(int damage, boolean opponentLost) {
         if (opponentLost)
-            return new StringBuilder("your opponent’s monster is destroyed and your opponent receives ").append(damage)
+            return new StringBuilder("your opponent’s monster is destroyed and your opponent receives ")
+                    .append(damage)
                     .append("battle damage");
         else
             return new StringBuilder("Your monster card is destroyed and you received ").append(damage).
                     append(" battle damage");
     }
 
-    public StringBuilder attackToDefenseResult(boolean defenderWasHidden, String defenderName, int result, int damage) {
+    public StringBuilder attackToDefenseResult(boolean defenderWasHidden,
+                                               String defenderName, int result, int damage) {
         StringBuilder results = new StringBuilder();
         if (defenderWasHidden)
             results.append("opponent’s monster card was ").append(defenderName).append(" ");
@@ -255,11 +258,13 @@ public class PrintBuilderController {
     }
 
     public StringBuilder askForPayingLp(String amount, String cardName) {
-        return new StringBuilder("do you want to lose ").append(amount).append("LP or lose ").append(cardName).append("?");
+        return new StringBuilder("do you want to lose ").append(amount).append("LP or lose ").
+                append(cardName).append("?");
     }
 
     public StringBuilder askForLpForActivation(int amount){
-        return new StringBuilder("do you want to pay ").append(amount).append(" LP to activate this special ability?");
+        return new StringBuilder("do you want to pay ").append(amount).
+                append(" LP to activate this special ability?");
     }
 
     public StringBuilder userDoesntHaveActiveDeck(String username){
@@ -270,7 +275,8 @@ public class PrintBuilderController {
         return new StringBuilder(username).append(" will start the game");
     }
 
-    public StringBuilder buildGameBoard(GameBoard currentPlayer, GameBoard opponent, String currentPlayerUsername, String opponentUsername){
+    public StringBuilder buildGameBoard(GameBoard currentPlayer, GameBoard opponent,
+                                        String currentPlayerUsername, String opponentUsername){
         StringBuilder board = new StringBuilder(opponentUsername);
         board.append(":").append(opponent.getHealth());
         board.append("\n").append("\tc").append("\tc").append("\tc").append("\tc").append("\tc");
@@ -289,7 +295,8 @@ public class PrintBuilderController {
         board.append("\t\t\t\t\t").append(getTheThing(opponent.getPlace(0, PLACE_NAME.FIELD)));
         board.append("\n\n--------------------------\n");
         board.append("\n").append(getTheThing(currentPlayer.getPlace(0, PLACE_NAME.FIELD)));
-        board.append("\t\t\t\t\t").append(currentPlayer.getGraveyard().size() != 0 ? currentPlayer.getGraveyard().size() : "E");
+        board.append("\t\t\t\t\t").append(currentPlayer.getGraveyard().size() != 0 ? currentPlayer.getGraveyard()
+                .size() : "E");
         board.append("\n\t").append(getTheThing(currentPlayer.getPlace(5, PLACE_NAME.MONSTER)));
         board.append("\t").append(getTheThing(currentPlayer.getPlace(3, PLACE_NAME.MONSTER)));
         board.append("\t").append(getTheThing(currentPlayer.getPlace(1, PLACE_NAME.MONSTER)));

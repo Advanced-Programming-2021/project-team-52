@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 import static model.tools.StringMessages.*;
 
-// todo : fix problems of pattern for username, password and nickname in Pattern regexes
 public class LoginController implements RegexPatterns {
 
     static LoginController loginController = null;
@@ -23,7 +22,6 @@ public class LoginController implements RegexPatterns {
     static HashMap<String, User> users;
     private static PrintBuilderController printBuilderController;
     private static PrinterAndScanner printerAndScanner;
-//    private boolean loginChecker = false;
 
     //TODO remove next block
     static {
@@ -84,7 +82,8 @@ public class LoginController implements RegexPatterns {
             if (loginUser(matcher.group("username"), matcher.group("password")))
                 MainController.getInstance().start(users.get(matcher.group("username")));
         } else if ((matcher = RegexController.getMatcher(command, userCreatPattern)) != null) {
-            createUser(matcher.group("username"), matcher.group("password"), matcher.group("nickname"));
+            createUser(matcher.group("username"), matcher.group("password"),
+                    matcher.group("nickname"));
         } else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
             if (RegexController.hasField(matcher, "showCurrent")) {
                 showCurrentMenu();

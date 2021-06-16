@@ -7,6 +7,7 @@ import model.cards.monster.MonsterCards;
 import model.tools.RegexPatterns;
 import model.tools.StringMessages;
 import view.PrinterAndScanner;
+
 import java.util.regex.Matcher;
 
 
@@ -19,7 +20,8 @@ public class ShopController implements StringMessages, RegexPatterns {
         printBuilderController = PrintBuilderController.getInstance();
         printerAndScanner = PrinterAndScanner.getInstance();
     }
-//
+
+    //
     private ShopController() {
     }
 
@@ -54,7 +56,7 @@ public class ShopController implements StringMessages, RegexPatterns {
                 showCurrent();
             else
                 printerAndScanner.printNextLine(invalidCommand);
-        }else
+        } else
             printerAndScanner.printNextLine(invalidCommand);
         return false;
     }
@@ -72,7 +74,7 @@ public class ShopController implements StringMessages, RegexPatterns {
         user.changeBalance(-model.Shop.getInstance().getItemPrize(cardName));
         user.addCards(cardName);
         user.addCardToJustShowCards(cardName);
-        printerAndScanner.printNextLine(cardBoughtSuccessfully); // This message does not exists
+        printerAndScanner.printNextLine(cardBoughtSuccessfully);
     }
 
     private boolean checkBeforeTransaction(String cardName, int balance) {

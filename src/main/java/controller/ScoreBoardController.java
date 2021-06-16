@@ -10,8 +10,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.regex.Matcher;
 
-// say in group : delete run method input (User : user)
-
 public class ScoreBoardController implements RegexPatterns, StringMessages {
     private static ScoreBoardController scoreBoard = null;
     private static PrintBuilderController printBuilderController = PrintBuilderController.getInstance();
@@ -20,7 +18,7 @@ public class ScoreBoardController implements RegexPatterns, StringMessages {
     ArrayList<User> usersInScoreOrder;
 
 
-    private ScoreBoardController(){
+    private ScoreBoardController() {
     }
 
     public static ScoreBoardController getInstance() {
@@ -38,10 +36,10 @@ public class ScoreBoardController implements RegexPatterns, StringMessages {
 
     public boolean run(String command) {
         Matcher matcher;
-        if(command.equals("scoreboard show")){
+        if (command.equals("scoreboard show")) {
             sortUserByScore();
             printerAndScanner.printNextLine(toString());
-        }else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
+        } else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
             if (RegexController.hasField(matcher, "exit"))
                 return true;
             else if (RegexController.hasField(matcher, "enter"))
@@ -50,7 +48,7 @@ public class ScoreBoardController implements RegexPatterns, StringMessages {
                 showCurrent();
             else
                 printerAndScanner.printNextLine(invalidCommand);
-        }else
+        } else
             printerAndScanner.printNextLine(invalidCommand);
         return false;
     }
