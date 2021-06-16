@@ -29,29 +29,34 @@ public class ShopController implements StringMessages, RegexPatterns {
         return shop;
     }
 
-    public void run(User user) {
+    public void start(User user) {
         String command = printerAndScanner.scanNextLine();
-        Matcher matcher;
-        while (true) {
-            if ((matcher = RegexController.getMatcher(command, shopBuyPattern)) != null) {
-                if (RegexController.hasField(matcher, "card"))
-                    buy(user, matcher.group("card"));
-                else if (RegexController.hasField(matcher, "all"))
-                    printerAndScanner.printNextLine(Shop.getInstance().getAllCardsWithPrice());
-                else
-                    printerAndScanner.printNextLine(invalidCommand);
-            } else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
-                if (RegexController.hasField(matcher, "exit"))
-                    break;
-                else if (RegexController.hasField(matcher, "enter"))
-                    printerAndScanner.printNextLine(menuNavigationIsNotPossible);
-                else if (RegexController.hasField(matcher, "showCurrent"))
-                    showCurrent();
-                else
-                    printerAndScanner.printNextLine(invalidCommand);
-            }
+        while (!run(user, command)) {
             command = printerAndScanner.scanNextLine();
         }
+    }
+
+    public boolean run(User user, String command) {
+        Matcher matcher;
+        if ((matcher = RegexController.getMatcher(command, shopBuyPattern)) != null) {
+            if (RegexController.hasField(matcher, "card"))
+                buy(user, matcher.group("card"));
+            else if (RegexController.hasField(matcher, "all"))
+                printerAndScanner.printNextLine(Shop.getInstance().getAllCardsWithPrice());
+            else
+                printerAndScanner.printNextLine(invalidCommand);
+        } else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
+            if (RegexController.hasField(matcher, "exit"))
+                return true;
+            else if (RegexController.hasField(matcher, "enter"))
+                printerAndScanner.printNextLine(menuNavigationIsNotPossible);
+            else if (RegexController.hasField(matcher, "showCurrent"))
+                showCurrent();
+            else
+                printerAndScanner.printNextLine(invalidCommand);
+        }else
+            printerAndScanner.printNextLine(invalidCommand);
+        return false;
     }
 
     public void buy(User user, String cardName) {

@@ -29,25 +29,30 @@ public class ScoreBoardController implements RegexPatterns, StringMessages {
         return scoreBoard;
     }
 
-    public void run() {
+    public void start() {
         String command = printerAndScanner.scanNextLine();
-        Matcher matcher;
-        while (true){
-            if(command.equals("scoreboard show")){
-                sortUserByScore();
-                printerAndScanner.printNextLine(toString());
-            }else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
-                if (RegexController.hasField(matcher, "exit"))
-                    break;
-                else if (RegexController.hasField(matcher, "enter"))
-                    printerAndScanner.printNextLine(menuNavigationIsNotPossible);
-                else if (RegexController.hasField(matcher, "showCurrent"))
-                    showCurrent();
-                else
-                    printerAndScanner.printNextLine(invalidCommand);
-            }
+        while (!run(command)) {
             command = printerAndScanner.scanNextLine();
         }
+    }
+
+    public boolean run(String command) {
+        Matcher matcher;
+        if(command.equals("scoreboard show")){
+            sortUserByScore();
+            printerAndScanner.printNextLine(toString());
+        }else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
+            if (RegexController.hasField(matcher, "exit"))
+                return true;
+            else if (RegexController.hasField(matcher, "enter"))
+                printerAndScanner.printNextLine(menuNavigationIsNotPossible);
+            else if (RegexController.hasField(matcher, "showCurrent"))
+                showCurrent();
+            else
+                printerAndScanner.printNextLine(invalidCommand);
+        }else
+            printerAndScanner.printNextLine(invalidCommand);
+        return false;
     }
 
     public void sortUserByScore() {

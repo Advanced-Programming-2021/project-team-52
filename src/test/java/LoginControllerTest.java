@@ -1,4 +1,5 @@
 import controller.LoginController;
+import controller.MainController;
 import model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,31 +33,38 @@ public class LoginControllerTest {
         LoginController loginController = LoginController.getInstance();
         loginController.createUser("AliRahim@", "12345Nf2", "ali");
       //  loginController.loginUser("AliRahim@", "12345Nf2");
-        Assertions.assertEquals(createUserFailedBecauseOfUsername, outContent.toString().trim().replace("\r",""));
+        Assertions.assertEquals(createUserFailedBecauseOfUsername,
+                outContent.toString().trim().replace("\r",""));
 
         outContent.reset();
         loginController.createUser("AliRahim","12345", "ali#");
-        Assertions.assertEquals(createUserFailedBecauseOfNickname, outContent.toString().trim().replace("\r",""));
+        Assertions.assertEquals(createUserFailedBecauseOfNickname,
+                outContent.toString().trim().replace("\r",""));
 
         outContent.reset();
         loginController.createUser("AliRahim","1234575", "ali");
-        Assertions.assertEquals(createUserFailedBecauseOfPasswordWeakness, outContent.toString().trim().replace("\r",""));
+        Assertions.assertEquals(createUserFailedBecauseOfPasswordWeakness,
+                outContent.toString().trim().replace("\r",""));
 
         outContent.reset();
         loginController.createUser("AliRahim","12345ereR4", "ali@#");
-        Assertions.assertEquals(createUserFailedBecauseOfNickname, outContent.toString().trim().replace("\r",""));
+        Assertions.assertEquals(createUserFailedBecauseOfNickname,
+                outContent.toString().trim().replace("\r",""));
 
        outContent.reset();
        loginController.createUser("mamad","123452MGr", "ali");
-       Assertions.assertEquals(printBuilderController.thisUsernameAlreadyExists("mamad"), outContent.toString().trim().replace("\r",""));
+       Assertions.assertEquals(printBuilderController.thisUsernameAlreadyExists("mamad"),
+               outContent.toString().trim().replace("\r",""));
 
        outContent.reset();
        loginController.createUser("AliRahim","1234523GTr", "gholi");
-       Assertions.assertEquals(printBuilderController.thisNicknameAlreadyExists("gholi"), outContent.toString().trim().replace("\r",""));
+       Assertions.assertEquals(printBuilderController.thisNicknameAlreadyExists("gholi"),
+               outContent.toString().trim().replace("\r",""));
 
         outContent.reset();
         loginController.createUser("AliRahim","12345ereR4", "ali");
-        Assertions.assertEquals(createUserSuccessfully, outContent.toString().trim().replace("\r",""));
+        Assertions.assertEquals(createUserSuccessfully,
+                outContent.toString().trim().replace("\r",""));
 
     }
 
@@ -69,20 +77,28 @@ public class LoginControllerTest {
 
         outContent.reset();
         loginController.loginUser("AliRahim", "123456YHo");
-        Assertions.assertEquals(usernameAndPasswordDoNotMatch, outContent.toString().trim().replace("\r", ""));
+        Assertions.assertEquals(usernameAndPasswordDoNotMatch,
+                outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
         loginController.loginUser("AliRahimi", "123456TGg");
-        Assertions.assertEquals(usernameAndPasswordDoNotMatch, outContent.toString().trim().replace("\r", ""));
+        Assertions.assertEquals(usernameAndPasswordDoNotMatch,
+                outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
         loginController.loginUser("AliRahim", "123456TGg");
-        Assertions.assertEquals(userLoggedInSuccessfully, outContent.toString().trim().replace("\r", ""));
+        Assertions.assertEquals(userLoggedInSuccessfully,
+                outContent.toString().trim().replace("\r", ""));
     }
 
     @Test
     @DisplayName("menu checker")
     public void showCurrentMenu(){
+        System.setOut(new PrintStream(outContent));
+        outContent.reset();
+        loginController.showCurrentMenu();
+        Assertions.assertEquals(showLoginMenu, outContent.toString().trim().replace("\r", ""));
+        outContent.reset();
         Assertions.assertEquals("Login menu :\n" +
                 "user create --username <username> --nickname <nickname> --password <password> :\n" +
                 "user login --username <username> --password <password>\n" +
@@ -90,6 +106,46 @@ public class LoginControllerTest {
                 "menu enter <menu name>\n" +
                 "menu exit", showLoginMenu.trim().replace("\r", ""));
     }
+
+    @Test
+    public void runChecker(){
+        System.setOut(new PrintStream(outContent));
+
+        outContent.reset();
+        loginController.run("user create --username ali_r --nickname ali --password 1234asAs");
+        Assertions.assertEquals(createUserSuccessfully, outContent.toString().trim().replace("\r", ""));
+
+//        outContent.reset();
+//        loginController.run("user login --username ali_r --password 1234asAs");
+//        lo
+//        Assertions.assertEquals(userLoggedInSuccessfully, outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        loginController.run("menu show-current");
+        Assertions.assertEquals(showLoginMenu, outContent.toString().trim().replace("\r", ""));
+
+        Assertions.assertTrue(loginController.run("menu exit"));
+
+        outContent.reset();
+        loginController.run("enter profile");
+        Assertions.assertEquals(invalidCommand, outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        loginController.run("menu enter profile");
+        Assertions.assertEquals(loginFirst, outContent.toString().trim().replace("\r", ""));
+
+    }
+
+    @Test
+    public void getUserByUsernameTest(){
+        loginController.createUser("AliRahim", "123wwWWas123", "ali");
+        loginController.createUser("mamad", "123wwWWas123", "ali");
+
+        Assertions.assertNotNull(LoginController.getUserByUsername("AliRahim"));
+        Assertions.assertNull(LoginController.getUserByUsername("aaa"));
+
+    }
+
 
 }
 

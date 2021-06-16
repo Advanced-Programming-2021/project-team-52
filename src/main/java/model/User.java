@@ -2,9 +2,6 @@ package model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-// need to tell in group : transfer getUserByUsername func from userModel to loginController
-// todo : unit test for all functions
-
 public class User extends Player {
     private String username;
     private String nickname;

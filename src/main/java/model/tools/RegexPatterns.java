@@ -20,7 +20,7 @@ public interface RegexPatterns {
     Pattern cardShowPattern = Pattern.compile("^card show (?<card>[^-]+|--selected|-s)$");
     Pattern deckCreatePattern = Pattern.compile("^deck create (?<deck>[^-]+)$");
     Pattern deckDeletePattern = Pattern.compile("^deck delete (?<deck>[^-]+)$");
-    Pattern deckSetActivePattern = Pattern.compile("^deck set-active (?<deck>[^-]+)$");
+    Pattern deckSetActivePattern = Pattern.compile("^deck set-activate (?<deck>[^-]+)$");
     Pattern deckAddCardPattern = Pattern.compile("^(?=deck (?:add|rm)-card(?: --?\\w+(?: [^-]+)?)+)deck (?<addOrRemove>ad" +
             "d|rm)-card(?!.*(?:--card|-c).*(?:--card|-c))(?!.*(?:--deck|-d).*(?:--deck|-d))(?!.*(?:--side|-s).*(?:--" +
             "side|-s))(?=.*(?:--card|-c))(?=.*(?:--deck|-d))(?: (?:(?:--card|-c) (?<card>[^-]+)|(?:--deck|-d) (?<dec" +

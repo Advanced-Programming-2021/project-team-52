@@ -29,29 +29,6 @@ public class ProfileControllerTest extends PrintBuilderController implements Str
         loginController.createUser("mamadM", "1234AaZz", "mamad");
     }
 
-    //    @Test
-//    public void changeNicknameWithExistingNickname() throws IOException, CsvException {
-//        System.setOut(new PrintStream(outContent));
-//        LoginController.instantiateCards();
-//        LoginController.getInstance().createUser("john", "123456John", "jojo");
-//        LoginController.getInstance().createUser("john", "123456John", "jojo");
-//        LoginController.getInstance().createUser("leonard", "123456Leonard", "leo");
-//        User user = LoginController.getUserByUsername("john");
-//        outContent.reset();
-//        ProfileController.getInstance().changeNickname("leo", user);
-//        Assertions.assertEquals("user with nickname " + "leo" + " already exists\r\n", outContent.toString());
-//    }
-//    @Test
-//    public void change() throws IOException, CsvException {
-//        LoginController.instantiateCards();
-//        LoginController loginController = LoginController.getInstance();
-//        String input = "user create --username Ali --nickname Ali --password 1234AaZz";
-//        ByteArrayInputStream inContent = new ByteArrayInputStream(input.getBytes());
-//        System.setIn(inContent);
-//        loginController.run();
-//        Assertions.assertEquals("user created successfully!", outContent.toString());
-//
-//    }
     @Test
     public void changeNickname() {
         System.setOut(new PrintStream(outContent));
@@ -97,21 +74,13 @@ public class ProfileControllerTest extends PrintBuilderController implements Str
         Assertions.assertEquals(nonStandardUsername
                 , outContent.toString().trim().replace("\r", ""));
 
-//        outContent.reset();
-//        profileController.changeUsername("aliNistam", user);
-//        Assertions.assertEquals(usernameChangedSuccessfully
-//                , outContent.toString().trim().replace("\r", ""));
-//
-//        outContent.reset();
-//        loginController.loginUser("AliRahim", "1234AaZz");
-//        Assertions.assertEquals("Username and password didn't match!",
-//                outContent.toString().trim().replace("\r", ""));
-//
-//        outContent.reset();
-//        loginController.loginUser("aliNistam", "1234AaZz");
-//        Assertions.assertEquals("user logged in successfully!",
-//                outContent.toString().trim().replace("\r", ""));
+        loginController.createUser("AliRahimiii", "1234AaZz", "Ali");
+        User AliUser = LoginController.getUserByUsername("AliRahim");
 
+        outContent.reset();
+        profileController.changeUsername("nanaz", AliUser);
+        Assertions.assertEquals(usernameChangedSuccessfully
+                , outContent.toString().trim().replace("\r", ""));
     }
 
     @Test
@@ -159,15 +128,36 @@ public class ProfileControllerTest extends PrintBuilderController implements Str
     }
 
     @Test
-    public void testRegexes(){
-//        String s = "create user --username ali --password 1234 --nickname ali";
-//        ByteArrayInputStream bais = new ByteArrayInputStream(s.getBytes());
-//        System.setIn(bais);
-//        profileController.run(user);
+    public void testRegex(){
+        System.setOut(new PrintStream(outContent));
+        loginController.createUser("AliRahim", "1234AaZz", "Ali");
+        user = LoginController.getUserByUsername("AliRahim");
 
-        String input = "menu exit";
-        InputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-        profileController.run(user);
+        outContent.reset();
+        profileController.run(user, "profile change --nickname aliii");
+        Assertions.assertEquals(nicknameChangedSuccessfully
+                , outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        profileController.run(user, "profile change --password --current 1234AaZz --new opo1234AS");
+        Assertions.assertEquals(passwordChangedSuccessfully
+                , outContent.toString().trim().replace("\r", ""));
+
+        Assertions.assertTrue(profileController.run(user,"menu exit"));
+
+        outContent.reset();
+        profileController.run(user,"menu enter profile");
+        Assertions.assertEquals(menuNavigationIsNotPossible,
+                outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        profileController.run(user,"menu show-current");
+        Assertions.assertEquals(showCurrentInProfileController,
+                outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        profileController.run(user,"menu sdfsdf");
+        Assertions.assertEquals(invalidCommand,
+                outContent.toString().trim().replace("\r", ""));
     }
 }

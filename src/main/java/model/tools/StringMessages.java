@@ -131,6 +131,15 @@ public interface StringMessages {
             "menu show-current\n" +
             "menu enter <menu name>\n" +
             "menu exit";
+    String showCurrentInDeckController = "Deck menu:\n" +
+            "deck create <deck name>\n" +
+            "deck delete <deck name>\n" +
+            "deck set-activate <deck name>\n" +
+            "deck add-card --card <card name> --deck <deck name> --side(optional)\n" +
+            "deck rm-card --card <card name> --deck <deck name> --side(optional)\n" +
+            "deck show --all\n" +
+            "deck show --deck <deck name> --side(Opt)\n" +
+            "deck show --cards";
 
     // DeckController
     String deckCreatedSuccessfully = "deck created successfully!";

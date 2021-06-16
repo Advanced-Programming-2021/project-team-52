@@ -75,9 +75,10 @@ public class DeckControllerTest extends PrintBuilderController implements String
                 "Other decks:\n" +
                 "1oodDeck: main deck 0, side deck 0, invalid\n" +
                 "GoodDeck: main deck 0, side deck 0, invalid\n" +
-                "PerfectDeck: main deck 0, side deck 0, invalid\n" +
                 "ZerfectDeck: main deck 0, side deck 0, invalid\n" +
-                "goodDeck: main deck 0, side deck 0, invalid\n\n", outContent.toString());
+                "goodDeck: main deck 0, side deck 0, invalid\n" +
+                "perfectDeck: main deck 0, side deck 0, invalid" ,
+                outContent.toString().trim().replace("\r", ""));
     }
 
     @Test
@@ -278,4 +279,92 @@ public class DeckControllerTest extends PrintBuilderController implements String
 
     }
 
+    @Test
+    public void testRegex(){
+        PrintBuilderController printBuilderController = PrintBuilderController.getInstance();
+        System.setOut(new PrintStream(outContent));
+
+        outContent.reset();
+        deckController.run(user,"deck create poop");
+        Assertions.assertEquals(deckCreatedSuccessfully,
+                outContent.toString().trim().replace("\r", ""));
+
+
+
+        outContent.reset();
+        deckController.run(user,"deck set-activate poop");
+        Assertions.assertEquals(deckActivatedSuccessfully,
+                outContent.toString().trim().replace("\r", ""));
+
+
+        outContent.reset();
+        deckController.run(user,"deck add-card --card Battle OX --deck poop --side");
+        Assertions.assertEquals(cardAddedToDeckSuccessfully,
+                outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        deckController.run(user,"deck rm-card --card Battle OX --deck poop --side");
+        Assertions.assertEquals(cardRemovedFormDeckSuccessfully,
+                outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        deckController.run(user,"deck show --all");
+        Assertions.assertEquals("Decks:\n" +
+                        "Active deck:\n" +
+                        "poop: main deck 0, side deck 0, invalid\n" +
+                        "Other decks:\n" +
+                        "goodDeck: main deck 0, side deck 0, invalid\n" +
+                        "perfectDeck: main deck 0, side deck 0, invalid",
+                outContent.toString().trim().replace("\r", ""));
+
+        deckController.run(user,"deck add-card --card Battle OX --deck poop --side");
+        outContent.reset();
+        deckController.run(user,"deck show --deck poop --side");
+        Assertions.assertEquals("Deck: poop\n" +
+                        "Monsters: \n" +
+                        "Battle OX: A monster with tremendous power, it destroys enemies with a swing of its axe.\n" +
+                        "Spell: \n" +
+                        "Trap:",
+                outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        deckController.run(user,"deck show --cards");
+        Assertions.assertEquals("Alexandrite Dragon: Many of the czars' lost jewels can be" +
+                        " found in the scales of this priceless dragon. Its creator remains a mystery," +
+                        " along with how they acquired the imperial treasures." +
+                        " But whosoever finds this dragon has hit" +
+                        " the jackpot... whether they know it or not.\n" +
+                        "Axe Raider: An axe-wielding monster of tremendous strength and agility.\n" +
+                        "Baby dragon: Much more than just a child, this dragon is gifted with untapped power.\n" +
+                        "Battle OX: A monster with tremendous power, it destroys enemies with a swing of its axe.\n" +
+                        "Curtain of the dark ones: A curtain that a spellcaster made," +
+                        " it is said to raise a dark power.\n" +
+                        "Man_Eater Bug: FLIP: Target 1 monster on the field; destroy that target.\n" +
+                        "Yomi Ship: If this card is destroyed by battle and sent to the GY:" +
+                        " Destroy the monster that destroyed this card.",
+                outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        deckController.run(user,"deck delete poop");
+        Assertions.assertEquals(deckDeletedSuccessfully,
+                outContent.toString().trim().replace("\r", ""));
+
+        Assertions.assertTrue(deckController.run(user,"menu exit"));
+
+        outContent.reset();
+        deckController.run(user,"menu enter profile");
+        Assertions.assertEquals(menuNavigationIsNotPossible,
+                outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        deckController.run(user,"menu show-current");
+        Assertions.assertEquals(showCurrentInDeckController,
+                outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        deckController.run(user,"menu sdfsdf");
+        Assertions.assertEquals(invalidCommand,
+                outContent.toString().trim().replace("\r", ""));
+
+    }
 }

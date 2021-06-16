@@ -1,12 +1,10 @@
 package controller;
 
-import model.Deck;
 import model.User;
 import view.PrinterAndScanner;
 
 import static model.tools.RegexPatterns.*;
 import static model.tools.StringMessages.*;
-import static view.PrinterAndScanner.*;
 
 import java.util.regex.Matcher;
 
@@ -29,45 +27,48 @@ public class MainController {
         return mainController;
     }
 
-    public void run(User user) {
+    public void start(User user) {
         String command = printerAndScanner.scanNextLine().toLowerCase();
-        Matcher matcher;
-        while (!command.equals("user logout")) {
-            if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
-                if (RegexController.hasField(matcher, "enter")) {
-                    if (matcher.group("enter").equals("duel")) {
-//                        DuelController dualController = DuelController.getInstance();
-//                        dualController.run(user);
-                        new NewDuelController(user);
-                    } else if (matcher.group("enter").equals("deck")) {
-                        DeckController deckController = DeckController.getInstance();
-                        deckController.run(user);
-                    } else if (matcher.group("enter").equals("scoreboard")) {
-                        ScoreBoardController scoreBoardController = ScoreBoardController.getInstance();
-                        scoreBoardController.run();
-                    } else if (matcher.group("enter").equals("profile")) {
-                        ProfileController profileController = ProfileController.getInstance();
-                        profileController.run(user);
-                    } else if (matcher.group("enter").equals("shop")) {
-                        ShopController shopController = ShopController.getInstance();
-                        shopController.run(user);
-                    } else if (matcher.group("enter").equals("login")) {
-                        printerAndScanner.printNextLine(impossibilityOfMenuNavigation);
-                    } else {
-                        printerAndScanner.printNextLine(invalidMenu);
-                    }
-                } else if (RegexController.hasField(matcher, "showCurrent")) {
-                    printerAndScanner.printNextLine(showMainMenu);
-                } else if (RegexController.hasField(matcher, "exit")) {
-                    printerAndScanner.printNextLine(shouldLogoutToExit);
-                } else
-                    printerAndScanner.printNextLine(invalidCommand);
-            }else
-                printerAndScanner.printNextLine(invalidCommand);
+        while (!run(user, command)) {
             command = printerAndScanner.scanNextLine().toLowerCase();
         }
         printerAndScanner.printNextLine(userLoggedOutSuccessfully);
-        // testing
+    }
+
+    public boolean run(User user, String command) {
+        Matcher matcher;
+        if(command.equals("user logout"))
+            return true;
+        else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
+            if (RegexController.hasField(matcher, "enter")) {
+                if (matcher.group("enter").equals("duel")) {
+                    new NewDuelController(user);
+                } else if (matcher.group("enter").equals("deck")) {
+                    DeckController deckController = DeckController.getInstance();
+                    deckController.start(user);
+                } else if (matcher.group("enter").equals("scoreboard")) {
+                    ScoreBoardController scoreBoardController = ScoreBoardController.getInstance();
+                    scoreBoardController.start();
+                } else if (matcher.group("enter").equals("profile")) {
+                    ProfileController profileController = ProfileController.getInstance();
+                    profileController.start(user);
+                } else if (matcher.group("enter").equals("shop")) {
+                    ShopController shopController = ShopController.getInstance();
+                    shopController.start(user);
+                } else if (matcher.group("enter").equals("login")) {
+                    printerAndScanner.printNextLine(impossibilityOfMenuNavigation);
+                } else {
+                    printerAndScanner.printNextLine(invalidMenu);
+                }
+            } else if (RegexController.hasField(matcher, "showCurrent")) {
+                printerAndScanner.printNextLine(showMainMenu);
+            } else if (RegexController.hasField(matcher, "exit")) {
+                printerAndScanner.printNextLine(shouldLogoutToExit);
+            } else
+                printerAndScanner.printNextLine(invalidCommand);
+        }else
+            printerAndScanner.printNextLine(invalidCommand);
+        return false;
     }
 }
 
