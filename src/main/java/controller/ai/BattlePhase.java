@@ -13,12 +13,6 @@ public class BattlePhase {
     private CommunicatorBetweenAIAndGamePlay gamePlayCommunicator = CommunicatorBetweenAIAndGamePlay.getInstance();
     private ArrayList<Place> ignoreCards = new ArrayList<>(); // if get error since set or summon, add the card to this
     // initialize these Arraylists
-    private ArrayList<String> goodSpellCards;
-    private ArrayList<String> normalSpellCards;
-    private ArrayList<String> goodTrapCards;
-    private ArrayList<String> normalTrapCards;
-    private ArrayList<String> responderSpellCards;
-    private ArrayList<String> responderTrapCards;
     ArrayList<Place> AIMonsterCardPlacesAlreadyAttacked = new ArrayList<>();
     ArrayList<Place> opponentMonsterCardPlacesAlreadyHaveBeenAttacked = new ArrayList<>();
 
@@ -52,6 +46,7 @@ public class BattlePhase {
 
         if (!AIMonsterCardPlaces.isEmpty()) {
             if (opponentMonsterCardPlaces.isEmpty()) {
+
                 // not considering attack modifier
                 Place cardPlaceForAttack = gameBoardCommunicator.
                         findBestMonsterCardByAttackByPlace(AIMonsterCardPlaces);

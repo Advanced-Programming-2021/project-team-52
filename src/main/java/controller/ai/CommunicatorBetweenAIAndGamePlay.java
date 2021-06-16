@@ -16,6 +16,7 @@ public class CommunicatorBetweenAIAndGamePlay {
     }
 
     public void summonMonster() {
+
     }
 
     public void setMonster() {

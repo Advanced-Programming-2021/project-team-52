@@ -7,7 +7,6 @@ import model.cards.monster.MonsterCards;
 import model.tools.RegexPatterns;
 import model.tools.StringMessages;
 import view.PrinterAndScanner;
-
 import java.util.regex.Matcher;
 
 
