@@ -335,5 +335,14 @@ public class PrintBuilderController {
         }
     }
 
+    // AI
+
+    public String selectCardAI(int cardNumber, PLACE_NAME placeName){
+        if(placeName == PLACE_NAME.HAND){
+            return "select --hand " + cardNumber;
+        }
+        return "";
+    }
+
 
 }

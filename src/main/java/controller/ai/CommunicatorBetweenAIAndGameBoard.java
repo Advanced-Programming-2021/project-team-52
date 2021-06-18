@@ -57,7 +57,7 @@ public class CommunicatorBetweenAIAndGameBoard {
 
     public ArrayList<Place> getMonsterZone(GameBoard gameBoard) {
         ArrayList<Place> places = new ArrayList<>();
-        for (int i = 1; i < 5; i++) {
+        for (int i = 1; i < 6; i++) {
             Place place = gameBoard.getPlace(i, PLACE_NAME.MONSTER);
             if (place != null)
                 places.add(place);
@@ -67,7 +67,7 @@ public class CommunicatorBetweenAIAndGameBoard {
 
     public ArrayList<Place> getSpellAndTrapZone(GameBoard gameBoard) {
         ArrayList<Place> places = new ArrayList<>();
-        for (int i = 1; i < 5; i++) {
+        for (int i = 1; i < 6; i++) {
             Place place = gameBoard.getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
             if (place != null)
                 places.add(place);
@@ -85,12 +85,18 @@ public class CommunicatorBetweenAIAndGameBoard {
         return spellsPlaces;
     }
 
-    public void getMonstersOfHand(ArrayList<Place> places, GameBoard gameBoard) {
-        for (int i = 0; i < 5; i++) {
+    public void getMonstersOfHand(ArrayList<Place> places, GameBoard gameBoard, boolean isRitual) {
+        for (int i = 0; i < 6; i++) {
             Place place = gameBoard.getPlace(i, PLACE_NAME.HAND);
-            if (place != null)
-                if (place.getCard() instanceof MonsterCards)
-                    places.add(place);
+            if (place != null) {
+                if (isRitual) {
+                    if ((place.getCard() instanceof MonsterCards) && place.getCard().getType().equals("Ritual"))
+                        places.add(place);
+                } else {
+                    if ((place.getCard() instanceof MonsterCards) && !place.getCard().getType().equals("Ritual"))
+                        places.add(place);
+                }
+            }
         }
     }
 
@@ -99,7 +105,7 @@ public class CommunicatorBetweenAIAndGameBoard {
         ArrayList<Place> monsterCards = new ArrayList<>();
         ArrayList<Place> spellCards = new ArrayList<>();
         ArrayList<Place> trapCards = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 1; i < 7; i++) {
             Place place = gameBoard.getPlace(i, PLACE_NAME.HAND);
             if (place != null) {
                 if (place.getCard() instanceof MonsterCards)
@@ -289,5 +295,36 @@ public class CommunicatorBetweenAIAndGameBoard {
             }
         }
         return null;
+    }
+
+    public int getNumberOfPlaceInGameBoard(GameBoard gameBoard, Place placeToFind, PLACE_NAME placeName) {
+        if (placeName == PLACE_NAME.HAND) {
+            for (int i = 1; i < 7; i++) {
+                Place place = gameBoard.getPlace(i, PLACE_NAME.HAND);
+                if (place != null) {
+                    if (place.getCard().getName().equals(placeToFind.getCard().getName()))
+                        return i;
+                }
+            }
+        }
+        if (placeName == PLACE_NAME.MONSTER) {
+            for (int i = 1; i < 6; i++) {
+                Place place = gameBoard.getPlace(i, PLACE_NAME.MONSTER);
+                if (place != null) {
+                    if (place.getCard().getName().equals(placeToFind.getCard().getName()))
+                        return i;
+                }
+            }
+        }
+        if (placeName == PLACE_NAME.SPELL_AND_TRAP) {
+            for (int i = 1; i < 6; i++) {
+                Place place = gameBoard.getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
+                if (place != null) {
+                    if (place.getCard().getName().equals(placeToFind.getCard().getName()))
+                        return i;
+                }
+            }
+        }
+        return -1;
     }
 }

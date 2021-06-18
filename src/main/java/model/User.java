@@ -1,5 +1,6 @@
 package model;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -7,7 +8,7 @@ public class User extends Player {
     private String username;
     private String nickname;
     private String password;
-    private int balance = 100000;
+    private int balance = 1000000;
     private int score = 0;
     private Deck activeDeck;
     private HashMap<String, Deck> decks;

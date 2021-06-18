@@ -95,7 +95,7 @@ public class Deck {
 
     public void changeCardBetweenMainAndSideDeck(String cardNameFromMainToSide, String cardNameFromSideToMain) {
         if (isCardWithThisNameExists(cardNameFromMainToSide, false)
-                && isCardWithThisNameExists(cardNameFromMainToSide, true)) {
+                && isCardWithThisNameExists(cardNameFromSideToMain, true)) {
             allSideCards.remove(cardNameFromSideToMain);
             allMainCards.add(cardNameFromSideToMain);
             allMainCards.remove(cardNameFromMainToSide);

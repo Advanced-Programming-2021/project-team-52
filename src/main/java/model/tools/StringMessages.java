@@ -181,4 +181,14 @@ public interface StringMessages {
     String usernameAndPasswordDoNotMatch = "Username and password didn't match!";
     String userLoggedInSuccessfully = "user logged in successfully!";
 
+
+    //AI
+    String nextPhaseAI = "next phase";
+    String summonAI = "summon";
+    String activateSpellAI = "activate effect";
+    String setSpellAI = "set";
+    String setTrapAI = "set";
+    String responseToStatusAI = "attack";
+    String graveYardAI = "graveyard";
+
 }
