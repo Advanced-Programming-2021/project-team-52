@@ -116,30 +116,39 @@ public interface StringMessages {
     // todo : is this enough (without abbreviation mode) ??
     String showCurrentInProfileController = "Profile menu :\n" +
             "profile change --nickname <nickname>\n" +
+            "profile change -n <nickname>\n" +
             "profile change --password --current <current password> --new <new password>\n" +
+            "profile change -p -c <current password> -n <new password>\n" +
             "menu show-current\n" +
-            "menu enter <menu name>\n" +
             "menu exit";
     String showCurrentInShopController = "Shop menu :\n" +
             "shop buy <card name>\n" +
             "shop show --all\n" +
+            "shop show -a\n" +
+            "card show <card name>\n" +
             "menu show-current\n" +
-            "menu enter <menu name>\n" +
             "menu exit";
     String getShowCurrentInScoreboardController = "Scoreboard menu :\n" +
             "scoreboard show\n" +
             "menu show-current\n" +
-            "menu enter <menu name>\n" +
             "menu exit";
     String showCurrentInDeckController = "Deck menu:\n" +
             "deck create <deck name>\n" +
             "deck delete <deck name>\n" +
             "deck set-activate <deck name>\n" +
             "deck add-card --card <card name> --deck <deck name> --side(optional)\n" +
+            "deck add-card -c <card name> -d <deck name> -s(optional)\n" +
             "deck rm-card --card <card name> --deck <deck name> --side(optional)\n" +
+            "deck rm-card -c <card name> -d <deck name> -s(optional)\n" +
             "deck show --all\n" +
-            "deck show --deck <deck name> --side(Opt)\n" +
-            "deck show --cards";
+            "deck show -a\n" +
+            "deck show --deck-name <deck name> --side(Opt)\n" +
+            "deck show -dn <deck name> -s(Opt)\n" +
+            "deck show --cards\n" +
+            "deck show -c\n" +
+            "card show <card name>\n" +
+            "menu show-current\n" +
+            "menu exit";
 
     // DeckController
     String deckCreatedSuccessfully = "deck created successfully!";
@@ -161,7 +170,7 @@ public interface StringMessages {
     String showMainMenu = "Main menu :\n" +
             "menu show-current\n" +
             "menu enter <menu name>\n" +
-            "menu exit";
+            "user logout";
     String shouldLogoutToExit = "You have to logout to exit";
     String userLoggedOutSuccessfully = "user logged out successfully!";
 
@@ -169,9 +178,10 @@ public interface StringMessages {
     String loginFirst = "please login first";
     String showLoginMenu = "Login menu :\n" +
             "user create --username <username> --nickname <nickname> --password <password> :\n" +
+            "user create -u <username> -n <nickname> -p <password> :\n" +
             "user login --username <username> --password <password>\n" +
+            "user login -u <username> -p <password>\n" +
             "menu show-current\n" +
-            "menu enter <menu name>\n" +
             "menu exit";
     String createUserFailedBecauseOfUsername = "create user failed! only letter, digit or underscore are valid for username";
     String createUserFailedBecauseOfNickname = "create user failed! only letter, digit or underscore are valid for nickname";

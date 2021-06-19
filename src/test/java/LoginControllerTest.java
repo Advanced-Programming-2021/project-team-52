@@ -99,12 +99,7 @@ public class LoginControllerTest {
         loginController.showCurrentMenu();
         Assertions.assertEquals(showLoginMenu, outContent.toString().trim().replace("\r", ""));
         outContent.reset();
-        Assertions.assertEquals("Login menu :\n" +
-                "user create --username <username> --nickname <nickname> --password <password> :\n" +
-                "user login --username <username> --password <password>\n" +
-                "menu show-current\n" +
-                "menu enter <menu name>\n" +
-                "menu exit", showLoginMenu.trim().replace("\r", ""));
+        Assertions.assertEquals(showLoginMenu, showLoginMenu.trim().replace("\r", ""));
     }
 
     @Test

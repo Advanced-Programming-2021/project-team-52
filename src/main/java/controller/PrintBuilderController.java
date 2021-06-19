@@ -97,7 +97,7 @@ public class PrintBuilderController {
 
     public String thereAreAlreadyThreeCardsWithThisNameInThisDeck
             (String cardName, String deckName, int numberOfCards) {
-        return "there are already "+numberOfCards+" cards with name " + cardName + " in deck " + deckName;
+        return "there are already " + numberOfCards + " cards with name " + cardName + " in deck " + deckName;
     }
 
     public String cardWithThisNameDoesNotExistInThisDeck(String cardName, boolean isSide) {
@@ -114,8 +114,8 @@ public class PrintBuilderController {
 
         StringBuilder response = new StringBuilder();
         response.append("Decks:\nActive deck:\n");
-        if(activeDeck != null)
-        showOneDeckForAllDecks(activeDeck, response);
+        if (activeDeck != null)
+            showOneDeckForAllDecks(activeDeck, response);
 
         response.append("Other decks:\n");
         for (String deckName : allDecks) {
@@ -201,6 +201,37 @@ public class PrintBuilderController {
         return response.toString();
     }
 
+    public String showOneCard(Cards card) {
+        StringBuilder response = new StringBuilder();
+        if (card instanceof MonsterCards) {
+            MonsterCards monsterCard = (MonsterCards) card;
+            response.append("Name: ").append(monsterCard.getName()).append("\n");
+            response.append("Level: ").append(monsterCard.getLevel()).append("\n");
+            response.append("Type: ").append(monsterCard.getType()).append("\n");
+            response.append("ATK: ").append(monsterCard.getAttack()).append("\n");
+            response.append("DEF: ").append(monsterCard.getDefense()).append("\n");
+            response.append("Description: ").append(monsterCard.getDescription());
+            return response.toString();
+        }
+        if (card instanceof SpellCards) {
+            SpellCards spellCard = (SpellCards) card;
+            response.append("Name: ").append(spellCard.getName()).append("\n");
+            response.append("Spell").append("\n");
+            response.append("Type: ").append(spellCard.getIcon()).append("\n");
+            response.append("Description: ").append(spellCard.getDescription());
+            return response.toString();
+        }
+        if (card instanceof TrapCards) {
+            TrapCards trapCard = (TrapCards) card;
+            response.append("Name: ").append(trapCard.getName()).append("\n");
+            response.append("Trap").append("\n");
+            response.append("Type: ").append(trapCard.getIcon()).append("\n");
+            response.append("Description: ").append(trapCard.getDescription());
+            return response.toString();
+        }
+        return "card is not valid";
+    }
+
     public String userHasNoActiveDeck(String username) {
         return username + " has no active deck";
     }
@@ -262,21 +293,21 @@ public class PrintBuilderController {
                 append(cardName).append("?");
     }
 
-    public StringBuilder askForLpForActivation(int amount){
+    public StringBuilder askForLpForActivation(int amount) {
         return new StringBuilder("do you want to pay ").append(amount).
                 append(" LP to activate this special ability?");
     }
 
-    public StringBuilder userDoesntHaveActiveDeck(String username){
+    public StringBuilder userDoesntHaveActiveDeck(String username) {
         return new StringBuilder(username).append(" has not active deck");
     }
 
-    public StringBuilder thisPlayerWillStartTheGame(String username){
+    public StringBuilder thisPlayerWillStartTheGame(String username) {
         return new StringBuilder(username).append(" will start the game");
     }
 
     public StringBuilder buildGameBoard(GameBoard currentPlayer, GameBoard opponent,
-                                        String currentPlayerUsername, String opponentUsername){
+                                        String currentPlayerUsername, String opponentUsername) {
         StringBuilder board = new StringBuilder(opponentUsername);
         board.append(":").append(opponent.getHealth());
         board.append("\n").append("\tc").append("\tc").append("\tc").append("\tc").append("\tc");
@@ -313,11 +344,11 @@ public class PrintBuilderController {
         return board;
     }
 
-    private String getTheThing(Place place){
+    private String getTheThing(Place place) {
         if (place.getCard() == null)
             return "E";
-        if (place.getCard() instanceof MonsterCards){
-            switch (place.getStatus()){
+        if (place.getCard() instanceof MonsterCards) {
+            switch (place.getStatus()) {
                 case ATTACK:
                     return "OO";
                 case DEFENCE:
@@ -326,7 +357,7 @@ public class PrintBuilderController {
                     return "DH";
             }
         } else {
-            switch (place.getStatus()){
+            switch (place.getStatus()) {
                 case ATTACK:
                     return "O";
                 default:
@@ -337,20 +368,20 @@ public class PrintBuilderController {
 
     // AI
 
-    public String selectCardAI(int cardNumber, PLACE_NAME placeName){
-        if(placeName == PLACE_NAME.HAND){
+    public String selectCardAI(int cardNumber, PLACE_NAME placeName) {
+        if (placeName == PLACE_NAME.HAND) {
             return "select --hand " + cardNumber;
         }
-        if(placeName == PLACE_NAME.MONSTER){
+        if (placeName == PLACE_NAME.MONSTER) {
             return "select --monster" + cardNumber;
         }
-        if(placeName == PLACE_NAME.SPELL_AND_TRAP){
+        if (placeName == PLACE_NAME.SPELL_AND_TRAP) {
             return "select --spell" + cardNumber;
         }
         return "";
     }
 
-    public String attackToMonster (int number){
+    public String attackToMonster(int number) {
         return "attack " + number;
     }
 

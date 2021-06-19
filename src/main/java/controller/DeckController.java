@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import model.Deck;
 import model.User;
 import model.cards.Cards;
+import model.cards.spell.SpellCards;
 import model.tools.RegexPatterns;
 import model.tools.StringMessages;
 import view.PrinterAndScanner;
@@ -43,6 +44,9 @@ public class DeckController implements RegexPatterns, StringMessages {
             deleteDeck(matcher.group("deck"), user);
         else if ((matcher = RegexController.getMatcher(command, deckSetActivePattern)) != null)
             activateDeck(matcher.group("deck"), user);
+        else if((matcher = RegexController.getMatcher(command, cardShowPattern)) != null)
+            printerAndScanner.printNextLine(printBuilderController.
+                    showOneCard(Cards.getCard(matcher.group("card"))));
         else if ((matcher = RegexController.getMatcher(command, deckAddCardPattern)) != null) {
             if (matcher.group("addOrRemove").equals("add"))
                 addCardToDeck(matcher.group("card"), matcher.group("deck")

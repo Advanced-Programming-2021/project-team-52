@@ -319,7 +319,7 @@ public class DeckControllerTest extends PrintBuilderController implements String
 
         deckController.run(user,"deck add-card --card Battle OX --deck poop --side");
         outContent.reset();
-        deckController.run(user,"deck show --deck poop --side");
+        deckController.run(user,"deck show --deck-name poop --side");
         Assertions.assertEquals("Deck: poop\n" +
                         "Monsters: \n" +
                         "Battle OX: A monster with tremendous power, it destroys enemies with a swing of its axe.\n" +
@@ -365,6 +365,27 @@ public class DeckControllerTest extends PrintBuilderController implements String
         deckController.run(user,"menu sdfsdf");
         Assertions.assertEquals(invalidCommand,
                 outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        deckController.run(user,"card show Mind Crush");
+        Assertions.assertEquals(printBuilderController.showOneCard(Cards.getCard("Mind Crush")),
+                outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        deckController.run(user,"card show Battle OX");
+        Assertions.assertEquals(printBuilderController.showOneCard(Cards.getCard("Battle OX")),
+                outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        deckController.run(user,"card show Yami");
+        Assertions.assertEquals(printBuilderController.showOneCard(Cards.getCard("Yami")),
+                outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        deckController.run(user,"card show sfd");
+        Assertions.assertEquals(printBuilderController.showOneCard(Cards.getCard("sfd")),
+                outContent.toString().trim().replace("\r", ""));
+
 
     }
 }

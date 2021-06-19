@@ -47,6 +47,9 @@ public class ShopController implements StringMessages, RegexPatterns {
                 printerAndScanner.printNextLine(Shop.getInstance().getAllCardsWithPrice());
             else
                 printerAndScanner.printNextLine(invalidCommand);
+        } else if ((matcher = RegexController.getMatcher(command, cardShowPattern)) != null) {
+            printerAndScanner.printNextLine(printBuilderController.
+                    showOneCard(Cards.getCard(matcher.group("card"))));
         } else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
             if (RegexController.hasField(matcher, "exit"))
                 return true;

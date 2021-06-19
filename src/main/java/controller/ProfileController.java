@@ -26,7 +26,7 @@ public class ProfileController implements RegexPatterns, StringMessages {
         String command = printerAndScanner.scanNextLine();
         Matcher matcher;
         while (!run(user, command)) {
-            command = printerAndScanner.scanNextLine().toLowerCase();
+            command = printerAndScanner.scanNextLine();
         }
     }
 

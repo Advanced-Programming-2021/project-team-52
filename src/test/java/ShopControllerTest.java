@@ -4,6 +4,7 @@ import controller.PrintBuilderController;
 import controller.ShopController;
 import model.Shop;
 import model.User;
+import model.cards.Cards;
 import model.tools.StringMessages;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -252,6 +253,12 @@ public class ShopControllerTest extends PrintBuilderController implements String
         shopController.run(user,"menu sdfsdf");
         Assertions.assertEquals(invalidCommand,
                 outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        shopController.run(user,"card show Yami");
+        Assertions.assertEquals(printBuilderController.showOneCard(Cards.getCard("Yami")),
+                outContent.toString().trim().replace("\r", ""));
+
 
     }
 }
