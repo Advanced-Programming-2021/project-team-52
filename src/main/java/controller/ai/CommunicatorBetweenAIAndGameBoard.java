@@ -85,6 +85,16 @@ public class CommunicatorBetweenAIAndGameBoard {
         return spellsPlaces;
     }
 
+    public ArrayList<Place> getTrapCards(ArrayList<Place> places){
+        ArrayList<Place> suitedCards = new ArrayList<>();
+        for (Place place : places) {
+            if (place.getCard() instanceof TrapCards) {
+                suitedCards.add(place);
+            }
+        }
+        return suitedCards;
+    }
+
     public void getMonstersOfHand(ArrayList<Place> places, GameBoard gameBoard, boolean isRitual) {
         for (int i = 0; i < 6; i++) {
             Place place = gameBoard.getPlace(i, PLACE_NAME.HAND);

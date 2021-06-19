@@ -1,6 +1,7 @@
 package controller.ai;
 
 import controller.PrintBuilderController;
+import model.AI;
 import model.cards.Cards;
 import model.cards.monster.MonsterCards;
 import model.game.*;
@@ -10,14 +11,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard implements StringMessages {
-    private static MainPhaseOne mainPhaseOne = null;
+public class AIController extends CommunicatorBetweenAIAndGameBoard implements StringMessages {
+    private static AIController AIController = null;
     private GameBoard AIGameBoard;
     private GameBoard opponentGameBoard;
     private PrintBuilderController printBuilderController = PrintBuilderController.getInstance();
     private CommunicatorBetweenAIAndGameBoard gameBoardCommunicator = CommunicatorBetweenAIAndGameBoard.getInstance();
-    private CommunicatorBetweenAIAndGamePlay gamePlayCommunicator = CommunicatorBetweenAIAndGamePlay.getInstance();
-    private ArrayList<Place> ignoreCards = new ArrayList<>(); // if get error since set or summon, add the card to this
+    private ArrayList<Place> ignoreCards = new ArrayList<>();
 
     private ArrayList<String> goodSpellCards = new ArrayList<>();
     private ArrayList<String> normalSpellCards = new ArrayList<>();
@@ -43,105 +43,185 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard implements S
     private boolean isSpellOperationInSpellZoneDone = false;
     private boolean isTrapOperationDone = false;
 
+    private boolean isAttackOperationDone = false;
+
     private boolean isInMonsterProcess = false;
     private boolean isInSetSpellProcess = false;
     private boolean isInActivateSpellProcess = false;
     private boolean isInSetTrapProcess = false;
+    private boolean isInActivateTrapProcess = false;
+
+    private boolean isInDirectAttackProcess = false;
+    private ArrayList<Integer> opponentMonsterCardToAttack = new ArrayList<>();
 
     private PHASE phase = PHASE.MAIN;
 
-    private MainPhaseOne() {
+    private AIController() {
     }
 
-    public static MainPhaseOne getInstance() {
-        if (mainPhaseOne == null)
-            mainPhaseOne = new MainPhaseOne();
-        return mainPhaseOne;
+    public static AIController getInstance() {
+        if (AIController == null)
+            AIController = new AIController();
+        return AIController;
     }
 
     public String mainCommand() {
         if (phase == PHASE.MAIN) {
-            ArrayList<Place> monsterCards = gameBoardCommunicator.getCardsOfHand(AIGameBoard, "monster");
-            ArrayList<Place> spellCards = gameBoardCommunicator.getCardsOfHand(AIGameBoard, "spell");
-            ArrayList<Place> trapCards = gameBoardCommunicator.getCardsOfHand(AIGameBoard, "trap");
-
-            if (isInMonsterProcess) {
-                isInMonsterProcess = false;
-                return summonAI;
-            }
-            if (isInActivateSpellProcess) {
-                isInActivateSpellProcess = false;
-                return activateSpellAI;
-            }
-            if (isInSetSpellProcess) {
-                isInSetSpellProcess = false;
-                return setTrapAI;
-            }
-            if (isInSetTrapProcess) {
-                isInSetTrapProcess = false;
-                return setTrapAI;
-            }
-
-            if (!isSpellOperationInSpellZoneDone) {
-                String response = activateSpellsOfSpellZone(gameBoardCommunicator.getSpells
-                        (gameBoardCommunicator.getSpellAndTrapZone(AIGameBoard)));
-                if (response.equals("done"))
-                    isSpellOperationInSpellZoneDone = true;
-                else
-                    return response;
-            }
-            if (!isSpellOperationInHandDone) {
-                String response = activateOrSetAllSpellCardsInHand(spellCards);
-                if (response.equals("done"))
-                    isSpellOperationInHandDone = true;
-                else
-                    return response;
-            }
-            if (!isTrapOperationDone) {
-                String response = setAllTrapCards(trapCards);
-                if (response.equals("done"))
-                    isTrapOperationDone = true;
-                else
-                    return response;
-            }
-            if (!isMonsterOperationDone) {
-                String monsterResponse = monsterOperation(monsterCards);
-                if (!monsterResponse.equals("")) {
-                    isInMonsterProcess = true;
-                    return monsterResponse;
-                }
-            }
-
-            ignoreCards.clear();
-            worstCardsPlacesForTribute.clear();
-
-            isMonsterOperationDone = false;
-            isSpellOperationInHandDone = false;
-            isSpellOperationInSpellZoneDone = false;
-            isTrapOperationDone = false;
-
-            phase = PHASE.BATTLE;
-            return StringMessages.nextPhaseAI;
-        }else{
-            ArrayList<Place> monsterCardPlaces = gameBoardCommunicator.getMonsterZone(AIGameBoard);
-            if (monsterCardPlaces != null) {
-                boolean canAttack = true;
-                while (canAttack) {
-                    canAttack = attack();
-                }
-            }
-
-            phase = PHASE.MAIN;
-            return StringMessages.nextPhaseAI;
+            return mainPhaseProcess();
+        } else {
+            return battlePhaseProcess();
         }
     }
 
-    public void exitGraveYard() {
-        // what to do ???
+    private String battlePhaseProcess() {
+        if (isInDirectAttackProcess) {
+            isInDirectAttackProcess = false;
+            return directAttackAI;
+        }
+        if (opponentMonsterCardToAttack.size() > 0) {
+            int numberToAttack = opponentMonsterCardToAttack.get(0);
+            opponentMonsterCardToAttack.clear();
+            return printBuilderController.attackToMonster(numberToAttack);
+        }
+
+        if (!isAttackOperationDone) {
+            String response = attack();
+            if (response.equals("done"))
+                isAttackOperationDone = true;
+            else
+                return response;
+        }
+
+        opponentMonsterCardPlacesAlreadyHaveBeenAttacked.clear();
+        AIMonsterCardPlacesAlreadyAttacked.clear();
+
+        isAttackOperationDone = false;
+
+        phase = PHASE.MAIN;
+        return StringMessages.nextPhaseAI;
     }
 
-    public void askNewChain() {
+    private String mainPhaseProcess() {
+        ArrayList<Place> monsterCards = gameBoardCommunicator.getCardsOfHand(AIGameBoard, "monster");
+        ArrayList<Place> spellCards = gameBoardCommunicator.getCardsOfHand(AIGameBoard, "spell");
+        ArrayList<Place> trapCards = gameBoardCommunicator.getCardsOfHand(AIGameBoard, "trap");
 
+        String putCardInFieldProcess = getPutCardInFieldProcess();
+        if (putCardInFieldProcess != null) return putCardInFieldProcess;
+
+        String response = selectCardForOperation(monsterCards, spellCards, trapCards);
+        if (response != null) return response;
+
+        ignoreCards.clear();
+        worstCardsPlacesForTribute.clear();
+
+        isMonsterOperationDone = false;
+        isSpellOperationInHandDone = false;
+        isSpellOperationInSpellZoneDone = false;
+        isTrapOperationDone = false;
+
+        phase = PHASE.BATTLE;
+        return StringMessages.nextPhaseAI;
+    }
+
+    private String selectCardForOperation(ArrayList<Place> monsterCards, ArrayList<Place> spellCards,
+                                          ArrayList<Place> trapCards) {
+        if (!isSpellOperationInSpellZoneDone) {
+            String response = activateSpellsOfSpellZone(gameBoardCommunicator.getSpells
+                    (gameBoardCommunicator.getSpellAndTrapZone(AIGameBoard)));
+            if (response.equals("done"))
+                isSpellOperationInSpellZoneDone = true;
+            else
+                return response;
+        }
+        if (!isSpellOperationInHandDone) {
+            String response = activateOrSetAllSpellCardsInHand(spellCards);
+            if (response.equals("done"))
+                isSpellOperationInHandDone = true;
+            else
+                return response;
+        }
+        if (!isTrapOperationDone) {
+            String response = setAllTrapCards(trapCards);
+            if (response.equals("done"))
+                isTrapOperationDone = true;
+            else
+                return response;
+        }
+        if (!isMonsterOperationDone) {
+            String monsterResponse = monsterOperation(monsterCards);
+            if (!monsterResponse.equals("")) {
+                isInMonsterProcess = true;
+                return monsterResponse;
+            }
+        }
+        return null;
+    }
+
+    private String getPutCardInFieldProcess() {
+        if (isInMonsterProcess) {
+            isInMonsterProcess = false;
+            return summonAI;
+        }
+        if (isInActivateSpellProcess) {
+            isInActivateSpellProcess = false;
+            return activateSpellAI;
+        }
+        if (isInSetSpellProcess) {
+            isInSetSpellProcess = false;
+            return setTrapAI;
+        }
+        if (isInSetTrapProcess) {
+            isInSetTrapProcess = false;
+            return setTrapAI;
+        }
+        return null;
+    }
+
+    public String exitGraveYard() {
+        return "back";
+    }
+
+    public String askNewChain(ArrayList<String> cards) {
+        if (cards.size() == 0)
+            return noAI;
+        ArrayList<Place> spellAndTrapZone = getSpellAndTrapZone(AIGameBoard);
+        ArrayList<Place> trapCards = getTrapCards(spellAndTrapZone);
+        for (Place trapCard : trapCards) {
+            String name = trapCard.getCard().getName();
+            if (goodTrapCards.contains(name) && cards.contains(name))
+                return yesAI;
+        }
+        return noAI;
+    }
+
+    public String chainCommand(ArrayList<String> cards) {
+        if(isInActivateTrapProcess){
+            isInActivateTrapProcess = false;
+            return activateTrapAI;
+        }
+        return chooseCardInChain(cards);
+    }
+
+    private String chooseCardInChain(ArrayList<String> cards) {
+        ArrayList<Place> spellAndTrapZone = getSpellAndTrapZone(AIGameBoard);
+        ArrayList<Place> trapCards = getTrapCards(spellAndTrapZone);
+        for (Place trapCard : trapCards) {
+            String name = trapCard.getCard().getName();
+            if (goodTrapCards.contains(name) && cards.contains(name)){
+                isInActivateTrapProcess = true;
+                return selectProcess(trapCard, PLACE_NAME.SPELL_AND_TRAP);
+            }else if(normalTrapCards.contains(name) && cards.contains(name)){
+                boolean isConditionOkay = false;
+                if(name.equals("Torrential Tribute"))
+                    isConditionOkay = torrentialTribute();
+                if(isConditionOkay){
+                    isInActivateTrapProcess = true;
+                     return selectProcess(trapCard, PLACE_NAME.SPELL_AND_TRAP);
+                }
+            }
+        }
+        return endAI;
     }
 
     public String askStatus() {
@@ -165,12 +245,17 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard implements S
     }
 
     public String getScanner() {
+        MonsterCards bestCard = getBestMonsterCardFromGraveYard();
+        return bestCard.getName();
+    }
+
+    private MonsterCards getBestMonsterCardFromGraveYard() {
         ArrayList<Cards> AIGraveyard = AIGameBoard.getGraveyard();
         ArrayList<Cards> opponentGraveyard = opponentGameBoard.getGraveyard();
         MonsterCards bestAICard = gameBoardCommunicator.findBestMonsterCardByCard(AIGraveyard);
         MonsterCards bestOpponentCard = gameBoardCommunicator.findBestMonsterCardByCard(opponentGraveyard);
         MonsterCards bestCard = gameBoardCommunicator.cardsComparatorByAttack(bestAICard, bestOpponentCard);
-        return bestAICard.getName();
+        return bestCard;
     }
 
     public String getRitualCard() {
@@ -180,8 +265,21 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard implements S
         return String.valueOf(getNumberOfPlaceInGameBoard(AIGameBoard, AIBestCardPlace, PLACE_NAME.HAND));
     }
 
+    public String getMonsterToEquip() {
+        ArrayList<Place> AIMonsterZone = gameBoardCommunicator.getMonsterZone(AIGameBoard);
+        Place AIBestCardPlace = gameBoardCommunicator.getBestCardByAttack(AIMonsterZone, true);
+        return String.valueOf(getNumberOfPlaceInGameBoard(AIGameBoard, AIBestCardPlace, PLACE_NAME.MONSTER));
+    }
+
     public String askWhereToSpecialSummonFrom() {
         return graveYardAI;
+    }
+
+    public String askCardToDestroy() {
+        ArrayList<Place> opponentMonsterZone = gameBoardCommunicator.getMonsterZone(opponentGameBoard);
+        Place opponentBestCardPlace = gameBoardCommunicator.getBestCardByAttack(opponentMonsterZone, true);
+        return String.valueOf(getNumberOfPlaceInGameBoard(opponentGameBoard, opponentBestCardPlace,
+                PLACE_NAME.MONSTER));
     }
 
     public String getTribute() {
@@ -192,32 +290,40 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard implements S
         return String.valueOf(getNumberOfPlaceInGameBoard(AIGameBoard, worstMonsterCard, PLACE_NAME.MONSTER));
     }
 
-//    public void start() {
-//        ArrayList<Place> monsterCards = gameBoardCommunicator.getCardsOfHand(AIGameBoard, "monster");
-//        ArrayList<Place> spellCards = gameBoardCommunicator.getCardsOfHand(AIGameBoard, "spell");
-//        ArrayList<Place> trapCards = gameBoardCommunicator.getCardsOfHand(AIGameBoard, "trap");
-//        if (spellCards != null) {
-//            activateOrSetAllSpellCardsInHand(spellCards);
-//            activateSpellsOfSpellZone(gameBoardCommunicator.getSpells
-//                    (gameBoardCommunicator.getSpellAndTrapZone(AIGameBoard)));
-//        }
-//        if (trapCards != null) {
-//            setAllTrapCards(trapCards);
-//        }
-//        if (monsterCards != null) {
-//            boolean isSetOrSummoned = true;
-//            while (isSetOrSummoned) {
-//                isSetOrSummoned = setOrSummonMonster();
-//            }
-//        }
-//        ignoreCards.clear();
-//        gamePlayCommunicator.endPhase();
-//    }
+    public String askActivateSpecial() {
+        return noAI;
+    }
+
+    public String askNormalSummon() {
+        return noAI;
+    }
+
+    public String specialSummonFromGraveYard() {
+        MonsterCards bestCard = getBestMonsterCardFromGraveYard();
+        return bestCard.getName();
+    }
+
+    public String getMonsterToSummon(int maxLevel) {
+        ArrayList<Place> AIHand = new ArrayList<>();
+        ArrayList<Place> ignoreTheseCards = new ArrayList<>();
+        gameBoardCommunicator.getMonstersOfHand(AIHand, AIGameBoard, true);
+        gameBoardCommunicator.getMonstersOfHand(AIHand, AIGameBoard, false);
+        while (AIHand.size() != 0) {
+            AIHand.removeIf(ignoreTheseCards::contains);
+            Place AIBestCardPlace = gameBoardCommunicator.getBestCardByAttack(AIHand, true);
+            if (((MonsterCards) AIBestCardPlace.getCard()).getLevel() > maxLevel) {
+                ignoreTheseCards.add(AIBestCardPlace);
+            } else
+                return String.valueOf(getNumberOfPlaceInGameBoard(AIGameBoard, AIBestCardPlace, PLACE_NAME.MONSTER));
+        }
+        return "cancel";
+    }
 
     public void initializeArrays() {
         Collections.addAll(goodSpellCards, "Monster Reborn", "Terraforming", "Pot of Greed", "Raigeki",
                 "Change of Heart", "Swords of Revealing Light", "Harpie's Feather Duster", "Dark Hole", "Supply Squad",
-                "Spell Absorption", "Mystical space typhoon", "Ring of defense");
+                "Spell Absorption", "Mystical space typhoon", "Ring of defense", "Sword of dark destruction",
+                "Black Pendant", "United We Stand", "Magnum Shield", "Advanced Ritual Art");
         Collections.addAll(normalSpellCards, "Yami", "Forest", "Closed Forest", "Umiiruka");
         Collections.addAll(badSpellCards, "Messenger of peace", "Twin Twisters");
         Collections.addAll(responderSpellCards, "Monster Reborn", "Change of Heart", "Mystical space typhoon");
@@ -260,11 +366,12 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard implements S
         String AIBestCardName = AIBestCardPlace.getCard().getName();
         ArrayList<Place> AIMonsterZone = gameBoardCommunicator.getMonsterZone(AIGameBoard);
 
+        return findBestMonster(AIBestCardPlace, AIBestCardName, AIMonsterZone);
+    }
+
+    private String findBestMonster(Place AIBestCardPlace, String AIBestCardName, ArrayList<Place> AIMonsterZone) {
         if (MonstersWithOneTribute.contains(AIBestCardName)) {
             if (AIMonsterZone.size() >= 1) {
-                Place worstMonsterCard = gameBoardCommunicator.getBestCardByAttack(AIMonsterZone, false);
-                // summon "AIBestCardPlace"
-                // tribute "worstMonsterCard"
                 return selectProcess(AIBestCardPlace, PLACE_NAME.HAND);
             } else {
                 ignoreCards.add(AIBestCardPlace);
@@ -272,15 +379,6 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard implements S
             }
         } else if (MonstersWithTwoTribute.contains(AIBestCardName)) {
             if (AIMonsterZone.size() >= 2) {
-                ArrayList<Place> worstCardsPlaces = new ArrayList<>();
-                for (int i = 0; i < 2; i++) {
-                    AIMonsterZone.removeAll(worstCardsPlaces);
-                    Place worstMonsterCard = gameBoardCommunicator.getBestCardByAttack(AIMonsterZone, false);
-                    AIMonsterZone.addAll(worstCardsPlaces);
-                    worstCardsPlaces.add(worstMonsterCard);
-                }
-                // summon "AIBestCardPlace"
-                // tribute "worstCardsPlaces"
                 return selectProcess(AIBestCardPlace, PLACE_NAME.HAND);
             } else {
                 ignoreCards.add(AIBestCardPlace);
@@ -288,26 +386,17 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard implements S
             }
         } else if (MonstersWithThreeTribute.contains(AIBestCardName)) {
             if (AIMonsterZone.size() >= 3) {
-                ArrayList<Place> worstCardsPlaces = new ArrayList<>();
-                for (int i = 0; i < 3; i++) {
-                    AIMonsterZone.removeAll(worstCardsPlaces);
-                    Place worstMonsterCard = gameBoardCommunicator.getBestCardByAttack(AIMonsterZone, false);
-                    AIMonsterZone.addAll(worstCardsPlaces);
-                    worstCardsPlaces.add(worstMonsterCard);
-                }
                 return selectProcess(AIBestCardPlace, PLACE_NAME.HAND);
-                // tribute "worstCardsPlaces"
             } else {
                 ignoreCards.add(AIBestCardPlace);
                 return "";
             }
         } else {
-            // check any other condition such as "ritual monsters"
             return selectProcess(AIBestCardPlace, PLACE_NAME.HAND);
         }
     }
 
-    public boolean attack() {
+    public String attack() {
         ArrayList<Place> AIMonsterCardPlaces = gameBoardCommunicator.getMonsterZone(AIGameBoard);
         ArrayList<Place> opponentMonsterCardPlaces = gameBoardCommunicator.getMonsterZone(opponentGameBoard);
         AIMonsterCardPlaces.removeIf(aiMonsterCardPlace
@@ -317,36 +406,35 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard implements S
 
         if (!AIMonsterCardPlaces.isEmpty()) {
             if (opponentMonsterCardPlaces.isEmpty()) {
-
-                // not considering attack modifier
                 Place cardPlaceForAttack = gameBoardCommunicator.
                         findBestMonsterCardByAttackByPlace(AIMonsterCardPlaces);
                 if (cardPlaceForAttack == null) {
-                    return false;
+                    return "done";
                 } else {
                     // direct attack with cardPlaceForAttack
+                    isInDirectAttackProcess = true;
                     AIMonsterCardPlacesAlreadyAttacked.add(cardPlaceForAttack);
-                    return true;
+                    return selectProcess(cardPlaceForAttack, PLACE_NAME.MONSTER);
                 }
             } else {
                 if (gameBoardCommunicator.doesOpponentHaveSetCard(opponentMonsterCardPlaces)) {
                     Place firstOpponentSetCard = gameBoardCommunicator.
                             getFirstSetMonsterCard(opponentMonsterCardPlaces);
                     if (firstOpponentSetCard != null) {
-                        // not considering attack modifier
                         Place cardPlaceForAttack = gameBoardCommunicator.
                                 findBestMonsterCardByAttackByPlace(AIMonsterCardPlaces);
                         if (cardPlaceForAttack == null) {
-                            return false;
+                            return "done";
                         } else {
                             // attack firstOpponentSetCard.getName
                             AIMonsterCardPlacesAlreadyAttacked.add(cardPlaceForAttack);
                             opponentMonsterCardPlacesAlreadyHaveBeenAttacked.add(firstOpponentSetCard);
-                            return true;
+                            opponentMonsterCardToAttack.add(getNumberOfPlaceInGameBoard(opponentGameBoard,
+                                    firstOpponentSetCard, PLACE_NAME.MONSTER));
+                            return selectProcess(cardPlaceForAttack, PLACE_NAME.MONSTER);
                         }
                     }
                 } else {
-                    // not considering attack modifier
                     Place cardPlaceForAttack = gameBoardCommunicator.
                             findBestMonsterCardByAttackByPlace(AIMonsterCardPlaces);
                     if (cardPlaceForAttack != null) {
@@ -356,14 +444,16 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard implements S
                         // attack to opponentCardPlaceToAttackTo
                         AIMonsterCardPlacesAlreadyAttacked.add(cardPlaceForAttack);
                         opponentMonsterCardPlacesAlreadyHaveBeenAttacked.add(opponentCardPlaceToAttackTo);
-                        return true;
+                        opponentMonsterCardToAttack.add(getNumberOfPlaceInGameBoard(opponentGameBoard,
+                                opponentCardPlaceToAttackTo, PLACE_NAME.MONSTER));
+                        return selectProcess(cardPlaceForAttack, PLACE_NAME.MONSTER);
                     } else
-                        return false;
+                        return "done";
                 }
             }
         } else
-            return false;
-        return false;
+            return "done";
+        return "done";
     }
 
 
@@ -378,81 +468,27 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard implements S
         }
     }
 
-
-//        ArrayList<Place> opponentMonsterZone = gameBoardCommunicator.getMonsterZone(opponentGameBoard);
-//        boolean opponentHasSetCard = gameBoardCommunicator.doesOpponentHaveSetCard(opponentMonsterZone);
-//        if (opponentHasSetCard) {
-//            AIBestCardPlace = gameBoardCommunicator.getBestCardByAttack(AIHand, true);
-//
-//            // summon AIBestCardPlace
-//            // check for AIBestCardPlace being null
-//            // attack to this card at first
-//            return true;
-//        } else {
-//            Place weakestOpponentFaceUpMonsterPlace = gameBoardCommunicator
-//                    .getWeakestOpponentFaceUpMonsterPlace(opponentMonsterZone);
-//            if (weakestOpponentFaceUpMonsterPlace == null) {
-//                AIBestCardPlace = gameBoardCommunicator.getBestCardByAttack(AIHand, true);
-//                ignoreCards.add(AIBestCardPlace);
-//                // summon best card
-//                // check for AIBestCardPlace being null
-//                //  direct attack
-//                return true;
-//            } else {
-//                AIBestCardPlace = gameBoardCommunicator.getBestCardByAttack(AIHand, true);
-//                if (AIBestCardPlace == null) {
-//                    // there is nothing to set or summon
-//                    return true;
-//                } else if (((MonsterCards) AIBestCardPlace.getCard()).getAttack() > gameBoardCommunicator
-//                        .getMonsterCardStrengthInMonsterZone(weakestOpponentFaceUpMonsterPlace)) {
-//                    ignoreCards.add(AIBestCardPlace);
-//                    // summon AIBestCardPlace
-//                    // if summon successful --> return true;
-//                    // else add AIBestCardPlace to ignoreCards and return false
-//                    return false; // just to avoid syntax error
-//                } else {
-//                    AIBestCardPlace = gameBoardCommunicator.getBestCardByAttack(AIHand, false);
-//                    ignoreCards.add(AIBestCardPlace);
-//                    // set AIBestCardPlace
-//                    return true;
-//                }
-//            }
-//        }
-
-
     public String activateOrSetAllSpellCardsInHand(ArrayList<Place> spellCards) {
         for (Place spellCardPlace : spellCards) {
             Cards spellCard = spellCardPlace.getCard();
             String cardName = spellCard.getName();
-//            boolean cardActivated = false;
             if (normalSpellCards.contains(cardName)) {
                 boolean isConditionOkay = false;
                 isConditionOkay = isSpellConditionOkay(cardName);
 
                 if (isConditionOkay) {
-//                    gamePlayCommunicator.activeSpell(spellCardPlace);
-//                    cardActivated = true;
                     isInActivateSpellProcess = true;
                     return selectProcess(spellCardPlace, PLACE_NAME.HAND);
 
                 } else {
-//                    gamePlayCommunicator.setSpell(spellCardPlace);
                     isInSetSpellProcess = true;
                     return selectProcess(spellCardPlace, PLACE_NAME.HAND);
                 }
 
             } else if (goodSpellCards.contains(cardName)) {
-//                gamePlayCommunicator.activeSpell(spellCardPlace);
-//                cardActivated = true;
                 isInActivateSpellProcess = true;
                 return selectProcess(spellCardPlace, PLACE_NAME.HAND);
             }
-
-//            if (cardActivated) {
-//                if (responderSpellCards.contains(cardName)) {
-//                    responseSpellTarget(cardName);
-//                }
-//            }
         }
         return "done";
     }
@@ -483,30 +519,19 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard implements S
         for (Place spellPlace : SpellPlaces) {
             Cards spellCard = spellPlace.getCard();
             String cardName = spellCard.getName();
-//            boolean cardActivated = false;
             if (normalSpellCards.contains(cardName)) {
 
                 boolean isConditionOkay = false;
                 isConditionOkay = isSpellConditionOkay(cardName);
                 if (isConditionOkay) {
-//                    gamePlayCommunicator.activeSpell(spellPlace);
-//                    cardActivated = true;
                     isInActivateSpellProcess = true;
                     return selectProcess(spellPlace, PLACE_NAME.SPELL_AND_TRAP);
                 }
 
             } else if (goodSpellCards.contains(cardName)) {
-//                gamePlayCommunicator.activeSpell(spellPlace);
-//                cardActivated = true;
                 isInActivateSpellProcess = true;
                 return selectProcess(spellPlace, PLACE_NAME.SPELL_AND_TRAP);
             }
-
-//            if (cardActivated) {
-//                if (responderSpellCards.contains(cardName)) {
-//                    responseSpellTarget(cardName);
-//                }
-//            }
         }
         return "done";
     }
@@ -522,34 +547,21 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard implements S
                     isConditionOkay = torrentialTribute();
                 }
                 if (isConditionOkay) {
-//                    gamePlayCommunicator.setTrap(trapCardPlace);
                     isInSetTrapProcess = true;
                     return selectProcess(trapCardPlace, PLACE_NAME.HAND);
                 }
             } else if (goodTrapCards.contains(cardName)) {
-//                gamePlayCommunicator.setTrap(trapCardPlace);
                 isInSetTrapProcess = true;
                 return selectProcess(trapCardPlace, PLACE_NAME.HAND);
             }
-//            if (responderTrapCards.contains(cardName)) {
-//                switch (cardName) {
-//                    // go to appropriate method
-//                }
-//            }
         }
         return "done";
     }
 
-    /// Spell cards
+/// Spell cards
 
     // responder
     public void monsterReborn() {
-        ArrayList<Cards> AIGraveyard = AIGameBoard.getGraveyard();
-        ArrayList<Cards> opponentGraveyard = opponentGameBoard.getGraveyard();
-        MonsterCards bestAICard = gameBoardCommunicator.findBestMonsterCardByCard(AIGraveyard);
-        MonsterCards bestOpponentCard = gameBoardCommunicator.findBestMonsterCardByCard(opponentGraveyard);
-        MonsterCards bestCard = gameBoardCommunicator.cardsComparatorByAttack(bestAICard, bestOpponentCard);
-        // select bestCard and send it
     }
 
     // responder
@@ -626,7 +638,7 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard implements S
         return false;
     }
 
-    // checker
+// checker
 //    public void swordOfDarkDestruction(){
 //        // most of our cards are in attack position and DEF point isn't as important as ATK point
 //        ArrayList<String> goodCards = new ArrayList<>();
@@ -650,7 +662,7 @@ public class MainPhaseOne extends CommunicatorBetweenAIAndGameBoard implements S
     }
 
 
-    /// Trap cards
+/// Trap cards
 
     // responder
     public Cards mindCrush() {

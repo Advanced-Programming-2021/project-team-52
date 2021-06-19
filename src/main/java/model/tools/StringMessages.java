@@ -186,9 +186,15 @@ public interface StringMessages {
     String nextPhaseAI = "next phase";
     String summonAI = "summon";
     String activateSpellAI = "activate effect";
+    String activateTrapAI = "activate effect";
     String setSpellAI = "set";
     String setTrapAI = "set";
     String responseToStatusAI = "attack";
     String graveYardAI = "graveyard";
+    String directAttackAI = "attack direct";
+    String yesAI = "yes";
+    String noAI = "no";
+    String cancelAI = "cancel";
+    String endAI = "end";
 
 }

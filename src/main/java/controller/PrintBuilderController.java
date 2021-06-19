@@ -341,7 +341,17 @@ public class PrintBuilderController {
         if(placeName == PLACE_NAME.HAND){
             return "select --hand " + cardNumber;
         }
+        if(placeName == PLACE_NAME.MONSTER){
+            return "select --monster" + cardNumber;
+        }
+        if(placeName == PLACE_NAME.SPELL_AND_TRAP){
+            return "select --spell" + cardNumber;
+        }
         return "";
+    }
+
+    public String attackToMonster (int number){
+        return "attack " + number;
     }
 
 
