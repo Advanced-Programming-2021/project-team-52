@@ -6,14 +6,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.Scanner;
 
 public class MainControllerTest {
-    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    MainController mainController = MainController.getInstance();
-    User user;
+
 
     @Test
     public void testRegex(){
+
     }
 }

@@ -113,10 +113,8 @@ public interface StringMessages {
 
 
     // Menu show current
-    // todo : is this enough (without abbreviation mode) ??
     String showCurrentInProfileController = "Profile menu :\n" +
             "profile change --nickname <nickname>\n" +
-            "profile change -n <nickname>\n" +
             "profile change --password --current <current password> --new <new password>\n" +
             "profile change -p -c <current password> -n <new password>\n" +
             "menu show-current\n" +

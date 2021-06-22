@@ -57,7 +57,6 @@ public class ProfileControllerTest extends PrintBuilderController implements Str
         Assertions.assertTrue(LoginController.getNickNames().contains("Ali_R"));
         Assertions.assertFalse(LoginController.getNickNames().contains("Ali"));
         Assertions.assertEquals(user.getNickname(), "Ali_R");
-
     }
 
     @Test
