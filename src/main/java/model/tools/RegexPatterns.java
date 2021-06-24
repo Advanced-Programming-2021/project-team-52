@@ -38,9 +38,9 @@ public interface RegexPatterns {
             "o)?|(?:--hand|-h)|(?:--field|-f)))(?!.*(?:--opponent|-o).*(?:--opponent|-o))(?=.*(?:(?:--monster|-m|--s" +
             "pell|-s)(?: --opponent| -o)?|(?:--hand|-h)(?!.*(?:--opponent|-o))|(?:--field|-f)))(?: (?:(?:(?<type>--m" +
             "onster|-m|--spell|-s)(?<opponent> --opponent| -o)?|(?<typeHand>--hand|-h)) (?<select>\\d+)|(?<typeField" +
-            ">--field|-f)|(?<opponent3>--opponent|-o)))+| (?<delete>-d))$");
-    Pattern setAttackOrDefensePattern = Pattern.compile("^set (?:--position|-o) (?<position>attack|defense)$");
-    Pattern attackPattern = Pattern.compile("^attack (?<type>direct|\\w+)$");
+            ">--field|-f)|(?<opponent2>--opponent|-o)))+| (?<delete>-d))$");
+    Pattern setAttackOrDefensePattern = Pattern.compile("^set (?:--position|-p) (?<position>attack|defense)$");
+    Pattern attackPattern = Pattern.compile("^attack (?<type>direct|\\d+)$");
     Pattern increaseMoneyOrLPByCheatPattern = Pattern.compile("^increase(?!.*(?:--money|-m).*(?:--money|-m))(?!.*(?:" +
             "--LP|-l).*(?:--LP|-l))(?: (?:(?:--money|-m) (?<money>\\d+)|(?:--LP|-l) (?<LP>\\d+)))+$");
     Pattern setDuelWinnerByCheat = Pattern.compile("^duel set-winner (?<username>\\w+)$");
@@ -48,12 +48,12 @@ public interface RegexPatterns {
 
 
     Pattern attackBoostPattern = Pattern.compile("attack boost (?<amount>\\d+) (?<all>all)");
-    Pattern getCardName = Pattern.compile("^select card (?<opponent>opponent)? (?<name>\\w+)$");
+    Pattern getCardName = Pattern.compile("^select card (?<opponent>opponent )?(?<name>[^-]+)$");
     Pattern reduceAttackerAttackPattern = Pattern.compile("reduce attacker attack (?<amount>all|\\d+) (?<oneRound>oneRound)? (?<oneUse>oneUse)? (?<faceUp>faceUp)?");
     Pattern tributePattern = Pattern.compile("tribute (?<amount>\\d+) (?<faceUpOnly>face up only)? (?<alternative>.+)?");
     Pattern drawCardPattern = Pattern.compile("draw card (?<amount>\\d+)");
 
-    Pattern extractEndingNumber = Pattern.compile("^\\w+(-?\\d+)$");
+    Pattern extractEndingNumber = Pattern.compile("^[a-zA-Z]+([+-]?\\d+)$");
 
     Pattern standardPassword = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");
     Pattern standardUsernameAndNickname = Pattern.compile("^\\w+$");

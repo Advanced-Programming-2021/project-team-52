@@ -46,7 +46,7 @@ public class ActivateChain implements SpecialAbility, StringMessages {
     }
 
     public void destroySpellAndTraps(){ //TODO ++
-        int amount = this.amount;
+        /*int amount = this.amount;
         int spellAndTrapCards = 0;
         for (int i = 1; i < 6; i++) {
             if (gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().getPlace
@@ -67,22 +67,68 @@ public class ActivateChain implements SpecialAbility, StringMessages {
             destroyASpellOrTrap(spellOrTrapToDestroy);
             spellAndTrapCards--;
             amount--;
+        }*/
+        int numberOfDestroyableCards = 0;
+        GamePlayController opponentGamePlayController = gamePlayController.getGamePlay().getOpponentGamePlayController();
+        for (int i = 1; i < 6; i++) {
+            if (gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP).getCard() != null)
+                numberOfDestroyableCards++;
+            if (opponentGamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP).getCard() != null)
+                numberOfDestroyableCards++;
+        }
+        numberOfDestroyableCards--;
+        int amount = Math.min(this.amount, numberOfDestroyableCards);
+        String command;
+//        int numberOfPlaceToDestroy;
+        Place toKill;
+//        boolean fromEnemy;
+        while (amount > 0){
+            printerAndScanner.printNextLine(askForSpellInGameToDestroy);
+            command = printerAndScanner.scanNextLine();
+            if (command.equalsIgnoreCase("cancel"))
+                break;
+            if (!command.matches("^[+-]?[12345]$"))
+                printerAndScanner.printNextLine(invalidInput);
+            else {
+//                fromEnemy = command.matches("^-\\d$");
+                GamePlayController gamePlayController = command.matches("^-\\d$") ?
+                        opponentGamePlayController : this.gamePlayController;
+//                numberOfPlaceToDestroy = Math.abs(Integer.parseInt(command));
+//                toKill = fromEnemy ?
+//                        opponentGamePlayController.getGamePlay().getMyGameBoard()
+//                                .getPlace(numberOfPlaceToDestroy, PLACE_NAME.SPELL_AND_TRAP) :
+//                        gamePlayController.getGamePlay().getMyGameBoard().getPlace(numberOfPlaceToDestroy, PLACE_NAME.SPELL_AND_TRAP) ;
+                toKill = gamePlayController.getGamePlay().getMyGameBoard().getPlace(Math.abs(Integer.parseInt(command)), PLACE_NAME.SPELL_AND_TRAP);
+                if (toKill.getCard() == null || toKill == place)
+                    printerAndScanner.printNextLine(wrongCard);
+                else {
+                    toKill.getTemporaryFeatures().add(TEMPORARY_FEATURES.FORCE_KILL);
+//                    (fromEnemy ? opponentGamePlayController : gamePlayController).killCard(toKill);
+                    gamePlayController.killCard(toKill);
+                    amount--;
+                }
+            }
         }
     }
 
-    private void destroyASpellOrTrap(int number){
-        Place toKill = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().getPlace
-                (number, PLACE_NAME.SPELL_AND_TRAP);
-        gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place);
-    }
+//    private void destroyASpellOrTrap(Place place, Game){
+//        Place toKill = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().getPlace
+//                (number, PLACE_NAME.SPELL_AND_TRAP);
+//        toKill.getTemporaryFeatures().add(TEMPORARY_FEATURES.FORCE_KILL);
+//        gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place);
+//    }
 
-    public void neutralizeTrap(){ //TODO ++
+    public void neutralizeTrap(){
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getUniversalHistory().add("neutralizeTrap");
     }
 
     public void redirectAttack(){ //TODO ++
-        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
-                .changeHealth(((MonsterZone) place.getAffect()).getAttack() * -1);
+//        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
+//                .changeHealth(((MonsterZone) place.getAffect()).getAttack() * -1);
+        GamePlayController opponentGamePlayController = gamePlayController.getGamePlay().getOpponentGamePlayController();
+        int amountToDamage = opponentGamePlayController.getGamePlay().getUniversalHistory().contains("preventDamageFromTrap") ?
+                0 : ((MonsterZone) place.getAffect()).getAttack() * -1;
+        opponentGamePlayController.getGamePlay().getMyGameBoard().changeHealth(amountToDamage);
     }
 
     public void destroyAllEnemyMonstersInThisStatus(){ //TODO ++
@@ -112,7 +158,15 @@ public class ActivateChain implements SpecialAbility, StringMessages {
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getUniversalHistory().add("preventAttack");
     }
 
-    public void preventNextChain(){
-        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getUniversalHistory().add("preventChain");
+//    public void preventNextChain(){
+//        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getUniversalHistory().add("preventChain");
+//    }
+
+    public void preventSummonOrSpecialSummon(){
+        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getUniversalHistory().add("preventSummon");
+    }
+
+    public void preventDamageFromTrap(){ //TOD ++
+        gamePlayController.getGamePlay().getUniversalHistory().add("preventDamageFromTrap");
     }
 }

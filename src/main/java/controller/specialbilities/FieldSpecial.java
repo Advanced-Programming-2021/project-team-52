@@ -1,6 +1,7 @@
 package controller.specialbilities;
 
 import controller.GamePlayController;
+import model.cards.monster.MonsterCards;
 import model.game.Field;
 import model.game.PLACE_NAME;
 import model.game.Place;
@@ -17,14 +18,14 @@ public class FieldSpecial implements SpecialAbility {
     private int amount, quantifier;
     private ArrayList<String> type;
     private boolean enemyAsWell;
-    public ArrayList<Place> affected;
+//    public ArrayList<Place> affected;
     public boolean onDeath = false;
 
     @Override
     public void run(GamePlayController gamePlayController, Place place){
         this.gamePlayController = gamePlayController;
         this.place = place;
-        this.affected = ((Field) place).getAffected();
+//        this.affected = ((Field) place).getAffectedAttack();
         try {
             method.invoke(this);
         } catch (Exception e) {
@@ -95,17 +96,20 @@ public class FieldSpecial implements SpecialAbility {
     }
 
     private void changeAttackModifier(int amount) {
+        ArrayList<Place> affected = ((Field) place).getAffectedAttack();
         Place place;
         for (int i = 1; i < 6; i++) {
             place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER);
-            if (!affected.contains(place) && type.contains(place.getCard().getType())) {
+            if (place.getCard() != null)
+            if (!affected.contains(place) && type.contains(((MonsterCards) place.getCard()).getMonsterType())) {
                 GeneralSpecialAbility.attackBoost(place, amount, onDeath);
                 affected.add(place);
             }
             if (enemyAsWell){
                 place = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
                         .getPlace(i, PLACE_NAME.MONSTER);
-                if (!affected.contains(place) && type.contains(place.getCard().getType())){
+                if (place.getCard() != null)
+                if (!affected.contains(place) && type.contains(((MonsterCards) place.getCard()).getMonsterType())){
                     GeneralSpecialAbility.attackBoost(place, amount, onDeath);
                     affected.add(place);
                 }
@@ -114,17 +118,20 @@ public class FieldSpecial implements SpecialAbility {
     }
 
     private void changeDefenseModifier(int amount) {
+        ArrayList<Place> affected = ((Field) place).getAffectedDefense();
         Place place;
         for (int i = 1; i < 6; i++) {
             place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER);
-            if (!affected.contains(place) && type.contains(place.getCard().getType())) {
+            if (place.getCard() != null)
+            if (!affected.contains(place) && type.contains(((MonsterCards) place.getCard()).getMonsterType())) {
                 GeneralSpecialAbility.defenseBoost(place, amount, onDeath);
                 affected.add(place);
             }
             if (enemyAsWell){
                 place = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
                         .getPlace(i, PLACE_NAME.MONSTER);
-                if (!affected.contains(place) && type.contains(place.getCard().getType())){
+                if (place.getCard() != null)
+                if (!affected.contains(place) && type.contains(((MonsterCards) place.getCard()).getMonsterType())){
                     GeneralSpecialAbility.defenseBoost(place, amount, onDeath);
                     affected.add(place);
                 }

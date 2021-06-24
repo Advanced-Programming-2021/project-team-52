@@ -4,14 +4,14 @@ import controller.specialbilities.*;
 import model.cards.Cards;
 import model.cards.monster.MonsterCards;
 import model.cards.spell.SpellCards;
+import model.cards.trap.TrapCards;
 import model.game.*;
 import model.tools.CHAIN_JOB;
 import model.tools.RegexPatterns;
 import model.tools.StringMessages;
 import view.PrinterAndScanner;
 //TODO some bug that i forgot about remove something from place special each round :|
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 import java.util.regex.Matcher;
 
 public class GamePlayController extends RegexController implements RegexPatterns, StringMessages {
@@ -19,27 +19,31 @@ public class GamePlayController extends RegexController implements RegexPatterns
     //TODO write a place card function and add activateField to it
     //TODO move remove card from game board to here
     //TODO add onDeath to remove card function for fields
+    //TODO flip-summon not showing error?
 
     private static final PrinterAndScanner printerAndScanner;
     private static final PrintBuilderController printBuilderController;
-    private static final SpecialAbilityActivationController specialAbilityActivationController;
+    private static final Set<String> endBattlePhase = Collections.singleton("endBattlePhase");
+//    private static final SpecialAbilityActivationController specialAbilityActivationController;
 
-    private final GamePlay gamePlay;
+    private final ArrayList<Place> CHAINED_PLACES;
+    private SpecialAbilityActivationController specialAbilityActivationController;
     private PHASE phase;
+    private GamePlay gamePlay;
     private boolean alreadySummonedOrSet = false;
     private boolean didBattlePhase = false;
     private boolean monsterCardDestroyed;
-    private final ArrayList<Place> CHAINED_PLACES;
 
     static {
         printerAndScanner = PrinterAndScanner.getInstance();
         printBuilderController = PrintBuilderController.getInstance();
-        specialAbilityActivationController = SpecialAbilityActivationController.getInstance();
+//        specialAbilityActivationController = SpecialAbilityActivationController.getInstance();
     }
 
     public GamePlayController(GamePlay gamePlay){
         this.gamePlay = gamePlay;
         CHAINED_PLACES = new ArrayList<>();
+        specialAbilityActivationController = new SpecialAbilityActivationController(this);
     }
 
     public ArrayList<Place> sendChainedPlaces(){
@@ -51,12 +55,26 @@ public class GamePlayController extends RegexController implements RegexPatterns
         return gamePlay;
     }
 
+    public PHASE getPhase() {
+        return phase;
+    }
+
+    public SpecialAbilityActivationController getSpecialAbilityActivationController() {
+        return specialAbilityActivationController;
+    }
+
     public void run(){
         didBattlePhase = false;
         drawPhase();
-        for (String command = printerAndScanner.scanNextLine(); true; command = printerAndScanner.scanNextLine()){
-            if (gamePlay.getUniversalHistory().contains("endBattlePhase") && phase == PHASE.BATTLE)
+//        for (String command = printerAndScanner.scanNextLine(); true; command = printerAndScanner.scanNextLine()){
+        String command;
+        while (true){
+            if (gamePlay.getUniversalHistory().contains("endBattlePhase") && phase == PHASE.BATTLE) {
+                gamePlay.getUniversalHistory().removeAll(endBattlePhase);
                 nextPhase();
+                continue;
+            }
+            command = printerAndScanner.scanNextLine();
             handleCommands(command);
             if (phase == PHASE.END || gamePlay.getGameEnded())
                 break;
@@ -122,32 +140,32 @@ public class GamePlayController extends RegexController implements RegexPatterns
     }
 
     private void drawPhase(){
+        monsterCardDestroyed = false;
         removeTemporaryFeatures();
         checkHistory();
-        monsterCardDestroyed = false;
         phase = PHASE.DRAW;
         printerAndScanner.printNextLine(phase.getValue());
         if (!gamePlay.getOpponentGamePlayController().getGamePlay().getUniversalHistory().contains("cannotDraw"))
             drawCard();
         new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2, sendChainedPlaces());
+        specialAbilityActivationController.handleMonstersThatCanBeActivated();
         standByPhase();
     }
 
     private void standByPhase(){
-        checkIndividualHistory();
         phase = PHASE.STAND_BY;
+        checkIndividualHistory();
         printerAndScanner.printNextLine(phase.getValue());
-        new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2, sendChainedPlaces());
+//        new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2, sendChainedPlaces());
         nextPhase();
     }
 
     private void end(){
         printerAndScanner.printNextLine(phase.getValue());
         new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2, sendChainedPlaces());
-        printerAndScanner.printString(printBuilderController.playerTurn(gamePlay.
-                getOpponentGamePlayController().getGamePlay().getName()));
         gamePlay.getUniversalHistory().remove("starter");
         alreadySummonedOrSet = false;
+        checkIndividualHistory();
     }
 
     public void drawCard(){
@@ -157,8 +175,10 @@ public class GamePlayController extends RegexController implements RegexPatterns
             Place emptyHandPlace = null;
             for (int i = 0; i < 6; i++) {
                 Place place = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.HAND);
-                if (place.getCard() == null)
+                if (place.getCard() == null) {
                     emptyHandPlace = place;
+                    break;
+                }
             }
             if (emptyHandPlace != null) {
                 emptyHandPlace.setCard(gamePlay.getMyGameBoard().drawCard());
@@ -218,25 +238,31 @@ public class GamePlayController extends RegexController implements RegexPatterns
             printerAndScanner.printNextLine(cardSelected);
         }
         //TODO do something about next line
-        if (gamePlay.getSelectedCard().getCard() != null)
-        System.out.println(gamePlay.getSelectedCard().getCard().getName());
+        if (gamePlay.getSelectedCard().getCard() != null) {
+            System.out.println(gamePlay.getSelectedCard().getCard().getName());
+            if (gamePlay.getSelectedCard() instanceof MonsterZone){
+                System.out.println(((MonsterZone) gamePlay.getSelectedCard()).getAttack() + " " + ((MonsterZone) gamePlay.getSelectedCard()).getDefense());
+            }
+        }
     }
 
     private void summonCredibility(){
         if (!gamePlay.getUniversalHistory().contains("cannotSummon")) {
             Place selectedCard = gamePlay.getSelectedCard();
             if (selectedCard.getCard() != null) {
-                if (gamePlay.getMyGameBoard().fromThisGameBoard(selectedCard) && selectedCard.getCard() instanceof MonsterCards) {
+                if (gamePlay.getMyGameBoard().fromThisGameBoard(selectedCard) && selectedCard.getCard() instanceof MonsterCards
+                    /*&& specialAbilityActivationController.checkIfItCanBeNormalSummoned(selectedCard)*/) {
                     if (phase == PHASE.MAIN) {
                         if (gamePlay.getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER) != -1 /*||
                                 selectedCard.getCard().getType().equals("Ritual")*/) {
                             if (!alreadySummonedOrSet) {
-                                if (specialAbilityActivationController.summonWithTribute(selectedCard)) {
+                                if (specialAbilityActivationController.summonOrSetWithTribute(selectedCard, true)) {
                                     if (selectedCard.getCard().getType().equals("Ritual"))
                                         ritualSummon(selectedCard);
                                     else //summon(getGamePlay().getSelectedCard(), true);
-                                        new NewChain(this, selectedCard,
-                                                CHAIN_JOB.SUMMON, 0, sendChainedPlaces());
+//                                        new NewChain(this, selectedCard,
+//                                                CHAIN_JOB.SUMMON, 0, sendChainedPlaces());
+                                    placeCard(selectedCard, true, STATUS.ATTACK);
                                 }
                             } else printerAndScanner.printNextLine(alreadySummonedORSetOnThisTurn);
                         } else printerAndScanner.printNextLine(monsterCardZoneIsFull);
@@ -246,7 +272,7 @@ public class GamePlayController extends RegexController implements RegexPatterns
         }
     }
 
-    public void placeCard(Place place, boolean normalSummon, STATUS status){
+    /*public Place placeCard(Place place, boolean normalSummon, STATUS status){
         int emptyPlace = gamePlay.getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER);
         Place placeTo = gamePlay.getMyGameBoard().getPlace(emptyPlace, PLACE_NAME.MONSTER);
         placeTo.setCard(place.getCard());
@@ -256,31 +282,72 @@ public class GamePlayController extends RegexController implements RegexPatterns
         place.setCard(null);
         if (normalSummon)
             alreadySummonedOrSet = true;
-        specialAbilityActivationController.setGamePlayController(this);
+//        specialAbilityActivationController.setGamePlayController(this);
         specialAbilityActivationController.runFacUpSpecial(placeTo);
 //        if (gamePlay.getUniversalHistory().contains("killThisCardUponSummon"))
 //            specialAbilityActivationController.checkSummonDeactivation(placeTo);
         if (placeTo.getCard() != null) {
             printerAndScanner.printNextLine(summonedSuccessfully);
             specialAbilityActivationController.activateField();
+            scannerHistoryHandler(placeTo);
         }
-        specialAbilityActivationController.setGamePlayController(this);
+//        specialAbilityActivationController.setGamePlayController(this);
         specialAbilityActivationController.runAttackAmountByQuantifier();
         if (normalSummon)
             specialAbilityActivationController.checkSummonAMonsterUponNormalSummon(placeTo);
-        else place.getAffect().setAffect(placeTo);
+//        else place.getAffect().setAffect(placeTo);
+        return placeTo;
+    }*/
+
+    //TODO merge with setCard ?
+    public Place placeCard(Place place, boolean normalSummon, STATUS status){
+        Place placeTo = null;
+        new NewChain(this, place, normalSummon ? CHAIN_JOB.BEFORE_SUMMON : CHAIN_JOB.BEFORE_SPECIAL_SUMMON,
+                0, sendChainedPlaces());
+        if (gamePlay.getUniversalHistory().contains("preventSummon"))
+            gamePlay.getUniversalHistory().remove("preventSummon");
+        else {
+            int emptyPlace = gamePlay.getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER);
+            placeTo = gamePlay.getMyGameBoard().getPlace(emptyPlace, PLACE_NAME.MONSTER);
+            placeTo.setCard(place.getCard());
+            placeTo.setStatus(status);
+            placeTo.addTemporaryFeatures(TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN);
+            placeTo.addTemporaryFeatures(TEMPORARY_FEATURES.CARD_POSITION_CHANGED_IN_THIS_TURN);
+            place.setCard(null);
+            if (normalSummon)
+                alreadySummonedOrSet = true;
+            if (status == STATUS.ATTACK || !normalSummon)
+                new NewChain(this, placeTo, normalSummon ? CHAIN_JOB.SUMMON : CHAIN_JOB.SPECIAL_SUMMON,
+                        0, sendChainedPlaces());
+            if (placeTo.getCard() != null) {
+                if (status != STATUS.SET) {
+                    specialAbilityActivationController.runFacUpSpecial(placeTo);
+                    specialAbilityActivationController.runContinuous(placeTo);
+                }
+                printerAndScanner.printNextLine(status == STATUS.ATTACK ? summonedSuccessfully : setSuccessfully);
+                specialAbilityActivationController.activateField();
+                scannerHistoryHandler(placeTo);
+                specialAbilityActivationController.runAttackAmountByQuantifier();
+                if (normalSummon)
+                    specialAbilityActivationController.checkSummonAMonsterUponNormalSummon(placeTo);
+                specialAbilityActivationController.equipByControlledMonstersHandler();
+            }
+        }
+        return placeTo;
     }
 
     private void checkBeforeSet(){
         Place selectedCard = gamePlay.getSelectedCard();
         if (selectedCard.getCard() != null){
             if (gamePlay.getMyGameBoard().fromThisGameBoard(selectedCard) &&
-                    selectedCard.getType() == PLACE_NAME.HAND &&
-                    !specialAbilityActivationController.hasTributeMethod(selectedCard.getCard())) {
+                    selectedCard.getType() == PLACE_NAME.HAND /*&&
+                    !specialAbilityActivationController.hasTributeMethod(selectedCard.getCard())*/) {
                 if (phase == PHASE.MAIN) {
                     if (selectedCard.getCard() instanceof MonsterCards)
                         setMonsterCard(selectedCard);
-                    else setSpellOrTrap(selectedCard);
+                    else //setSpellOrTrap(selectedCard);
+                    if (putSpellOrField(selectedCard, STATUS.SET) != null)
+                        printerAndScanner.printNextLine(setSuccessfully);
                 } else printerAndScanner.printNextLine(actionNotAllowedInThisPhase);
             } else printerAndScanner.printNextLine(cantSetThisCard);
         } else printerAndScanner.printNextLine(noCardsIsSelectedYet);
@@ -290,18 +357,34 @@ public class GamePlayController extends RegexController implements RegexPatterns
         int emptyPlace = gamePlay.getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER);
         if (emptyPlace != -1) {
             if (!alreadySummonedOrSet) {
-                Place placeTo = gamePlay.getMyGameBoard().getPlace(emptyPlace, PLACE_NAME.MONSTER);
-                placeTo.setCard(selectedCard.getCard());
-                placeTo.setStatus(STATUS.SET);
-                selectedCard.setCard(null);
-                placeTo.addTemporaryFeatures(TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN);
-                alreadySummonedOrSet = true;
-                printerAndScanner.printNextLine(setSuccessfully);
+                if (specialAbilityActivationController.hasTributeMethod(selectedCard.getCard())) {
+                    if (specialAbilityActivationController.summonOrSetWithTribute(selectedCard, false)) {
+                        //TODO may need to change
+                        if (selectedCard.getCard().getType().equals("Ritual"))
+                            ritualSummon(selectedCard);
+                        else //summon(getGamePlay().getSelectedCard(), true);
+                            new NewChain(this, selectedCard,
+                                    CHAIN_JOB.SUMMON, 0, sendChainedPlaces());
+                    }
+                } else {
+                    setCard(selectedCard, emptyPlace);
+                }
             } else printerAndScanner.printNextLine(alreadySummonedORSetOnThisTurn);
         } else printerAndScanner.printNextLine(monsterCardZoneIsFull);
     }
 
-    private void setSpellOrTrap(Place selectedCard){
+    public Place setCard(Place selectedCard, int emptyPlace) {
+        Place placeTo = gamePlay.getMyGameBoard().getPlace(emptyPlace, PLACE_NAME.MONSTER);
+        placeTo.setCard(selectedCard.getCard());
+        placeTo.setStatus(STATUS.SET);
+        selectedCard.setCard(null);
+        placeTo.addTemporaryFeatures(TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN);
+        alreadySummonedOrSet = true;
+        printerAndScanner.printNextLine(setSuccessfully);
+        return placeTo;
+    }
+
+    /*private void setSpellOrTrap(Place selectedCard){
         int emptyPlace = gamePlay.getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.SPELL_AND_TRAP);
         if (emptyPlace != -1) {
                 Place placeTo = gamePlay.getMyGameBoard().getPlace(emptyPlace, PLACE_NAME.SPELL_AND_TRAP);
@@ -312,8 +395,9 @@ public class GamePlayController extends RegexController implements RegexPatterns
                 selectedCard.setCard(null);
                 printerAndScanner.printNextLine(setSuccessfully);
         } else printerAndScanner.printNextLine(spellCardZoneIsFull);
-    }
+    }*/
 
+    //TODO bug when you change the position once and then change to the previous position again
     private void changePosition(Matcher matcher){
         Place selectedCard = gamePlay.getSelectedCard();
         if (selectedCard != null){
@@ -322,10 +406,10 @@ public class GamePlayController extends RegexController implements RegexPatterns
                     STATUS status = STATUS.getStatusByString(matcher.group("position"));
                     if ((status == STATUS.ATTACK && selectedCard.getStatus() == STATUS.DEFENCE) ||
                             (status == STATUS.DEFENCE && selectedCard.getStatus() == STATUS.ATTACK)){
-                        if (selectedCard.getTemporaryFeatures().isEmpty()){
+                        if (!selectedCard.getTemporaryFeatures().contains(TEMPORARY_FEATURES.CARD_POSITION_CHANGED_IN_THIS_TURN)){
                             selectedCard.setStatus(STATUS.getStatusByString(matcher.group("position")));
                             if (selectedCard.getTemporaryFeatures().contains(TEMPORARY_FEATURES.EQUIPPED)){
-                                specialAbilityActivationController.setGamePlayController(this);
+//                                specialAbilityActivationController.setGamePlayController(this);
                                 Place equippedBy = getEquip(selectedCard);
                                 if (equippedBy != null)
                                     specialAbilityActivationController.dynamicEquipHandler(equippedBy,
@@ -344,7 +428,7 @@ public class GamePlayController extends RegexController implements RegexPatterns
         if (selectedCard != null){
             if (selectedCard instanceof MonsterZone){
                 if (phase == PHASE.MAIN){
-                    if (selectedCard.getStatus() != STATUS.SET &&
+                    if (selectedCard.getStatus() == STATUS.SET &&
                             !selectedCard.getTemporaryFeatures().contains(TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN)){
 //                        selectedCard.setStatus(STATUS.ATTACK);
 //                        selectedCard.addTemporaryFeatures(TEMPORARY_FEATURES.CARD_POSITION_CHANGED_IN_THIS_TURN);
@@ -355,6 +439,8 @@ public class GamePlayController extends RegexController implements RegexPatterns
 //                            specialAbilityActivationController.runFlipSpecial(selectedCard);
 //                        }
                         new NewChain(this, selectedCard, CHAIN_JOB.FLIP_SUMMON, 0, sendChainedPlaces());
+                        if (selectedCard.getCard() != null)
+                            specialAbilityActivationController.equipByControlledMonstersHandler();
                     }
                 } else printerAndScanner.printNextLine(cantDoInThisPhase);
             } else printerAndScanner.printNextLine(cantChangeThisCardPosition);
@@ -371,9 +457,11 @@ public class GamePlayController extends RegexController implements RegexPatterns
                     if (phase == PHASE.BATTLE) {
                         if (!selectedCard.getTemporaryFeatures().contains(TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN)) {
                             if (cardToAttack.getCard() != null) {
-                                selectedCard.setAffect(cardToAttack);
-                                new NewChain(this,
-                                        selectedCard,CHAIN_JOB.ATTACK_MONSTER, 0, sendChainedPlaces());
+                                if (selectedCard.getStatus() == STATUS.ATTACK) {
+                                    selectedCard.setAffect(cardToAttack);
+                                    new NewChain(this,
+                                            selectedCard, CHAIN_JOB.ATTACK_MONSTER, 0, sendChainedPlaces());
+                                } else printerAndScanner.printNextLine(cannotAttackWhileSet);
                             } else printerAndScanner.printNextLine(noCardToAttackHere);
                         } else printerAndScanner.printNextLine(cardAlreadyAttacked);
                     } else printerAndScanner.printNextLine(cantDoInThisPhase);
@@ -418,37 +506,49 @@ public class GamePlayController extends RegexController implements RegexPatterns
         return true;
     }
 
-    public void flip (Place toFlip, STATUS status){
+    public void flip (Place toFlip, STATUS status, boolean runFlipSpecial, boolean runContinuous){
         toFlip.setStatus(status);
-        specialAbilityActivationController.runFlipSpecial(toFlip);
-        specialAbilityActivationController.runFacUpSpecial(toFlip);
+        if (runFlipSpecial) {
+            specialAbilityActivationController.runFlipSpecial(toFlip);
+            specialAbilityActivationController.runFacUpSpecial(toFlip);
+            if (runContinuous)
+                specialAbilityActivationController.runContinuous(toFlip);
+//            specialAbilityActivationController.runSuccessSpecialAbility(toFlip);
+        }
     }
 
     private void activateEffect(){
         Place selectedCard = gamePlay.getSelectedCard();
         if (selectedCard != null){
-            if (gamePlay.getMyGameBoard().fromThisGameBoard(selectedCard)) {
+            if (gamePlay.getMyGameBoard().fromThisGameBoard(selectedCard) &&
+                !isRitual(selectedCard)) {
                 if (selectedCard.getCard() instanceof SpellCards) {
                     if (phase == PHASE.MAIN) {
-                        if (!selectedCard.getTemporaryFeatures().contains(TEMPORARY_FEATURES.SPELL_ACTIVATED) &&
-                            !gamePlay.getHistory().get(selectedCard).contains("noSpecialThisRound") &&
-                            !selectedCard.getTemporaryFeatures().contains(TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN)) {
+                        //TODO remove true
+                        if (/*!selectedCard.getTemporaryFeatures().contains(TEMPORARY_FEATURES.SPELL_ACTIVATED) &&
+                            !selectedCard.getTemporaryFeatures().contains(TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN)*/ true) {
+                            if (selectedCard.getType() != PLACE_NAME.HAND)
+                                if (gamePlay.getHistory().get(selectedCard).contains("noSpecialThisRound"))
+                                    return;
                             if ((selectedCard.getType() == PLACE_NAME.HAND &&
 //                                    gamePlay.getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.SPELL_AND_TRAP) != -1 ||
                                     selectedCard.getCard().getSpecialSpeed() >= 2) ||
-                                    selectedCard.getCard().getType().equals("Field") ||
+                                    isField(selectedCard) ||
                                     selectedCard.getType() == PLACE_NAME.SPELL_AND_TRAP ){
-                                specialAbilityActivationController.setGamePlayController(this);
-                                if (specialAbilityActivationController.checkForConditions(selectedCard) &&
-                                    !gamePlay.getUniversalHistory().contains("cannotActivateTrap")){
+//                                specialAbilityActivationController.setGamePlayController(this);
+                                if (specialAbilityActivationController.checkForConditions(selectedCard) /*&&
+                                    !gamePlay.getUniversalHistory().contains("cannotActivateTrap")*/){
                                     if (selectedCard.getType() == PLACE_NAME.HAND)
-                                        selectedCard = putSpellOrField(selectedCard);
+                                        selectedCard = putSpellOrField(selectedCard, STATUS.ATTACK);
                                     if (selectedCard != null) {
+                                        if (selectedCard.getStatus() == STATUS.SET)
+                                            flip(selectedCard, STATUS.ATTACK, true, false);
                                         printerAndScanner.printNextLine(spellActivated);
-                                        if (selectedCard.getCard().getType().equals("Field"))
+                                        if (isField(selectedCard))
                                             specialAbilityActivationController.activateField();
-                                        else {
-                                            selectedCard.setAffect(selectedCard);
+                                        else{
+//                                            selectedCard.setAffect(selectedCard);
+                                            if (specialAbilityActivationController.runUponActivation(selectedCard))
                                             new NewChain(this, selectedCard,
                                                     CHAIN_JOB.ACTIVATE_SPELL,
                                                     selectedCard.getCard().getSpecialSpeed(), sendChainedPlaces());
@@ -463,23 +563,25 @@ public class GamePlayController extends RegexController implements RegexPatterns
         } else  printerAndScanner.printNextLine(noCardsIsSelectedYet);
     }
 
-    private Place putSpellOrField(Place toPlace){
+    private Place putSpellOrField(Place toPlace, STATUS status){
         Place place = null;
-        if (toPlace.getCard().getType().equals("Field")){
+        if (isField(toPlace)){
             place = gamePlay.getMyGameBoard().getPlace(0, PLACE_NAME.FIELD);
             killCard(place);
             place.setCard(toPlace.getCard());
-            place.setStatus(STATUS.ATTACK);
+            place.setStatus(status);
             toPlace.setCard(null);
         } else {
             int emptyPlace = gamePlay.getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.SPELL_AND_TRAP);
             if (emptyPlace != -1){
                 place = gamePlay.getMyGameBoard().getPlace(emptyPlace, PLACE_NAME.SPELL_AND_TRAP);
                 place.setCard(toPlace.getCard());
-                place.setStatus(STATUS.ATTACK);
+                place.setStatus(status);
                 toPlace.setCard(null);
             } else printerAndScanner.printNextLine(spellCardZoneIsFull);
         }
+        if (place != null)
+        place.addTemporaryFeatures(TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN);
         return place;
     }
 
@@ -487,39 +589,46 @@ public class GamePlayController extends RegexController implements RegexPatterns
         if (checkBeforeRitualSummon(place)){
             Place ritualSpell = getRitualSpell();
             if (ritualSpell != null){
-                ritualSpell.getCard().getSpecial().get(0).run(this, ritualSpell);
+                ritualSpell.setAffect(gamePlay.getSelectedCard());
+                new NewChain(this, ritualSpell, CHAIN_JOB.ACTIVATE_SPELL,
+                        ritualSpell.getCard().getSpecialSpeed(), sendChainedPlaces());
+//                if (ritualSpell.getCard() != null) {
+//                    ritualSpell.getCard().getSpecial().get(0).run(this, ritualSpell);
+//                    killCard(ritualSpell);
+//                }
             } else printerAndScanner.printNextLine(cantRitualSummon);
         } else printerAndScanner.printNextLine(cantRitualSummon);
     }
 
     private boolean checkBeforeRitualSummon(Place place){
         boolean canRitual = false;
-        Cards card;
-        for (int i = 1; i < 6 && !canRitual; i++) {
-            card = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP).getCard();
-            if (card != null)
-                if (card.getType().equals("Ritual"))
-                    canRitual = true;
+        Place ritualPlace;
+        for (int i = 1; i < 6; i++) {
+            ritualPlace = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
+            if (isRitual(ritualPlace)){
+                canRitual = true;
+                    break;
+                }
         }
-        if (!canRitual){
-            for (int i = 0; i < 6 && !canRitual; i++) {
-                card = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.HAND).getCard();
-                if (card != null)
-                    if (card.getType().equals("Ritual"))
-                        canRitual = true;
-            }
-        }
-        if (!canRitual)
-            return false;
-        else {
+//        if (!canRitual){
+//            for (int i = 0; i < 6 && !canRitual; i++) {
+//                card = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.HAND).getCard();
+//                if (card != null)
+//                    if (card.getType().equals("Ritual"))
+//                        canRitual = true;
+//            }
+//        }
+        if (canRitual)
             return calculateLevel(((MonsterCards) place.getCard()).getLevel(), sumOfAllLevels(), 5);
-        }
+        else return false;
     }
 
     private boolean calculateLevel(int toReach, int sum, int upperLimit){
         Cards card;
         if (sum == toReach)
             return true;
+        if (sum < toReach)
+            return false;
         for (int i = upperLimit; i > 0; i--) {
             card = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER).getCard();
             if (card != null)
@@ -545,27 +654,30 @@ public class GamePlayController extends RegexController implements RegexPatterns
         for (int i = 1; i < 6; i++) {
             Place place = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
             if (place.getCard() != null)
-                if (place.getCard().getType().equals("Ritual"))
-                ritual = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
+                if (place.getCard() instanceof SpellCards)
+                    if (((SpellCards) place.getCard()).getIcon().equals("Ritual")) {
+                        ritual = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
+                        break;
+                    }
         }
-        if (ritual == null){
-            for (int i = 0; i < 6; i++) {
-                Place place = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.HAND);
-                if (place.getCard() != null)
-                    if (place.getCard().getType().equals("Ritual"))
-                        ritual = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.HAND);
-            }
-            if (ritual != null) {
-                int emptyPlace = gamePlay.getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.SPELL_AND_TRAP);
-                if (emptyPlace != -1) {
-                    Place place = gamePlay.getMyGameBoard().getPlace(emptyPlace, PLACE_NAME.SPELL_AND_TRAP);
-                    place.setCard(ritual.getCard());
-                    place.setStatus(STATUS.ATTACK);
-                    ritual.setCard(null);
-                    ritual = place;//TODO chain placing cards;
-                } else ritual = null;
-            }
-        }
+//        if (ritual == null){
+//            for (int i = 0; i < 6; i++) {
+//                Place place = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.HAND);
+//                if (place.getCard() != null)
+//                    if (place.getCard().getType().equals("Ritual"))
+//                        ritual = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.HAND);
+//            }
+//            if (ritual != null) {
+//                int emptyPlace = gamePlay.getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.SPELL_AND_TRAP);
+//                if (emptyPlace != -1) {
+//                    Place place = gamePlay.getMyGameBoard().getPlace(emptyPlace, PLACE_NAME.SPELL_AND_TRAP);
+//                    place.setCard(ritual.getCard());
+//                    place.setStatus(STATUS.ATTACK);
+//                    ritual.setCard(null);
+//                    ritual = place;//TODO chain placing cards;
+//                } else ritual = null;
+//            }
+//        }
         return ritual;
     }
 
@@ -585,17 +697,15 @@ public class GamePlayController extends RegexController implements RegexPatterns
 
     private void checkUniversalHistory(){
         ArrayList<String> universalHistory = gamePlay.getUniversalHistory();
-        for (String history : universalHistory) {
-            if (history.equals("endBattleHistory"))
-                universalHistory.remove(history);
-            else if (history.startsWith("MyMonsterCard")){//TODO round or turn?
-                specialAbilityActivationController.setGamePlayController(this);
-                specialAbilityActivationController.stopControl(history);
-                universalHistory.remove(history);
-            } else if (universalHistory.contains("cannotDraw"))
-                universalHistory.remove(history);
-
+        for (int i = 0; i < universalHistory.size(); i++) {
+            if (universalHistory.get(i).startsWith("MyMonsterCard")){//TODO round or turn?
+//                specialAbilityActivationController.setGamePlayController(this);
+                specialAbilityActivationController.stopControl(universalHistory.get(i));
+                universalHistory.remove(universalHistory.get(i));
+            }
         }
+        universalHistory.remove("endBattleHistory");
+        universalHistory.remove("cannotDraw");
     }
 
     private void checkIndividualHistory(){
@@ -615,42 +725,43 @@ public class GamePlayController extends RegexController implements RegexPatterns
     }
 
     private void manageHistory(Place place, ArrayList<String> historyArray){
-        for (String history : historyArray) {
-            if (history.equals("noSpecialThisRound"))
-                historyArray.remove(history);
-            else if (history.equals("scanner")){
-                specialAbilityActivationController.setGamePlayController(this);
-                specialAbilityActivationController.handleScanner(place);
+        for (int i = 0; i < historyArray.size(); i++) {
+            if (historyArray.get(i).equals("noSpecialThisRound"))
+                historyArray.remove(historyArray.get(i));
+            else if (historyArray.get(i).equals("scanner")){
+//                specialAbilityActivationController.setGamePlayController(this);
+                specialAbilityActivationController.handleScanner(place, phase);
                 break;
-            } else if (history.startsWith("temporaryAttackBoost")){
-                Matcher matcher = RegexController.getMatcher(history, extractEndingNumber);
+            } else if (historyArray.get(i).startsWith("temporaryAttackBoost")){
+                Matcher matcher = RegexController.getMatcher(historyArray.get(i), extractEndingNumber);
                 ((MonsterZone) place).setAttackModifier(
                         ((MonsterZone) place).getAttackModifier() - Integer.parseInt(matcher.group(1)));
-            } else if (history.equals("drawCardIfAMonsterIsDestroyed") && monsterCardDestroyed)
-                drawCard();
-            else if (history.startsWith("turnsRemaining")){
-                Matcher matcher = RegexController.getMatcher(history, extractEndingNumber);
+            } else if (historyArray.get(i).startsWith("turnsRemaining")){
+                Matcher matcher = RegexController.getMatcher(historyArray.get(i), extractEndingNumber);
                 if (matcher != null){
                     int number = Integer.parseInt(matcher.group(1));
                     if (number != 0){
-                        historyArray.remove(history);
+                        historyArray.remove(historyArray.get(i));
                         historyArray.add("turnsRemaining" + (number -1));
                     } else {
                         killCard(place);
                         break;
                     }
                 }
-            }
+            } else if (historyArray.get(i).equals("drawCardIfAMonsterIsDestroyed") && monsterCardDestroyed)
+                drawCard();
         }
     }
 
     public void placeCard(Place place, Cards card, STATUS status){
         place.setCard(card);
         place.setStatus(status);
-        specialAbilityActivationController.setGamePlayController(this);
+//        specialAbilityActivationController.setGamePlayController(this);
         specialAbilityActivationController.activateField();
-        if (status != STATUS.SET)
+        if (status != STATUS.SET) {
             specialAbilityActivationController.runFacUpSpecial(place);
+            specialAbilityActivationController.runContinuous(place);
+        }
         if (card instanceof MonsterCards){
             applyUniversalEffectsToSummonCards(place);
         }
@@ -681,7 +792,7 @@ public class GamePlayController extends RegexController implements RegexPatterns
         }
     }
 
-    private boolean checkIfMonstersCanAttack(){
+    public boolean checkIfMonstersCanAttack(){
         if (gamePlay.getUniversalHistory().contains("cannotAttack"))
             return false;
         Place selectedCard = gamePlay.getSelectedCard();
@@ -700,7 +811,7 @@ public class GamePlayController extends RegexController implements RegexPatterns
     private void checkStandByHistory(Place place, ArrayList<String> historyArray){
         for (String history : historyArray) {
             if (history.startsWith("payHealthEveryRound")){
-                specialAbilityActivationController.setGamePlayController(this);
+//                specialAbilityActivationController.setGamePlayController(this);
                 if (specialAbilityActivationController.getHealthOrDestroyCard(place, history))
                     break;
             }
@@ -715,9 +826,12 @@ public class GamePlayController extends RegexController implements RegexPatterns
             temporaryFeatures = place.getTemporaryFeatures();
             for (int j = 0; j < temporaryFeatures.size(); j++) {
                 if (temporaryFeatures.get(j) != TEMPORARY_FEATURES.SPELL_ACTIVATED &&
-                        temporaryFeatures.get(j) != TEMPORARY_FEATURES.EQUIPPED ||
-                        temporaryFeatures.get(j) == TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN)
+                        (temporaryFeatures.get(j) != TEMPORARY_FEATURES.EQUIPPED ||
+                        temporaryFeatures.get(j) == TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN ||
+                        temporaryFeatures.get(j) == TEMPORARY_FEATURES.CARD_POSITION_CHANGED_IN_THIS_TURN)) {
                     temporaryFeatures.remove(temporaryFeatures.get(j));
+                    j = 0;
+                }
             }
             place = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
             temporaryFeatures = place.getTemporaryFeatures();
@@ -753,22 +867,27 @@ public class GamePlayController extends RegexController implements RegexPatterns
     private Place getEquip(Place place){
         for (int i = 1; i < 6; i++) {
             Place spell = gamePlay.getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
-            if (spell.getCard().getType().equals("Equip") && spell.getAffect() == place)
+            if (spell.getCard() != null)
+            if (((SpellCards) spell.getCard()).getIcon().equals("Equip") && spell.getAffect() == place)
                 return spell;
         }
         return null;
     }
 
     public void killCard(Place place){
-        if (place.getCard() != null) {
-            specialAbilityActivationController.setGamePlayController(this);
+        if (checkIfItCanBeDestroyed(place)) {
+            boolean wasMonster = false;
+//            specialAbilityActivationController.setGamePlayController(this);
             specialAbilityActivationController.deathWishWithoutKillCard(place);
             if (place instanceof MonsterZone) {
                 specialAbilityActivationController.removeMonsterFromFieldAndEffect(place);
-                specialAbilityActivationController.runAttackAmountByQuantifier();
                 monsterCardDestroyed = true;
-            } else if (place instanceof Field)
+                wasMonster = true;
+            } else if (place instanceof Field) {
                 specialAbilityActivationController.deactivateField();
+                ((Field) place).clear();
+            } else if (isEquip(place.getCard()))
+                specialAbilityActivationController.deactivateEquip(place);
 //            specialAbilityActivationController.deathWishWithoutKillCard(place);
 //            if (place instanceof MonsterZone) {
 //                specialAbilityActivationController.removeMonsterFromFieldAndEffect(place);
@@ -777,6 +896,78 @@ public class GamePlayController extends RegexController implements RegexPatterns
 //            } else if (place instanceof Field)
 //                specialAbilityActivationController.deactivateField();
             gamePlay.getMyGameBoard().killCards(place);
+            if (wasMonster){
+                specialAbilityActivationController.runAttackAmountByQuantifier();
+                specialAbilityActivationController.equipByControlledMonstersHandler();
+            }
+        }
+    }
+
+    public void scannerHistoryHandler(Place place){
+        ArrayList<String> historyArray = gamePlay.getHistory().get(place);
+        for (int i = 0; i < historyArray.size(); i++) {
+            if (historyArray.get(i).equals("scanner")) {
+                specialAbilityActivationController.handleScanner(place, phase);
+                break;
+            }
+        }
+    }
+
+    public STATUS askStatus(){
+        printerAndScanner.printNextLine(askStatus);
+        STATUS status;
+        for (String string = printerAndScanner.scanNextLine(); true; string = printerAndScanner.scanNextLine()){
+//            if (string.equals("attack"))
+//                return STATUS.ATTACK;
+//            if (string.equals("defense"))
+//                return STATUS.DEFENCE;
+            status = STATUS.getStatusByString(string);
+            if (status != null)
+                break;
+            printerAndScanner.printNextLine(wrongStatus);
+        }
+        return status;
+    }
+
+    private boolean isField(Place place){
+        if (place.getCard() instanceof SpellCards)
+            return ((SpellCards) place.getCard()).getIcon().equals("Field");
+        return false;
+    }
+
+    private boolean checkIfItCanBeDestroyed(Place place){
+        if (place.getCard() == null)
+            return false;
+        if (place.getTemporaryFeatures().contains(TEMPORARY_FEATURES.FORCE_KILL))
+            return true;
+        if (place.getCard() instanceof SpellCards) {
+            if (((SpellCards) place.getCard()).getIcon().equals("Continuous"))
+                return false;
+        } else if (place.getCard() instanceof TrapCards)
+            if (((TrapCards) place.getCard()).getIcon().equals("Continuous"))
+                return false;
+        if (gamePlay.getHistory().containsKey(place)){
+            for (String history : gamePlay.getHistory().get(place)) {
+                if (history.startsWith("turnsRemaining"))
+                    return history.equals("turnsRemaining0");
+            }
+        }
+        return true;
+    }
+
+    public boolean isEquip(Cards card){
+        try {
+            return ((SpellCards) card).getIcon().equals("Equip");
+        } catch (ClassCastException e){
+            return false;
+        }
+    }
+
+    public boolean isRitual(Place place){
+        try {
+            return ((SpellCards) place.getCard()).getIcon().equals("Ritual");
+        } catch (ClassCastException | NullPointerException e){
+            return false;
         }
     }
 }

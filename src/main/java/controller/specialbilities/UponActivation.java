@@ -55,13 +55,33 @@ public class UponActivation implements SpecialAbility, StringMessages {
             met = false;
     }
 
-    private void sacrificeCardFromHand(){
+    private void sacrificeCardFromHand(){//TODO ++ ++
+        met = false;
         printerAndScanner.printNextLine(askForPlace);
-        int toRemove = printerAndScanner.scanNextInt();
-        while (gamePlayController.getGamePlay().getMyGameBoard().getPlace(toRemove, PLACE_NAME.HAND) == null){
-            printerAndScanner.printNextLine(wrongCard);
-            toRemove = printerAndScanner.scanNextInt();
+        String command;
+        Place place;
+        while (true){
+            command = printerAndScanner.scanNextLine();
+            if (command.equals("cancel"))
+                break;
+            if (command.matches("[^012345]"))
+                printerAndScanner.printNextLine(invalidInput);
+            else {
+                place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(Integer.parseInt(command), PLACE_NAME.HAND);
+                if (place.getCard() == null)
+                    printerAndScanner.printNextLine(wrongCard);
+                else {
+                    gamePlayController.killCard(place);
+                    met = true;
+                    break;
+                }
+            }
         }
-        gamePlayController.killCard(gamePlayController.getGamePlay().getMyGameBoard().getPlace(toRemove, PLACE_NAME.HAND));
+//        while (gamePlayController.getGamePlay().getMyGameBoard().getPlace(toRemove, PLACE_NAME.HAND) == null){
+//            printerAndScanner.printNextLine(wrongCard);
+//            toRemove = printerAndScanner.scanNextInt();
+//        }
+//        gamePlayController.killCard(gamePlayController.getGamePlay().getMyGameBoard().getPlace(toRemove, PLACE_NAME.HAND));
+//        met = true;
     }
 }

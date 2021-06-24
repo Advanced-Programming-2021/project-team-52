@@ -6,6 +6,7 @@ import model.game.Place;
 import model.tools.StringMessages;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 public class AttackSpecial implements SpecialAbility, StringMessages {
 
@@ -44,9 +45,10 @@ public class AttackSpecial implements SpecialAbility, StringMessages {
         if (!gamePlayController.getGamePlay().getHistory().get(place).contains("noSpecial")) {
             printerAndScanner.printNextLine(askActivateSpecial);
             if (printerAndScanner.scanNextLine().equals("yes")) {
-                gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
-                        .getHistory().get(place.getAffect()).add(
-                        "temporaryAttackBoost" + ((MonsterZone) place.getAffect()).getAttack());
+                ArrayList<String> history =  gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
+                        .getHistory().get(place.getAffect());
+                history.add("temporaryAttackBoost" + ((MonsterZone) place.getAffect()).getAttack());
+                history.add("neutralizeAttack");
                 GeneralSpecialAbility.attackBoost(place.getAffect(), ((MonsterZone) place.getAffect()).getAttack(), true);
                 gamePlayController.getGamePlay().getHistory().get(place).add("noSpecial");
             }
@@ -55,21 +57,21 @@ public class AttackSpecial implements SpecialAbility, StringMessages {
 
     public void neutralizeAttack(){ //TODO ++
         if (!gamePlayController.getGamePlay().getHistory().get(place).contains("noSpecialThisRound")) {
-            place.getAffect().setAffect(null);
-            gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getHistory().
-                    get(place.getAffect()).add("neutralizeAttack");
-            SpecialAbilityActivationController specialAbilityActivationController =
-                    SpecialAbilityActivationController.getInstance();
-            specialAbilityActivationController.setGamePlayController(gamePlayController);
-            specialAbilityActivationController.runSuccessSpecialAbility(place);
+            gamePlayController.getGamePlay().getHistory().get(place).add("neutralizeAttack");
+//            place.getAffect().setAffect(null);
+//            gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getHistory().
+//                    get(place.getAffect()).add("neutralizeAttack");
+//            SpecialAbilityActivationController specialAbilityActivationController =
+//                    SpecialAbilityActivationController.getInstance();
+//            specialAbilityActivationController.setGamePlayController(gamePlayController);
+//            specialAbilityActivationController.runSuccessSpecialAbility(place);
+//            gamePlayController.getSpecialAbilityActivationController().runSuccessSpecialAbility(place);
             gamePlayController.getGamePlay().getHistory().get(place).add("noSpecialThisRound");
         }
     }
 
     public void reduceAttackerLPIfItWasFacingDown(){ //TODO ++
-        if (place.getAffect() != null) {
             gamePlayController.getGamePlay().getOpponentGamePlayController()
                     .getGamePlay().getMyGameBoard().changeHealth(amount * -1);
-        }
     }
 }

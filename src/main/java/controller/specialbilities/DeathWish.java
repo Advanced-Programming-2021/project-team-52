@@ -2,6 +2,7 @@ package controller.specialbilities;
 
 import controller.GamePlayController;
 import model.cards.monster.MonsterCards;
+import model.game.PLACE_NAME;
 import model.game.Place;
 
 import java.lang.reflect.Method;
@@ -51,8 +52,10 @@ public class DeathWish implements SpecialAbility {
     }
 
     public void removeAllAttackBoost(){ //TODO ++
-        GeneralSpecialAbility.boostAllAttack(gamePlayController, amount, true);
-        gamePlayController.getGamePlay().getHistory().get(place).remove("attack boost all " + amount);
+        if (place.getType() != PLACE_NAME.HAND) {
+            GeneralSpecialAbility.boostAllAttack(gamePlayController, amount, true);
+            gamePlayController.getGamePlay().getHistory().get(place).remove("attack boost all " + amount);
+        }
     }
 
     public void removeAttackBoost(){
@@ -60,8 +63,10 @@ public class DeathWish implements SpecialAbility {
     }
 
     public void removeAllDefenseBoost(){
-        GeneralSpecialAbility.boostAllDefense(gamePlayController, amount, true);
-        gamePlayController.getGamePlay().getHistory().get(place).remove("defense boost all " + amount);
+        if (place.getType() != PLACE_NAME.HAND) {
+            GeneralSpecialAbility.boostAllDefense(gamePlayController, amount, true);
+            gamePlayController.getGamePlay().getHistory().get(place).remove("defense boost all " + amount);
+        }
     }
 
     public void removeDefenseBoost(){
@@ -75,6 +80,8 @@ public class DeathWish implements SpecialAbility {
 
     public void noHealthReduction(){ //TODO ++
         gamePlayController.getGamePlay().getUniversalHistory().add("noHealthReduction");
+        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
+                .getUniversalHistory().add("noHealthReduction");
     }
 
     public void canAttack(){ //TODO ++
@@ -95,6 +102,12 @@ public class DeathWish implements SpecialAbility {
 
     public void canNoLongerKillCardUponSummon(){
         gamePlayController.getGamePlay().getUniversalHistory().remove("killThisCardUponSummon");
+    }
+
+    public void monsterCanAttack(){//TODO ++
+        gamePlayController.getGamePlay().getUniversalHistory().remove("monstersCannotAttack" + amount);
+        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
+                .getUniversalHistory().remove("monstersCannotAttack" + amount);
     }
 
 //    public void killAMonsterThatIsNormalOrFlipSummoned(){

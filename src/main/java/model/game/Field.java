@@ -4,12 +4,13 @@ import java.util.ArrayList;
 
 public class Field extends Place{
 
-    public ArrayList<Place> affected;
-    public int numberOfCardsAffected;
+    private ArrayList<Place> affectedAttack, affectedDefense;
+    private int numberOfCardsAffected;
 
     public Field(){
         super(PLACE_NAME.FIELD);
-        affected = new ArrayList<>();
+        affectedAttack = new ArrayList<>();
+        affectedDefense = new ArrayList<>();
         this.numberOfCardsAffected = 0;
     }
 
@@ -21,11 +22,19 @@ public class Field extends Place{
         return numberOfCardsAffected;
     }
 
-    public ArrayList<Place> getAffected() {
-        return affected;
+    public ArrayList<Place> getAffectedAttack() {
+        return affectedAttack;
     }
 
+    public ArrayList<Place> getAffectedDefense(){return  affectedDefense;}
+
     public void removeFromAffect(Place place){
-        affected.remove(place);
+        affectedAttack.remove(place);
+        affectedDefense.remove(place);
+    }
+
+    public void clear(){
+        affectedAttack.clear();
+        affectedDefense.clear();
     }
 }

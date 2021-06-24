@@ -13,30 +13,37 @@ import model.tools.StringMessages;
 import view.PrinterAndScanner;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 
 public class SpecialAbilityActivationController implements StringMessages {
 
-    private static SpecialAbilityActivationController specialAbilityActivationController = null;
+//    private static SpecialAbilityActivationController specialAbilityActivationController = null;
+    private static PrinterAndScanner printerAndScanner;
+    private static PrintBuilderController printBuilderController;
 
     private GamePlayController gamePlayController;
-    private PrinterAndScanner printerAndScanner;
-    private PrintBuilderController printBuilderController;
 
-    private SpecialAbilityActivationController() {
+    static {
         printerAndScanner = PrinterAndScanner.getInstance();
         printBuilderController = PrintBuilderController.getInstance();
     }
 
-    public static SpecialAbilityActivationController getInstance() {
-        if (specialAbilityActivationController == null)
-            specialAbilityActivationController = new SpecialAbilityActivationController();
-        return specialAbilityActivationController;
-    }
-
-    public void setGamePlayController(GamePlayController gamePlayController) {
+    public SpecialAbilityActivationController(GamePlayController gamePlayController) {
+//        printerAndScanner = PrinterAndScanner.getInstance();
+//        printBuilderController = PrintBuilderController.getInstance();
         this.gamePlayController = gamePlayController;
     }
+
+//    public static SpecialAbilityActivationController getInstance() {
+//        if (specialAbilityActivationController == null)
+//            specialAbilityActivationController = new SpecialAbilityActivationController();
+//        return specialAbilityActivationController;
+//    }
+
+//    public void setGamePlayController(GamePlayController gamePlayController) {
+//        this.gamePlayController = gamePlayController;
+//    }
 
     public void runKillCardDeathWishes(Place place, boolean killAttacker) {
         for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
@@ -56,18 +63,23 @@ public class SpecialAbilityActivationController implements StringMessages {
         }
     }
 
-    public boolean summonWithTribute(Place place) {
+    public boolean summonOrSetWithTribute(Place place, boolean summon) {
         ArrayList<String> specials = new ArrayList<>();
         for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
-            if (specialAbility instanceof Tribute)
-                specials.add(specialAbility.getMethodName());
+            if (specialAbility instanceof Tribute) {
+                    specials.add(specialAbility.getMethodName());
+                ((Tribute) specialAbility).setStatus(summon ? STATUS.ATTACK : STATUS.DEFENCE);
+            }
         }
-        if (specials.contains("canSummonNormally")) {
+//        if (specials.size() > 0)
+//            System.out.println("1");
+        if (specials.contains("canSummonNormally") && checkForConditions(place)) {
             printerAndScanner.printNextLine(summonWithoutTribute);
             if (printerAndScanner.scanNextLine().equals("yes")) {
                 for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
                     if (specialAbility.getMethodName().equals("canSummonNormally")) {
                         specialAbility.run(gamePlayController, gamePlayController.getGamePlay().getSelectedCard());
+                        break;
                     }
                 }
             } else runTributeSummon(place);
@@ -86,7 +98,7 @@ public class SpecialAbilityActivationController implements StringMessages {
 //                        break;
 //                    }
 //                }
-                runSuccessSpecialAbility(place);
+//                runSuccessSpecialAbility(place);
                 break;
             }
         }
@@ -154,12 +166,22 @@ public class SpecialAbilityActivationController implements StringMessages {
                 if (!specialAbility.getMethodName().equals("summonAMonster"))
                     specialAbility.run(gamePlayController, place);
         }
-        runSuccessSpecialAbility(place);
+//        runSuccessSpecialAbility(place);
+    }
+
+    public void runContinuous(Place place){
+        if (!place.getTemporaryFeatures().contains(TEMPORARY_FEATURES.CONTINUOUS_ACTIVATED)) {
+            for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
+                if (specialAbility instanceof Continuous)
+                    specialAbility.run(gamePlayController, place);
+            }
+            place.addTemporaryFeatures(TEMPORARY_FEATURES.CONTINUOUS_ACTIVATED);
+        }
     }
 
     public void activateEffectWithoutChain(Place place) {
         for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
-            if ((specialAbility instanceof Continuous) || (specialAbility instanceof ActivateNoChain))
+            if (specialAbility instanceof ActivateNoChain)
                 specialAbility.run(gamePlayController, place);
         }
     }
@@ -176,14 +198,20 @@ public class SpecialAbilityActivationController implements StringMessages {
         if (field.getCard() != null) {
             ((Field) field).removeFromAffect(place);
         }
-        Place effectCheck;
+        GameBoard myGameBoard = gamePlayController.getGamePlay().getMyGameBoard();
+        GameBoard opponentGameBoard = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard();
         for (int i = 1; i < 6; i++) {
-            effectCheck = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.SPELL_AND_TRAP);
-            if (effectCheck.getCard() != null)
-                if (effectCheck.getAffect() == place)
-                    gamePlayController.killCard(effectCheck);
-
+            checkEquip(place, myGameBoard.getPlace(i, PLACE_NAME.SPELL_AND_TRAP));
+            checkEquip(place, opponentGameBoard.getPlace(i, PLACE_NAME.SPELL_AND_TRAP));
         }
+    }
+
+    private void checkEquip(Place place, Place equipCheck) {
+        if (equipCheck.getCard() != null)
+            if (equipCheck.getAffect() == place)
+                if (equipCheck.getCard() instanceof SpellCards)
+                    if (((SpellCards) equipCheck.getCard()).getIcon().equals("Equip"))
+                        gamePlayController.killCard(equipCheck);
     }
 
     public void stopControl(String command) {
@@ -202,17 +230,21 @@ public class SpecialAbilityActivationController implements StringMessages {
         }
     }
 
-    public void handleScanner(Place place) {
+    public void handleScanner(Place place, PHASE phase) {
         STATUS status = place.getStatus();
         gamePlayController.killCard(place);
         place.setCard(Cards.getCard("Scanner"));
         place.setStatus(status);
-        printerAndScanner.printNextLine(askActivateScanner);
-        if (printerAndScanner.scanNextLine().equals("yes")) {
-            place.getCard().getSpecial().get(0).run(gamePlayController, place);
-            runFlipSpecial(place);
-            runFacUpSpecial(place);
+        if (phase == PHASE.DRAW) {
+            printerAndScanner.printNextLine(askActivateScanner);
+            if (printerAndScanner.scanNextLine().equals("yes")) {
+                place.getCard().getSpecial().get(0).run(gamePlayController, place);
+                runFlipSpecial(place);
+                runFacUpSpecial(place);
+            }
         }
+        gamePlayController.getGamePlay().getHistory().get(place).remove("scanner");
+        gamePlayController.getGamePlay().getHistory().get(place).add("scanner");
     }
 
     public boolean getHealthOrDestroyCard(Place place, String command) {
@@ -222,6 +254,7 @@ public class SpecialAbilityActivationController implements StringMessages {
             gamePlayController.getGamePlay().getMyGameBoard().changeHealth(Integer.parseInt(matcher.group(1)) * -1);
             return false;
         } else {
+            place.getTemporaryFeatures().add(TEMPORARY_FEATURES.FORCE_KILL);
             gamePlayController.killCard(place);
             return true;
         }
@@ -315,15 +348,13 @@ public class SpecialAbilityActivationController implements StringMessages {
         return false;
     }
 
-    public void runAttackSpecial(Place place, boolean defenderWasHidden){
-
+    public void runAttackSpecial(Place place){
         for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
             if (specialAbility instanceof AttackSpecial) {
-                if (specialAbility.getMethodName().equals("reduceAttackerLPIfItWasFacingDown")) {
-                    if (defenderWasHidden)
-                        specialAbility.run(gamePlayController, place);
-                } else specialAbility.run(gamePlayController, place);
-                runSuccessSpecialAbility(place);
+                if (!specialAbility.getMethodName().equals("reduceAttackerLPIfItWasFacingDown")) {
+                    specialAbility.run(gamePlayController, place);
+                    runSuccessSpecialAbility(place);
+                }
             }
         }
     }
@@ -422,4 +453,52 @@ public class SpecialAbilityActivationController implements StringMessages {
         }
         return true;
     }
+
+    public void runReduceAttackerLpIfItWasFacingDown(Place place){
+        if (place.getCard() != null)
+            for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
+                if (specialAbility instanceof AttackSpecial)
+                    if (specialAbility.getMethodName().equals("reduceAttackerLPIfItWasFacingDown")){
+                        specialAbility.run(gamePlayController, place);
+                        break;
+                    }
+            }
+    }
+
+    public void deactivateEquip(Place place){
+        if (place.getCard() != null)
+            for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
+                if (specialAbility instanceof Equip){
+                    ((Equip) specialAbility).setOnDeath(true);
+                    specialAbility.run(gamePlayController, place);
+                    ((Equip) specialAbility).setOnDeath(false);
+                }
+            }
+    }
+
+    public void handleMonstersThatCanBeActivated(){
+        Place place;
+        GameBoard gameBoard = gamePlayController.getGamePlay().getMyGameBoard();
+        HashMap<Place, ArrayList<String>> history = gamePlayController.getGamePlay().getHistory();
+        for (int i = 1; i < 6; i++) {
+            place = gameBoard.getPlace(i, PLACE_NAME.MONSTER);
+            if (place.getCard() != null)
+                if (history.get(place).contains("canBeActivated") && checkForConditions(place)) {
+                    printerAndScanner.printNextLine(printBuilderController.askActivateMonster(place.getCard().getName()));
+                    if (printerAndScanner.scanNextLine().equals("yes"))
+                        if (runUponActivation(place)){
+                        activateEffectWithChain(place);
+                        activateEffectWithoutChain(place);
+                    }
+                }
+        }
+    }
+
+//    public boolean checkIfItCanBeNormalSummoned(Place place){
+//        for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
+//            if (specialAbility.getMethodName().equals("canOnlyBeSpecialSummoned"))
+//                return false;
+//        }
+//        return true;
+//    }
 }

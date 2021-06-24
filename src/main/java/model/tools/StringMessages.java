@@ -32,6 +32,7 @@ public interface StringMessages {
     String cantFlipSummonThisCard = "you can’t flip summon this card";
     String flipsSummonedSuccessfully = "flip summoned successfully";
 
+    String cannotAttackWhileSet = "you cannot attack in set position";
     String noCardToAttackHere = "there is no card to attack here";
     String drawingAgainstOO = "both you and your opponent monster cards are destroyed and no one receives damage";
     String winingAgainstDO = "the defense position monster is destroyed";
@@ -54,11 +55,19 @@ public interface StringMessages {
     String couldNotFindASuitableCard = "could not find a suitable card";
     String emptyOpponentMonsterPlaces = "your opponent has no monster in the board";
     String doOnceMore = "do you want to activate this special ability once more?";
-    String askForPlace = "please enter the number of card you want to destroy";
+    String askForPlace = "please enter the number of card you want to sacrifice from hand to activate " +
+            "the effect of this card, or enter cancel to cancel";
     String noMonsterInGraveYard = "there is no monster card in graveyard to summon";
     String doYouWantToTribute = "do you want to tribute?";
     String thereIsNoCard = "there is no card in the selected place. please select another";
     String summonWithoutTribute = "summon without Tribute?";
+    String cannotSet = "unable to set";
+    String askForSpellInGameToDestroy = "please enter a spell in the game to destroy\nuse positive number to destroy" +
+            " a spell in your own board and a negative number to destroy a spell in enemy's board\nyou can enter \"cancel\"" +
+            " to exit";
+    String askForMonsterInGameToEquip = "please enter a monster in the game to equip\nuse positive number to equip" +
+            " a monster in your own board and a negative number to equip a monster in enemy's board\nyou can enter \"cancel\"" +
+            " to exit";
 
     String invalidSelection = "invalid selection";
     String noCardInGivenPosition = "no card found in the given position";

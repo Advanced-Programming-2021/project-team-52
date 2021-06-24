@@ -71,14 +71,16 @@ public class Place {
 
     public void killCard(){
         if (this instanceof MonsterZone){
-            ((MonsterZone) this).setAttackModifier(0);
-            ((MonsterZone) this).setDefenseModifier(0);
+            MonsterZone monsterZone = (MonsterZone) this;
+            monsterZone.setAttackModifier(0);
+            monsterZone.setDefenseModifier(0);
+            monsterZone.clearEquip();
         }
         this.card = null;
         this.status = null;
-        this.type = null;
         this.temporaryFeatures.clear();
         this.affect = null;
+        if (!type.equals(PLACE_NAME.HAND))
         history.clear();
     }
 

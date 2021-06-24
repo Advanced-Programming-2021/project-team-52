@@ -72,4 +72,8 @@ public class MonsterZone extends Place{
     public boolean hasThisModifier(Place place){
         return equippedCards.containsKey(place);
     }
+
+    public void clearEquip(){
+        equippedCards.clear();
+    }
 }

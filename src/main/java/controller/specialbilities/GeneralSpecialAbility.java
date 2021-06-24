@@ -34,18 +34,21 @@ public abstract class GeneralSpecialAbility {
 
     public static void killAllMonsters(boolean enemyOnly, GamePlayController gamePlayController
             , boolean dontUseStatus, STATUS status){
-        Place place;
-        for (int i = 1; i < 6; i++) {
-            place = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
-                    .getPlace(i, PLACE_NAME.MONSTER);
-            if (place.getStatus() == status || !dontUseStatus)
-                gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place);
+//        Place place;
+        killAllMonsterCards(gamePlayController.getGamePlay().getOpponentGamePlayController(), dontUseStatus, status);
+        if (!enemyOnly) {
+            killAllMonsterCards(gamePlayController, dontUseStatus, status);
         }
-        if (!enemyOnly)
-            for (int i = 1; i < 6; i++) {
-                place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER);
+    }
+
+    private static void killAllMonsterCards(GamePlayController gamePlayController, boolean dontUseStatus, STATUS status) {
+        Place place;
+        GameBoard gameBoard = gamePlayController.getGamePlay().getMyGameBoard();
+        for (int i = 1; i < 6; i++) {
+            place = gameBoard.getPlace(i, PLACE_NAME.MONSTER);
+            if (place.getCard() != null)
                 if (place.getStatus() == status || dontUseStatus)
                     gamePlayController.killCard(place);
-            }
+        }
     }
 }

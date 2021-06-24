@@ -130,7 +130,12 @@ public abstract class InstantiateCards implements RegexPatterns {
         if (matcher.group(2) != null) {
             subsetSplit = matcher.group(2).split("/");
         }
-        if ("removeAllAttackBoost".equals(matcher.group("methodName"))) {
+//        if ("removeAllAttackBoost".equals(matcher.group("methodName"))) {
+//                deathWish.setAmount(Integer.parseInt(subsetSplit[0]));
+//        }
+        switch (matcher.group("methodName")){
+            case "removeAllAttackBoost":
+            case "monsterCanAttack":
                 deathWish.setAmount(Integer.parseInt(subsetSplit[0]));
         }
         deathWish.setMethod(deathWish.getClass().getDeclaredMethod(matcher.group("methodName")));
@@ -144,10 +149,11 @@ public abstract class InstantiateCards implements RegexPatterns {
             subsetSplit = matcher.group(2).split("/");
         switch (matcher.group("methodName")){
             case "canSummonNormally" :
-                tribute.setKey(Integer.parseInt(subsetSplit[2]));
+                tribute.setKey(Integer.parseInt(subsetSplit[3]));
             case "summonWithTribute" :
-                tribute.setAmount(Integer.parseInt(subsetSplit[0]));
-                tribute.setSpecialSummon(matcher.group(1).equals("normal"));
+                tribute.setCannotSet(subsetSplit[0].equals("true"));
+                tribute.setAmount(Integer.parseInt(subsetSplit[1]));
+                tribute.setSpecialSummon(subsetSplit[2].equals("normal"));
                 break;
         }
         tribute.setMethod(tribute.getClass().getDeclaredMethod(matcher.group("methodName")));
@@ -157,6 +163,8 @@ public abstract class InstantiateCards implements RegexPatterns {
     private static SpecialAbility addAttackSpecial(Matcher matcher) throws NoSuchMethodException {
         AttackSpecial attackSpecial = new AttackSpecial();
         attackSpecial.setMethod(attackSpecial.getClass().getDeclaredMethod(matcher.group("methodName")));
+        if (matcher.group("methodName").equals("reduceAttackerLPIfItWasFacingDown"))
+            attackSpecial.setAmount(Integer.parseInt(matcher.group(2)));
         return attackSpecial;
     }
 
@@ -173,10 +181,12 @@ public abstract class InstantiateCards implements RegexPatterns {
             subsetSplit = matcher.group(2).split("/");
         switch (matcher.group("methodName")){
             case "specialSummonFromGraveYard" :
-                activateNoChain.setOnlyForOnePlayer(!subsetSplit[0].equals("both"));
-                break;
-            case "turnRemaining" :
+                activateNoChain.setOnlyForOnePlayer(!subsetSplit[1].equals("both"));
+                if (subsetSplit.length == 3)
+                    activateNoChain.setType(subsetSplit[2]);
+            case "turnsRemaining" :
             case "drawCard" :
+            case "sacrificeToGetFromGraveYard":
                 activateNoChain.setAmount(Integer.parseInt(subsetSplit[0]));
                 break;
             case "killAllMonsters" :
@@ -195,7 +205,7 @@ public abstract class InstantiateCards implements RegexPatterns {
         switch (matcher.group("methodName")){
             case "payHealthEveryRound" :
             case "monstersCannotAttack" :
-            case "getLPIfEnemySpellIsActivated" :
+            case "getLPIfSpellIsActivated" :
                 continuous.setAmount(Integer.parseInt(subsetSplit[0]));
                 break;
         }
@@ -206,6 +216,7 @@ public abstract class InstantiateCards implements RegexPatterns {
     private static SpecialAbility addSuccessSpecial(Matcher matcher) throws NoSuchMethodException {
         Success success = new Success();
         success.setMethod(success.getClass().getDeclaredMethod(matcher.group("methodName")));
+        success.setMonsterType(matcher.group(2));
         return success;
     }
 
@@ -214,8 +225,13 @@ public abstract class InstantiateCards implements RegexPatterns {
         String[] subsetSplit = new String[0];
         if (matcher.group(2) != null)
             subsetSplit = matcher.group(2).split("/");
-        if (matcher.group("methodName").equals("affectHasAtLeastThisDamage"))
-            condition.setAmount(Integer.parseInt(subsetSplit[0]));
+//        if (matcher.group("methodName").equals("opponentHasMonsterWithAtLeastThisDamage"))
+//            condition.setAmount(Integer.parseInt(subsetSplit[0]));
+        switch (matcher.group("methodName")){
+            case "opponentHasMonsterWithAtLeastThisDamage":
+            case "monsterCardWithAtLeastThisLevelExistsInGraveyard":
+                condition.setAmount(Integer.parseInt(subsetSplit[0]));
+        }
         condition.setMethod(condition.getClass().getDeclaredMethod(matcher.group("methodName")));
         return condition;
     }
@@ -225,8 +241,14 @@ public abstract class InstantiateCards implements RegexPatterns {
         String[] subsetSplit = new String[0];
         if (matcher.group(2) != null)
             subsetSplit = matcher.group(2).split("/");
-        if ("boostAllAttack".equals(matcher.group("methodName"))) {
-            faceUp.setBoostAmount(Integer.parseInt(subsetSplit[0]));
+//        if ("boostAllAttack".equals(matcher.group("methodName"))) {
+//            faceUp.setBoostAmount(Integer.parseInt(subsetSplit[0]));
+//        }
+        switch (matcher.group("methodName")){
+            case "summonAMonster":
+            case "boostAllAttack":
+                faceUp.setBoostAmount(Integer.parseInt(subsetSplit[0]));
+                break;
         }
         faceUp.setMethod(faceUp.getClass().getDeclaredMethod(matcher.group("methodName")));
         return faceUp;
@@ -264,7 +286,7 @@ public abstract class InstantiateCards implements RegexPatterns {
         }
         fieldSpecial.setEnemyAsWell(subsetSplit[1].equals("enemyAsWell"));
         ArrayList<String> types = new ArrayList<>();
-        if (subsetSplit.length == 2)
+        if (subsetSplit.length == 3)
             types.addAll(Arrays.asList(subsetSplit[2].split("\\+")));
         fieldSpecial.setType(types);
         fieldSpecial.setMethod(fieldSpecial.getClass().getDeclaredMethod(matcher.group("methodName")));
@@ -276,26 +298,26 @@ public abstract class InstantiateCards implements RegexPatterns {
         String[] subsetSplit = new String[0];
         if (matcher.group(2) != null)
             subsetSplit = matcher.group(2).split("/");
+        ArrayList<String> types = new ArrayList<>();
         switch (matcher.group("methodName")){
             case "normalEquip" : {
                 equip.setAttackChange(Integer.parseInt(subsetSplit[0]));
                 equip.setDefenseChange(Integer.parseInt(subsetSplit[1]));
-                ArrayList<String> types = new ArrayList<>();
                 if (subsetSplit.length == 3)
                     types.addAll(Arrays.asList(subsetSplit[2].split("\\+")));
-                equip.setTypes(types);
             }
                 break;
             case "boostByControlledMonsters" :
                 equip.setQuantifier(Integer.parseInt(subsetSplit[0]));
                 break;
             case "dynamicEquip" : {
-                ArrayList<String> types = new ArrayList<>();
+//                ArrayList<String> types = new ArrayList<>();
                 if (subsetSplit.length == 1)
                     types.addAll(Arrays.asList(subsetSplit[0].split("\\+")));
-                equip.setTypes(types);
+//                equip.setTypes(types);
             }
         }
+        equip.setTypes(types);
         equip.setMethod(equip.getClass().getDeclaredMethod(matcher.group("methodName")));
         return equip;
     }
@@ -311,7 +333,7 @@ public abstract class InstantiateCards implements RegexPatterns {
         String[] subsetSplit = new String[0];
         if (matcher.group(2) != null)
             subsetSplit = matcher.group(2).split("/");
-        if (matcher.group("methodName").equals("payLpForActivation"))
+        if (matcher.group("methodName").equals("payLPForActivation"))
             uponActivation.setAmount(Integer.parseInt(subsetSplit[0]));
         uponActivation.setMethod(uponActivation.getClass().getDeclaredMethod(matcher.group("methodName")));
         return uponActivation;

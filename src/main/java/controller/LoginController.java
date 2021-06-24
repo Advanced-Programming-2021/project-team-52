@@ -37,11 +37,20 @@ public class LoginController implements RegexPatterns {
         Deck deck = new Deck("a");
         deck.addAllCardsToDeck();
         test.setActiveDeck(deck);
+        Deck deck1 = new Deck("aa");
+        for (int i = 0; i < 2; i++) deck1.addCard("Crab Turtle",false);
+        for (int i = 0; i < 2; i++) deck1.addCard("Advanced Ritual Art", false);
+        for (int i = 0; i < 6; i++) deck1.addCard("Feral Imp", false);
+        test.setActiveDeck(deck1);
         users.put("a", test);
         test = User.createUser("b", "b", "b");
         deck = new Deck("b");
         deck.addAllCardsToDeck();
         test.setActiveDeck(deck);
+        Deck deck2 = new Deck("aa");
+        for (int i = 0; i < 10; i++) deck2.addCard("Battle OX",false);
+//        for (int i = 0; i < 5; i++) deck2.addCard("Supply Squad", false);
+        test.setActiveDeck(deck2);
         users.put("b", test);
     }
 

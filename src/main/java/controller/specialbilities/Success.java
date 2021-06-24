@@ -2,6 +2,7 @@ package controller.specialbilities;
 
 import controller.GamePlayController;
 import model.cards.Cards;
+import model.cards.monster.MonsterCards;
 import model.game.PLACE_NAME;
 import model.game.Place;
 import model.game.STATUS;
@@ -41,6 +42,10 @@ public class Success implements SpecialAbility, StringMessages {
         return methodName;
     }
 
+    public void setMonsterType(String monsterType) {
+        this.monsterType = monsterType;
+    }
+
     public void killAffect(){ //TODO ++
         gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place.getAffect());
     }
@@ -75,7 +80,10 @@ public class Success implements SpecialAbility, StringMessages {
                     } else if (command.equals("deck") && existsInDeck){
                         summonFromDeck();
                         break;
-                    } else printerAndScanner.printNextLine(invalidCommand);
+                    } else {
+                        printerAndScanner.printNextLine(invalidCommand);
+                        command = printerAndScanner.scanNextLine();
+                    }
                 }
             }
         }
@@ -89,7 +97,7 @@ public class Success implements SpecialAbility, StringMessages {
         while (true){
             toSummon = Cards.getCard(cardName);
             if (toSummon != null)
-                if (toSummon.getType().equals(monsterType))
+                if (((MonsterCards) toSummon).getMonsterType().equals(monsterType) && toSummon.getSpecial().size() == 0)
                     if (graveYard.contains(toSummon))
                         break;
             printerAndScanner.printNextLine(wrongCard);
@@ -107,7 +115,8 @@ public class Success implements SpecialAbility, StringMessages {
         while (true){
             if (cardNumber <6 && cardNumber >= 0){
                 Place place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(cardNumber, PLACE_NAME.HAND);
-                if (place.getCard().getType().equals(monsterType)){
+                if (place.getCard() != null)
+                if (((MonsterCards) place.getCard()).getMonsterType().equals(monsterType) && place.getCard().getSpecial().size() == 0){
                     gamePlayController.placeCard(place, false, STATUS.ATTACK);
                     break;
                 }
@@ -125,7 +134,8 @@ public class Success implements SpecialAbility, StringMessages {
         outerLoop :
         while (true){
             Cards card = Cards.getCard(cardName);
-            if (card.getType().equals(monsterType))
+            if (card != null)
+            if (((MonsterCards) card).getMonsterType().equals(monsterType) && card.getSpecial().size() == 0)
                 for (int i = 0; i < mainCards.size(); i++) {
                     if (mainCards.get(i).equals(card) && !cardsPicked.contains(i)){
                         Place toSummon = new Place(PLACE_NAME.HAND);
@@ -155,7 +165,7 @@ public class Success implements SpecialAbility, StringMessages {
         for (int i = 0; i < 6; i++) {
             card = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.HAND).getCard();
             if (card != null)
-            if (card.getType().equals(monsterType))
+            if (((MonsterCards) card).getMonsterType().equals(monsterType))
                 return true;
         }
         return false;
@@ -165,7 +175,7 @@ public class Success implements SpecialAbility, StringMessages {
         ArrayList<Cards> mainCards = gamePlayController.getGamePlay().getMyGameBoard().getMainCards();
         ArrayList<Integer> cardsPicked = gamePlayController.getGamePlay().getMyGameBoard().getCardsPicked();
         for (int i = 0; i < mainCards.size(); i++) {
-            if (mainCards.get(i).getType().equals(monsterType) && !cardsPicked.contains(i))
+            if (((MonsterCards) mainCards.get(i)).getMonsterType().equals(monsterType) && !cardsPicked.contains(i))
                 return true;
         }
         return false;

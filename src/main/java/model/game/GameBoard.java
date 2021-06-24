@@ -3,6 +3,7 @@ package model.game;
 import controller.GamePlayController;
 import controller.specialbilities.SpecialAbilityActivationController;
 import model.cards.Cards;
+import model.cards.spell.SpellCards;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,7 +65,7 @@ public class GameBoard {
     public Cards drawCard() {
         while (cardsPicked.contains(lastCardNumberPicked))
             lastCardNumberPicked--;
-        if (lastCardNumberPicked == 0 && cardsPicked.size() != mainCards.size()){
+        if (lastCardNumberPicked < 0 && cardsPicked.size() != mainCards.size()){
                 lastCardNumberPicked = mainCards.size() - 1;
                 return drawCard();
         } else {
@@ -206,11 +207,16 @@ public class GameBoard {
     //////////////////////////////////////////////
 
     public Cards getACardByType(String type){
-        int fieldNum = lastCardNumberPicked;
+        int fieldNum = mainCards.size() -1;
+        Cards card;
         while (fieldNum >= 0){
-            if (mainCards.get(fieldNum).getType().equals(type) && !cardsPicked.contains(fieldNum)){
-                cardsPicked.add(fieldNum);
-                return mainCards.get(fieldNum);
+            if (!cardsPicked.contains(fieldNum)) {
+                card = mainCards.get(fieldNum);
+                if (card instanceof SpellCards)
+                    if (((SpellCards) card).getIcon().equals(type)) {
+                        cardsPicked.add(fieldNum);
+                        return mainCards.get(fieldNum);
+                    }
             }
             fieldNum --;
         }

@@ -6,11 +6,13 @@ public enum STATUS {
     SET;
 
     public static STATUS getStatusByString(String status){
+        if (status != null)
         switch (status){
             case "attack" : return ATTACK;
+            case "defense":
             case "defence" : return DEFENCE;
             case "set" : return SET;
-            default: return null;
         }
+        return null;
     }
 }

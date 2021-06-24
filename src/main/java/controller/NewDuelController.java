@@ -69,29 +69,17 @@ public class NewDuelController implements RegexPatterns, StringMessages {
     }
 
     private void makeNeededObjects(){
-        ArrayList<Cards> mainCards, sideCards;
-        mainCards = new ArrayList<>();
-        for (String card : host.getActiveDeck().getAllMainCards()) {
-            mainCards.add(Cards.getCard(card));
-        }
-        mainCards.remove(Cards.getCard("Raigeki"));
-        mainCards.add(Cards.getCard("Raigeki"));
-        sideCards = new ArrayList<>();
-        for (String card : host.getActiveDeck().getAllSideCards()) {
-            sideCards.add(Cards.getCard(card));
-        }
-        sideCards.remove(Cards.getCard("Raigeki"));
-        sideCards.add(Cards.getCard("Raigeki"));
-        hostGameBoard = new GameBoard(mainCards, sideCards);
-        mainCards.clear();
-        for (String card : guest.getActiveDeck().getAllMainCards()) {
-            mainCards.add(Cards.getCard(card));
-        }
-        sideCards.clear();
-        for (String card : guest.getActiveDeck().getAllSideCards()) {
-            sideCards.add(Cards.getCard(card));
-        }
-        guestGameBoard = new GameBoard(mainCards, sideCards);
+        hostGameBoard = makeCards(host);
+        guestGameBoard = makeCards(guest);
+//        guestMainCards = new ArrayList<>();
+//        for (String card : guest.getActiveDeck().getAllMainCards()) {
+//            guestMainCards.add(Cards.getCard(card));
+//        }
+//        guestSideCards = new ArrayList<>();
+//        for (String card : guest.getActiveDeck().getAllSideCards()) {
+//            guestSideCards.add(Cards.getCard(card));
+//        }
+//        guestGameBoard = new GameBoard(guestMainCards, guestSideCards);
         hostGamePlay = new GamePlay(true, hostGameBoard, false, host.getUsername());
         guestGamePlay = new GamePlay(false, guestGameBoard, false, guest.getUsername());
         hostGamePlayController = new GamePlayController(hostGamePlay);
@@ -100,16 +88,39 @@ public class NewDuelController implements RegexPatterns, StringMessages {
         guestGamePlay.setOpponentGamePlayController(hostGamePlayController);
         hostGamePlayController.shuffleDeck();
         guestGamePlayController.shuffleDeck();
+        //TODO remove next
+        guestGameBoard.getGraveyard().add(Cards.getCard("Suijin"));
+        hostGameBoard.getGraveyard().add(Cards.getCard("Suijin"));
+    }
+
+    private GameBoard makeCards(User user) {
+        ArrayList<Cards> hostSideCards;
+        ArrayList<Cards> hostMainCards;
+        hostMainCards = new ArrayList<>();
+        for (String card : user.getActiveDeck().getAllMainCards()) {
+            hostMainCards.add(Cards.getCard(card));
+        }
+//        mainCards.remove(Cards.getCard("Raigeki"));
+//        mainCards.add(Cards.getCard("Raigeki"));
+        hostSideCards = new ArrayList<>();
+        for (String card : user.getActiveDeck().getAllSideCards()) {
+            hostSideCards.add(Cards.getCard(card));
+        }
+//        sideCards.remove(Cards.getCard("Raigeki"));
+//        sideCards.add(Cards.getCard("Raigeki"));
+        return new GameBoard(hostMainCards, hostSideCards);
     }
 
     private void startTheGame(int rounds){
         GamePlayController currentPlayer = flipACoin();
+        //TODO delete the next loop
         for (int i = 0; i < 5; i++) {
             hostGamePlayController.drawCard();
             guestGamePlayController.drawCard();
         }
         while (rounds > 0){
             do {
+                PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.playerTurn(currentPlayer.getGamePlay().getName()));
                 PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.buildGameBoard(
                         currentPlayer.getGamePlay().getMyGameBoard(),
                         currentPlayer.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard(),
@@ -129,14 +140,16 @@ public class NewDuelController implements RegexPatterns, StringMessages {
     }
 
     private GamePlayController flipACoin(){
-        if (RANDOM.nextBoolean()){
-            PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.thisPlayerWillStartTheGame(host.getUsername()));
-            hostGamePlayController.getGamePlay().getUniversalHistory().add("starter");
-            return hostGamePlayController;
-        } else {
-            PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.thisPlayerWillStartTheGame(guest.getUsername()));
-            guestGamePlayController.getGamePlay().getUniversalHistory().add("starter");
-            return guestGamePlayController;
-        }
+        hostGamePlayController.getGamePlay().getUniversalHistory().add("starter");
+        return hostGamePlayController;
+//        if (RANDOM.nextBoolean()){
+//            PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.thisPlayerWillStartTheGame(host.getUsername()));
+//            hostGamePlayController.getGamePlay().getUniversalHistory().add("starter");
+//            return hostGamePlayController;
+//        } else {
+//            PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.thisPlayerWillStartTheGame(guest.getUsername()));
+//            guestGamePlayController.getGamePlay().getUniversalHistory().add("starter");
+//            return guestGamePlayController;
+//        }
     }
 }

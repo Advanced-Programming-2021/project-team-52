@@ -52,6 +52,8 @@ public class Continuous implements SpecialAbility, StringMessages {
     }
 
     public void attackAmountByQuantifier(){ //TODO ++
+        if (place.getStatus() == STATUS.SET)
+            return;
         int sumOfLevels = 0;
         for (int i = 1; i < 6; i++) {
             Place monsterPlace = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER);
@@ -65,11 +67,11 @@ public class Continuous implements SpecialAbility, StringMessages {
     }
 
     public void drawCardIfAMonsterIsDestroyed(){ //TODO ++
-        gamePlayController.getGamePlay().getUniversalHistory().add("drawCardIfAMonsterIsDestroyed");
+        gamePlayController.getGamePlay().getHistory().get(place).add("drawCardIfAMonsterIsDestroyed");
     }
 
-    public void getLPIfEnemySpellIsActivated(){ //TODO ++
-        gamePlayController.getGamePlay().getUniversalHistory().add("getLPIfEnemySpellIsActivated" + amount);
+    public void getLPIfSpellIsActivated(){ //TODO ++
+        gamePlayController.getGamePlay().getUniversalHistory().add("getLPIfSpellIsActivated" + amount);
     }
 
     public void payHealthEveryRound(){ //TODO ++

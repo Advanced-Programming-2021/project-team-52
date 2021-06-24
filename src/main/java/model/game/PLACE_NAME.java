@@ -22,10 +22,14 @@ public enum PLACE_NAME {
         switch (enumString){
             case "-m":
             case "--monster":
+            case "monster":
                 return MONSTER;
             case "-s":
             case "--spell":
+            case "spell":
                 return SPELL_AND_TRAP;
+            case "hand":
+                return HAND;
         }
         return null;
     }

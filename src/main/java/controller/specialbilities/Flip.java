@@ -37,6 +37,7 @@ public class Flip implements SpecialAbility, StringMessages {
         return methodName;
     }
 
+    //TODO tell player to enter what
     public void destroyAMonster(){//TODO ++
         int i;
         for (i = 1; i < 6; i++) {
@@ -47,16 +48,22 @@ public class Flip implements SpecialAbility, StringMessages {
         if (i == 6)
             return;
         printerAndScanner.printNextLine(askActivateSpecial);
-        i = printerAndScanner.scanNextInt();
-        while (gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
-                .getPlace(i, PLACE_NAME.MONSTER) == null){
-            printerAndScanner.printNextLine(wrongCard);
-            i = printerAndScanner.scanNextInt();
+        if (printerAndScanner.scanNextLine().equals("yes")) {
+            String number;
+            while (true) {
+                number = printerAndScanner.scanNextLine();
+                if (number.matches("[^12345]"))
+                    continue;
+                    if (gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
+                            .getPlace(i, PLACE_NAME.MONSTER) == null)
+                        printerAndScanner.printNextLine(wrongCard);
+                    else break;
+            }
+            gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(
+                    gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().
+                            getPlace(i, PLACE_NAME.MONSTER)
+            );
         }
-        gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(
-                gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().
-                        getPlace(i, PLACE_NAME.MONSTER)
-        );
     }
 
 //    public void reduceAttackerLP(){

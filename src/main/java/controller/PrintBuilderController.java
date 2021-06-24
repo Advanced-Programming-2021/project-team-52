@@ -57,7 +57,7 @@ public class PrintBuilderController {
         return "your opponent’s monster is destroyed" +
                 " and your opponent receives " +
                 damage +
-                "battle damage";
+                " battle damage";
     }
 
     public String losingAgainstOO(int damage) {
@@ -68,7 +68,7 @@ public class PrintBuilderController {
 
     public String losingAgainstDO(int damage) {
         return "no card is destroyed and" +
-                " you received " + damage + "battle damage";
+                " you received " + damage + " battle damage";
     }
 
     public String hiddenCardAfterAttacking(String cardName) {
@@ -217,26 +217,42 @@ public class PrintBuilderController {
         return new StringBuilder("its ").append(name).append("'s turn");
     }
 
-    public StringBuilder attackToAttackResult(int damage, boolean opponentLost) {
-        if (opponentLost)
-            return new StringBuilder("your opponent’s monster is destroyed and your opponent receives ").append(damage)
-                    .append("battle damage");
-        else
-            return new StringBuilder("Your monster card is destroyed and you received ").append(damage).
+    public StringBuilder attackToAttackResult(int damage, int result) {
+//        if (opponentLost)
+//            return new StringBuilder("your opponent’s monster is destroyed and your opponent receives ").append(damage)
+//                    .append("battle damage");
+//        else
+//            return new StringBuilder("Your monster card is destroyed and you received ").append(damage).
+//                    append(" battle damage");
+        StringBuilder resultString = new StringBuilder();
+        switch (result){
+            case 1 :
+                resultString.append("your opponent’s monster is destroyed and your opponent receives ").append(damage)
+                        .append(" battle damage");
+                break;
+            case 0:
+                resultString.append("no card is destroyed");
+                break;
+            case -1 :
+                resultString.append("Your monster card is destroyed and you received ").append(damage).
                     append(" battle damage");
+        }
+        return resultString;
     }
 
     public StringBuilder attackToDefenseResult(boolean defenderWasHidden, String defenderName, int result, int damage) {
         StringBuilder results = new StringBuilder();
         if (defenderWasHidden)
-            results.append("opponent’s monster card was ").append(defenderName).append(" ");
+            results.append("opponent’s monster card was ").append(defenderName).append(". and ");
         switch (result) {
             case 1:
-                results.append("the defense position monster is destroyed");
+                results.append("the defending monster is destroyed");
+                break;
             case 0:
                 results.append("no card is destroyed");
+                break;
             case -1:
-                results.append("no card is destroyed and you received ").append(damage).append("  battle damage");
+                results.append("no card is destroyed and you received ").append(damage).append(" battle damage");
         }
         return results;
     }
@@ -255,7 +271,7 @@ public class PrintBuilderController {
     }
 
     public StringBuilder askForPayingLp(String amount, String cardName) {
-        return new StringBuilder("do you want to lose ").append(amount).append("LP or lose ").append(cardName).append("?");
+        return new StringBuilder("do you want to pay ").append(amount).append(" LP to keep ").append(cardName).append("?");
     }
 
     public StringBuilder askForLpForActivation(int amount){
@@ -326,6 +342,10 @@ public class PrintBuilderController {
                     return "H";
             }
         }
+    }
+
+    public String askActivateMonster(String name){
+        return new StringBuilder("do you want to activate ").append(name).append(" special ability ?").toString();
     }
 
 

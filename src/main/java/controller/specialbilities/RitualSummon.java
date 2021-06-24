@@ -40,7 +40,8 @@ public class RitualSummon implements SpecialAbility, StringMessages {
 
     //TODO in dock it says that this can be cancelled but doest say how
     public void ritualSummon(){//TODO ++
-        Place toSummon = getRitualCard();
+//        Place toSummon = getRitualCard();
+        Place toSummon = this.place.getAffect();
         String[] tributes;
         while(true){
             printerAndScanner.printNextLine(ritualSummonTribute);
@@ -49,20 +50,21 @@ public class RitualSummon implements SpecialAbility, StringMessages {
                 break;
         }
         sacrificeTributes(tributes);
-        gamePlayController.placeCard(toSummon, true, STATUS.ATTACK);
+        gamePlayController.placeCard(toSummon, true, gamePlayController.askStatus());
     }
 
     private Place getRitualCard() {
-        Place toSummon = null;
+        Place toSummon;
         while (true){
             printerAndScanner.printNextLine(pleaseEnterTheCardThatYouWantToRitualSummon);
             String input = printerAndScanner.scanNextLine();
-            if (input.matches("\\D")){
+            if (input.matches("[^012345]")){
                 printerAndScanner.printNextLine(youShouldRitualSummonRightNow);
                 continue;
             }
             toSummon = gamePlayController.
-                    getGamePlay().getMyGameBoard().getPlace(Integer.parseInt(input), PLACE_NAME.MONSTER);
+                    getGamePlay().getMyGameBoard().getPlace(Integer.parseInt(input), PLACE_NAME.HAND);
+            if (place.getCard() != null)
             if (toSummon.getCard().getType().equals("Ritual"))
                 break;
             printerAndScanner.printNextLine(youShouldRitualSummonRightNow);
@@ -72,13 +74,15 @@ public class RitualSummon implements SpecialAbility, StringMessages {
 
     private boolean checkCredibility(String[] tributes, int toEqual){
         for (String tribute : tributes) {
-            if (tribute.matches("\\D")) {
+            if (tribute.matches("[^12345]")) {
                 printerAndScanner.printNextLine(youShouldRitualSummonRightNow);
                 return false;
             }
             else if (gamePlayController.getGamePlay().getMyGameBoard().
-                    getPlace(Integer.parseInt(tribute), PLACE_NAME.MONSTER).getCard() == null)
+                    getPlace(Integer.parseInt(tribute), PLACE_NAME.MONSTER).getCard() == null) {
+                printerAndScanner.printNextLine(wrongCardCombination);
                 return false;
+            }
         }
         for (int i = 0; i < tributes.length; i++) {
             for (int j = i+1; j < tributes.length; j++) {
