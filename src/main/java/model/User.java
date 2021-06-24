@@ -1,9 +1,8 @@
 package model;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-// need to tell in group : transfer getUserByUsername func from userModel to loginController
-// todo : unit test for all functions
 
 public class User extends Player {
     private String username;
@@ -30,9 +29,6 @@ public class User extends Player {
 
     public static User createUser(String username, String password, String nickname) {
         return new User(username, password, nickname);
-        // todo : add user to users arraylists in loginController
-        // todo : handleCreateNewUserProblems such as repetitive username, weak password
-        // todo : check user problems by assignments
     }
 
 
@@ -97,57 +93,50 @@ public class User extends Player {
     }
 
     public Deck getDeckByName(String name) {
-        if(decks.containsKey(name))
+        if (decks.containsKey(name))
             return decks.get(name);
         return null;
-        // can be null
     }
 
     public Deck getDeck(String name) {
         return decks.get(name);
-        // can be null
     }
 
 
     public void addDeck(Deck deck) {
-        // is deck with this name already exists
         decks.put(deck.getName(), deck);
     }
 
     public void deleteDeck(String name) {
-        // is deck with this name exists
         decks.remove(name);
     }
 
     public void changeBalance(int amount) {
         this.balance += amount;
-        // amount can be negative
     }
 
     public void changeScore(int amount) {
         this.score += amount;
-        // amount can be negative
     }
 
     public void addCards(String name) {
-        // is card with this name already exists
         cards.add(name);
     }
 
-    public void removeCardFromCardsWithoutDeck(String cardName){
+    public void removeCardFromCardsWithoutDeck(String cardName) {
         cards.remove(cardName);
     }
 
-    public void addCardToCardsWithoutDeck(String cardName){
+    public void addCardToCardsWithoutDeck(String cardName) {
         cards.add(cardName);
     }
 
-    public boolean isCardWithThisNameExists(String cardName){
+    public boolean isCardWithThisNameExists(String cardName) {
         return cards.contains(cardName);
     }
 
-    public void addCardToJustShowCards(String cardName){
-        if(!cardsToJustShow.contains(cardName))
+    public void addCardToJustShowCards(String cardName) {
+        if (!cardsToJustShow.contains(cardName))
             cardsToJustShow.add(cardName);
     }
 }

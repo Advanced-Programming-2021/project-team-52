@@ -29,7 +29,7 @@ public class Shop {
     }
 
     public int getItemPrize(String name) {
-            return items.get(name);
+        return items.get(name);
     }
 
     public String toString() {
@@ -44,7 +44,7 @@ public class Shop {
         return response.toString();
     }
 
-    public String getAllCardsWithPrice(){
+    public String getAllCardsWithPrice() {
         return toString();
 
     }

@@ -62,8 +62,10 @@ public class NewDuelController implements RegexPatterns, StringMessages {
                     if (rounds == 1 || rounds == 3)
                         return true;
                     else PRINTER_AND_SCANNER.printNextLine(numberOfRoundsIsNotSupported);
-                } else PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.userDoesntHaveActiveDeck(guest.getUsername()));
-            } else PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.userDoesntHaveActiveDeck(host.getUsername()));
+                } else PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.
+                        userDoesntHaveActiveDeck(guest.getUsername()));
+            } else PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.
+                    userDoesntHaveActiveDeck(host.getUsername()));
         } else PRINTER_AND_SCANNER.printNextLine(thereIsNoPlayerWithThisUsername);
         return false;
     }
@@ -128,7 +130,8 @@ public class NewDuelController implements RegexPatterns, StringMessages {
                         currentPlayer.getGamePlay().getOpponentGamePlayController().getGamePlay().getName()
                 ));
                 currentPlayer.run();
-                currentPlayer = currentPlayer == hostGamePlayController ? guestGamePlayController : hostGamePlayController;
+                currentPlayer = currentPlayer == hostGamePlayController ?
+                        guestGamePlayController : hostGamePlayController;
             }
             while (hostGameBoard.getHealth() > 0 && guestGameBoard.getHealth() > 0);
             rounds--;

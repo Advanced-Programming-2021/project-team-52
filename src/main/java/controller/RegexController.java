@@ -6,11 +6,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public abstract class RegexController implements RegexPatterns{
+public abstract class RegexController implements RegexPatterns {
 
     private static Matcher matcher;
 
-    public static Matcher getMatcher(String command, Pattern pattern){
+    public static Matcher getMatcher(String command, Pattern pattern) {
 //        command = command.concat(" ");
         matcher = pattern.matcher(command);
         if (matcher.find())
@@ -18,10 +18,10 @@ public abstract class RegexController implements RegexPatterns{
         else return null;
     }
 
-    public static boolean hasField(Matcher matcher, String field){
+    public static boolean hasField(Matcher matcher, String field) {
         try {
             return (matcher.group(field) != null);
-        } catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }

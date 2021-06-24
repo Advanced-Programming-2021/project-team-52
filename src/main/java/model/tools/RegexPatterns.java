@@ -6,7 +6,8 @@ public interface RegexPatterns {
     Pattern loginPattern = Pattern.compile("^user login(?!.*(?:--password|-p).*(?:--password|-p))(?!.*(?:--username|" +
             "-u).*(?:--username|-u))(?=.*(?:--username|-u))(?=.*(?:--password|-p))(?: (?:(?:--password|-p) (?<passwo" +
             "rd>\\S+)|(?:--username|-u) (?<username>\\S+)))+$");
-    Pattern menuPattern = Pattern.compile("^menu (?:(?:enter (?<enter>\\w+))|(?<exit>exit)|(?<showCurrent>show-current))" +
+    Pattern menuPattern = Pattern.compile("^menu (?:(?:enter (?<enter>\\w+))|(?<exit>exit)|" +
+            "(?<showCurrent>show-current))" +
             "$");
     Pattern userCreatPattern = Pattern.compile("^user create(?!.*(?:--password|-p).*(?:--password|-p))(?!.*(?:--user" +
             "name|-u).*(?:--username|-u))(?!.*(?:--nickname|-n).*(?:--nickname|-n))(?=.*(?:--username|-u))(?=.*(?:--" +
@@ -20,14 +21,15 @@ public interface RegexPatterns {
     Pattern cardShowPattern = Pattern.compile("^card show (?<card>[^-]+|--selected|-s)$");
     Pattern deckCreatePattern = Pattern.compile("^deck create (?<deck>[^-]+)$");
     Pattern deckDeletePattern = Pattern.compile("^deck delete (?<deck>[^-]+)$");
-    Pattern deckSetActivePattern = Pattern.compile("^deck set-active (?<deck>[^-]+)$");
-    Pattern deckAddCardPattern = Pattern.compile("^(?=deck (?:add|rm)-card(?: --?\\w+(?: [^-]+)?)+)deck (?<addOrRemove>ad" +
+    Pattern deckSetActivePattern = Pattern.compile("^deck set-activate (?<deck>[^-]+)$");
+    Pattern deckAddCardPattern = Pattern.compile("^(?=deck (?:add|rm)-card(?: --?\\w+(?: [^-]+)?)+)deck " +
+            "(?<addOrRemove>ad" +
             "d|rm)-card(?!.*(?:--card|-c).*(?:--card|-c))(?!.*(?:--deck|-d).*(?:--deck|-d))(?!.*(?:--side|-s).*(?:--" +
             "side|-s))(?=.*(?:--card|-c))(?=.*(?:--deck|-d))(?: (?:(?:--card|-c) (?<card>[^-]+)|(?:--deck|-d) (?<dec" +
             "k>[^-]+)|(?<side>--side|-s)))+$");
-    Pattern deckShowPattern = Pattern.compile("^deck show(?: (?:--all|-a)(?<all>)| (?:--cards|-c)(?<card>)|(?!.*(?:-" +
-            "-deck|-d).*(?:--deck|-d))(?!.*(?:--side|-s).*(?:--side|-s))(?=.*(?:--deck|-d))(?: (?:(?:--deck|-d) (?<d" +
-            "eck>[^-]+)|(?:--side|-s)(?<side>)))+)$");
+    Pattern deckShowPattern = Pattern.compile("^deck show(?: (?:--all|-a)(?<all>)| (?:--cards|-c)(?<card>)|" +
+            "(?!.*(?:--deck-name|-dn).*(?:--deck-name|-dn))(?!.*(?:--side|-s).*(?:--side|-s))" +
+            "(?=.*(?:--deck-name|-dn))(?: (?:(?:--deck-name|-dn) (?<deck>[^-]+)|(?:--side|-s)(?<side>)))+)$");
     Pattern shopBuyPattern = Pattern.compile("^shop (?:buy (?<card>[^-]+)|show (?:--all|-a)(?<all>))$");
     Pattern newDuelPattern = Pattern.compile("^duel(?!.*(?:--second-player|-sp|--ai|-a).*(?:--second-player|-sp|--ai" +
             "|-a))(?!.*(?:--rounds|-r).*(?:--rounds|-r))(?!.*(?:--new|-n).*(?:--new|-n))(?=.*(?:--new|-n))(?=.*(?:--" +

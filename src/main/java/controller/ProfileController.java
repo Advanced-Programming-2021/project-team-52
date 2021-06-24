@@ -22,27 +22,32 @@ public class ProfileController implements RegexPatterns, StringMessages {
     }
 
 
-    public void run(User user) {
+    public void start(User user) {
         String command = printerAndScanner.scanNextLine();
         Matcher matcher;
-        while (true) {
-            if ((matcher = RegexController.getMatcher(command, profileChangeNickNamePattern)) != null) {
-                changeNickname(matcher.group("nickname"), user);
-            } else if ((matcher = RegexController.getMatcher(command, profileChangePasswordPattern)) != null) {
-                changePassword(matcher.group("new"), matcher.group("current"), user);
-            } else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
-                if (RegexController.hasField(matcher, "exit"))
-                    break;
-                else if (RegexController.hasField(matcher, "enter"))
-                    printerAndScanner.printNextLine(menuNavigationIsNotPossible);
-                else if (RegexController.hasField(matcher, "showCurrent"))
-                    showCurrent();
-                else
-                    printerAndScanner.printNextLine(invalidCommand);
-            } else
-                printerAndScanner.printNextLine(invalidCommand);
-            command = printerAndScanner.scanNextLine().toLowerCase();
+        while (!run(user, command)) {
+            command = printerAndScanner.scanNextLine();
         }
+    }
+
+    public boolean run(User user, String command) {
+        Matcher matcher;
+        if ((matcher = RegexController.getMatcher(command, profileChangeNickNamePattern)) != null) {
+            changeNickname(matcher.group("nickname"), user);
+        } else if ((matcher = RegexController.getMatcher(command, profileChangePasswordPattern)) != null) {
+            changePassword(matcher.group("new"), matcher.group("current"), user);
+        } else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
+            if (RegexController.hasField(matcher, "exit"))
+                return true;
+            else if (RegexController.hasField(matcher, "enter"))
+                printerAndScanner.printNextLine(menuNavigationIsNotPossible);
+            else if (RegexController.hasField(matcher, "showCurrent"))
+                showCurrent();
+            else
+                printerAndScanner.printNextLine(invalidCommand);
+        } else
+            printerAndScanner.printNextLine(invalidCommand);
+        return false;
     }
 
 

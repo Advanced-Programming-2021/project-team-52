@@ -70,7 +70,8 @@ public class ScoreBoardControllerTest extends PrintBuilderController implements 
                 "2- aliRahjm: 20\n" +
                 "2- aziRahim: 20\n" +
                 "7- mamad: 10\n" +
-                "8- akbar: 9", ScoreBoardController.getInstance().toString().trim().replace("\r", ""));
+                "8- akbar: 9"
+                , ScoreBoardController.getInstance().toString().trim().replace("\r", ""));
 
         ProfileController.getInstance().changeNickname("parsa", LoginController.getUserByUsername("asghar"));
 
@@ -82,7 +83,8 @@ public class ScoreBoardControllerTest extends PrintBuilderController implements 
                 "2- aliRahjm: 20\n" +
                 "2- aziRahim: 20\n" +
                 "7- mamad: 10\n" +
-                "8- akbar: 9", ScoreBoardController.getInstance().toString().trim().replace("\r", ""));
+                "8- akbar: 9"
+                , ScoreBoardController.getInstance().toString().trim().replace("\r", ""));
 
     }
 
@@ -93,5 +95,38 @@ public class ScoreBoardControllerTest extends PrintBuilderController implements 
         ScoreBoardController.showCurrent();
         Assertions.assertEquals(getShowCurrentInScoreboardController,
                 outContent.toString().trim().replace("\r", ""));
+    }
+
+    @Test
+    public void testRegexes(){
+        System.setOut(new PrintStream(outContent));
+        LoginController loginController = LoginController.getInstance();
+        ScoreBoardController scoreBoardController = ScoreBoardController.getInstance();
+
+        loginController.createUser("AliRahim", "12345AaZz", "AliRahim");
+        User user = LoginController.getUserByUsername("AliRahim");
+
+        outContent.reset();
+        scoreBoardController.run("scoreboard show");
+        Assertions.assertEquals("1- AliRahim: 0",
+                outContent.toString().trim().replace("\r", ""));
+
+        Assertions.assertTrue(scoreBoardController.run("menu exit"));
+
+        outContent.reset();
+        scoreBoardController.run("menu enter profile");
+        Assertions.assertEquals(menuNavigationIsNotPossible,
+                outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        scoreBoardController.run("menu show-current");
+        Assertions.assertEquals(getShowCurrentInScoreboardController,
+                outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        scoreBoardController.run("menu sdfsdf");
+        Assertions.assertEquals(invalidCommand,
+                outContent.toString().trim().replace("\r", ""));
+
     }
 }

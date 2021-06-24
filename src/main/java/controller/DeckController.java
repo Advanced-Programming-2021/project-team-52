@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import model.Deck;
 import model.User;
 import model.cards.Cards;
+import model.cards.spell.SpellCards;
 import model.tools.RegexPatterns;
 import model.tools.StringMessages;
 import view.PrinterAndScanner;
@@ -27,46 +28,55 @@ public class DeckController implements RegexPatterns, StringMessages {
         return deckController;
     }
 
-    public void setAddCardCheat(boolean addCardCheat) {
-        DeckController.addCardCheat = addCardCheat;
-    }
 
-    public boolean isAddCardCheat() {
-        return addCardCheat;
-    }
-
-    public void run(User user) {
+    public void start(User user) {
         String command = printerAndScanner.scanNextLine();
-        Matcher matcher;
-        while (true) {
-            if ((matcher = RegexController.getMatcher(command, deckCreatePattern)) != null)
-                createDeck(matcher.group("deck"), user);
-            else if ((matcher = RegexController.getMatcher(command, deckDeletePattern)) != null)
-                deleteDeck(matcher.group("deck"), user);
-            else if ((matcher = RegexController.getMatcher(command, deckSetActivePattern)) != null)
-                activateDeck(matcher.group("deck"), user);
-            else if ((matcher = RegexController.getMatcher(command, deckAddCardPattern)) != null) {
-                if (matcher.group("addOrRemove").equals("add"))
-                    addCardToDeck(matcher.group("card"), matcher.group("deck")
-                            , matcher.group("side") == null, user);
-                else if (matcher.group("addOrRemove").equals("rm"))
-                    removeCardFromDeck(matcher.group("card"), matcher.group("deck")
-                            , matcher.group("side") == null, user);
-                else
-                    printerAndScanner.printNextLine(invalidCommand);
-            } else if ((matcher = RegexController.getMatcher(command, deckShowPattern)) != null) {
-                if (RegexController.hasField(matcher, "all"))
-                    showAllDecks(user);
-                else if (RegexController.hasField(matcher, "deck")) {
-                    showDeck(user, matcher.group("deck"), RegexController.hasField(matcher, "side"));
-                } else if (RegexController.hasField(matcher, "card")) {
-                    showAllUserCards(user);
-                } else
-                    printerAndScanner.printNextLine(invalidCommand);
-            } else
-                printerAndScanner.printNextLine(invalidCommand);
+        while (!run(user, command)) {
             command = printerAndScanner.scanNextLine();
         }
+    }
+
+    public boolean run(User user, String command) {
+        Matcher matcher;
+        if ((matcher = RegexController.getMatcher(command, deckCreatePattern)) != null)
+            createDeck(matcher.group("deck"), user);
+        else if ((matcher = RegexController.getMatcher(command, deckDeletePattern)) != null)
+            deleteDeck(matcher.group("deck"), user);
+        else if ((matcher = RegexController.getMatcher(command, deckSetActivePattern)) != null)
+            activateDeck(matcher.group("deck"), user);
+        else if((matcher = RegexController.getMatcher(command, cardShowPattern)) != null)
+            printerAndScanner.printNextLine(printBuilderController.
+                    showOneCard(Cards.getCard(matcher.group("card"))));
+        else if ((matcher = RegexController.getMatcher(command, deckAddCardPattern)) != null) {
+            if (matcher.group("addOrRemove").equals("add"))
+                addCardToDeck(matcher.group("card"), matcher.group("deck")
+                        , matcher.group("side") != null, user);
+            else if (matcher.group("addOrRemove").equals("rm"))
+                removeCardFromDeck(matcher.group("card"), matcher.group("deck")
+                        , matcher.group("side") != null, user);
+            else
+                printerAndScanner.printNextLine(invalidCommand);
+        } else if ((matcher = RegexController.getMatcher(command, deckShowPattern)) != null) {
+            if (RegexController.hasField(matcher, "all"))
+                showAllDecks(user);
+            else if (RegexController.hasField(matcher, "deck")) {
+                showDeck(user, matcher.group("deck"), RegexController.hasField(matcher, "side"));
+            } else if (RegexController.hasField(matcher, "card")) {
+                showAllUserCards(user);
+            } else
+                printerAndScanner.printNextLine(invalidCommand);
+        } else if((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
+            if (RegexController.hasField(matcher, "exit"))
+                return true;
+            else if (RegexController.hasField(matcher, "enter"))
+                printerAndScanner.printNextLine(menuNavigationIsNotPossible);
+            else if (RegexController.hasField(matcher, "showCurrent"))
+                showCurrent();
+            else
+                printerAndScanner.printNextLine(invalidCommand);
+        } else
+            printerAndScanner.printNextLine(invalidCommand);
+        return false;
     }
 
     public void createDeck(String deckName, User user) {
@@ -142,7 +152,8 @@ public class DeckController implements RegexPatterns, StringMessages {
         return false;
     }
 
-    private boolean checkNumberOfCardsWithDifferentStatus(String cardName, String deckName, Deck deck, int numberOfStatus) {
+    private boolean checkNumberOfCardsWithDifferentStatus(String cardName, String deckName, Deck deck,
+                                                          int numberOfStatus) {
         if (deck.numberOfThisCardInDeck(cardName) >= numberOfStatus) {
             printerAndScanner.printNextLine(printBuilderController.
                     thereAreAlreadyThreeCardsWithThisNameInThisDeck(cardName, deckName, numberOfStatus));
@@ -177,4 +188,17 @@ public class DeckController implements RegexPatterns, StringMessages {
     public void showAllUserCards(User user) {
         printerAndScanner.printNextLine(printBuilderController.showAllCardsOfUser(user.getCardsToJustShow()));
     }
+
+    public void showCurrent(){
+        printerAndScanner.printNextLine(showCurrentInDeckController);
+    }
+
+    public void setAddCardCheat(boolean addCardCheat) {
+        DeckController.addCardCheat = addCardCheat;
+    }
+
+    public boolean isAddCardCheat() {
+        return addCardCheat;
+    }
+
 }

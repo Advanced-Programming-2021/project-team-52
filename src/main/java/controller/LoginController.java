@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 import static model.tools.StringMessages.*;
 
-// todo : fix problems of pattern for username, password and nickname in Pattern regexes
 public class LoginController implements RegexPatterns {
 
     static LoginController loginController = null;
@@ -23,7 +22,6 @@ public class LoginController implements RegexPatterns {
     static HashMap<String, User> users;
     private static PrintBuilderController printBuilderController;
     private static PrinterAndScanner printerAndScanner;
-//    private boolean loginChecker = false;
 
     //TODO remove next block
     static {
@@ -67,7 +65,7 @@ public class LoginController implements RegexPatterns {
 
     public static void main(String[] args) throws IOException, CsvException {
 //        instantiateCards();
-        LoginController.getInstance().run();
+        LoginController.getInstance().start();
     }
 
     public static LoginController getInstance() {
@@ -79,26 +77,32 @@ public class LoginController implements RegexPatterns {
         return nickNames;
     }
 
-    public void run() {
+    public void start() {
         String command = printerAndScanner.scanNextLine();
-        Matcher matcher;
         while (true) {
-            if ((matcher = RegexController.getMatcher(command, loginPattern)) != null) {
-                if (loginUser(matcher.group("username"), matcher.group("password")))
-                    MainController.getInstance().run(users.get(matcher.group("username")));
-            } else if ((matcher = RegexController.getMatcher(command, userCreatPattern)) != null) {
-                createUser(matcher.group("username"), matcher.group("password"), matcher.group("nickname"));
-            } else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
-                if (RegexController.hasField(matcher, "showCurrent")) {
-                    showCurrentMenu();
-                } else if (RegexController.hasField(matcher, "exit")) {
-                    break;
-                } else if (RegexController.hasField(matcher, "enter")) {
-                    printerAndScanner.printNextLine(loginFirst);
-                } else printerAndScanner.printNextLine(invalidCommand);
-            } else printerAndScanner.printNextLine(invalidCommand);
+            if (run(command)) break;
             command = printerAndScanner.scanNextLine();
         }
+    }
+
+    public boolean run(String command) {
+        Matcher matcher;
+        if ((matcher = RegexController.getMatcher(command, loginPattern)) != null) {
+            if (loginUser(matcher.group("username"), matcher.group("password")))
+                MainController.getInstance().start(users.get(matcher.group("username")));
+        } else if ((matcher = RegexController.getMatcher(command, userCreatPattern)) != null) {
+            createUser(matcher.group("username"), matcher.group("password"),
+                    matcher.group("nickname"));
+        } else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
+            if (RegexController.hasField(matcher, "showCurrent")) {
+                showCurrentMenu();
+            } else if (RegexController.hasField(matcher, "exit")) {
+                return true;
+            } else if (RegexController.hasField(matcher, "enter")) {
+                printerAndScanner.printNextLine(loginFirst);
+            } else printerAndScanner.printNextLine(invalidCommand);
+        } else printerAndScanner.printNextLine(invalidCommand);
+        return false;
     }
 
     public static void instantiateCards() throws IOException, CsvException {
@@ -106,16 +110,16 @@ public class LoginController implements RegexPatterns {
 
     }
 
-    private void showCurrentMenu() {
+    public void showCurrentMenu() {
         printerAndScanner.printNextLine(showLoginMenu);
     }
 
     public void createUser(String username, String password, String nickname) {
         if (RegexController.getMatcher(username, standardUsernameAndNickname) == null)
             printerAndScanner.printNextLine(createUserFailedBecauseOfUsername);
-        else if ( RegexController.getMatcher(nickname, standardUsernameAndNickname) == null)
+        else if (RegexController.getMatcher(nickname, standardUsernameAndNickname) == null)
             printerAndScanner.printNextLine(createUserFailedBecauseOfNickname);
-        else if ( RegexController.getMatcher(password, standardPassword) == null)
+        else if (RegexController.getMatcher(password, standardPassword) == null)
             printerAndScanner.printNextLine(createUserFailedBecauseOfPasswordWeakness);
         else if (userNames.contains(username)) {
             //bug fixed
@@ -142,8 +146,8 @@ public class LoginController implements RegexPatterns {
         return true;
     }
 
-    public static User getUserByUsername(String username){
-        if(users.containsKey(username))
+    public static User getUserByUsername(String username) {
+        if (users.containsKey(username))
             return users.get(username);
         return null;
     }
