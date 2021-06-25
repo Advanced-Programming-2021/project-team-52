@@ -85,7 +85,7 @@ public class CommunicatorBetweenAIAndGameBoard {
         return spellsPlaces;
     }
 
-    public ArrayList<Place> getTrapCards(ArrayList<Place> places){
+    public ArrayList<Place> getTrapCards(ArrayList<Place> places) {
         ArrayList<Place> suitedCards = new ArrayList<>();
         for (Place place : places) {
             if (place.getCard() instanceof TrapCards) {
@@ -155,7 +155,8 @@ public class CommunicatorBetweenAIAndGameBoard {
                 if (((MonsterZone) AICardForAttack).getAttack() > getMonsterCardStrengthInMonsterZone(monsterPlace)) {
                     if (bestCardToAttack == null)
                         bestCardToAttack = monsterPlace;
-                    else if (getMonsterCardStrengthInMonsterZone(monsterPlace) > getMonsterCardStrengthInMonsterZone(bestCardToAttack))
+                    else if (getMonsterCardStrengthInMonsterZone(monsterPlace) > getMonsterCardStrengthInMonsterZone
+                            (bestCardToAttack))
                         bestCardToAttack = monsterPlace;
                 }
             }

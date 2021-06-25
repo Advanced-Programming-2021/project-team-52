@@ -19,58 +19,58 @@ public class LoginControllerTest {
     ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     LoginController loginController = LoginController.getInstance();
     User user;
-    
+
 
     @Test
     @DisplayName("create user test")
-    public void createUser(){
+    public void createUser() {
 
-        loginController.createUser("mamad","12345MFm52", "gholi");
+        loginController.createUser("mamad", "12345MFm52", "gholi");
 
         System.setOut(new PrintStream(outContent));
 
         outContent.reset();
         LoginController loginController = LoginController.getInstance();
         loginController.createUser("AliRahim@", "12345Nf2", "ali");
-      //  loginController.loginUser("AliRahim@", "12345Nf2");
+        //  loginController.loginUser("AliRahim@", "12345Nf2");
         Assertions.assertEquals(createUserFailedBecauseOfUsername,
-                outContent.toString().trim().replace("\r",""));
+                outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        loginController.createUser("AliRahim","12345", "ali#");
+        loginController.createUser("AliRahim", "12345", "ali#");
         Assertions.assertEquals(createUserFailedBecauseOfNickname,
-                outContent.toString().trim().replace("\r",""));
+                outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        loginController.createUser("AliRahim","1234575", "ali");
+        loginController.createUser("AliRahim", "1234575", "ali");
         Assertions.assertEquals(createUserFailedBecauseOfPasswordWeakness,
-                outContent.toString().trim().replace("\r",""));
+                outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        loginController.createUser("AliRahim","12345ereR4", "ali@#");
+        loginController.createUser("AliRahim", "12345ereR4", "ali@#");
         Assertions.assertEquals(createUserFailedBecauseOfNickname,
-                outContent.toString().trim().replace("\r",""));
-
-       outContent.reset();
-       loginController.createUser("mamad","123452MGr", "ali");
-       Assertions.assertEquals(printBuilderController.thisUsernameAlreadyExists("mamad"),
-               outContent.toString().trim().replace("\r",""));
-
-       outContent.reset();
-       loginController.createUser("AliRahim","1234523GTr", "gholi");
-       Assertions.assertEquals(printBuilderController.thisNicknameAlreadyExists("gholi"),
-               outContent.toString().trim().replace("\r",""));
+                outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        loginController.createUser("AliRahim","12345ereR4", "ali");
+        loginController.createUser("mamad", "123452MGr", "ali");
+        Assertions.assertEquals(printBuilderController.thisUsernameAlreadyExists("mamad"),
+                outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        loginController.createUser("AliRahim", "1234523GTr", "gholi");
+        Assertions.assertEquals(printBuilderController.thisNicknameAlreadyExists("gholi"),
+                outContent.toString().trim().replace("\r", ""));
+
+        outContent.reset();
+        loginController.createUser("AliRahim", "12345ereR4", "ali");
         Assertions.assertEquals(createUserSuccessfully,
-                outContent.toString().trim().replace("\r",""));
+                outContent.toString().trim().replace("\r", ""));
 
     }
 
     @Test
     @DisplayName("login User checker")
-    public void loginUser(){
+    public void loginUser() {
         loginController.createUser("AliRahim", "123456TGg", "AliBala");
 
         System.setOut(new PrintStream(outContent));
@@ -93,7 +93,7 @@ public class LoginControllerTest {
 
     @Test
     @DisplayName("menu checker")
-    public void showCurrentMenu(){
+    public void showCurrentMenu() {
         System.setOut(new PrintStream(outContent));
         outContent.reset();
         loginController.showCurrentMenu();
@@ -103,17 +103,13 @@ public class LoginControllerTest {
     }
 
     @Test
-    public void runChecker(){
+    public void runChecker() {
         System.setOut(new PrintStream(outContent));
 
         outContent.reset();
         loginController.run("user create --username ali_r --nickname ali --password 1234asAs");
-        Assertions.assertEquals(createUserSuccessfully, outContent.toString().trim().replace("\r", ""));
-
-//        outContent.reset();
-//        loginController.run("user login --username ali_r --password 1234asAs");
-//        lo
-//        Assertions.assertEquals(userLoggedInSuccessfully, outContent.toString().trim().replace("\r", ""));
+        Assertions.assertEquals(createUserSuccessfully, outContent.toString().trim().
+                replace("\r", ""));
 
         outContent.reset();
         loginController.run("menu show-current");
@@ -132,7 +128,7 @@ public class LoginControllerTest {
     }
 
     @Test
-    public void getUserByUsernameTest(){
+    public void getUserByUsernameTest() {
         loginController.createUser("AliRahim", "123wwWWas123", "ali");
         loginController.createUser("mamad", "123wwWWas123", "ali");
 
@@ -140,25 +136,4 @@ public class LoginControllerTest {
         Assertions.assertNull(LoginController.getUserByUsername("aaa"));
 
     }
-
-
 }
-
-// import controller.LoginController;
-// import org.junit.jupiter.api.Assertions;
-// import org.junit.jupiter.api.Test;
-
-// import java.io.ByteArrayOutputStream;
-// import java.io.PrintStream;
-
-// public class LoginControllerTest {
-//     @Test
-//     public void createUser(){
-//         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-//         System.setOut(new PrintStream(outContent));
-//         LoginController loginController = LoginController.getInstance();
-//         loginController.createUser("AliRahim", "12345", "ali");
-// //        loginController.loginUser("AliRahim", "543");
-//         Assertions.assertEquals("Username and password didn't match!", outContent.toString());
-//     }
-// }

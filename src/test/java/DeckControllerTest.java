@@ -71,13 +71,13 @@ public class DeckControllerTest extends PrintBuilderController implements String
         outContent.reset();
         deckController.showAllDecks(user);
         Assertions.assertEquals("Decks:\n" +
-                "Active deck:\n" +
-                "Other decks:\n" +
-                "1oodDeck: main deck 0, side deck 0, invalid\n" +
-                "GoodDeck: main deck 0, side deck 0, invalid\n" +
-                "ZerfectDeck: main deck 0, side deck 0, invalid\n" +
-                "goodDeck: main deck 0, side deck 0, invalid\n" +
-                "perfectDeck: main deck 0, side deck 0, invalid" ,
+                        "Active deck:\n" +
+                        "Other decks:\n" +
+                        "1oodDeck: main deck 0, side deck 0, invalid\n" +
+                        "GoodDeck: main deck 0, side deck 0, invalid\n" +
+                        "ZerfectDeck: main deck 0, side deck 0, invalid\n" +
+                        "goodDeck: main deck 0, side deck 0, invalid\n" +
+                        "perfectDeck: main deck 0, side deck 0, invalid",
                 outContent.toString().trim().replace("\r", ""));
     }
 
@@ -280,35 +280,34 @@ public class DeckControllerTest extends PrintBuilderController implements String
     }
 
     @Test
-    public void testRegex(){
+    public void testRegex() {
         PrintBuilderController printBuilderController = PrintBuilderController.getInstance();
         System.setOut(new PrintStream(outContent));
 
         outContent.reset();
-        deckController.run(user,"deck create poop");
+        deckController.run(user, "deck create poop");
         Assertions.assertEquals(deckCreatedSuccessfully,
                 outContent.toString().trim().replace("\r", ""));
 
 
-
         outContent.reset();
-        deckController.run(user,"deck set-activate poop");
+        deckController.run(user, "deck set-activate poop");
         Assertions.assertEquals(deckActivatedSuccessfully,
                 outContent.toString().trim().replace("\r", ""));
 
 
         outContent.reset();
-        deckController.run(user,"deck add-card --card Battle OX --deck poop --side");
+        deckController.run(user, "deck add-card --card Battle OX --deck poop --side");
         Assertions.assertEquals(cardAddedToDeckSuccessfully,
                 outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        deckController.run(user,"deck rm-card --card Battle OX --deck poop --side");
+        deckController.run(user, "deck rm-card --card Battle OX --deck poop --side");
         Assertions.assertEquals(cardRemovedFormDeckSuccessfully,
                 outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        deckController.run(user,"deck show --all");
+        deckController.run(user, "deck show --all");
         Assertions.assertEquals("Decks:\n" +
                         "Active deck:\n" +
                         "poop: main deck 0, side deck 0, invalid\n" +
@@ -317,9 +316,9 @@ public class DeckControllerTest extends PrintBuilderController implements String
                         "perfectDeck: main deck 0, side deck 0, invalid",
                 outContent.toString().trim().replace("\r", ""));
 
-        deckController.run(user,"deck add-card --card Battle OX --deck poop --side");
+        deckController.run(user, "deck add-card --card Battle OX --deck poop --side");
         outContent.reset();
-        deckController.run(user,"deck show --deck-name poop --side");
+        deckController.run(user, "deck show --deck-name poop --side");
         Assertions.assertEquals("Deck: poop\n" +
                         "Monsters: \n" +
                         "Battle OX: A monster with tremendous power, it destroys enemies with a swing of its axe.\n" +
@@ -328,7 +327,7 @@ public class DeckControllerTest extends PrintBuilderController implements String
                 outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        deckController.run(user,"deck show --cards");
+        deckController.run(user, "deck show --cards");
         Assertions.assertEquals("Alexandrite Dragon: Many of the czars' lost jewels can be" +
                         " found in the scales of this priceless dragon. Its creator remains a mystery," +
                         " along with how they acquired the imperial treasures." +
@@ -345,47 +344,46 @@ public class DeckControllerTest extends PrintBuilderController implements String
                 outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        deckController.run(user,"deck delete poop");
+        deckController.run(user, "deck delete poop");
         Assertions.assertEquals(deckDeletedSuccessfully,
                 outContent.toString().trim().replace("\r", ""));
 
-        Assertions.assertTrue(deckController.run(user,"menu exit"));
+        Assertions.assertTrue(deckController.run(user, "menu exit"));
 
         outContent.reset();
-        deckController.run(user,"menu enter profile");
+        deckController.run(user, "menu enter profile");
         Assertions.assertEquals(menuNavigationIsNotPossible,
                 outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        deckController.run(user,"menu show-current");
+        deckController.run(user, "menu show-current");
         Assertions.assertEquals(showCurrentInDeckController,
                 outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        deckController.run(user,"menu sdfsdf");
+        deckController.run(user, "menu sdfsdf");
         Assertions.assertEquals(invalidCommand,
                 outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        deckController.run(user,"card show Mind Crush");
+        deckController.run(user, "card show Mind Crush");
         Assertions.assertEquals(printBuilderController.showOneCard(Cards.getCard("Mind Crush")),
                 outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        deckController.run(user,"card show Battle OX");
+        deckController.run(user, "card show Battle OX");
         Assertions.assertEquals(printBuilderController.showOneCard(Cards.getCard("Battle OX")),
                 outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        deckController.run(user,"card show Yami");
+        deckController.run(user, "card show Yami");
         Assertions.assertEquals(printBuilderController.showOneCard(Cards.getCard("Yami")),
                 outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        deckController.run(user,"card show sfd");
+        deckController.run(user, "card show sfd");
         Assertions.assertEquals(printBuilderController.showOneCard(Cards.getCard("sfd")),
                 outContent.toString().trim().replace("\r", ""));
-
 
     }
 }

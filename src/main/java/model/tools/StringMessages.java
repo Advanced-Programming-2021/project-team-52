@@ -128,6 +128,15 @@ public interface StringMessages {
     String noCardWithThisName = "there is no card with this name";
     String notEnoughMoney = "not enough money";
 
+    // ImportAndExportController
+    String cardWithThisNameIsNotValid = "card with this name is not valid";
+    String cardWithThisNameHasAlreadyExported = "card with this name already exported";
+    String cardExportedSuccessfully = "card has been exported successfully";
+    String thereIsNoCardWithThisNameToImport = "there is no card with this name to import";
+    String thereIsAlreadyACardWithThisName = "there is already a card with this name";
+    String cardImportedSuccessfully = "card has been imported successfully";
+    String error = "Error";
+
 
     // Menu show current
     String showCurrentInProfileController = "Profile menu :\n" +
@@ -145,6 +154,11 @@ public interface StringMessages {
             "menu exit";
     String getShowCurrentInScoreboardController = "Scoreboard menu :\n" +
             "scoreboard show\n" +
+            "menu show-current\n" +
+            "menu exit";
+    String showCurrentInExportAndImportController = "Import and Export menu :\n" +
+            "import card <card name>\n" +
+            "export card <card name>\n" +
             "menu show-current\n" +
             "menu exit";
     String showCurrentInDeckController = "Deck menu:\n" +
@@ -198,8 +212,10 @@ public interface StringMessages {
             "user login -u <username> -p <password>\n" +
             "menu show-current\n" +
             "menu exit";
-    String createUserFailedBecauseOfUsername = "create user failed! only letter, digit or underscore are valid for username";
-    String createUserFailedBecauseOfNickname = "create user failed! only letter, digit or underscore are valid for nickname";
+    String createUserFailedBecauseOfUsername = "create user failed! only letter," +
+            " digit or underscore are valid for username";
+    String createUserFailedBecauseOfNickname = "create user failed! only letter," +
+            " digit or underscore are valid for nickname";
     String createUserFailedBecauseOfPasswordWeakness = "weak password! please choose a password with\n" +
             "minimum eight characters, at least one uppercase letter, one lowercase letter and  one number";
     String createUserSuccessfully = "user created successfully!";

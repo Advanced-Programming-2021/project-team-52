@@ -7,6 +7,8 @@ import model.Shop;
 import model.cards.monster.MonsterCards;
 import model.cards.spell.SpellCards;
 import model.cards.trap.TrapCards;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvException;
 import model.game.STATUS;
 import model.tools.CHAIN_JOB;
 import model.tools.RegexPatterns;
@@ -25,7 +27,7 @@ public abstract class InstantiateCards implements RegexPatterns {
             try {
                 new MonsterCards(info[0], Integer.parseInt(info[1]), info[2], info[3], info[4],
                         Integer.parseInt(info[5]), Integer.parseInt(info[6]), info[7], info[9],
-                        Integer.parseInt(info[10]), loadSpecialAbilities(info[11].split("&&")));
+                        Integer.parseInt(info[10]), loadSpecialAbilities(info[11].split("&&")), info[11]);
                 Shop.addCard(info[0], Integer.parseInt(info[8]));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -37,7 +39,7 @@ public abstract class InstantiateCards implements RegexPatterns {
         list.forEach(info -> {
             try {
                 new TrapCards(info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[6]),
-                        loadSpecialAbilities(info[7].split("&&")), getChainJobs(info[8]));
+                        loadSpecialAbilities(info[7].split("&&")), getChainJobs(info[8]), info[7], info[8]);
                 Shop.addCard(info[0], Integer.parseInt(info[5]));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -49,7 +51,7 @@ public abstract class InstantiateCards implements RegexPatterns {
         list.forEach(info -> {
             try {
                 new SpellCards(info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[6]),
-                        loadSpecialAbilities(info[7].split("&&")), getChainJobs(info[8]));
+                        loadSpecialAbilities(info[7].split("&&")), getChainJobs(info[8]), info[7], info[8]);
                 Shop.addCard(info[0], Integer.parseInt(info[5]));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -57,7 +59,7 @@ public abstract class InstantiateCards implements RegexPatterns {
         });
     }
 
-    private static ArrayList<CHAIN_JOB> getChainJobs(String chainJobs) throws Exception {
+    public static ArrayList<CHAIN_JOB> getChainJobs(String chainJobs) throws Exception {
         ArrayList<CHAIN_JOB> jobs = new ArrayList<>();
         if (!chainJobs.equals("nothing")) {
             CHAIN_JOB thisJob;
@@ -71,7 +73,8 @@ public abstract class InstantiateCards implements RegexPatterns {
         return jobs;
     }
 
-    private static ArrayList<SpecialAbility> loadSpecialAbilities(String[] abilities) throws Exception {
+    public static ArrayList<SpecialAbility> loadSpecialAbilities(String[] abilities) throws Exception {
+        ArrayList<String> test = new ArrayList<>(Arrays.asList(abilities));
         if (abilities[0].equals("nothing"))
             return new ArrayList<>();
         else {

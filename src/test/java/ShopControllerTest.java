@@ -144,7 +144,7 @@ public class ShopControllerTest extends PrintBuilderController implements String
     }
 
     @Test
-    public void testRegex(){
+    public void testRegex() {
         loginController.createUser("AliRahim", "1234AaZz", "Ali");
         user = LoginController.getUserByUsername("AliRahim");
         System.setOut(new PrintStream(outContent));
@@ -237,28 +237,26 @@ public class ShopControllerTest extends PrintBuilderController implements String
         Assertions.assertEquals(invalidCommand,
                 outContent.toString().trim().replace("\r", ""));
 
-        Assertions.assertTrue(shopController.run(user,"menu exit"));
+        Assertions.assertTrue(shopController.run(user, "menu exit"));
 
         outContent.reset();
-        shopController.run(user,"menu enter profile");
+        shopController.run(user, "menu enter profile");
         Assertions.assertEquals(menuNavigationIsNotPossible,
                 outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        shopController.run(user,"menu show-current");
+        shopController.run(user, "menu show-current");
         Assertions.assertEquals(showCurrentInShopController,
                 outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        shopController.run(user,"menu sdfsdf");
+        shopController.run(user, "menu sdfsdf");
         Assertions.assertEquals(invalidCommand,
                 outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        shopController.run(user,"card show Yami");
+        shopController.run(user, "card show Yami");
         Assertions.assertEquals(printBuilderController.showOneCard(Cards.getCard("Yami")),
                 outContent.toString().trim().replace("\r", ""));
-
-
     }
 }

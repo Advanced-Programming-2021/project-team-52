@@ -93,16 +93,6 @@ public class Deck {
         return mainDeckCardCount >= 40;
     }
 
-    public void changeCardBetweenMainAndSideDeck(String cardNameFromMainToSide, String cardNameFromSideToMain) {
-        if (isCardWithThisNameExists(cardNameFromMainToSide, false)
-                && isCardWithThisNameExists(cardNameFromSideToMain, true)) {
-            allSideCards.remove(cardNameFromSideToMain);
-            allMainCards.add(cardNameFromSideToMain);
-            allMainCards.remove(cardNameFromMainToSide);
-            allSideCards.add(cardNameFromMainToSide);
-        }
-    }
-
     //TODO remove next functions
     public void addAllCardsToDeck() {
         allMainCards = new ArrayList<>(Cards.getAllNames());
