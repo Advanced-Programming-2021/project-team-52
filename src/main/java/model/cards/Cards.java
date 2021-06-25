@@ -15,6 +15,7 @@ public class Cards {
     private String name, type, description, status;
     private ArrayList<SpecialAbility> special;
     private int specialSpeed;//TODO add special speed to csv
+    private String specialsInString;
 //    private ArrayList<CHAIN_JOB> chainAfter;
 
     static{
@@ -22,13 +23,14 @@ public class Cards {
     }
 
     protected Cards(String name, String type, String description, String status, int specialSpeed,
-                    ArrayList<SpecialAbility> special/*, ArrayList<CHAIN_JOB> chainAfter*/){
+                    ArrayList<SpecialAbility> special/*, ArrayList<CHAIN_JOB> chainAfter*/, String specialsInString){
         this.name = name;
         this.type = type;
         this.description = description;
         this.status = status;
         this.special = special;
         this.specialSpeed = specialSpeed;
+        this.specialsInString = specialsInString;
 //        this.chainAfter = chainAfter;
     }
 
@@ -77,7 +79,11 @@ public class Cards {
         return specialSpeed;
     }
 
-//    public ArrayList<CHAIN_JOB> getChainJob() {
+    public String getSpecialsInString() {
+        return specialsInString;
+    }
+
+    //    public ArrayList<CHAIN_JOB> getChainJob() {
 //        return chainAfter;
 //    }
 

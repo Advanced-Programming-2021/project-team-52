@@ -18,6 +18,8 @@ public interface RegexPatterns {
             "?!.*(?:--new|-new).*(?:--new|-n))(?!.*(?:--password|-p).*(?:--password|-p))(?=.*(?:--current|-c))(?=.*(" +
             "?:--password|-p))(?=.*(?:--new|-n))(?: (?:(?:--current|-c) (?<current>\\S+)|(?:--new|-n) (?<new>\\S+)|(" +
             "?:--password|-p)))+$");
+    Pattern importCardPattern = Pattern.compile("^import card (?<cardName>[^-]+)$");
+    Pattern exportCardPattern = Pattern.compile("^export card (?<cardName>[^-]+)$");
     Pattern cardShowPattern = Pattern.compile("^card show (?<card>[^-]+|--selected|-s)$");
     Pattern deckCreatePattern = Pattern.compile("^deck create (?<deck>[^-]+)$");
     Pattern deckDeletePattern = Pattern.compile("^deck delete (?<deck>[^-]+)$");

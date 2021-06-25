@@ -1,7 +1,6 @@
 package controller.ai;
 
 import controller.PrintBuilderController;
-import model.AI;
 import model.cards.Cards;
 import model.cards.monster.MonsterCards;
 import model.game.*;
@@ -196,7 +195,7 @@ public class AIController extends CommunicatorBetweenAIAndGameBoard implements S
     }
 
     public String chainCommand(ArrayList<String> cards) {
-        if(isInActivateTrapProcess){
+        if (isInActivateTrapProcess) {
             isInActivateTrapProcess = false;
             return activateTrapAI;
         }
@@ -208,16 +207,16 @@ public class AIController extends CommunicatorBetweenAIAndGameBoard implements S
         ArrayList<Place> trapCards = getTrapCards(spellAndTrapZone);
         for (Place trapCard : trapCards) {
             String name = trapCard.getCard().getName();
-            if (goodTrapCards.contains(name) && cards.contains(name)){
+            if (goodTrapCards.contains(name) && cards.contains(name)) {
                 isInActivateTrapProcess = true;
                 return selectProcess(trapCard, PLACE_NAME.SPELL_AND_TRAP);
-            }else if(normalTrapCards.contains(name) && cards.contains(name)){
+            } else if (normalTrapCards.contains(name) && cards.contains(name)) {
                 boolean isConditionOkay = false;
-                if(name.equals("Torrential Tribute"))
+                if (name.equals("Torrential Tribute"))
                     isConditionOkay = torrentialTribute();
-                if(isConditionOkay){
+                if (isConditionOkay) {
                     isInActivateTrapProcess = true;
-                     return selectProcess(trapCard, PLACE_NAME.SPELL_AND_TRAP);
+                    return selectProcess(trapCard, PLACE_NAME.SPELL_AND_TRAP);
                 }
             }
         }
@@ -406,54 +405,64 @@ public class AIController extends CommunicatorBetweenAIAndGameBoard implements S
 
         if (!AIMonsterCardPlaces.isEmpty()) {
             if (opponentMonsterCardPlaces.isEmpty()) {
-                Place cardPlaceForAttack = gameBoardCommunicator.
-                        findBestMonsterCardByAttackByPlace(AIMonsterCardPlaces);
-                if (cardPlaceForAttack == null) {
-                    return "done";
-                } else {
-                    // direct attack with cardPlaceForAttack
-                    isInDirectAttackProcess = true;
-                    AIMonsterCardPlacesAlreadyAttacked.add(cardPlaceForAttack);
-                    return selectProcess(cardPlaceForAttack, PLACE_NAME.MONSTER);
-                }
+                return opponentWithOutCardScenario(AIMonsterCardPlaces);
             } else {
                 if (gameBoardCommunicator.doesOpponentHaveSetCard(opponentMonsterCardPlaces)) {
                     Place firstOpponentSetCard = gameBoardCommunicator.
                             getFirstSetMonsterCard(opponentMonsterCardPlaces);
                     if (firstOpponentSetCard != null) {
-                        Place cardPlaceForAttack = gameBoardCommunicator.
-                                findBestMonsterCardByAttackByPlace(AIMonsterCardPlaces);
-                        if (cardPlaceForAttack == null) {
-                            return "done";
-                        } else {
-                            // attack firstOpponentSetCard.getName
-                            AIMonsterCardPlacesAlreadyAttacked.add(cardPlaceForAttack);
-                            opponentMonsterCardPlacesAlreadyHaveBeenAttacked.add(firstOpponentSetCard);
-                            opponentMonsterCardToAttack.add(getNumberOfPlaceInGameBoard(opponentGameBoard,
-                                    firstOpponentSetCard, PLACE_NAME.MONSTER));
-                            return selectProcess(cardPlaceForAttack, PLACE_NAME.MONSTER);
-                        }
+                        return opponentWithSetCardScenario(AIMonsterCardPlaces, firstOpponentSetCard);
                     }
                 } else {
-                    Place cardPlaceForAttack = gameBoardCommunicator.
-                            findBestMonsterCardByAttackByPlace(AIMonsterCardPlaces);
-                    if (cardPlaceForAttack != null) {
-                        Place opponentCardPlaceToAttackTo = gameBoardCommunicator.
-                                getBestMonsterCardStrengthInMonsterZoneForAttack
-                                        (opponentMonsterCardPlaces, cardPlaceForAttack);
-                        // attack to opponentCardPlaceToAttackTo
-                        AIMonsterCardPlacesAlreadyAttacked.add(cardPlaceForAttack);
-                        opponentMonsterCardPlacesAlreadyHaveBeenAttacked.add(opponentCardPlaceToAttackTo);
-                        opponentMonsterCardToAttack.add(getNumberOfPlaceInGameBoard(opponentGameBoard,
-                                opponentCardPlaceToAttackTo, PLACE_NAME.MONSTER));
-                        return selectProcess(cardPlaceForAttack, PLACE_NAME.MONSTER);
-                    } else
-                        return "done";
+                    return opponentWithFaceDownScenario(AIMonsterCardPlaces, opponentMonsterCardPlaces);
                 }
             }
         } else
             return "done";
         return "done";
+    }
+
+    private String opponentWithFaceDownScenario(ArrayList<Place> AIMonsterCardPlaces,
+                                                ArrayList<Place> opponentMonsterCardPlaces) {
+        Place cardPlaceForAttack = gameBoardCommunicator.
+                findBestMonsterCardByAttackByPlace(AIMonsterCardPlaces);
+        if (cardPlaceForAttack != null) {
+            Place opponentCardPlaceToAttackTo = gameBoardCommunicator.
+                    getBestMonsterCardStrengthInMonsterZoneForAttack
+                            (opponentMonsterCardPlaces, cardPlaceForAttack);
+            AIMonsterCardPlacesAlreadyAttacked.add(cardPlaceForAttack);
+            opponentMonsterCardPlacesAlreadyHaveBeenAttacked.add(opponentCardPlaceToAttackTo);
+            opponentMonsterCardToAttack.add(getNumberOfPlaceInGameBoard(opponentGameBoard,
+                    opponentCardPlaceToAttackTo, PLACE_NAME.MONSTER));
+            return selectProcess(cardPlaceForAttack, PLACE_NAME.MONSTER);
+        } else
+            return "done";
+    }
+
+    private String opponentWithSetCardScenario(ArrayList<Place> AIMonsterCardPlaces, Place firstOpponentSetCard) {
+        Place cardPlaceForAttack = gameBoardCommunicator.
+                findBestMonsterCardByAttackByPlace(AIMonsterCardPlaces);
+        if (cardPlaceForAttack == null) {
+            return "done";
+        } else {
+            AIMonsterCardPlacesAlreadyAttacked.add(cardPlaceForAttack);
+            opponentMonsterCardPlacesAlreadyHaveBeenAttacked.add(firstOpponentSetCard);
+            opponentMonsterCardToAttack.add(getNumberOfPlaceInGameBoard(opponentGameBoard,
+                    firstOpponentSetCard, PLACE_NAME.MONSTER));
+            return selectProcess(cardPlaceForAttack, PLACE_NAME.MONSTER);
+        }
+    }
+
+    private String opponentWithOutCardScenario(ArrayList<Place> AIMonsterCardPlaces) {
+        Place cardPlaceForAttack = gameBoardCommunicator.
+                findBestMonsterCardByAttackByPlace(AIMonsterCardPlaces);
+        if (cardPlaceForAttack == null) {
+            return "done";
+        } else {
+            isInDirectAttackProcess = true;
+            AIMonsterCardPlacesAlreadyAttacked.add(cardPlaceForAttack);
+            return selectProcess(cardPlaceForAttack, PLACE_NAME.MONSTER);
+        }
     }
 
 
@@ -569,7 +578,6 @@ public class AIController extends CommunicatorBetweenAIAndGameBoard implements S
         ArrayList<Place> opponentMonsterZone = gameBoardCommunicator.getMonsterZone(opponentGameBoard);
         Place bestMonsterPlace = gameBoardCommunicator.findBestMonsterCardByAttackByPlace(opponentMonsterZone);
         if (bestMonsterPlace != null) {
-            // send message by bestMonsterPlace card
         }
     }
 
@@ -578,14 +586,12 @@ public class AIController extends CommunicatorBetweenAIAndGameBoard implements S
         ArrayList<Place> opponentSpellAndTrapPlace = gameBoardCommunicator.getSpellAndTrapZone(opponentGameBoard);
         for (Place place : opponentSpellAndTrapPlace) {
             if (place != null) {
-                // send this card to destroy
                 return;
             }
         }
         ArrayList<Place> AISpellAndTrapPlace = gameBoardCommunicator.getSpellAndTrapZone(AIGameBoard);
         for (Place place : AISpellAndTrapPlace) {
             if (place != null) {
-                // send this card to destroy
                 return;
             }
         }
@@ -628,7 +634,6 @@ public class AIController extends CommunicatorBetweenAIAndGameBoard implements S
 
     // checker
     public boolean umiiruka() {
-        // most of our cards are in attack position and DEF point isn't as important as ATK point
         ArrayList<String> goodCards = new ArrayList<>();
         goodCards.add("Aqua");
         ArrayList<String> badCards = new ArrayList<>();
@@ -637,18 +642,6 @@ public class AIController extends CommunicatorBetweenAIAndGameBoard implements S
         }
         return false;
     }
-
-// checker
-//    public void swordOfDarkDestruction(){
-//        // most of our cards are in attack position and DEF point isn't as important as ATK point
-//        ArrayList<String> goodCards = new ArrayList<>();
-//        goodCards.add("Fiend");
-//        goodCards.add("Spellcaster");
-//        ArrayList<String> badCards = new ArrayList<>();
-//        if(weightedCardCounter(goodCards, badCards, AIGameBoard, opponentGameBoard)){
-//            // activate spell
-//        }
-//    }
 
     // checker
     public boolean magnumShield() {
@@ -695,7 +688,6 @@ public class AIController extends CommunicatorBetweenAIAndGameBoard implements S
         ArrayList<Cards> AIGraveyard = AIGameBoard.getGraveyard();
         MonsterCards bestMonsterCard = findBestMonsterCardByCard(AIGraveyard);
         if (bestMonsterCard != null) {
-            // activate trap
         }
     }
 }

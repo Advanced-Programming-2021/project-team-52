@@ -6,7 +6,6 @@ import java.util.regex.Matcher;
 import model.Deck;
 import model.User;
 import model.cards.Cards;
-import model.cards.spell.SpellCards;
 import model.tools.RegexPatterns;
 import model.tools.StringMessages;
 import view.PrinterAndScanner;
@@ -44,7 +43,7 @@ public class DeckController implements RegexPatterns, StringMessages {
             deleteDeck(matcher.group("deck"), user);
         else if ((matcher = RegexController.getMatcher(command, deckSetActivePattern)) != null)
             activateDeck(matcher.group("deck"), user);
-        else if((matcher = RegexController.getMatcher(command, cardShowPattern)) != null)
+        else if ((matcher = RegexController.getMatcher(command, cardShowPattern)) != null)
             printerAndScanner.printNextLine(printBuilderController.
                     showOneCard(Cards.getCard(matcher.group("card"))));
         else if ((matcher = RegexController.getMatcher(command, deckAddCardPattern)) != null) {
@@ -65,7 +64,7 @@ public class DeckController implements RegexPatterns, StringMessages {
                 showAllUserCards(user);
             } else
                 printerAndScanner.printNextLine(invalidCommand);
-        } else if((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
+        } else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
             if (RegexController.hasField(matcher, "exit"))
                 return true;
             else if (RegexController.hasField(matcher, "enter"))
@@ -132,9 +131,9 @@ public class DeckController implements RegexPatterns, StringMessages {
         if (!addCardCheat) {
             if (card.getStatus().equals("Unlimited")) {
                 if (checkNumberOfCardsWithDifferentStatus(cardName, deckName, deck, 3)) return;
-            }else if (card.getStatus().equals("Half limited")) {
+            } else if (card.getStatus().equals("Half limited")) {
                 if (checkNumberOfCardsWithDifferentStatus(cardName, deckName, deck, 2)) return;
-            }else if (card.getStatus().equals("Limited")) {
+            } else if (card.getStatus().equals("Limited")) {
                 if (checkNumberOfCardsWithDifferentStatus(cardName, deckName, deck, 1)) return;
             }
         }
@@ -189,7 +188,7 @@ public class DeckController implements RegexPatterns, StringMessages {
         printerAndScanner.printNextLine(printBuilderController.showAllCardsOfUser(user.getCardsToJustShow()));
     }
 
-    public void showCurrent(){
+    public void showCurrent() {
         printerAndScanner.printNextLine(showCurrentInDeckController);
     }
 

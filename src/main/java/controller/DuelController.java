@@ -59,18 +59,23 @@ public class DuelController implements RegexPatterns, StringMessages {
                 System.out.println("invalid command");
                 deckSituation = "invalid";
             }
-            if (deckSituation.equals("isMainDeck") && deck.getMainDeckCardCount() > 40 && deck.getSideDeckCardCount() < 15) {
+            if (deckSituation.equals("isMainDeck") &&
+                    deck.getMainDeckCardCount() > 40 &&
+                    deck.getSideDeckCardCount() < 15) {
                 deck.getAllSideCards().remove(cardName);
                 deck.getAllMainCards().add(cardName);
             }
-            if (deckSituation.equals("isSideDeck") && deck.getSideDeckCardCount() > 0 && deck.getMainDeckCardCount() < 60) {
+            if (deckSituation.equals("isSideDeck") &&
+                    deck.getSideDeckCardCount() > 0 &&
+                    deck.getMainDeckCardCount() < 60) {
                 deck.getAllMainCards().remove(cardName);
                 deck.getAllSideCards().add(cardName);
             }
         }
     }
 
-    public void setDuelWinnerByCheat() {}
+    public void setDuelWinnerByCheat() {
+    }
 
     public void startDuel(User user, String opponentName, String numberOfRounds) {
         User opponentUser = LoginController.getUserByUsername(opponentName);
@@ -92,12 +97,12 @@ public class DuelController implements RegexPatterns, StringMessages {
             printerAndScanner.printNextLine(printBuilderController.userDeckIsInvalid(user.getUsername()));
             return;
         }
-        if(!opponentUserActiveDeck.isDeckValid()){
+        if (!opponentUserActiveDeck.isDeckValid()) {
             printerAndScanner.printNextLine(printBuilderController.userDeckIsInvalid(opponentName));
             return;
         }
         int numberOfRoundsInInteger = Integer.parseInt(numberOfRounds);
-        if(numberOfRoundsInInteger != 1 && numberOfRoundsInInteger != 3){
+        if (numberOfRoundsInInteger != 1 && numberOfRoundsInInteger != 3) {
             printerAndScanner.printNextLine(numberOfRoundsIsNotSupported);
             return;
         }

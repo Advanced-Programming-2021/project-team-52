@@ -28,16 +28,16 @@ public class MainController {
     }
 
     public void start(User user) {
-        String command = printerAndScanner.scanNextLine().toLowerCase();
+        String command = printerAndScanner.scanNextLine();
         while (!run(user, command)) {
-            command = printerAndScanner.scanNextLine().toLowerCase();
+            command = printerAndScanner.scanNextLine();
         }
         printerAndScanner.printNextLine(userLoggedOutSuccessfully);
     }
 
     public boolean run(User user, String command) {
         Matcher matcher;
-        if(command.equals("user logout"))
+        if (command.equals("user logout"))
             return true;
         else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
             if (RegexController.hasField(matcher, "enter")) {
@@ -55,6 +55,8 @@ public class MainController {
                 } else if (matcher.group("enter").equals("shop")) {
                     ShopController shopController = ShopController.getInstance();
                     shopController.start(user);
+                } else if (matcher.group("enter").equals("IE")) {
+                    ImportAndExportController.getInstance().run();
                 } else if (matcher.group("enter").equals("login")) {
                     printerAndScanner.printNextLine(impossibilityOfMenuNavigation);
                 } else {
@@ -66,7 +68,7 @@ public class MainController {
                 printerAndScanner.printNextLine(shouldLogoutToExit);
             } else
                 printerAndScanner.printNextLine(invalidCommand);
-        }else
+        } else
             printerAndScanner.printNextLine(invalidCommand);
         return false;
     }

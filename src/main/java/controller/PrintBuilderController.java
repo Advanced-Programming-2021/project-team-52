@@ -12,7 +12,6 @@ import model.game.Place;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.TreeMap;
 
 public class PrintBuilderController {
     private static PrintBuilderController printPrintBuilderController = null;
@@ -303,7 +302,8 @@ public class PrintBuilderController {
     }
 
     public StringBuilder askForPayingLp(String amount, String cardName) {
-        return new StringBuilder("do you want to pay ").append(amount).append(" LP to keep ").append(cardName).append("?");
+        return new StringBuilder("do you want to pay ").append(amount).append(" LP to keep ")
+                .append(cardName).append("?");
     }
 
     public StringBuilder askForLpForActivation(int amount){
@@ -318,7 +318,8 @@ public class PrintBuilderController {
         return new StringBuilder(username).append(" will start the game");
     }
 
-    public StringBuilder buildGameBoard(GameBoard currentPlayer, GameBoard opponent, String currentPlayerUsername, String opponentUsername){
+    public StringBuilder buildGameBoard(GameBoard currentPlayer, GameBoard opponent, String currentPlayerUsername,
+                                        String opponentUsername){
         StringBuilder board = new StringBuilder(opponentUsername);
         board.append(":").append(opponent.getHealth());
         board.append("\n").append("\tc").append("\tc").append("\tc").append("\tc").append("\tc");
@@ -337,7 +338,8 @@ public class PrintBuilderController {
         board.append("\t\t\t\t\t").append(getTheThing(opponent.getPlace(0, PLACE_NAME.FIELD)));
         board.append("\n\n--------------------------\n");
         board.append("\n").append(getTheThing(currentPlayer.getPlace(0, PLACE_NAME.FIELD)));
-        board.append("\t\t\t\t\t").append(currentPlayer.getGraveyard().size() != 0 ? currentPlayer.getGraveyard().size() : "E");
+        board.append("\t\t\t\t\t").append(currentPlayer.getGraveyard().size() != 0 ? currentPlayer.getGraveyard()
+                .size() : "E");
         board.append("\n\t").append(getTheThing(currentPlayer.getPlace(5, PLACE_NAME.MONSTER)));
         board.append("\t").append(getTheThing(currentPlayer.getPlace(3, PLACE_NAME.MONSTER)));
         board.append("\t").append(getTheThing(currentPlayer.getPlace(1, PLACE_NAME.MONSTER)));

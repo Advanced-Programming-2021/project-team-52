@@ -7,15 +7,15 @@ import model.game.Place;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MonsterCards extends Cards{
-//TODO add speed
+public class MonsterCards extends Cards {
+    //TODO add speed
     private int level, attack, defense;
     private String attribute, monsterType;
 
     public MonsterCards(String name, int level, String attribute, String monsterType,
                         String type, int attack, int defense, String description, String status, int specialSpeed,
-                        ArrayList<SpecialAbility> special){
-        super(name, type, description, status, specialSpeed, special);
+                        ArrayList<SpecialAbility> special, String specialsInString) {
+        super(name, type, description, status, specialSpeed, special, specialsInString);
         Cards.addCard(this, name);
         this.level = level;
         this.attack = attack;

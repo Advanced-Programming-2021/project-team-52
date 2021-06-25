@@ -1,14 +1,11 @@
 package model;
 
-import controller.PrintBuilderController;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class Shop {
     private static Shop shop = null;
-    private PrintBuilderController printBuilderController;
     private static HashMap<String, Integer> items;
 
     static {
