@@ -17,7 +17,7 @@ public class AttackSpecial implements SpecialAbility, StringMessages {
     private int amount;
 
     @Override
-    public void run(GamePlayController gamePlayController, Place place){
+    public void run(GamePlayController gamePlayController, Place place) {
         this.gamePlayController = gamePlayController;
         this.place = place;
         try {
@@ -41,11 +41,11 @@ public class AttackSpecial implements SpecialAbility, StringMessages {
         this.amount = amount;
     }
 
-    public void reduceAttackToZero(){ //TODO ++
+    public void reduceAttackToZero() {
         if (!gamePlayController.getGamePlay().getHistory().get(place).contains("noSpecial")) {
             printerAndScanner.printNextLine(askActivateSpecial);
             if (printerAndScanner.scanNextLine().equals("yes")) {
-                ArrayList<String> history =  gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
+                ArrayList<String> history = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
                         .getHistory().get(place.getAffect());
                 history.add("temporaryAttackBoost" + ((MonsterZone) place.getAffect()).getAttack());
                 history.add("neutralizeAttack");
@@ -55,23 +55,15 @@ public class AttackSpecial implements SpecialAbility, StringMessages {
         }
     }
 
-    public void neutralizeAttack(){ //TODO ++
+    public void neutralizeAttack() {
         if (!gamePlayController.getGamePlay().getHistory().get(place).contains("noSpecialThisRound")) {
             gamePlayController.getGamePlay().getHistory().get(place).add("neutralizeAttack");
-//            place.getAffect().setAffect(null);
-//            gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getHistory().
-//                    get(place.getAffect()).add("neutralizeAttack");
-//            SpecialAbilityActivationController specialAbilityActivationController =
-//                    SpecialAbilityActivationController.getInstance();
-//            specialAbilityActivationController.setGamePlayController(gamePlayController);
-//            specialAbilityActivationController.runSuccessSpecialAbility(place);
-//            gamePlayController.getSpecialAbilityActivationController().runSuccessSpecialAbility(place);
             gamePlayController.getGamePlay().getHistory().get(place).add("noSpecialThisRound");
         }
     }
 
-    public void reduceAttackerLPIfItWasFacingDown(){ //TODO ++
-            gamePlayController.getGamePlay().getOpponentGamePlayController()
-                    .getGamePlay().getMyGameBoard().changeHealth(amount * -1);
+    public void reduceAttackerLPIfItWasFacingDown() {
+        gamePlayController.getGamePlay().getOpponentGamePlayController()
+                .getGamePlay().getMyGameBoard().changeHealth(amount * -1);
     }
 }

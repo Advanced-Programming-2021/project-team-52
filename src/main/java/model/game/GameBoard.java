@@ -1,12 +1,9 @@
 package model.game;
 
-import controller.GamePlayController;
-import controller.specialbilities.SpecialAbilityActivationController;
 import model.cards.Cards;
 import model.cards.spell.SpellCards;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 public class GameBoard {
@@ -18,7 +15,6 @@ public class GameBoard {
     private ArrayList<Integer> cardsPicked;
     private int lastCardNumberPicked;
     private int health;
-//    private boolean monsterCardDestroyed = false;
 
     public GameBoard(ArrayList<Cards> mainCards, ArrayList<Cards> sideCards) {
         place = new HashMap<>();
@@ -26,7 +22,7 @@ public class GameBoard {
         for (int i = 1; i < 6; i++) {
             place.put(PLACE_NAME.HAND.getNumber() + i, new Place(PLACE_NAME.HAND));
             place.put(PLACE_NAME.MONSTER.getNumber() + i, new MonsterZone());
-            place.put(PLACE_NAME.SPELL_AND_TRAP.getNumber() + i, new Place(PLACE_NAME.SPELL_AND_TRAP));//TODO instantiate History arrayList From place
+            place.put(PLACE_NAME.SPELL_AND_TRAP.getNumber() + i, new Place(PLACE_NAME.SPELL_AND_TRAP));
         }
         place.put(PLACE_NAME.FIELD.getNumber(), new Field());
         graveyard = new ArrayList<>();
@@ -45,18 +41,6 @@ public class GameBoard {
         return graveyard;
     }
 
-    //TODO move shuffling to
-    public void shuffleCards() {
-        if (cardsPicked.isEmpty())
-            Collections.shuffle(mainCards);
-        lastCardNumberPicked = mainCards.size();
-    }
-
-    public void removeCard(Cards card, int placeNumber, PLACE_NAME name) {
-        graveyard.add(card);
-        getPlace(placeNumber, name).setCard(null);
-    }
-
     public void addCard(Cards card, int placeNumber, PLACE_NAME name, STATUS status) {
         getPlace(placeNumber, name).setCard(card);
         getPlace(placeNumber, name).setStatus(status);
@@ -65,16 +49,16 @@ public class GameBoard {
     public Cards drawCard() {
         while (cardsPicked.contains(lastCardNumberPicked))
             lastCardNumberPicked--;
-        if (lastCardNumberPicked < 0 && cardsPicked.size() != mainCards.size()){
-                lastCardNumberPicked = mainCards.size() - 1;
-                return drawCard();
+        if (lastCardNumberPicked < 0 && cardsPicked.size() != mainCards.size()) {
+            lastCardNumberPicked = mainCards.size() - 1;
+            return drawCard();
         } else {
             cardsPicked.add(lastCardNumberPicked);
             return (mainCards.get(lastCardNumberPicked--));
         }
     }
 
-    public boolean noCardToDraw(){
+    public boolean noCardToDraw() {
         return mainCards.size() == cardsPicked.size();
     }
 
@@ -84,6 +68,10 @@ public class GameBoard {
 
     public ArrayList<Cards> getMainCards() {
         return mainCards;
+    }
+
+    public ArrayList<Cards> getSideCards() {
+        return sideCards;
     }
 
     public void setMainCards(ArrayList<Cards> mainCards) {
@@ -103,25 +91,6 @@ public class GameBoard {
         this.cardsPicked = cardsPicked;
     }
 
-    ///////////////////////////////////////////////
-    // todo : fix equal() for Cards class
-    public boolean isThisCardExistsInThisPlace(Cards card, PLACE_NAME placeName) {
-        for (int i = 1; i < 6; i++) {
-            if (getPlace(i, placeName).getCard().equals(card))
-                return true;
-        }
-        return false;
-    }
-
-    public int getNumberOfCardsInThisPlace(PLACE_NAME placeName) {
-        int counter = 0;
-        for (int i = 1; i < 6; i++) {
-            if (getPlace(i, placeName).getCard() != null)
-                ++counter;
-        }
-        return counter;
-    }
-
     public int getFirstEmptyPlace(PLACE_NAME placeName) {
         for (int i = 1; i < 6; i++) {
             if (getPlace(i, placeName).getCard() == null)
@@ -130,86 +99,14 @@ public class GameBoard {
         return -1;
     }
 
-//    public void setMonsterCardDestroyed(boolean monsterCardDestroyed) {
-//        this.monsterCardDestroyed = monsterCardDestroyed;
-//    }
-//
-//    public boolean getMonsterCardDestroyed(){
-//        return monsterCardDestroyed;
-//    }
-
-    public Cards getCardByAddressAndPlace(int placeNumber, PLACE_NAME name) {
-        return getPlace(placeNumber, name).getCard();
-    }
-
-    public STATUS getCardStatus(Cards card, PLACE_NAME placeName) {
-        for (int i = 1; i < 6; i++) {
-            if (getPlace(i, placeName).getCard().equals(card))
-                return getPlace(i, placeName).getStatus();
-        }
-        return null;
-    }
-
-    public void changeStatusOfCard(int placeNumber, PLACE_NAME placeName, STATUS status) {
-        if (getPlace(placeNumber, placeName) != null)
-            getPlace(placeNumber, placeName).setStatus(status);
-
-    }
-
-    public int getPlaceNumberOfCard(Cards card, PLACE_NAME placeName) {
-        for (int i = 1; i < 6; i++) {
-            if (getPlace(i, placeName).getCard().equals(card))
-                return i;
-        }
-        return -1;
-    }
-
-    public boolean isCardSetOrSummonInThisTurn(int placeNumber, PLACE_NAME placeName) {
-        return getPlace(placeNumber, placeName)
-                .isTemporaryFeaturesContainsThisFeature(TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN);
-    }
-
-    public boolean isCardAttackedInThisTurn(int placeNumber, PLACE_NAME placeName) {
-        return getPlace(placeNumber, placeName)
-                .isTemporaryFeaturesContainsThisFeature(TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN);
-    }
-
-    public boolean isCardPositionChangedInThisTurn(int placeNumber, PLACE_NAME placeName) {
-        return getPlace(placeNumber, placeName)
-                .isTemporaryFeaturesContainsThisFeature(TEMPORARY_FEATURES.CARD_POSITION_CHANGED_IN_THIS_TURN);
-    }
-
-    public void setCardSetOrSummonInThisTurn(int placeNumber, PLACE_NAME placeName) {
-        getPlace(placeNumber, placeName).addTemporaryFeatures
-                (TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN);
-    }
-
-    public void setCardAttackedInThisTurn(int placeNumber, PLACE_NAME placeName) {
-        getPlace(placeNumber, placeName).addTemporaryFeatures
-                (TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN);
-    }
-
-    public void setCardPositionChangedInThisTurn(int placeNumber, PLACE_NAME placeName) {
-        getPlace(placeNumber, placeName).addTemporaryFeatures
-                (TEMPORARY_FEATURES.CARD_POSITION_CHANGED_IN_THIS_TURN);
-    }
-
     public Place getPlace(int placeNumber, PLACE_NAME placeName) {
         return place.get(placeName.getNumber() + placeNumber);
     }
 
-    public void clearAllTemporaryFeatures() {
-        for (int i = 1; i < 6; i++) {
-            getPlace(i, PLACE_NAME.MONSTER).clearTemporaryFeatures();
-        }
-    }
-    // agar card az graveyard bargasht, bazi tanzimat esh bayad reset beshe
-    //////////////////////////////////////////////
-
-    public Cards getACardByType(String type){
-        int fieldNum = mainCards.size() -1;
+    public Cards getACardByType(String type) {
+        int fieldNum = mainCards.size() - 1;
         Cards card;
-        while (fieldNum >= 0){
+        while (fieldNum >= 0) {
             if (!cardsPicked.contains(fieldNum)) {
                 card = mainCards.get(fieldNum);
                 if (card instanceof SpellCards)
@@ -218,7 +115,7 @@ public class GameBoard {
                         return mainCards.get(fieldNum);
                     }
             }
-            fieldNum --;
+            fieldNum--;
         }
         return null;
     }
@@ -231,39 +128,28 @@ public class GameBoard {
         this.health = health;
     }
 
-    public void killCards(Place place){
-//        SpecialAbilityActivationController specialAbilityActivationController = SpecialAbilityActivationController.getInstance();
-//        specialAbilityActivationController.setGamePlayController(gamePlayController);
-//        specialAbilityActivationController.deathWishWithoutKillCard(place);
-//        if (place instanceof MonsterZone) {
-//            specialAbilityActivationController.removeMonsterFromFieldAndEffect(place);
-//            specialAbilityActivationController.runAttackAmountByQuantifier();
-//            monsterCardDestroyed = true;
-//        } else if (place instanceof Field)
-//            specialAbilityActivationController.deactivateField();
+    public void killCards(Place place) {
         graveyard.add(place.getCard());
         place.killCard();
     }
 
-     public void changeHealth(int amount){
+    public void changeHealth(int amount) {
         health += amount;
         if (health < 0)
             health = 0;
-     }
+    }
 
-     public boolean fromThisGameBoard(Place place){
+    public boolean fromThisGameBoard(Place place) {
         return this.place.containsValue(place);
-     }
+    }
 
-     public int numberOfCardsRemainingToBePicked(){
+    public int numberOfCardsRemainingToBePicked() {
         return mainCards.size() - cardsPicked.size();
-     }
+    }
 
-
-//
-//    @Override
-//    public String toString() {
-//        //TODO change toString
-//        return "GameBoard";
-//    }
+    public void clearArrayLists() {
+        graveyard.clear();
+        cardsPicked.clear();
+        lastCardNumberPicked = mainCards.size() - 1;
+    }
 }

@@ -293,8 +293,9 @@ public class PrintBuilderController {
         return new StringBuilder("you opponent receives ").append(damage).append(" battle damage");
     }
 
-    public StringBuilder turnComplete(String name, GameBoard myGameBoard, GameBoard opponentGameBoard) {
-        return new StringBuilder("now it will be ").append(name).append("’s turn\n")/*.
+    public StringBuilder turnComplete(String name, String opponentName, GameBoard myGameBoard, GameBoard opponentGameBoard) {
+        return new StringBuilder("now it will be ").append(name).append("’s turn\n").
+                append(buildGameBoard(myGameBoard, opponentGameBoard, name, opponentName))/*.
                 append(gameBoardBuilder(myGameBoard, opponentGameBoard))*/;
     }
 
@@ -319,9 +320,11 @@ public class PrintBuilderController {
     }
 
     public StringBuilder buildGameBoard(GameBoard currentPlayer, GameBoard opponent, String currentPlayerUsername, String opponentUsername){
+        int cardsInHand = calculateCardsInHand(opponent);
         StringBuilder board = new StringBuilder(opponentUsername);
         board.append(":").append(opponent.getHealth());
-        board.append("\n").append("\tc").append("\tc").append("\tc").append("\tc").append("\tc");
+        board.append("\n");
+        for (int i = 0; i < 5; i++) board.append(cardsInHand).append("\t");
         board.append("\n").append(opponent.numberOfCardsRemainingToBePicked());
         board.append("\n\t").append(getTheThing(opponent.getPlace(4, PLACE_NAME.SPELL_AND_TRAP)));
         board.append("\t").append(getTheThing(opponent.getPlace(2, PLACE_NAME.SPELL_AND_TRAP)));
@@ -349,9 +352,20 @@ public class PrintBuilderController {
         board.append("\t").append(getTheThing(currentPlayer.getPlace(2, PLACE_NAME.SPELL_AND_TRAP)));
         board.append("\t").append(getTheThing(currentPlayer.getPlace(4, PLACE_NAME.SPELL_AND_TRAP)));
         board.append("\n\t\t\t\t\t").append(currentPlayer.numberOfCardsRemainingToBePicked());
-        board.append("\n").append("\tc").append("\tc").append("\tc").append("\tc").append("\tc");
+        board.append("\n");
+        cardsInHand = calculateCardsInHand(currentPlayer);
+        for (int i = 0; i < 5; i++) board.append(cardsInHand).append("\t");
         board.append("\n").append(currentPlayerUsername).append(":").append(currentPlayer.getHealth());
         return board;
+    }
+
+    private int calculateCardsInHand(GameBoard board){
+        int amount = 0;
+        for (int i = 0; i < 6; i++) {
+            if (board.getPlace(i, PLACE_NAME.HAND).getCard() != null)
+                amount++;
+        }
+        return amount;
     }
 
     private String getTheThing(Place place){
@@ -399,5 +413,13 @@ public class PrintBuilderController {
         return "attack " + number;
     }
 
+    public StringBuilder showEndRoundOrGameMessage(String name, int score, boolean wholeMatch){
+        return new StringBuilder(name).append(" won the ").
+                append(wholeMatch ? "whole match with score: " : "game and the score is: ").append(score);
+    }
+
+    public String askSwapCards(String name){
+        return name + " do you want to swap cards between your main deck and your side deck ?";
+    }
 
 }

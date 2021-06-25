@@ -17,7 +17,7 @@ public class UponActivation implements SpecialAbility, StringMessages {
     private int amount;
 
     @Override
-    public void run(GamePlayController gamePlayController, Place place){
+    public void run(GamePlayController gamePlayController, Place place) {
         this.gamePlayController = gamePlayController;
         this.place = place;
         try {
@@ -42,25 +42,25 @@ public class UponActivation implements SpecialAbility, StringMessages {
         this.amount = amount;
     }
 
-    public boolean getMet(){
+    public boolean getMet() {
         return met;
     }
 
-    private void payLPForActivation(){ //TODO ++
+    private void payLPForActivation() {
         printerAndScanner.printNextLine(printBuilderController.askForLpForActivation(amount).toString());
-        if (printerAndScanner.scanNextLine().equals("yes")){
+        if (printerAndScanner.scanNextLine().equals("yes")) {
             gamePlayController.getGamePlay().getMyGameBoard().changeHealth(amount * -1);
             met = true;
         } else
             met = false;
     }
 
-    private void sacrificeCardFromHand(){//TODO ++ ++
+    private void sacrificeCardFromHand() {
         met = false;
         printerAndScanner.printNextLine(askForPlace);
         String command;
         Place place;
-        while (true){
+        while (true) {
             command = printerAndScanner.scanNextLine();
             if (command.equals("cancel"))
                 break;
@@ -77,11 +77,5 @@ public class UponActivation implements SpecialAbility, StringMessages {
                 }
             }
         }
-//        while (gamePlayController.getGamePlay().getMyGameBoard().getPlace(toRemove, PLACE_NAME.HAND) == null){
-//            printerAndScanner.printNextLine(wrongCard);
-//            toRemove = printerAndScanner.scanNextInt();
-//        }
-//        gamePlayController.killCard(gamePlayController.getGamePlay().getMyGameBoard().getPlace(toRemove, PLACE_NAME.HAND));
-//        met = true;
     }
 }

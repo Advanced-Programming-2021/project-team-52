@@ -5,7 +5,6 @@ import view.PrinterAndScanner;
 
 public class CheatController {
 
-    private static DuelController duelController;
     private static GamePlayController gamePlayController;
     private static PrintBuilderController printBuilderController;
     private static PrinterAndScanner printerAndScanner;

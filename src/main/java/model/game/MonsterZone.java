@@ -1,11 +1,10 @@
 package model.game;
 
-import model.cards.Cards;
 import model.cards.monster.MonsterCards;
 
 import java.util.HashMap;
 
-public class MonsterZone extends Place{
+public class MonsterZone extends Place {
 
     private int attackModifier;
     private int defenseModifier;
@@ -17,11 +16,11 @@ public class MonsterZone extends Place{
         equippedCards = new HashMap<>();
     }
 
-    public int getAttack(){
+    public int getAttack() {
         return ((MonsterCards) card).getAttack() + attackModifier;
     }
 
-    public int getDefense(){
+    public int getDefense() {
         return ((MonsterCards) card).getDefense() + defenseModifier;
     }
 
@@ -41,26 +40,7 @@ public class MonsterZone extends Place{
         return defenseModifier;
     }
 
-    public void changeToThisCard(Cards card){
-        super.setAffect(null);
-        super.setCard(card);
-        String string = "";
-        for (int i = 0; i < super.history.size(); i++) {
-            string = super.history.get(i);
-            if (!string.equals("scanner"))
-                super.history.remove(string);
-        }
-        //TODO reverse the card before scanner special abilities
-    }
-
-    public void putInEquipped(Place place, int attack, int defense){
-        equippedCards.remove(place);
-        equippedCards.put(place, new Integer[2]);
-        equippedCards.get(place)[0] = attack;
-        equippedCards.get(place)[1] = defense;
-    }
-
-    public Integer[] getModifiers(Place place){
+    public Integer[] getModifiers(Place place) {
         if (!hasThisModifier(place)) {
             equippedCards.put(place, new Integer[2]);
             equippedCards.get(place)[0] = 0;
@@ -69,11 +49,11 @@ public class MonsterZone extends Place{
         return equippedCards.get(place);
     }
 
-    public boolean hasThisModifier(Place place){
+    public boolean hasThisModifier(Place place) {
         return equippedCards.containsKey(place);
     }
 
-    public void clearEquip(){
+    public void clearEquip() {
         equippedCards.clear();
     }
 }

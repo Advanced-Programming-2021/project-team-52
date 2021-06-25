@@ -4,7 +4,6 @@ import controller.GamePlayController;
 import model.cards.monster.MonsterCards;
 import model.game.PLACE_NAME;
 import model.game.Place;
-import model.game.STATUS;
 import model.tools.StringMessages;
 
 import java.lang.reflect.Method;
@@ -17,7 +16,7 @@ public class RitualSummon implements SpecialAbility, StringMessages {
     private Place place;
 
     @Override
-    public void run(GamePlayController gamePlayController, Place place){
+    public void run(GamePlayController gamePlayController, Place place) {
         this.gamePlayController = gamePlayController;
         this.place = place;
         try {
@@ -38,54 +37,32 @@ public class RitualSummon implements SpecialAbility, StringMessages {
         return methodName;
     }
 
-    //TODO in dock it says that this can be cancelled but doest say how
-    public void ritualSummon(){//TODO ++
-//        Place toSummon = getRitualCard();
+    public void ritualSummon() {
         Place toSummon = this.place.getAffect();
         String[] tributes;
-        while(true){
+        while (true) {
             printerAndScanner.printNextLine(ritualSummonTribute);
             tributes = printerAndScanner.scanNextLine().split("\\s+");
-            if (checkCredibility(tributes, ((MonsterCards)toSummon.getCard()).getLevel()))
+            if (checkCredibility(tributes, ((MonsterCards) toSummon.getCard()).getLevel()))
                 break;
         }
         sacrificeTributes(tributes);
         gamePlayController.placeCard(toSummon, true, gamePlayController.askStatus());
     }
 
-    private Place getRitualCard() {
-        Place toSummon;
-        while (true){
-            printerAndScanner.printNextLine(pleaseEnterTheCardThatYouWantToRitualSummon);
-            String input = printerAndScanner.scanNextLine();
-            if (input.matches("[^012345]")){
-                printerAndScanner.printNextLine(youShouldRitualSummonRightNow);
-                continue;
-            }
-            toSummon = gamePlayController.
-                    getGamePlay().getMyGameBoard().getPlace(Integer.parseInt(input), PLACE_NAME.HAND);
-            if (place.getCard() != null)
-            if (toSummon.getCard().getType().equals("Ritual"))
-                break;
-            printerAndScanner.printNextLine(youShouldRitualSummonRightNow);
-        }
-        return toSummon;
-    }
-
-    private boolean checkCredibility(String[] tributes, int toEqual){
+    private boolean checkCredibility(String[] tributes, int toEqual) {
         for (String tribute : tributes) {
             if (tribute.matches("[^12345]")) {
                 printerAndScanner.printNextLine(youShouldRitualSummonRightNow);
                 return false;
-            }
-            else if (gamePlayController.getGamePlay().getMyGameBoard().
+            } else if (gamePlayController.getGamePlay().getMyGameBoard().
                     getPlace(Integer.parseInt(tribute), PLACE_NAME.MONSTER).getCard() == null) {
                 printerAndScanner.printNextLine(wrongCardCombination);
                 return false;
             }
         }
         for (int i = 0; i < tributes.length; i++) {
-            for (int j = i+1; j < tributes.length; j++) {
+            for (int j = i + 1; j < tributes.length; j++) {
                 if (tributes[i].equals(tributes[j]))
                     return false;
             }
@@ -95,14 +72,14 @@ public class RitualSummon implements SpecialAbility, StringMessages {
             sum += ((MonsterCards) gamePlayController.getGamePlay().
                     getMyGameBoard().getPlace(Integer.parseInt(tribute), PLACE_NAME.MONSTER).getCard()).getLevel();
         }
-        if (sum != toEqual){
+        if (sum != toEqual) {
             printerAndScanner.printNextLine(wrongCardCombination);
             return false;
         }
         return true;
     }
 
-    private void sacrificeTributes(String[] tributes){
+    private void sacrificeTributes(String[] tributes) {
         for (String tribute : tributes) {
             gamePlayController.killCard(
                     gamePlayController.getGamePlay().getMyGameBoard().getPlace(

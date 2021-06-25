@@ -1,9 +1,11 @@
 package controller.specialbilities;
 
 import controller.GamePlayController;
-import model.cards.Cards;
 import model.cards.monster.MonsterCards;
-import model.game.*;
+import model.game.MonsterZone;
+import model.game.PLACE_NAME;
+import model.game.Place;
+import model.game.STATUS;
 import model.tools.StringMessages;
 
 import java.lang.reflect.Method;
@@ -15,10 +17,9 @@ public class Continuous implements SpecialAbility, StringMessages {
     private GamePlayController gamePlayController;
     private Place place;
     private int amount;
-    private int type;
 
     @Override
-    public void run(GamePlayController gamePlayController, Place place){
+    public void run(GamePlayController gamePlayController, Place place) {
         this.gamePlayController = gamePlayController;
         this.place = place;
         try {
@@ -42,16 +43,11 @@ public class Continuous implements SpecialAbility, StringMessages {
         this.amount = amount;
     }
 
-    //    public void scanner(){
-//        if (place.getCard() != Cards.getCard("Scanner"))
-//            ((MonsterZone) place).changeToThisCard(Cards.getCard("Scanner"));
-//    }
-
-    public void cannotBeNormallyDestroyed(){//TODO++
+    public void cannotBeNormallyDestroyed() {
         gamePlayController.getGamePlay().getHistory().get(place).add("cannotBeNormallyDestroyed");
     }
 
-    public void attackAmountByQuantifier(){ //TODO ++
+    public void attackAmountByQuantifier() {
         if (place.getStatus() == STATUS.SET)
             return;
         int sumOfLevels = 0;
@@ -66,31 +62,21 @@ public class Continuous implements SpecialAbility, StringMessages {
         ((MonsterZone) place).setAttackModifier(amount * sumOfLevels);
     }
 
-    public void drawCardIfAMonsterIsDestroyed(){ //TODO ++
+    public void drawCardIfAMonsterIsDestroyed() {
         gamePlayController.getGamePlay().getHistory().get(place).add("drawCardIfAMonsterIsDestroyed");
     }
 
-    public void getLPIfSpellIsActivated(){ //TODO ++
+    public void getLPIfSpellIsActivated() {
         gamePlayController.getGamePlay().getUniversalHistory().add("getLPIfSpellIsActivated" + amount);
     }
 
-    public void payHealthEveryRound(){ //TODO ++
+    public void payHealthEveryRound() {
         gamePlayController.getGamePlay().getHistory().get(place).add("payHealthEveryRound" + amount);
     }
 
-    public void monstersCannotAttack(){ //TODO ++
+    public void monstersCannotAttack() {
         gamePlayController.getGamePlay().getUniversalHistory().add("monstersCannotAttack" + amount);
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
                 .getUniversalHistory().add("monstersCannotAttack" + amount);
     }
-
-//    public void killAMonsterThatIsNormalOrFlipSummoned(){
-//        gamePlayController.getGamePlay().getUniversalHistory().add("killAMonsterThatIsNormalOrFlipSummoned" + amount);
-//        gamePlayController.getGamePlay().getHistory().get(place).add("killAMonsterThatIsNormalOrFlipSummoned" + amount);
-//    }
-//
-//    public void killAllMonsterWhenAMonsterIsSummoned(){
-//        gamePlayController.getGamePlay().getUniversalHistory().add("killAllMonsterWhenAMonsterIsSummoned");
-//        gamePlayController.getGamePlay().getHistory().get(place).add("killAllMonsterWhenAMonsterIsSummoned");
-//    }
 }

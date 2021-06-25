@@ -16,7 +16,7 @@ public class DeathWish implements SpecialAbility {
     private int amount;
 
     @Override
-    public void run(GamePlayController gamePlayController, Place place){
+    public void run(GamePlayController gamePlayController, Place place) {
         this.gamePlayController = gamePlayController;
         this.place = place;
         try {
@@ -41,82 +41,42 @@ public class DeathWish implements SpecialAbility {
         this.amount = amount;
     }
 
-    public void killAttacker(){ //TODO ++
+    public void killAttacker() {
         if (place.getAffect().getCard() instanceof MonsterCards)
             gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place.getAffect());
     }
 
-    public void killDestroyer(){//TODO ++
+    public void killDestroyer() {
         if (place.getAffect().getCard() instanceof MonsterCards)
             gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place.getAffect());
     }
 
-    public void removeAllAttackBoost(){ //TODO ++
+    public void removeAllAttackBoost() {
         if (place.getType() != PLACE_NAME.HAND) {
             GeneralSpecialAbility.boostAllAttack(gamePlayController, amount, true);
             gamePlayController.getGamePlay().getHistory().get(place).remove("attack boost all " + amount);
         }
     }
 
-    public void removeAttackBoost(){
-        GeneralSpecialAbility.attackBoost(place, amount, true);
-    }
-
-    public void removeAllDefenseBoost(){
-        if (place.getType() != PLACE_NAME.HAND) {
-            GeneralSpecialAbility.boostAllDefense(gamePlayController, amount, true);
-            gamePlayController.getGamePlay().getHistory().get(place).remove("defense boost all " + amount);
-        }
-    }
-
-    public void removeDefenseBoost(){
-        GeneralSpecialAbility.defenseBoost(place, amount, true);
-    }
-
-    public void canActivateTrap(){ //TODO ++
+    public void canActivateTrap() {
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
                 .getUniversalHistory().add("cannotActivateTrap");
     }
 
-    public void noHealthReduction(){ //TODO ++
+    public void noHealthReduction() {
         gamePlayController.getGamePlay().getUniversalHistory().add("noHealthReduction");
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
                 .getUniversalHistory().add("noHealthReduction");
     }
 
-    public void canAttack(){ //TODO ++
+    public void canAttack() {
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
                 .getUniversalHistory().remove("cannotAttack");
     }
 
-    public void monstersCanAttack(){
+    public void monsterCanAttack() {
         gamePlayController.getGamePlay().getUniversalHistory().remove("monstersCannotAttack" + amount);
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
                 .getUniversalHistory().remove("monstersCannotAttack" + amount);
     }
-
-    public void noLongerNeutralizeTrap(){
-        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
-                .getUniversalHistory().remove("neutralizeTrap");
-    }
-
-    public void canNoLongerKillCardUponSummon(){
-        gamePlayController.getGamePlay().getUniversalHistory().remove("killThisCardUponSummon");
-    }
-
-    public void monsterCanAttack(){//TODO ++
-        gamePlayController.getGamePlay().getUniversalHistory().remove("monstersCannotAttack" + amount);
-        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
-                .getUniversalHistory().remove("monstersCannotAttack" + amount);
-    }
-
-//    public void killAMonsterThatIsNormalOrFlipSummoned(){
-//        gamePlayController.getGamePlay().getUniversalHistory().remove("killAMonsterThatIsNormalOrFlipSummoned" + amount);
-//        gamePlayController.getGamePlay().getHistory().get(place).remove("killAMonsterThatIsNormalOrFlipSummoned" + amount);
-//    }
-//
-//    public void killAllMonsterWhenAMonsterIsSummoned(){
-//        gamePlayController.getGamePlay().getUniversalHistory().remove("killAllMonsterWhenAMonsterIsSummoned");
-//        gamePlayController.getGamePlay().getHistory().get(place).remove("killAllMonsterWhenAMonsterIsSummoned");
-//    }
 }

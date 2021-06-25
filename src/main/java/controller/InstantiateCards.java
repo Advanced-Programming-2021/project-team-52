@@ -1,14 +1,12 @@
 package controller;
 
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvException;
 import controller.specialbilities.*;
 import model.Shop;
-import model.cards.Cards;
 import model.cards.monster.MonsterCards;
 import model.cards.spell.SpellCards;
 import model.cards.trap.TrapCards;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.exceptions.CsvException;
-import model.game.Field;
 import model.game.STATUS;
 import model.tools.CHAIN_JOB;
 import model.tools.RegexPatterns;
@@ -17,11 +15,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.regex.Matcher;
-import java.lang.reflect.Method;
 
-//TODO :  Change csv file Path
 public abstract class InstantiateCards implements RegexPatterns {
     public static void start() throws IOException, CsvException {
         FileReader file = new FileReader("./src/main/resources/CSV/Monster.csv");
@@ -62,7 +57,7 @@ public abstract class InstantiateCards implements RegexPatterns {
         });
     }
 
-    private static ArrayList<CHAIN_JOB> getChainJobs(String chainJobs) throws Exception{
+    private static ArrayList<CHAIN_JOB> getChainJobs(String chainJobs) throws Exception {
         ArrayList<CHAIN_JOB> jobs = new ArrayList<>();
         if (!chainJobs.equals("nothing")) {
             CHAIN_JOB thisJob;
@@ -77,9 +72,8 @@ public abstract class InstantiateCards implements RegexPatterns {
     }
 
     private static ArrayList<SpecialAbility> loadSpecialAbilities(String[] abilities) throws Exception {
-        ArrayList<String> test = new ArrayList<>(Arrays.asList(abilities));
         if (abilities[0].equals("nothing"))
-            return new ArrayList<SpecialAbility>();
+            return new ArrayList<>();
         else {
             ArrayList<SpecialAbility> specials = new ArrayList<>();
             for (String ability : abilities) {
@@ -130,10 +124,7 @@ public abstract class InstantiateCards implements RegexPatterns {
         if (matcher.group(2) != null) {
             subsetSplit = matcher.group(2).split("/");
         }
-//        if ("removeAllAttackBoost".equals(matcher.group("methodName"))) {
-//                deathWish.setAmount(Integer.parseInt(subsetSplit[0]));
-//        }
-        switch (matcher.group("methodName")){
+        switch (matcher.group("methodName")) {
             case "removeAllAttackBoost":
             case "monsterCanAttack":
                 deathWish.setAmount(Integer.parseInt(subsetSplit[0]));
@@ -142,15 +133,15 @@ public abstract class InstantiateCards implements RegexPatterns {
         return deathWish;
     }
 
-    private static SpecialAbility addTributeSpecial(Matcher matcher) throws NoSuchMethodException{
+    private static SpecialAbility addTributeSpecial(Matcher matcher) throws NoSuchMethodException {
         Tribute tribute = new Tribute();
         String[] subsetSplit = new String[0];
         if (matcher.group(2) != null)
             subsetSplit = matcher.group(2).split("/");
-        switch (matcher.group("methodName")){
-            case "canSummonNormally" :
+        switch (matcher.group("methodName")) {
+            case "canSummonNormally":
                 tribute.setKey(Integer.parseInt(subsetSplit[3]));
-            case "summonWithTribute" :
+            case "summonWithTribute":
                 tribute.setCannotSet(subsetSplit[0].equals("true"));
                 tribute.setAmount(Integer.parseInt(subsetSplit[1]));
                 tribute.setSpecialSummon(subsetSplit[2].equals("normal"));
@@ -169,7 +160,7 @@ public abstract class InstantiateCards implements RegexPatterns {
     }
 
     private static SpecialAbility addFlipSpecial(Matcher matcher) throws NoSuchMethodException {
-        Flip flip  = new Flip();
+        Flip flip = new Flip();
         flip.setMethod(flip.getClass().getDeclaredMethod(matcher.group("methodName")));
         return flip;
     }
@@ -179,17 +170,17 @@ public abstract class InstantiateCards implements RegexPatterns {
         String[] subsetSplit = new String[0];
         if (matcher.group(2) != null)
             subsetSplit = matcher.group(2).split("/");
-        switch (matcher.group("methodName")){
-            case "specialSummonFromGraveYard" :
+        switch (matcher.group("methodName")) {
+            case "specialSummonFromGraveYard":
                 activateNoChain.setOnlyForOnePlayer(!subsetSplit[1].equals("both"));
                 if (subsetSplit.length == 3)
                     activateNoChain.setType(subsetSplit[2]);
-            case "turnsRemaining" :
-            case "drawCard" :
+            case "turnsRemaining":
+            case "drawCard":
             case "sacrificeToGetFromGraveYard":
                 activateNoChain.setAmount(Integer.parseInt(subsetSplit[0]));
                 break;
-            case "killAllMonsters" :
+            case "killAllMonsters":
                 activateNoChain.setOnlyForOnePlayer(subsetSplit[0].equals("enemyOnly"));
                 break;
         }
@@ -202,10 +193,10 @@ public abstract class InstantiateCards implements RegexPatterns {
         String[] subsetSplit = new String[0];
         if (matcher.group(2) != null)
             subsetSplit = matcher.group(2).split("/");
-        switch (matcher.group("methodName")){
-            case "payHealthEveryRound" :
-            case "monstersCannotAttack" :
-            case "getLPIfSpellIsActivated" :
+        switch (matcher.group("methodName")) {
+            case "payHealthEveryRound":
+            case "monstersCannotAttack":
+            case "getLPIfSpellIsActivated":
                 continuous.setAmount(Integer.parseInt(subsetSplit[0]));
                 break;
         }
@@ -225,9 +216,7 @@ public abstract class InstantiateCards implements RegexPatterns {
         String[] subsetSplit = new String[0];
         if (matcher.group(2) != null)
             subsetSplit = matcher.group(2).split("/");
-//        if (matcher.group("methodName").equals("opponentHasMonsterWithAtLeastThisDamage"))
-//            condition.setAmount(Integer.parseInt(subsetSplit[0]));
-        switch (matcher.group("methodName")){
+        switch (matcher.group("methodName")) {
             case "opponentHasMonsterWithAtLeastThisDamage":
             case "monsterCardWithAtLeastThisLevelExistsInGraveyard":
                 condition.setAmount(Integer.parseInt(subsetSplit[0]));
@@ -241,10 +230,7 @@ public abstract class InstantiateCards implements RegexPatterns {
         String[] subsetSplit = new String[0];
         if (matcher.group(2) != null)
             subsetSplit = matcher.group(2).split("/");
-//        if ("boostAllAttack".equals(matcher.group("methodName"))) {
-//            faceUp.setBoostAmount(Integer.parseInt(subsetSplit[0]));
-//        }
-        switch (matcher.group("methodName")){
+        switch (matcher.group("methodName")) {
             case "summonAMonster":
             case "boostAllAttack":
                 faceUp.setBoostAmount(Integer.parseInt(subsetSplit[0]));
@@ -259,11 +245,11 @@ public abstract class InstantiateCards implements RegexPatterns {
         String[] subsetSplit = new String[0];
         if (matcher.group(2) != null)
             subsetSplit = matcher.group(2).split("/");
-        switch (matcher.group("methodName")){
-            case "destroySpellAndTraps" :
+        switch (matcher.group("methodName")) {
+            case "destroySpellAndTraps":
                 activateChain.setAmount(Integer.parseInt(subsetSplit[0]));
                 break;
-            case "destroyAllEnemyMonstersInThisStatus" :
+            case "destroyAllEnemyMonstersInThisStatus":
                 activateChain.setStatus(STATUS.getStatusByString(subsetSplit[0]));
                 break;
         }
@@ -277,12 +263,11 @@ public abstract class InstantiateCards implements RegexPatterns {
         if (matcher.group(2) != null)
             subsetSplit = matcher.group(2).split("/");
         switch (matcher.group("methodName")) {
-            case "attackChange" :
-            case "defenseChange" :
+            case "attackChange":
+            case "defenseChange":
+            case "attackBoostForGraveYard":
                 fieldSpecial.setAmount(Integer.parseInt(subsetSplit[0]));
                 break;
-            case "attackBoostForGraveyard" :
-                fieldSpecial.setQuantifier(Integer.parseInt(subsetSplit[0]));
         }
         fieldSpecial.setEnemyAsWell(subsetSplit[1].equals("enemyAsWell"));
         ArrayList<String> types = new ArrayList<>();
@@ -299,22 +284,20 @@ public abstract class InstantiateCards implements RegexPatterns {
         if (matcher.group(2) != null)
             subsetSplit = matcher.group(2).split("/");
         ArrayList<String> types = new ArrayList<>();
-        switch (matcher.group("methodName")){
-            case "normalEquip" : {
+        switch (matcher.group("methodName")) {
+            case "normalEquip": {
                 equip.setAttackChange(Integer.parseInt(subsetSplit[0]));
                 equip.setDefenseChange(Integer.parseInt(subsetSplit[1]));
                 if (subsetSplit.length == 3)
                     types.addAll(Arrays.asList(subsetSplit[2].split("\\+")));
             }
-                break;
-            case "boostByControlledMonsters" :
+            break;
+            case "boostByControlledMonsters":
                 equip.setQuantifier(Integer.parseInt(subsetSplit[0]));
                 break;
-            case "dynamicEquip" : {
-//                ArrayList<String> types = new ArrayList<>();
+            case "dynamicEquip": {
                 if (subsetSplit.length == 1)
                     types.addAll(Arrays.asList(subsetSplit[0].split("\\+")));
-//                equip.setTypes(types);
             }
         }
         equip.setTypes(types);

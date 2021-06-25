@@ -13,10 +13,9 @@ public class Flip implements SpecialAbility, StringMessages {
     private String methodName;
     private GamePlayController gamePlayController;
     private Place place;
-    private int amount;
 
     @Override
-    public void run(GamePlayController gamePlayController, Place place){
+    public void run(GamePlayController gamePlayController, Place place) {
         this.gamePlayController = gamePlayController;
         this.place = place;
         try {
@@ -37,8 +36,7 @@ public class Flip implements SpecialAbility, StringMessages {
         return methodName;
     }
 
-    //TODO tell player to enter what
-    public void destroyAMonster(){//TODO ++
+    public void destroyAMonster() {
         int i;
         for (i = 1; i < 6; i++) {
             if (gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
@@ -54,10 +52,10 @@ public class Flip implements SpecialAbility, StringMessages {
                 number = printerAndScanner.scanNextLine();
                 if (number.matches("[^12345]"))
                     continue;
-                    if (gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
-                            .getPlace(i, PLACE_NAME.MONSTER) == null)
-                        printerAndScanner.printNextLine(wrongCard);
-                    else break;
+                if (gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()
+                        .getPlace(i, PLACE_NAME.MONSTER) == null)
+                    printerAndScanner.printNextLine(wrongCard);
+                else break;
             }
             gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(
                     gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().
@@ -65,16 +63,4 @@ public class Flip implements SpecialAbility, StringMessages {
             );
         }
     }
-
-//    public void reduceAttackerLP(){
-//        if (place.getAffect() != null) {
-//            gamePlayController.getGamePlay().getOpponentGamePlayController()
-//                    .getGamePlay().getMyGameBoard().changeHealth(amount * -1);
-//        }
-//    }
-
-//    public void cannotActivateTrap(){
-//        gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
-//                .getUniversalHistory().add("cannotActivateTrap");
-//    }
 }

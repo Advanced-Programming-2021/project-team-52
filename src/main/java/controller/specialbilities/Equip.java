@@ -21,7 +21,7 @@ public class Equip implements SpecialAbility, StringMessages {
     private boolean onDeath = false;
 
     @Override
-    public void run(GamePlayController gamePlayController, Place place){
+    public void run(GamePlayController gamePlayController, Place place) {
         this.gamePlayController = gamePlayController;
         this.place = place;
         try {
@@ -66,12 +66,12 @@ public class Equip implements SpecialAbility, StringMessages {
         return types;
     }
 
-    public void normalEquip(){ //TODO ++
+    public void normalEquip() {
         Place placeToEquip = place.getAffect();
         if (placeToEquip == null)
             placeToEquip = getEquip();
         else placeToEquip = place.getAffect();
-        if (placeToEquip instanceof MonsterZone){
+        if (placeToEquip instanceof MonsterZone) {
             place.setAffect(placeToEquip);
             if (canModifyThisCard((MonsterCards) placeToEquip.getCard())) {
                 int attackBoost = this.attackChange;
@@ -89,7 +89,7 @@ public class Equip implements SpecialAbility, StringMessages {
         }
     }
 
-    public void dynamicEquip(){ //TODO ++
+    public void dynamicEquip() {
         Place placeToEquip = place.getAffect();
         if (placeToEquip == null)
             placeToEquip = getEquip();
@@ -97,38 +97,25 @@ public class Equip implements SpecialAbility, StringMessages {
             place.setAffect(placeToEquip);
             if (canModifyThisCard((MonsterCards) placeToEquip.getCard())) {
                 Integer[] modifiers = ((MonsterZone) placeToEquip).getModifiers(place);
-//                GeneralSpecialAbility.attackBoost(placeToEquip, modifiers[0], true);
-//                GeneralSpecialAbility.defenseBoost(placeToEquip, modifiers[1], true);
-//                if (quantifier == 0) { // boost attack by defense
-//                    modifiers[0] = ((MonsterCards) placeToEquip.getCard()).getDefense();
-//                    GeneralSpecialAbility.attackBoost(placeToEquip, modifiers[0], true);
-//                    modifiers[1] = 0;
-//                } else { //boost defense by attack
-//                    modifiers[1] = ((MonsterCards) placeToEquip.getCard()).getAttack();
-//                    GeneralSpecialAbility.defenseBoost(placeToEquip, modifiers[1], true);
-//                    modifiers[0] = 0;
-//                }
                 removeThisBoost(modifiers);
                 if (!onDeath)
                     if (placeToEquip.getStatus() == STATUS.ATTACK) {
                         modifiers[0] = ((MonsterCards) placeToEquip.getCard()).getDefense();
                         modifiers[1] = 0;
                         GeneralSpecialAbility.attackBoost(placeToEquip, modifiers[0], false);
-                    }
-                    else {
+                    } else {
                         modifiers[0] = 0;
                         modifiers[1] = ((MonsterCards) placeToEquip.getCard()).getAttack();
                         GeneralSpecialAbility.defenseBoost(placeToEquip, modifiers[1], false);
                     }
-                else  modifiers[0] = modifiers[1] = 0;
+                else modifiers[0] = modifiers[1] = 0;
                 if (!placeToEquip.getTemporaryFeatures().contains(TEMPORARY_FEATURES.EQUIPPED))
                     placeToEquip.addTemporaryFeatures(TEMPORARY_FEATURES.EQUIPPED);
-//                quantifier = 0;
             }
         }
     }
 
-    private void boostByControlledMonsters() { //TODO ++
+    private void boostByControlledMonsters() {
         Place placeToEquip = place.getAffect();
         if (placeToEquip == null)
             placeToEquip = getEquip();
@@ -137,7 +124,7 @@ public class Equip implements SpecialAbility, StringMessages {
             if (canModifyThisCard((MonsterCards) placeToEquip.getCard())) {
                 Integer[] modifiers = ((MonsterZone) placeToEquip).getModifiers(place);
                 int amount = boostByControlledCards();
-                if (!onDeath){
+                if (!onDeath) {
                     modifiers[0] -= amount;
                     modifiers[1] -= amount;
                 }
@@ -150,47 +137,43 @@ public class Equip implements SpecialAbility, StringMessages {
         }
     }
 
-    private Place getEquip(){
+    private Place getEquip() {
         int i;
         Place place;
         GameBoard myGameBoard = gamePlayController.getGamePlay().getMyGameBoard();
-        GameBoard opponentGameBoard =gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard();
+        GameBoard opponentGameBoard = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard();
         for (i = 1; i < 6; i++) {
             if (myGameBoard.getPlace(i, PLACE_NAME.MONSTER).getCard() != null ||
                     opponentGameBoard.getPlace(i, PLACE_NAME.MONSTER).getCard() != null)
-//            if (types.contains(place.getCard().getType()) || types.size() == 0)
                 break;
         }
         place = null;
-        if (i != 6){
+        if (i != 6) {
             printerAndScanner.printNextLine(askForMonsterInGameToEquip);
             int placeNumber = -1;
-            while (true){
+            while (true) {
                 String toChek = printerAndScanner.scanNextLine();
-                if (toChek.matches("^[-+]?[12345]$")){
+                if (toChek.matches("^[-+]?[12345]$")) {
                     GamePlayController gamePlayController = toChek.matches("^-\\d$") ?
                             this.gamePlayController.getGamePlay().getOpponentGamePlayController() : this.gamePlayController;
                     placeNumber = Math.abs(Integer.parseInt(toChek));
-                    if (placeNumber < 6 && placeNumber > 0){
+                    if (placeNumber < 6 && placeNumber > 0) {
                         place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(placeNumber, PLACE_NAME.MONSTER);
                         if (place.getCard() != null)
-//                        if (types.contains(place.getCard().getType()) || types.size() == 0)
                             break;
                     }
                 }
-                if (toChek.equals("cancel")){
+                if (toChek.equals("cancel")) {
                     place = null;
                     break;
                 }
                 printerAndScanner.printNextLine(wrongCard);
             }
-//            if (placeNumber != -1)
-//                return gamePlayController.getGamePlay().getMyGameBoard().getPlace(placeNumber, PLACE_NAME.MONSTER);
         }
         return place;
     }
 
-    private int boostByControlledCards(){
+    private int boostByControlledCards() {
         int amount = 0;
         for (int i = 1; i < 6; i++) {
             if (gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER).getStatus() != STATUS.SET)
@@ -199,13 +182,13 @@ public class Equip implements SpecialAbility, StringMessages {
         return amount;
     }
 
-    private boolean canModifyThisCard(MonsterCards monsterCards){
+    private boolean canModifyThisCard(MonsterCards monsterCards) {
         return types.contains(monsterCards.getMonsterType()) || types.size() == 0;
     }
 
-    private void removeThisBoost(Integer[] modifiers){
+    private void removeThisBoost(Integer[] modifiers) {
         Place place = this.place.getAffect();
-        if (place != null){
+        if (place != null) {
             GeneralSpecialAbility.attackBoost(place, modifiers[0], true);
             GeneralSpecialAbility.defenseBoost(place, modifiers[1], true);
         }

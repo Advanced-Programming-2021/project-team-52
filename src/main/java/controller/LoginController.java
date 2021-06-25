@@ -1,16 +1,14 @@
 package controller;
 
 import com.opencsv.exceptions.CsvException;
-import model.Deck;
 import model.User;
 import model.tools.RegexPatterns;
 import view.PrinterAndScanner;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
 
 import static model.tools.StringMessages.*;
 
@@ -23,48 +21,19 @@ public class LoginController implements RegexPatterns {
     private static PrintBuilderController printBuilderController;
     private static PrinterAndScanner printerAndScanner;
 
-    //TODO remove next block
-    static {
-        try {
-            instantiateCards();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        users = new HashMap<>();
-        User test = User.createUser("a", "a", "a");
-        Deck deck = new Deck("a");
-        deck.addAllCardsToDeck();
-        test.setActiveDeck(deck);
-        Deck deck1 = new Deck("aa");
-        for (int i = 0; i < 2; i++) deck1.addCard("Crab Turtle",false);
-        for (int i = 0; i < 2; i++) deck1.addCard("Advanced Ritual Art", false);
-        for (int i = 0; i < 6; i++) deck1.addCard("Feral Imp", false);
-        test.setActiveDeck(deck1);
-        users.put("a", test);
-        test = User.createUser("b", "b", "b");
-        deck = new Deck("b");
-        deck.addAllCardsToDeck();
-        test.setActiveDeck(deck);
-        Deck deck2 = new Deck("aa");
-        for (int i = 0; i < 10; i++) deck2.addCard("Battle OX",false);
-//        for (int i = 0; i < 5; i++) deck2.addCard("Supply Squad", false);
-        test.setActiveDeck(deck2);
-        users.put("b", test);
-    }
-
     {
         printBuilderController = PrintBuilderController.getInstance();
         printerAndScanner = PrinterAndScanner.getInstance();
         userNames = new ArrayList<>();
         nickNames = new ArrayList<>();
-//        users = new HashMap<>();
+        users = new HashMap<>();
     }
 
     private LoginController() {
     }
 
     public static void main(String[] args) throws IOException, CsvException {
-//        instantiateCards();
+        instantiateCards();
         LoginController.getInstance().start();
     }
 

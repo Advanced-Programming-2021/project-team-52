@@ -43,6 +43,8 @@ public interface StringMessages {
     String doAlternativeSpecial = "do alternative ?";
     String askStatus = "status ?";
 
+    String cardIsNotVisible = "card is not visible";
+    String notYourTurnToDoThat = "it’s not your turn to play this kind of moves";
     String askActivateSpecial = "Do you want to active this card's special ability?";
     String wrongCard = "wrong card. please select another one";
     String cannotDoThat = "unable to do that";
@@ -80,6 +82,12 @@ public interface StringMessages {
     String cantDoInThisPhase = "you can’t do this action in this phase";
     String invalidInput = "your input is invalid please check it"; //TODO is different from invalid command, only used in specialSummonFromGraveYard in ActivateNoChain
 
+    String swapFormat = "you can swap cards by entering the following command:\nswap <card from main deck> with" +
+            " <card from side deck>\n you can enter cancel to exit";
+    String wrongCardForSwap = "one of the cards that you have entered is wrong, either the name that you have entered" +
+            " is wrong or the card isn't in your deck";
+    String swappedSuccessfully = "swapped successfully";
+    String cantFlipSummon = "you cant flip summon this card";
     String askActivateChain = "do you want to activate your trap or spell?";
     String cardNumber = "please enter the card number";
     String activateEffectIsOnlyForSpells = "activate effect is only for spell cards.";

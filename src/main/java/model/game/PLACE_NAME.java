@@ -9,17 +9,17 @@ public enum PLACE_NAME {
 
     private int number;
 
-    private PLACE_NAME(int number){
+    PLACE_NAME(int number) {
         this.number = number;
 
     }
 
-    public int getNumber(){
+    public int getNumber() {
         return number;
     }
 
-    public static PLACE_NAME getEnumByString(String enumString){
-        switch (enumString){
+    public static PLACE_NAME getEnumByString(String enumString) {
+        switch (enumString) {
             case "-m":
             case "--monster":
             case "monster":

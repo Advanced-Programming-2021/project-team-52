@@ -4,7 +4,6 @@ package model.game;
 import model.cards.Cards;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Place {
 
@@ -14,7 +13,6 @@ public class Place {
     private PLACE_NAME type;
     private ArrayList<TEMPORARY_FEATURES> temporaryFeatures;
     private Place affect;
-    // َAttention developers!! temporaryFeatures are only valid for monster cards
 
     public Place(PLACE_NAME type) {
         this.type = type;
@@ -53,14 +51,6 @@ public class Place {
         temporaryFeatures.remove(temporaryFeature);
     }
 
-    public boolean isTemporaryFeaturesContainsThisFeature(TEMPORARY_FEATURES temporaryFeature){
-        return temporaryFeatures.contains(temporaryFeature);
-    }
-
-    public void clearTemporaryFeatures(){
-        temporaryFeatures.clear();
-    }
-
     public Place getAffect() {
         return affect;
     }
@@ -69,8 +59,8 @@ public class Place {
         this.affect = affect;
     }
 
-    public void killCard(){
-        if (this instanceof MonsterZone){
+    public void killCard() {
+        if (this instanceof MonsterZone) {
             MonsterZone monsterZone = (MonsterZone) this;
             monsterZone.setAttackModifier(0);
             monsterZone.setDefenseModifier(0);
@@ -81,7 +71,7 @@ public class Place {
         this.temporaryFeatures.clear();
         this.affect = null;
         if (!type.equals(PLACE_NAME.HAND))
-        history.clear();
+            history.clear();
     }
 
     public ArrayList<TEMPORARY_FEATURES> getTemporaryFeatures() {

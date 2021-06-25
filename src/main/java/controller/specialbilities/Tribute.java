@@ -1,11 +1,9 @@
 package controller.specialbilities;
 
 import controller.GamePlayController;
-import controller.NewChain;
 import model.game.PLACE_NAME;
 import model.game.Place;
 import model.game.STATUS;
-import model.tools.CHAIN_JOB;
 import model.tools.StringMessages;
 
 import java.lang.reflect.Method;
@@ -23,7 +21,7 @@ public class Tribute implements SpecialAbility, StringMessages {
     private int key;
 
     @Override
-    public void run(GamePlayController gamePlayController, Place place){
+    public void run(GamePlayController gamePlayController, Place place) {
         this.gamePlayController = gamePlayController;
         this.place = place;
         try {
@@ -64,23 +62,17 @@ public class Tribute implements SpecialAbility, StringMessages {
         this.cannotSet = cannotSet;
     }
 
-    public void canSummonNormally(){ //TODO ++ ++
+    public void canSummonNormally() {
         switch (key) {
-            case 1 :
+            case 1:
                 summonWithReducingAttack();
                 break;
-            case 2 : summonWithSacrificingCardFromHand();
+            case 2:
+                summonWithSacrificingCardFromHand();
         }
     }
 
-    private void summonWithReducingAttack(){
-//        if (status == STATUS.SET)
-//            if (cannotSet)
-//                printerAndScanner.printNextLine(StringMessages.cannotSet);
-//            else gamePlayController.setCard(place,
-//                    gamePlayController.getGamePlay().getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER));
-//        else
-//            new NewChain(gamePlayController, place, CHAIN_JOB.SUMMON, 0, gamePlayController.sendChainedPlaces());
+    private void summonWithReducingAttack() {
         Place summonedPlace = null;
         if (status == STATUS.SET)
             if (cannotSet)
@@ -91,15 +83,15 @@ public class Tribute implements SpecialAbility, StringMessages {
             summonedPlace = gamePlayController.placeCard(place, specialSummon, STATUS.ATTACK);
         }
         if (summonedPlace != null)
-        if (summonedPlace.getCard() != null)
-        GeneralSpecialAbility.attackBoost(summonedPlace, amount, true);
+            if (summonedPlace.getCard() != null)
+                GeneralSpecialAbility.attackBoost(summonedPlace, amount, true);
     }
 
-    private void summonWithSacrificingCardFromHand(){
+    private void summonWithSacrificingCardFromHand() {
         printerAndScanner.printNextLine(cardNumber);
         int handNumberToSacrifice = printerAndScanner.scanNextInt();
         Place place;
-        while (true){
+        while (true) {
             place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(handNumberToSacrifice, PLACE_NAME.HAND);
             if (place != null)
                 if (place != this.place && place.getCard() != null)
@@ -108,32 +100,24 @@ public class Tribute implements SpecialAbility, StringMessages {
             handNumberToSacrifice = printerAndScanner.scanNextInt();
         }
         gamePlayController.killCard(place);
-//        gamePlayController.placeCard(this.place, specialSummon, STATUS.ATTACK);
         if (status == STATUS.SET)
             if (cannotSet)
                 printerAndScanner.printNextLine(StringMessages.cannotSet);
             else gamePlayController.setCard(this.place,
                     gamePlayController.getGamePlay().getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER));
         else gamePlayController.placeCard(this.place, specialSummon, STATUS.ATTACK);
-//        if (status == STATUS.SET)
-//            if (cannotSet)
-//                printerAndScanner.printNextLine(StringMessages.cannotSet);
-//            else gamePlayController.setCard(place,
-//                    gamePlayController.getGamePlay().getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER));
-//        else
-//            new NewChain(gamePlayController, place, CHAIN_JOB.SUMMON, 0, gamePlayController.sendChainedPlaces());
     }
 
-    public void summonWithTribute(){ //TODO ++ ++ ++
+    public void summonWithTribute() {
         int amount = this.amount;
         int numberOfMonsterToTribute = 0;
         for (int i = 1; i < 6; i++) {
             if (gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.MONSTER).getCard() != null)
                 numberOfMonsterToTribute++;
         }
-        if (amount <= numberOfMonsterToTribute){
+        if (amount <= numberOfMonsterToTribute) {
             printerAndScanner.printNextLine(doYouWantToTribute);
-            if (printerAndScanner.scanNextLine().equals("yes")){
+            if (printerAndScanner.scanNextLine().equals("yes")) {
                 int[] cardsToTribute = new int[amount];
                 do
                     scanTributes(amount, cardsToTribute);
@@ -152,36 +136,22 @@ public class Tribute implements SpecialAbility, StringMessages {
                 if (summonedPlace != null)
                     if (summonedPlace.getCard() != null)
                         gamePlayController.getSpecialAbilityActivationController().runSuccessSpecialAbility(summonedPlace);
-//                if (status == STATUS.SET)
-//                    if (cannotSet)
-//                        printerAndScanner.printNextLine(StringMessages.cannotSet);
-//                    else gamePlayController.setCard(place,
-//                            gamePlayController.getGamePlay().getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER));
-//                else
-//                new NewChain(gamePlayController, place, CHAIN_JOB.SUMMON, 0, gamePlayController.sendChainedPlaces());
-//                if (place.getCard() != null){
-////                    SpecialAbilityActivationController specialAbilityActivationController =
-////                            SpecialAbilityActivationController.getInstance();
-////                    specialAbilityActivationController.setGamePlayController(gamePlayController);
-////                    specialAbilityActivationController.runSuccessSpecialAbility(place);
-//                    gamePlayController.getSpecialAbilityActivationController().runSuccessSpecialAbility(place);
-//                }
             }
         } else printerAndScanner.printNextLine(thereAreNotEnoughCardsForTribute);
     }
 
-    private void scanTributes (int amount, int[] cardsToTribute){
-        while (amount > 0){
+    private void scanTributes(int amount, int[] cardsToTribute) {
+        while (amount > 0) {
             printerAndScanner.printNextLine(pleaseEnterNextCard);
             cardsToTribute[amount - 1] = printerAndScanner.scanNextInt();
             amount--;
         }
     }
 
-    private boolean validForTribute(int[] cardsToTribute){
+    private boolean validForTribute(int[] cardsToTribute) {
         for (int card : cardsToTribute) {
             if (card < 6 && card > 0) {
-                if (gamePlayController.getGamePlay().getMyGameBoard().getPlace(card, PLACE_NAME.MONSTER).getCard() == null){
+                if (gamePlayController.getGamePlay().getMyGameBoard().getPlace(card, PLACE_NAME.MONSTER).getCard() == null) {
                     if (cardsToTribute.length == 1)
                         printerAndScanner.printNextLine(thereNoMonstersOneThisAddress);
                     else printerAndScanner.printNextLine(noMonsterOnOneOfTheseAddresses);

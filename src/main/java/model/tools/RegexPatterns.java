@@ -41,10 +41,10 @@ public interface RegexPatterns {
             "pell|-s)(?: --opponent| -o)?|(?:--hand|-h)(?!.*(?:--opponent|-o))|(?:--field|-f)))(?: (?:(?:(?<type>--m" +
             "onster|-m|--spell|-s)(?<opponent> --opponent| -o)?|(?<typeHand>--hand|-h)) (?<select>\\d+)|(?<typeField" +
             ">--field|-f)|(?<opponent2>--opponent|-o)))+| (?<delete>-d))$");
-    Pattern setAttackOrDefensePattern = Pattern.compile("^set (?:--position|-p) (?<position>attack|defense)$");
+    Pattern setAttackOrDefensePattern = Pattern.compile("^set (?:--position|-p) (?<position>attack|defense|defence)$");
     Pattern attackPattern = Pattern.compile("^attack (?<type>direct|\\d+)$");
     Pattern increaseMoneyOrLPByCheatPattern = Pattern.compile("^increase(?!.*(?:--money|-m).*(?:--money|-m))(?!.*(?:" +
-            "--LP|-l).*(?:--LP|-l))(?: (?:(?:--money|-m) (?<money>\\d+)|(?:--LP|-l) (?<LP>\\d+)))+$");
+            "--LP|-l).*(?:--LP|-l))(?: (?:(?<money>--money|-m) (?<amount>\\d+)|(?<LP>--LP|-l) (?<amount2>\\d+)))$");
     Pattern setDuelWinnerByCheat = Pattern.compile("^duel set-winner (?<username>\\w+)$");
     Pattern importOrExportCard = Pattern.compile("^(?:import|export) card [^-]+$");
 
@@ -61,6 +61,8 @@ public interface RegexPatterns {
     Pattern standardUsernameAndNickname = Pattern.compile("^\\w+$");
 
     Pattern extractSpecial = Pattern.compile("[a-zA-Z]+ : (?<methodName>[a-zA-Z]+)(?:/(.*))?");
+
+    Pattern swapPattern = Pattern.compile("^swap ([^-]+) with ([^-]+)$");
 }
 
 

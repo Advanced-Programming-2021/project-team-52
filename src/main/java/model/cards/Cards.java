@@ -13,8 +13,9 @@ public class Cards {
     private static final HashMap<String, Cards> ALL_CARDS;
 
     private String name, type, description, status;
-    private ArrayList<SpecialAbility> special;
+    private transient ArrayList<SpecialAbility> special;
     private int specialSpeed;//TODO add special speed to csv
+    private String specialString;
 //    private ArrayList<CHAIN_JOB> chainAfter;
 
     static{

@@ -1,7 +1,6 @@
 package controller.specialbilities;
 
 import controller.GamePlayController;
-import model.cards.Cards;
 import model.cards.monster.MonsterCards;
 import model.game.PLACE_NAME;
 import model.game.Place;
@@ -19,7 +18,7 @@ public class FaceUp implements SpecialAbility, StringMessages {
     private int boostAmount;
 
     @Override
-    public void run(GamePlayController gamePlayController, Place place){
+    public void run(GamePlayController gamePlayController, Place place) {
         this.gamePlayController = gamePlayController;
         this.place = place;
         try {
@@ -43,34 +42,21 @@ public class FaceUp implements SpecialAbility, StringMessages {
         this.boostAmount = boostAmount;
     }
 
-    public void boostAllAttack(){ //TODO ++
+    public void boostAllAttack() {
         gamePlayController.getGamePlay().getUniversalHistory().add("attackBoost" + boostAmount);
         GeneralSpecialAbility.boostAllAttack(gamePlayController, boostAmount, false);
     }
 
-    public void attackBoost(){
-        GeneralSpecialAbility.attackBoost(place, boostAmount, false);
-    }
-
-    public void boostAllDefense(){
-        gamePlayController.getGamePlay().getUniversalHistory().add("defenseBoost" + boostAmount);
-        GeneralSpecialAbility.boostAllDefense(gamePlayController, boostAmount, false);
-    }
-
-    public void defenseBoost(){
-        GeneralSpecialAbility.defenseBoost(place, boostAmount, false);
-    }
-
-    public void cannotBeAttackedWhileThereAreOtherMonsters(){ //TODO ++
+    public void cannotBeAttackedWhileThereAreOtherMonsters() {
         gamePlayController.getGamePlay().getHistory().get(place).add("cannotBeAttackedWhileThereAreOtherMonsters");
     }
 
-    public void cannotActivateTrap(){ //TODO ++
+    public void cannotActivateTrap() {
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
                 .getUniversalHistory().add("cannotActivateTrap");
     }
 
-    public void summonAMonster(){ //TODO ++
+    public void summonAMonster() {
         int emptyMonsterPlace = gamePlayController.getGamePlay().getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER);
         if (emptyMonsterPlace != -1) {
             int i;
@@ -107,11 +93,11 @@ public class FaceUp implements SpecialAbility, StringMessages {
         }
     }
 
-    //TODO ++
-    public void addScannerHistory(){
+    public void addScannerHistory() {
         gamePlayController.getGamePlay().getHistory().get(place).add("scanner");
     }
 
-    //TODO ++
-    public void canActivateMonster(){gamePlayController.getGamePlay().getHistory().get(place).add("canBeActivated");}
+    public void canActivateMonster() {
+        gamePlayController.getGamePlay().getHistory().get(place).add("canBeActivated");
+    }
 }

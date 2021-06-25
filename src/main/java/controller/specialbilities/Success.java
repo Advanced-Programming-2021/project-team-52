@@ -21,7 +21,7 @@ public class Success implements SpecialAbility, StringMessages {
     private String monsterType;
 
     @Override
-    public void run(GamePlayController gamePlayController, Place place){
+    public void run(GamePlayController gamePlayController, Place place) {
         this.gamePlayController = gamePlayController;
         this.place = place;
         try {
@@ -38,7 +38,7 @@ public class Success implements SpecialAbility, StringMessages {
     }
 
     @Override
-    public String getMethodName(){
+    public String getMethodName() {
         return methodName;
     }
 
@@ -46,11 +46,11 @@ public class Success implements SpecialAbility, StringMessages {
         this.monsterType = monsterType;
     }
 
-    public void killAffect(){ //TODO ++
+    public void killAffect() {
         gamePlayController.getGamePlay().getOpponentGamePlayController().killCard(place.getAffect());
     }
 
-    public void destroyAllEnemyCards(){ //TODO ++
+    public void destroyAllEnemyCards() {
         GamePlayController opponentGamePlayController = gamePlayController.getGamePlay().getOpponentGamePlayController();
         for (int i = 1; i < 6; i++) {
             opponentGamePlayController.killCard(
@@ -60,7 +60,7 @@ public class Success implements SpecialAbility, StringMessages {
         }
     }
 
-    public void specialSummonMonster() { //TODO ++
+    public void specialSummonMonster() {
         boolean existsInGraveYard = monsterOfThisTypeExistsInGraveYard();
         boolean existsInHand = monsterOfThisTypeExistsInHand();
         boolean existsInDeck = monsterOfThisTypeExistsInDeck();
@@ -74,10 +74,10 @@ public class Success implements SpecialAbility, StringMessages {
                     if (command.equals("graveyard") && existsInGraveYard) {
                         summonFromGraveYard();
                         break;
-                    } else if (command.equals("hand") && existsInHand){
+                    } else if (command.equals("hand") && existsInHand) {
                         summonFromHand();
                         break;
-                    } else if (command.equals("deck") && existsInDeck){
+                    } else if (command.equals("deck") && existsInDeck) {
                         summonFromDeck();
                         break;
                     } else {
@@ -89,12 +89,12 @@ public class Success implements SpecialAbility, StringMessages {
         }
     }
 
-    private void summonFromGraveYard(){
+    private void summonFromGraveYard() {
         ArrayList<Cards> graveYard = gamePlayController.getGamePlay().getMyGameBoard().getGraveyard();
         printerAndScanner.printString(printBuilderController.buildGraveyard(graveYard));
         String cardName = printerAndScanner.scanNextLine();
         Cards toSummon;
-        while (true){
+        while (true) {
             toSummon = Cards.getCard(cardName);
             if (toSummon != null)
                 if (((MonsterCards) toSummon).getMonsterType().equals(monsterType) && toSummon.getSpecial().size() == 0)
@@ -109,49 +109,50 @@ public class Success implements SpecialAbility, StringMessages {
         gamePlayController.placeCard(toPlace, false, STATUS.ATTACK);
     }
 
-    private void summonFromHand(){
+    private void summonFromHand() {
         printerAndScanner.printNextLine(cardNumber);
         int cardNumber = printerAndScanner.scanNextInt();
-        while (true){
-            if (cardNumber <6 && cardNumber >= 0){
+        while (true) {
+            if (cardNumber < 6 && cardNumber >= 0) {
                 Place place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(cardNumber, PLACE_NAME.HAND);
                 if (place.getCard() != null)
-                if (((MonsterCards) place.getCard()).getMonsterType().equals(monsterType) && place.getCard().getSpecial().size() == 0){
-                    gamePlayController.placeCard(place, false, STATUS.ATTACK);
-                    break;
-                }
+                    if (((MonsterCards) place.getCard()).getMonsterType().equals(monsterType) && place.getCard().getSpecial().size() == 0) {
+                        gamePlayController.placeCard(place, false, STATUS.ATTACK);
+                        break;
+                    }
             }
             printerAndScanner.printNextLine(wrongCard);
             cardNumber = printerAndScanner.scanNextInt();
         }
     }
 
-    private void summonFromDeck(){
+    private void summonFromDeck() {
         ArrayList<Cards> mainCards = gamePlayController.getGamePlay().getMyGameBoard().getMainCards();
         ArrayList<Integer> cardsPicked = gamePlayController.getGamePlay().getMyGameBoard().getCardsPicked();
         printerAndScanner.printNextLine(nameOfTheCardYouWantToSummon);
         String cardName = printerAndScanner.scanNextLine();
-        outerLoop :
-        while (true){
+        outerLoop:
+        while (true) {
             Cards card = Cards.getCard(cardName);
             if (card != null)
-            if (((MonsterCards) card).getMonsterType().equals(monsterType) && card.getSpecial().size() == 0)
-                for (int i = 0; i < mainCards.size(); i++) {
-                    if (mainCards.get(i).equals(card) && !cardsPicked.contains(i)){
-                        Place toSummon = new Place(PLACE_NAME.HAND);
-                        toSummon.setCard(card);
-                        gamePlayController.placeCard(place, false, STATUS.ATTACK);
-                        cardsPicked.add(i);
-                        gamePlayController.shuffleDeck();
-                        break outerLoop;
+                if (((MonsterCards) card).getMonsterType().equals(monsterType) && card.getSpecial().size() == 0)
+                    for (int i = 0; i < mainCards.size(); i++) {
+                        if (mainCards.get(i).equals(card) && !cardsPicked.contains(i)) {
+                            Place toSummon = new Place(PLACE_NAME.HAND);
+                            toSummon.setCard(card);
+                            gamePlayController.placeCard(place, false, STATUS.ATTACK);
+                            cardsPicked.add(i);
+                            gamePlayController.shuffleDeck();
+                            break outerLoop;
+                        }
                     }
-            }
             printerAndScanner.printNextLine(wrongCard);
             cardName = printerAndScanner.scanNextLine();
         }
+        gamePlayController.shuffleDeck();
     }
 
-    private boolean monsterOfThisTypeExistsInGraveYard(){
+    private boolean monsterOfThisTypeExistsInGraveYard() {
         ArrayList<Cards> graveYard = gamePlayController.getGamePlay().getMyGameBoard().getGraveyard();
         for (Cards cards : graveYard) {
             if (cards.getType().equals(monsterType))
@@ -160,18 +161,18 @@ public class Success implements SpecialAbility, StringMessages {
         return false;
     }
 
-    private boolean monsterOfThisTypeExistsInHand(){
+    private boolean monsterOfThisTypeExistsInHand() {
         Cards card;
         for (int i = 0; i < 6; i++) {
             card = gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.HAND).getCard();
             if (card != null)
-            if (((MonsterCards) card).getMonsterType().equals(monsterType))
-                return true;
+                if (((MonsterCards) card).getMonsterType().equals(monsterType))
+                    return true;
         }
         return false;
     }
 
-    private boolean monsterOfThisTypeExistsInDeck(){
+    private boolean monsterOfThisTypeExistsInDeck() {
         ArrayList<Cards> mainCards = gamePlayController.getGamePlay().getMyGameBoard().getMainCards();
         ArrayList<Integer> cardsPicked = gamePlayController.getGamePlay().getMyGameBoard().getCardsPicked();
         for (int i = 0; i < mainCards.size(); i++) {
@@ -181,7 +182,7 @@ public class Success implements SpecialAbility, StringMessages {
         return false;
     }
 
-    public void preventAttack(){
+    public void preventAttack() {
         place.getAffect().getTemporaryFeatures().add(TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN);
     }
 }
