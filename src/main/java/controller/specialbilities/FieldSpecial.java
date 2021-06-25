@@ -58,7 +58,7 @@ public class FieldSpecial implements SpecialAbility {
         this.onDeath = onDeath;
     }
 
-    private void attackChange() {//TODO ++
+    private void attackChange() {
         changeAttackModifier(amount);
     }
 
