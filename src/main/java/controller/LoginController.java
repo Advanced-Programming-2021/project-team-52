@@ -1,11 +1,19 @@
 package controller;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.opencsv.exceptions.CsvException;
+import model.Deck;
 import model.User;
 import model.tools.RegexPatterns;
 import view.PrinterAndScanner;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -47,11 +55,13 @@ public class LoginController implements RegexPatterns {
     }
 
     public void start() {
+        readUser();
         String command = printerAndScanner.scanNextLine();
         while (true) {
             if (run(command)) break;
             command = printerAndScanner.scanNextLine();
         }
+        saveUsers();
     }
 
     public boolean run(String command) {
@@ -119,6 +129,41 @@ public class LoginController implements RegexPatterns {
         if (users.containsKey(username))
             return users.get(username);
         return null;
+    }
+
+    private void saveUsers(){
+        File file = new File("./src/main/resources/users");
+        try {
+            file.mkdir();
+        } catch (Exception ignored){
+        }
+        Gson gson = new Gson();
+        for (User user : users.values()) {
+            String nextUser = gson.toJson(user);
+            try {
+                FileWriter nextFile = new FileWriter("./src/main/resources/users/" + user.getUsername() + ".json");
+                nextFile.write(nextUser);
+                nextFile.close();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void readUser(){
+        File directory = new File("./src/main/resources/users");
+        File[] allUsers = directory.listFiles();
+        if (allUsers != null)
+            for (File user : allUsers) {
+                try {
+                    String json = new String(Files.readAllBytes(Paths.get(user.getPath())));
+                    User user1 = new Gson().fromJson(json, new TypeToken<User>(){}.getType());
+                    userNames.add(user1.getUsername());
+                    nickNames.add(user1.getNickname());
+                    users.put(user1.getUsername(), user1);
+                } catch (Exception ignored){
+                }
+            }
     }
 
 }

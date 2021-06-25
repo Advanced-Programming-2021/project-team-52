@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class User extends Player {
+
     private String username;
     private String nickname;
     private String password;
-    private int balance = 100000;
-    private int score = 0;
+    private int balance;
+    private int score;
     private Deck activeDeck;
     private HashMap<String, Deck> decks;
     private ArrayList<String> cards;
@@ -24,6 +25,8 @@ public class User extends Player {
         setUsername(username);
         setPassword(password);
         setNickname(nickname);
+        this.score = 0;
+        this.balance = 1000;
     }
 
     public static User createUser(String username, String password, String nickname) {
