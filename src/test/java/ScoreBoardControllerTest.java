@@ -5,7 +5,6 @@ import controller.ScoreBoardController;
 import model.User;
 import model.tools.StringMessages;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import view.PrinterAndScanner;
 
@@ -64,26 +63,27 @@ public class ScoreBoardControllerTest extends PrintBuilderController implements 
 
         outContent.reset();
         Assertions.assertEquals("1- asghar: 90\n" +
-                "2- AliRahim: 20\n" +
-                "2- BliRahim: 20\n" +
-                "2- aliRahim: 20\n" +
-                "2- aliRahjm: 20\n" +
-                "2- aziRahim: 20\n" +
-                "7- mamad: 10\n" +
-                "8- akbar: 9"
+                        "2- AliRahim: 20\n" +
+                        "2- BliRahim: 20\n" +
+                        "2- aliRahim: 20\n" +
+                        "2- aliRahjm: 20\n" +
+                        "2- aziRahim: 20\n" +
+                        "7- mamad: 10\n" +
+                        "8- akbar: 9"
                 , ScoreBoardController.getInstance().toString().trim().replace("\r", ""));
 
-        ProfileController.getInstance().changeNickname("parsa", LoginController.getUserByUsername("asghar"));
+        ProfileController.getInstance().changeNickname("parsa",
+                LoginController.getUserByUsername("asghar"));
 
         outContent.reset();
         Assertions.assertEquals("1- parsa: 90\n" +
-                "2- AliRahim: 20\n" +
-                "2- BliRahim: 20\n" +
-                "2- aliRahim: 20\n" +
-                "2- aliRahjm: 20\n" +
-                "2- aziRahim: 20\n" +
-                "7- mamad: 10\n" +
-                "8- akbar: 9"
+                        "2- AliRahim: 20\n" +
+                        "2- BliRahim: 20\n" +
+                        "2- aliRahim: 20\n" +
+                        "2- aliRahjm: 20\n" +
+                        "2- aziRahim: 20\n" +
+                        "7- mamad: 10\n" +
+                        "8- akbar: 9"
                 , ScoreBoardController.getInstance().toString().trim().replace("\r", ""));
 
     }
@@ -98,7 +98,7 @@ public class ScoreBoardControllerTest extends PrintBuilderController implements 
     }
 
     @Test
-    public void testRegexes(){
+    public void testRegexes() {
         System.setOut(new PrintStream(outContent));
         LoginController loginController = LoginController.getInstance();
         ScoreBoardController scoreBoardController = ScoreBoardController.getInstance();

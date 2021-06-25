@@ -1,4 +1,4 @@
-import com.opencsv.exceptions.CsvException;
+
 import controller.LoginController;
 import controller.PrintBuilderController;
 import controller.ProfileController;
@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 import view.PrinterAndScanner;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
 
 public class ProfileControllerTest extends PrintBuilderController implements StringMessages {
     ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -123,11 +121,12 @@ public class ProfileControllerTest extends PrintBuilderController implements Str
     public void showCurrent() {
         System.setOut(new PrintStream(outContent));
         ProfileController.showCurrent();
-        Assertions.assertEquals(showCurrentInProfileController, outContent.toString().trim().replace("\r", ""));
+        Assertions.assertEquals(showCurrentInProfileController, outContent.toString().trim().
+                replace("\r", ""));
     }
 
     @Test
-    public void testRegex(){
+    public void testRegex() {
         System.setOut(new PrintStream(outContent));
         loginController.createUser("AliRahim", "1234AaZz", "Ali");
         user = LoginController.getUserByUsername("AliRahim");
@@ -142,20 +141,20 @@ public class ProfileControllerTest extends PrintBuilderController implements Str
         Assertions.assertEquals(passwordChangedSuccessfully
                 , outContent.toString().trim().replace("\r", ""));
 
-        Assertions.assertTrue(profileController.run(user,"menu exit"));
+        Assertions.assertTrue(profileController.run(user, "menu exit"));
 
         outContent.reset();
-        profileController.run(user,"menu enter profile");
+        profileController.run(user, "menu enter profile");
         Assertions.assertEquals(menuNavigationIsNotPossible,
                 outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        profileController.run(user,"menu show-current");
+        profileController.run(user, "menu show-current");
         Assertions.assertEquals(showCurrentInProfileController,
                 outContent.toString().trim().replace("\r", ""));
 
         outContent.reset();
-        profileController.run(user,"menu sdfsdf");
+        profileController.run(user, "menu sdfsdf");
         Assertions.assertEquals(invalidCommand,
                 outContent.toString().trim().replace("\r", ""));
     }
