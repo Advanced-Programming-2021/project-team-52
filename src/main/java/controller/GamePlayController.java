@@ -151,10 +151,10 @@ public class GamePlayController extends RegexController implements RegexPatterns
         try {
             Place selectedCard = gamePlay.getSelectedCard();
             if (gamePlay.getMyGameBoard().fromThisGameBoard(selectedCard))
-                printerAndScanner.printNextLine(printBuilderController.showOneCard(selectedCard.getCard()));
+                printerAndScanner.printNextLine(printBuilderController.showOneCard(selectedCard));
             else if (selectedCard.getStatus() == STATUS.SET)
                 printerAndScanner.printNextLine(cardIsNotVisible);
-            else printerAndScanner.printNextLine(printBuilderController.showOneCard(selectedCard.getCard()));
+            else printerAndScanner.printNextLine(printBuilderController.showOneCard(selectedCard));
         } catch (NullPointerException e) {
             printerAndScanner.printNextLine(noCardsIsSelectedYet);
         }

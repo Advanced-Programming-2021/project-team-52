@@ -3,7 +3,6 @@ package model.cards;
 import controller.specialbilities.SpecialAbility;
 import model.cards.monster.MonsterCards;
 import model.cards.spell.SpellCards;
-import model.tools.CHAIN_JOB;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,16 +13,15 @@ public class Cards {
 
     private String name, type, description, status;
     private ArrayList<SpecialAbility> special;
-    private int specialSpeed;//TODO add special speed to csv
+    private int specialSpeed;
     private String specialsInString;
-//    private ArrayList<CHAIN_JOB> chainAfter;
 
-    static{
+    static {
         ALL_CARDS = new HashMap<>();
     }
 
     protected Cards(String name, String type, String description, String status, int specialSpeed,
-                    ArrayList<SpecialAbility> special/*, ArrayList<CHAIN_JOB> chainAfter*/, String specialsInString){
+                    ArrayList<SpecialAbility> special, String specialsInString) {
         this.name = name;
         this.type = type;
         this.description = description;
@@ -31,22 +29,20 @@ public class Cards {
         this.special = special;
         this.specialSpeed = specialSpeed;
         this.specialsInString = specialsInString;
-//        this.chainAfter = chainAfter;
     }
 
-    protected static void addCard(Cards card, String name){
+    protected static void addCard(Cards card, String name) {
         ALL_CARDS.put(name, card);
     }
 
-    public static Cards getCard(String name){
+    public static Cards getCard(String name) {
         return ALL_CARDS.getOrDefault(name, null);
     }
 
-    public static ArrayList<String> getAllNames(){
+    public static ArrayList<String> getAllNames() {
         return new ArrayList<>(ALL_CARDS.keySet());
     }
 
-    //just for unit tests
     public void setStatus(String status) {
         this.status = status;
     }
@@ -71,10 +67,6 @@ public class Cards {
         return status;
     }
 
-    public void setSpecialSpeed(int specialSpeed) {
-        this.specialSpeed = specialSpeed;
-    }
-
     public int getSpecialSpeed() {
         return specialSpeed;
     }
@@ -83,14 +75,10 @@ public class Cards {
         return specialsInString;
     }
 
-    //    public ArrayList<CHAIN_JOB> getChainJob() {
-//        return chainAfter;
-//    }
-
     @Override
     public String toString() {
         StringBuilder results = new StringBuilder("Name: ").append(this.name).append("\n");
-        if (this instanceof MonsterCards){
+        if (this instanceof MonsterCards) {
             MonsterCards monsterCard = (MonsterCards) this;
             results.append("Level: ").append(monsterCard.getLevel()).append("\n");
             results.append("Type: ").append(monsterCard.getType()).append("\n");

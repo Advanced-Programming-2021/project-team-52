@@ -1,22 +1,21 @@
 package controller;
 
+import model.cards.Cards;
+import model.cards.monster.MonsterCards;
+import model.cards.spell.SpellCards;
+import model.cards.trap.TrapCards;
+import model.tools.RegexPatterns;
+import model.tools.StringMessages;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import view.PrinterAndScanner;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.regex.Matcher;
-
-import model.cards.monster.MonsterCards;
-import model.cards.spell.SpellCards;
-import model.cards.trap.TrapCards;
-import org.json.simple.JSONObject;
-
-import model.cards.Cards;
-import model.tools.RegexPatterns;
-import model.tools.StringMessages;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import view.PrinterAndScanner;
 
 public class ImportAndExportController implements RegexPatterns, StringMessages {
     private static ImportAndExportController importAndExportController = null;
@@ -33,6 +32,11 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
     }
 
     public void run() {
+        File file = new File("./src/main/resources/exportedCards");
+        try {
+            file.mkdir();
+        } catch (Exception ignored) {
+        }
         String command = printerAndScanner.scanNextLine();
         Matcher matcher;
         while (true) {
@@ -134,8 +138,8 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
                                 ("&&")), InstantiateCards.getChainJobs((String) cardInJson.get("chainJobInString")
                 ), (String) cardInJson.get("specialsInString"), (String) cardInJson.get("chainJobInString"));
             }
-        } catch (Exception exception) {
-            printerAndScanner.printNextLine(error);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

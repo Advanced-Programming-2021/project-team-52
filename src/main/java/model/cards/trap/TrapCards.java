@@ -6,7 +6,6 @@ import model.tools.CHAIN_JOB;
 
 import java.util.ArrayList;
 
-//TODO add speed
 public class TrapCards extends Cards {
     private String icon;
     private ArrayList<CHAIN_JOB> chainJobs;

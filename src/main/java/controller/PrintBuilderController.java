@@ -7,6 +7,7 @@ import model.cards.spell.SpellCards;
 import model.cards.trap.TrapCards;
 import model.game.GameBoard;
 import model.cards.Cards;
+import model.game.MonsterZone;
 import model.game.PLACE_NAME;
 import model.game.Place;
 
@@ -16,19 +17,10 @@ import java.util.Collections;
 public class PrintBuilderController {
     private static PrintBuilderController printPrintBuilderController = null;
 
-    private void PrintBuilderController() {
-    }
-
     public static PrintBuilderController getInstance() {
         if (printPrintBuilderController == null)
             printPrintBuilderController = new PrintBuilderController();
         return printPrintBuilderController;
-    }
-
-    public void buildAllCardsInDeck(Deck deck) {
-    }
-
-    public void buildAllDecks(User user) {
     }
 
     public StringBuilder buildGraveyard(ArrayList<Cards> graveyard) {
@@ -38,40 +30,6 @@ public class PrintBuilderController {
             results.append("\n");
         }
         return results;
-    }
-
-    public void buildGameWinner(String username, int score1, int score2) {
-    }
-
-    public void buildMatchWinner(String username, int score1, int score2) {
-    }
-
-    public void buildScoreBoard() {
-    }
-
-    public void buildChainTurnPromot(String playerName, GameBoard board) {
-    }
-
-    public String winingAgainstOO(int damage) {
-        return "your opponent’s monster is destroyed" +
-                " and your opponent receives " +
-                damage +
-                " battle damage";
-    }
-
-    public String losingAgainstOO(int damage) {
-        return "Your monster card is destroyed" +
-                " and you received " + damage + " battle" +
-                " damage";
-    }
-
-    public String losingAgainstDO(int damage) {
-        return "no card is destroyed and" +
-                " you received " + damage + " battle damage";
-    }
-
-    public String hiddenCardAfterAttacking(String cardName) {
-        return "opponent’s monster card was " + cardName + " and ";
     }
 
     public String thisUsernameAlreadyExists(String newUsername) {
@@ -212,13 +170,35 @@ public class PrintBuilderController {
             response.append("Description: ").append(monsterCard.getDescription());
             return response.toString();
         }
+        if (getSpellOrTrap(response, card)) return response.toString();
+        return "card is not valid";
+    }
+
+    public String showOneCard(Place place) {
+        StringBuilder response = new StringBuilder();
+        Cards card = place.getCard();
+        if (card instanceof MonsterCards) {
+            MonsterCards monsterCard = (MonsterCards) card;
+            response.append("Name: ").append(monsterCard.getName()).append("\n");
+            response.append("Level: ").append(monsterCard.getLevel()).append("\n");
+            response.append("Type: ").append(((MonsterZone) place).getAttack()).append("\n");
+            response.append("ATK: ").append(((MonsterZone) place).getDefense()).append("\n");
+            response.append("DEF: ").append(monsterCard.getDefense()).append("\n");
+            response.append("Description: ").append(monsterCard.getDescription());
+            return response.toString();
+        }
+        if (getSpellOrTrap(response, card)) return response.toString();
+        return "card is not valid";
+    }
+
+    private boolean getSpellOrTrap(StringBuilder response, Cards card) {
         if (card instanceof SpellCards) {
             SpellCards spellCard = (SpellCards) card;
             response.append("Name: ").append(spellCard.getName()).append("\n");
             response.append("Spell").append("\n");
             response.append("Type: ").append(spellCard.getIcon()).append("\n");
             response.append("Description: ").append(spellCard.getDescription());
-            return response.toString();
+            return true;
         }
         if (card instanceof TrapCards) {
             TrapCards trapCard = (TrapCards) card;
@@ -226,17 +206,9 @@ public class PrintBuilderController {
             response.append("Trap").append("\n");
             response.append("Type: ").append(trapCard.getIcon()).append("\n");
             response.append("Description: ").append(trapCard.getDescription());
-            return response.toString();
+            return true;
         }
-        return "card is not valid";
-    }
-
-    public String userHasNoActiveDeck(String username) {
-        return username + " has no active deck";
-    }
-
-    public String userDeckIsInvalid(String username) {
-        return username + " deck is invalid";
+        return false;
     }
 
 
@@ -249,12 +221,6 @@ public class PrintBuilderController {
     }
 
     public StringBuilder attackToAttackResult(int damage, int result) {
-//        if (opponentLost)
-//            return new StringBuilder("your opponent’s monster is destroyed and your opponent receives ").append(damage)
-//                    .append("battle damage");
-//        else
-//            return new StringBuilder("Your monster card is destroyed and you received ").append(damage).
-//                    append(" battle damage");
         StringBuilder resultString = new StringBuilder();
         switch (result){
             case 1 :
@@ -296,10 +262,6 @@ public class PrintBuilderController {
         return new StringBuilder("now it will be ").append(name).append("’s turn\n").
                 append(buildGameBoard(myGameBoard, opponentGameBoard, name, opponentName))/*.
                 append(gameBoardBuilder(myGameBoard, opponentGameBoard))*/;
-    }
-
-    public StringBuilder gameBoardBuilder(GameBoard myGameBoard, GameBoard opponentGameBoard) {
-        return null;
     }
 
     public StringBuilder askForPayingLp(String amount, String cardName) {

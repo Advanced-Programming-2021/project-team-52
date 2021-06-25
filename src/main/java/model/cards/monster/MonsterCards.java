@@ -2,13 +2,11 @@ package model.cards.monster;
 
 import controller.specialbilities.SpecialAbility;
 import model.cards.Cards;
-import model.game.Place;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MonsterCards extends Cards {
-    //TODO add speed
+
     private int level, attack, defense;
     private String attribute, monsterType;
 
