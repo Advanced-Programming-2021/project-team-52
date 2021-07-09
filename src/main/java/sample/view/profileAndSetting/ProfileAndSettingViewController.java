@@ -70,10 +70,7 @@ public class ProfileAndSettingViewController implements Initializable {
     public void changeNickname(ActionEvent e) {
         newNicknameTextArea.setVisible(!newNicknameTextArea.isVisible());
         nicknameChangeSubmitButton.setVisible(!nicknameChangeSubmitButton.isVisible());
-        String response = profileController.changeNickname(newNicknameTextArea.getText(),
-                UserKeeper.getInstance().getCurrentUser());
-        nicknameLabelInProfileScene.setText(UserKeeper.getInstance().getCurrentUser().getNickname());
-        situationLabel.setText(response);
+
     }
 
     public void changePassword(ActionEvent e) {
@@ -81,10 +78,6 @@ public class ProfileAndSettingViewController implements Initializable {
         newPasswordTextArea.setVisible(!newPasswordTextArea.isVisible());
         newPasswordAgainTextArea.setVisible(!newPasswordAgainTextArea.isVisible());
         passwordChangeSubmitButton.setVisible(!passwordChangeSubmitButton.isVisible());
-        String response = profileController.changePassword(newPasswordTextArea.getText(),
-                newPasswordAgainTextArea.getText(), oldPasswordTextArea.getText(),
-                UserKeeper.getInstance().getCurrentUser());
-        situationLabel.setText(response);
     }
 
     public void dragAndDropEnteredOver(DragEvent e) throws FileNotFoundException {
@@ -110,6 +103,20 @@ public class ProfileAndSettingViewController implements Initializable {
         } catch (FileNotFoundException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
         }
+    }
+
+    public void changePasswordFromController(){
+        String response = profileController.changePassword(newPasswordTextArea.getText(),
+                newPasswordAgainTextArea.getText(), oldPasswordTextArea.getText(),
+                UserKeeper.getInstance().getCurrentUser());
+        situationLabel.setText(response);
+    }
+
+    public void changeNicknameFromController(){
+        String response = profileController.changeNickname(newNicknameTextArea.getText(),
+                UserKeeper.getInstance().getCurrentUser());
+        nicknameLabelInProfileScene.setText(UserKeeper.getInstance().getCurrentUser().getNickname());
+        situationLabel.setText(response);
     }
 
 }
