@@ -18,6 +18,7 @@ import sample.Main;
 import sample.controller.LoginController;
 import sample.controller.PrintBuilderController;
 import sample.model.User;
+import sample.view.UserKeeper;
 
 import java.io.File;
 import java.io.IOException;
@@ -87,6 +88,7 @@ public class LoginViewController implements Initializable {
             errorLabelInEntranceMenu.setDisable(false);
             errorLabelInEntranceMenu.setText(usernameAndPasswordDoNotMatch);
         } else {
+            UserKeeper.setCurrentUser(LoginController.getUserByUsername(usernameFieldInEntranceScene.getText()));
             switchToMainMenu(e);
         }
     }

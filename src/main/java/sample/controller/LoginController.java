@@ -27,7 +27,6 @@ public class LoginController implements RegexPatterns {
     static ArrayList<String> userNames;
     static ArrayList<String> nickNames;
     static HashMap<String, User> users;
-    User onlineUser;
     private static PrintBuilderController printBuilderController;
     private static PrinterAndScanner printerAndScanner;
 
@@ -142,7 +141,6 @@ public class LoginController implements RegexPatterns {
         if (user == null || !user.getPassword().equals(password)) {
             return usernameAndPasswordDoNotMatch;
         }
-        onlineUser = user;
         return userLoggedInSuccessfully;
     }
 

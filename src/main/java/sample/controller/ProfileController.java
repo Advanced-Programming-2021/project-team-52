@@ -51,8 +51,7 @@ public class ProfileController implements RegexPatterns, StringMessages {
 //    }
 
 
-    public String changeNickname(String newNickname) {
-        User user = LoginController.getInstance().onlineUser;
+    public String changeNickname(String newNickname, User user) {
         if (LoginController.nickNames.contains(newNickname)) {
             return printBuilderController.thisNicknameAlreadyExists(newNickname);
         }
@@ -82,8 +81,7 @@ public class ProfileController implements RegexPatterns, StringMessages {
 //        printerAndScanner.printNextLine(usernameChangedSuccessfully);
 //    }
 
-    public String changePassword(String newPassword, String oldPassword) {
-        User user = LoginController.getInstance().onlineUser;
+    public String changePassword(String newPassword, String oldPassword, User user) {
         if (RegexController.getMatcher(newPassword, RegexPatterns.standardPassword) == null)
             return nonStandardPassword;
         else if (!user.getPassword().equals(oldPassword))
