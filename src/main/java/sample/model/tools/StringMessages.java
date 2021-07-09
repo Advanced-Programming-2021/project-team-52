@@ -241,4 +241,9 @@ public interface StringMessages {
     String cancelAI = "cancel";
     String endAI = "end";
 
+    //Card Creator
+    String thereIsNoCardWithThisName= "There is no card with this name";
+    String invalidInputForCardCreator= "Invalid input";
+    String thisCardDoesNotHaveSpecial= "This card doesn't have special";
+
 }

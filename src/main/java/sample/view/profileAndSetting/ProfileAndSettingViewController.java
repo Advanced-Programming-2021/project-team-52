@@ -100,6 +100,7 @@ public class ProfileAndSettingViewController implements Initializable {
         try {
             Image draggedImage = new Image(new FileInputStream(draggedImageFile.get(0)));
             profileImageImageView.setImage(draggedImage);
+            profileController.changeProfileImage(draggedImage, UserKeeper.getInstance().getCurrentUser());
         } catch (FileNotFoundException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
         }
