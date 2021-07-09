@@ -4,25 +4,31 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import sample.controller.ProfileController;
 import sample.view.UserKeeper;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class ProfileAndSettingViewController implements Initializable {
+
+    Scene scene;
+    Stage stage;
+
     private ProfileController profileController = ProfileController.getInstance();
     @FXML
     AnchorPane ProfileAndSettingViewPane;
@@ -30,7 +36,7 @@ public class ProfileAndSettingViewController implements Initializable {
     JFXTextArea newNicknameTextArea, newUsernameTextArea, newPasswordTextArea, newPasswordAgainTextArea, oldPasswordTextArea;
     @FXML
     JFXButton nicknameEditButton, usernameEditButton, changePasswordButton,
-            nicknameChangeSubmitButton, usernameChangeSubmitButton, passwordChangeSubmitButton;
+            nicknameChangeSubmitButton, usernameChangeSubmitButton, passwordChangeSubmitButton, backButton;
     @FXML
     ImageView profileImageImageView;
 
@@ -118,6 +124,17 @@ public class ProfileAndSettingViewController implements Initializable {
                 UserKeeper.getInstance().getCurrentUser());
         nicknameLabelInProfileScene.setText(UserKeeper.getInstance().getCurrentUser().getNickname());
         situationLabel.setText(response);
+    }
+
+    public void backButton(ActionEvent e) throws IOException {
+        FXMLLoader loader = new FXMLLoader(new File
+                ("./src/main/java/sample/view/mainMenu/MainMenuFxml.fxml").toURI().toURL());
+//                ("src\\main\\java\\sample\\view\\mainMenu\\MainMenuFxml.fxml").toURI().toURL());
+        Parent root = loader.load();
+        stage = (Stage)((Node)e.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
 }
