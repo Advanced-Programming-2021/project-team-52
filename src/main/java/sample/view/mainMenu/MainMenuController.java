@@ -17,6 +17,8 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
+import sample.model.User;
+import sample.view.UserKeeper;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -47,8 +49,8 @@ public class MainMenuController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
-        mainMenuBackgroundMediaFile = new File("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\resources\\media\\images\\backgrounds\\newProject11.mp4");
-//        mainMenuBackgroundMediaFile = new File("src\\main\\resources\\media\\images\\backgrounds\\newProject11.mp4");
+//        mainMenuBackgroundMediaFile = new File("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\resources\\media\\images\\backgrounds\\newProject11.mp4");
+        mainMenuBackgroundMediaFile = new File("./src/main/resources/media/images/backgrounds/newProject11.mp4");
         try {
             mainMenuBackgroundMedia = new Media(mainMenuBackgroundMediaFile.toURI().toURL().toExternalForm());
             mainMenuBackgroundMediaPlayer = new MediaPlayer(mainMenuBackgroundMedia);
@@ -166,6 +168,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void switchToProfileAndSettingScene(ActionEvent e) throws IOException {
+//        System.out.println(UserKeeper.getInstance().getCurrentUser().getUsername());
         FXMLLoader loader = new FXMLLoader(new File
 //                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\java\\sample\\view\\deckManager\\DeckManagerFxml.fxml").toURI().toURL());
                 ("./src/main/java/sample/view/profileAndSetting/ProfileAndSettingFxml.fxml").toURI().toURL());

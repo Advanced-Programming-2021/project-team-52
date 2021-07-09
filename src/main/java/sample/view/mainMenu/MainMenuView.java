@@ -37,8 +37,8 @@ public class MainMenuView extends Application{
     @Override
     public void start(Stage stage) throws Exception {
 
-        mainMenuMusicFile = new File("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\resources\\media\\sounds\\mainMenuMusic.mp3");
-//        mainMenuMusicFile = new File("src\\main\\resources\\media\\sounds\\mainMenuMusic.mp3");
+//        mainMenuMusicFile = new File("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\resources\\media\\sounds\\mainMenuMusic.mp3");
+        mainMenuMusicFile = new File("./src/main/resources/media/sounds/mainMenuMusic.mp3");
         try {
             mainMenuMusic = new Media(mainMenuMusicFile.toURI().toURL().toExternalForm());
             mainMenuMusicPlayer = new MediaPlayer(mainMenuMusic);
@@ -51,12 +51,12 @@ public class MainMenuView extends Application{
         }
 
         Parent root = FXMLLoader.load(new File
-                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\java\\sample\\view\\mainMenu\\MainMenuFxml.fxml").toURI().toURL());
-//                ("src\\main\\java\\sample\\view\\mainMenu\\MainMenuFxml.fxml").toURI().toURL());
+//                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\java\\sample\\view\\mainMenu\\MainMenuFxml.fxml").toURI().toURL());
+                ("./src/main/java/sample/view/mainMenu/MainMenuFxml.fxml").toURI().toURL());
         Scene mainMenuScene = new Scene(root);
         mainMenuScene.getStylesheets().add(new File
-                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\resources\\cssFiles\\MainMenuViewCss.css").toURI().toURL().toExternalForm());
-//                ("src\\main\\resources\\cssFiles\\MainMenuViewCss.css").toURI().toURL().toExternalForm());
+//                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\resources\\cssFiles\\MainMenuViewCss.css").toURI().toURL().toExternalForm());
+                ("./src/main/resources/cssFiles/MainMenuViewCss.css").toURI().toURL().toExternalForm());
         stage.setScene(mainMenuScene);
         stage.show();
     }
