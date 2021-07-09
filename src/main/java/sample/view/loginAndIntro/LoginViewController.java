@@ -56,6 +56,7 @@ public class LoginViewController implements Initializable {
         entranceScenePane.setStyle("-fx-background-image: url(media/images/backgrounds/1191_entranceMenuSceneBackground.png); " +
                 "-fx-background-size: 720 480 ");
 
+
     }
 
     public void switchToMainMenu(ActionEvent e) throws IOException {

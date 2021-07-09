@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXTextArea;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
@@ -31,6 +32,9 @@ public class ProfileAndSettingViewController implements Initializable{
     @FXML
     ImageView profileImageImageView;
 
+    @FXML
+    Label usernameLabelInProfileScene,nicknameLabelInProfileScene;
+
 //    InputStream defaultProfileImageStream = new FileInputStream
 //            ("./src/main/resources/media/images/profile/1.jpg");
     InputStream dragAndDropGuidImageStream = new FileInputStream
@@ -43,6 +47,8 @@ public class ProfileAndSettingViewController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        usernameLabelInProfileScene.setText(UserKeeper.getInstance().getCurrentUser().getUsername());
+        nicknameLabelInProfileScene.setText(UserKeeper.getInstance().getCurrentUser().getNickname());
         ProfileAndSettingViewPane.setStyle("-fx-background-color: black");
         newNicknameTextArea.setStyle("-fx-text-fill: White; -fx-prompt-text-fill: white");
         newUsernameTextArea.setStyle("-fx-text-fill: White; -fx-prompt-text-fill: white");
