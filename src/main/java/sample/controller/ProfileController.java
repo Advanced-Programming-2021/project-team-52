@@ -83,7 +83,9 @@ public class ProfileController implements RegexPatterns, StringMessages {
 //        printerAndScanner.printNextLine(usernameChangedSuccessfully);
 //    }
 
-    public String changePassword(String newPassword, String oldPassword, User user) {
+    public String changePassword(String newPassword,String newPasswordAgain, String oldPassword, User user) {
+        if(!newPassword.equals(newPasswordAgain))
+            return inputPasswordsDoesNotMatch;
         if (RegexController.getMatcher(newPassword, RegexPatterns.standardPassword) == null)
             return nonStandardPassword;
         else if (!user.getPassword().equals(oldPassword))
@@ -95,14 +97,16 @@ public class ProfileController implements RegexPatterns, StringMessages {
         return passwordChangedSuccessfully;
     }
 
-    public String changeProfileImage(String path, User user){
-        try {
-            user.setImage(new Image(new FileInputStream(path)));
-            return imageChangedSuccessfully;
-        } catch (FileNotFoundException exception) {
-            exception.printStackTrace();
-        }
-        return noImageWithThisName;
+    public String changeProfileImage(/*String path*/Image image, User user){
+//        try {
+//            user.setImage(new Image(new FileInputStream(path)));
+//            return imageChangedSuccessfully;
+//        } catch (FileNotFoundException exception) {
+//            exception.printStackTrace();
+//        }
+//        return noImageWithThisName;
+        user.setImage(image);
+        return imageChangedSuccessfully;
     }
 
 //    public String changeProfileImage(User user, String newImageName){

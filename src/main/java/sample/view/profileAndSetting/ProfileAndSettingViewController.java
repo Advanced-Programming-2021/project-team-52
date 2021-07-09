@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import sample.controller.ProfileController;
 import sample.view.UserKeeper;
 
 import java.io.File;
@@ -21,11 +22,12 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class ProfileAndSettingViewController implements Initializable{
+public class ProfileAndSettingViewController implements Initializable {
+    private ProfileController profileController = ProfileController.getInstance();
     @FXML
     AnchorPane ProfileAndSettingViewPane;
     @FXML
-    JFXTextArea newNicknameTextArea,newUsernameTextArea, newPasswordTextArea , newPasswordAgainTextArea, oldPasswordTextArea;
+    JFXTextArea newNicknameTextArea, newUsernameTextArea, newPasswordTextArea, newPasswordAgainTextArea, oldPasswordTextArea;
     @FXML
     JFXButton nicknameEditButton, usernameEditButton, changePasswordButton,
             nicknameChangeSubmitButton, usernameChangeSubmitButton, passwordChangeSubmitButton;
@@ -33,9 +35,11 @@ public class ProfileAndSettingViewController implements Initializable{
     ImageView profileImageImageView;
 
     @FXML
-    Label usernameLabelInProfileScene,nicknameLabelInProfileScene;
+    Label usernameLabelInProfileScene, nicknameLabelInProfileScene;
+    @FXML
+    Label situationLabel;
 
-//    InputStream defaultProfileImageStream = new FileInputStream
+    //    InputStream defaultProfileImageStream = new FileInputStream
 //            ("./src/main/resources/media/images/profile/1.jpg");
     InputStream dragAndDropGuidImageStream = new FileInputStream
             ("./src/main/resources/media/images/others/dragAndDropGuidImage.jpg");
@@ -57,38 +61,48 @@ public class ProfileAndSettingViewController implements Initializable{
         oldPasswordTextArea.setStyle("-fx-text-fill: White; -fx-prompt-text-fill: white");
     }
 
-    public void changeUsername(ActionEvent e){
+    public void changeUsername(ActionEvent e) {
         newUsernameTextArea.setVisible(!newUsernameTextArea.isVisible());
         usernameChangeSubmitButton.setVisible(!usernameChangeSubmitButton.isVisible());
 
     }
 
-    public void changeNickname(ActionEvent e){
+    public void changeNickname(ActionEvent e) {
         newNicknameTextArea.setVisible(!newNicknameTextArea.isVisible());
         nicknameChangeSubmitButton.setVisible(!nicknameChangeSubmitButton.isVisible());
+        String response = profileController.changeNickname(newNicknameTextArea.getText(),
+                UserKeeper.getInstance().getCurrentUser());
+        nicknameLabelInProfileScene.setText(UserKeeper.getInstance().getCurrentUser().getNickname());
+        situationLabel.setText(response);
     }
 
-    public void changePassword(ActionEvent e){
+    public void changePassword(ActionEvent e) {
         oldPasswordTextArea.setVisible(!oldPasswordTextArea.isVisible());
         newPasswordTextArea.setVisible(!newPasswordTextArea.isVisible());
         newPasswordAgainTextArea.setVisible(!newPasswordAgainTextArea.isVisible());
         passwordChangeSubmitButton.setVisible(!passwordChangeSubmitButton.isVisible());
+        String response = profileController.changePassword(newPasswordTextArea.getText(),
+                newPasswordAgainTextArea.getText(), oldPasswordTextArea.getText(),
+                UserKeeper.getInstance().getCurrentUser());
+        situationLabel.setText(response);
     }
 
     public void dragAndDropEnteredOver(DragEvent e) throws FileNotFoundException {
         profileImageImageView.setImage(profileImageGuid);
-        if(e.getDragboard().hasFiles()) {
+        if (e.getDragboard().hasFiles()) {
             e.acceptTransferModes(TransferMode.ANY);
         } else {
             profileImageImageView.setImage(defaultProfileImage);
         }
     }
-    public void dragAndDropExited(DragEvent e){
-        if(profileImageImageView.getImage() == profileImageGuid) {
+
+    public void dragAndDropExited(DragEvent e) {
+        if (profileImageImageView.getImage() == profileImageGuid) {
             profileImageImageView.setImage(profileImageImageView.getImage());
         }
     }
-    public void setNewImageProcessDragDropped(DragEvent e){
+
+    public void setNewImageProcessDragDropped(DragEvent e) {
         List<File> draggedImageFile = e.getDragboard().getFiles();
         try {
             Image draggedImage = new Image(new FileInputStream(draggedImageFile.get(0)));

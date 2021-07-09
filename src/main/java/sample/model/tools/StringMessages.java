@@ -123,6 +123,7 @@ public interface StringMessages {
             "minimum eight characters, at least one uppercase letter, one lowercase letter and  one number";
     String noImageWithThisName = "There is no image with this name";
     String imageChangedSuccessfully = "Image changed successfully";
+    String inputPasswordsDoesNotMatch = "Input passwords doesn't match";
 
 
     // ShopController
