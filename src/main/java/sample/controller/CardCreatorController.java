@@ -1,5 +1,7 @@
 package sample.controller;
 
+import sample.model.Shop;
+import sample.model.User;
 import sample.model.cards.Cards;
 import sample.model.cards.monster.MonsterCards;
 import sample.model.cards.spell.SpellCards;
@@ -180,4 +182,64 @@ public class CardCreatorController implements StringMessages {
         return String.valueOf(countPriceForSpellAndTrap());
     }
 
+    public String createMonsterCard(User user) {
+        if (name == null || status == null || cardToUserSpecial == null || description == null ||
+                level == 0 || attribute == null || attackPoint == 0 || defendPoint == 0)
+            return PLEASE_CHOOSE_ALL_PROPERTIES;
+        int price = countPriceForMonster();
+        MonsterCards monsterCardToUseSpecial = (MonsterCards) cardToUserSpecial;
+        try {
+            new MonsterCards(name, level, attribute,
+                    monsterCardToUseSpecial.getMonsterType(), monsterCardToUseSpecial.getMonsterType(), attackPoint,
+                    defendPoint, description, status, monsterCardToUseSpecial.getSpecialSpeed(),
+                    InstantiateCards.loadSpecialAbilities((cardToUserSpecial.getSpecialsInString()).split("&&")),
+                    cardToUserSpecial.getSpecialsInString());
+            Shop.addCard(name, price);
+            user.changeBalance(-price / 10);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return THERE_IS_AN_ERROR_IN_OUR_SIDE;
+        }
+        return CARD_CREATED_SUCCESSFULLY;
+    }
+
+    public String createSpellCard(User user) {
+        if (name == null || status == null || cardToUserSpecial == null ||
+                description == null || speed == 0)
+            return PLEASE_CHOOSE_ALL_PROPERTIES;
+        int price = countPriceForSpellAndTrap();
+        SpellCards spellCardToUseSpecial = (SpellCards) cardToUserSpecial;
+        try {
+            new SpellCards(name, "Spell", spellCardToUseSpecial.getIcon(), description, status, speed,
+                    InstantiateCards.loadSpecialAbilities((cardToUserSpecial.getSpecialsInString()).split("&&")),
+                    InstantiateCards.getChainJobs(spellCardToUseSpecial.getChainJobInString()),
+                    cardToUserSpecial.getSpecialsInString(), spellCardToUseSpecial.getChainJobInString());
+            Shop.addCard(name, price);
+            user.changeBalance(-price / 10);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return THERE_IS_AN_ERROR_IN_OUR_SIDE;
+        }
+        return CARD_CREATED_SUCCESSFULLY;
+    }
+
+    public String createTrapCard(User user) {
+        if (name == null || status == null || cardToUserSpecial == null ||
+                description == null || speed == 0)
+            return PLEASE_CHOOSE_ALL_PROPERTIES;
+        int price = countPriceForSpellAndTrap();
+        TrapCards spellCardToUseSpecial = (TrapCards) cardToUserSpecial;
+        try {
+            new SpellCards(name, "Trap", spellCardToUseSpecial.getIcon(), description, status, speed,
+                    InstantiateCards.loadSpecialAbilities((cardToUserSpecial.getSpecialsInString()).split("&&")),
+                    InstantiateCards.getChainJobs(spellCardToUseSpecial.getChainJobInString()),
+                    cardToUserSpecial.getSpecialsInString(), spellCardToUseSpecial.getChainJobInString());
+            Shop.addCard(name, price);
+            user.changeBalance(-price / 10);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return THERE_IS_AN_ERROR_IN_OUR_SIDE;
+        }
+        return CARD_CREATED_SUCCESSFULLY;
+    }
 }

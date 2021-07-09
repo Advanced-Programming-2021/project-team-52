@@ -250,5 +250,8 @@ public interface StringMessages {
     String successful= "Successful";
     String chooseNumberBetween1To3= "Choose a number between 1 to 3";
     String CHOOSE_1_OR_2 = "Choose 1 or 2";
+    String PLEASE_CHOOSE_ALL_PROPERTIES = "Please choose all properties";
+    String THERE_IS_AN_ERROR_IN_OUR_SIDE ="There is an error in our side";
+    String CARD_CREATED_SUCCESSFULLY = "Card created successfully";
 
 }

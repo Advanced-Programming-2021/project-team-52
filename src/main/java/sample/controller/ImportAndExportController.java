@@ -1,5 +1,8 @@
 package sample.controller;
 
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.CSVWriter;
+import sample.model.Shop;
 import sample.model.cards.Cards;
 import sample.model.cards.monster.MonsterCards;
 import sample.model.cards.spell.SpellCards;
@@ -15,26 +18,18 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ImportAndExportController implements RegexPatterns, StringMessages {
     private static ImportAndExportController importAndExportController = null;
     private PrintBuilderController printBuilderController = PrintBuilderController.getInstance();
     private PrinterAndScanner printerAndScanner = PrinterAndScanner.getInstance();
+    private String FILE_PATH_OF_MONSTER_CSV = "./src/main/resources/exportedCardsInCSV/Monster.csv";
+    private String FILE_PATH_OF_SPELL_CSV = "./src/main/resources/exportedCardsInCSV/Spell.csv";
+    private String FILE_PATH_OF_TRAP_CSV = "./src/main/resources/exportedCardsInCSV/Trap.csv";
 
     private ImportAndExportController() {
-        File fileForJson = new File("./src/main/resources/exportedCardsInJson");
-        try {
-            if (!fileForJson.exists())
-                fileForJson.mkdir();
-        } catch (Exception ignored) {
-        }
-        File fileForCSV = new File("./src/main/resources/exportedCardsInCSV");
-        try {
-            if (!fileForCSV.exists())
-                fileForCSV.mkdir();
-        } catch (Exception ignored) {
-        }
-
     }
 
     public static ImportAndExportController getInstance() {
@@ -43,30 +38,159 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
         return importAndExportController;
     }
 
-//    public void run() {
-//        String command = printerAndScanner.scanNextLine();
-//        Matcher matcher;
-//        while (true) {
-//            if ((matcher = RegexController.getMatcher(command, importCardPattern)) != null)
-//                importCard(matcher.group("cardName"));
-//            else if ((matcher = RegexController.getMatcher(command, exportCardPattern)) != null)
-//                exportCard(matcher.group("cardName"));
-//            else if ((matcher = RegexController.getMatcher(command, menuPattern)) != null) {
-//                if (RegexController.hasField(matcher, "showCurrent")) {
-//                    showCurrentMenu();
-//                } else if (RegexController.hasField(matcher, "exit")) {
-//                    break;
-//                } else if (RegexController.hasField(matcher, "enter")) {
-//                    printerAndScanner.printNextLine(impossibilityOfMenuNavigation);
-//                } else
-//                    printerAndScanner.printNextLine(invalidCommand);
-//            } else
-//                printerAndScanner.printNextLine(invalidCommand);
-//            command = printerAndScanner.scanNextLine();
-//        }
-//    }
+    public static void writeDataLineByLine(String filePath, String[] data) {
+        File file = new File(filePath);
+        try {
+            FileWriter fileWriter = new FileWriter(file, true);
+            CSVWriter csvWriter = new CSVWriter(fileWriter);
+            csvWriter.writeNext(data);
+            csvWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    // TODO : does create cards by constructor work?
+    public void exportCardInCSV(String cardName) {
+        Cards card = Cards.getCard(cardName);
+        if (card == null) {
+            printerAndScanner.printNextLine(cardWithThisNameIsNotValid);
+            return;
+        }
+        String filePath;
+        String[] data;
+        if (card instanceof MonsterCards) {
+            filePath = FILE_PATH_OF_MONSTER_CSV;
+            MonsterCards monsterCards = (MonsterCards) card;
+            data = new String[]{card.getName(), String.valueOf(monsterCards.getLevel()), monsterCards.getAttribute(),
+                    monsterCards.getMonsterType(), monsterCards.getType(), String.valueOf(monsterCards.getAttack()),
+                    String.valueOf(monsterCards.getDefense()), monsterCards.getDescription(),
+                    String.valueOf(Shop.getInstance().getItemPrize(cardName)), monsterCards.getStatus(),
+                    String.valueOf(monsterCards.getSpecialSpeed()), monsterCards.getSpecialsInString()};
+        } else if (card instanceof SpellCards) {
+            filePath = FILE_PATH_OF_SPELL_CSV;
+            SpellCards spellCards = (SpellCards) card;
+            data = new String[]{spellCards.getName(), spellCards.getType(), spellCards.getIcon(),
+                    spellCards.getDescription(), spellCards.getStatus(),
+                    String.valueOf(Shop.getInstance().getItemPrize(cardName)),
+                    String.valueOf(spellCards.getSpecialSpeed()), spellCards.getSpecialsInString(),
+                    spellCards.getChainJobInString()};
+        } else {
+            filePath = FILE_PATH_OF_TRAP_CSV;
+            TrapCards trapCards = (TrapCards) card;
+            data = new String[]{trapCards.getName(), trapCards.getType(), trapCards.getIcon(),
+                    trapCards.getDescription(), trapCards.getStatus(),
+                    String.valueOf(Shop.getInstance().getItemPrize(cardName)),
+                    String.valueOf(trapCards.getSpecialSpeed()), trapCards.getSpecialsInString(),
+                    trapCards.getChainJobInString()};
+        }
+        AtomicBoolean isCardAlreadyExported = isCardWithThisNameExistsInExportedCSVCards(cardName, filePath);
+        if (isCardAlreadyExported.get()) {
+            System.out.println(cardWithThisNameHasAlreadyExported);
+            return;
+        }
+        writeDataLineByLine(filePath, data);
+        printerAndScanner.printNextLine(cardExportedSuccessfully);
+    }
 
-    public void exportCard(String cardName) {
+    private AtomicBoolean isCardWithThisNameExistsInExportedCSVCards(String cardName, String filePath) {
+        File file = new File(filePath);
+        AtomicBoolean isCardAlreadyExported = new AtomicBoolean(false);
+        try {
+            FileReader fileReader = new FileReader(file);
+            ArrayList<String[]> list = new ArrayList<>(new CSVReaderBuilder(fileReader).
+                    withSkipLines(1).build().readAll());
+            list.forEach(info -> {
+                if (info[0].equals(cardName)) {
+                    isCardAlreadyExported.set(true);
+                }
+            });
+            fileReader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isCardAlreadyExported;
+    }
+
+    public void importCardFromCSV(String cardName) {
+        try {
+            FileReader fileReader;
+            ArrayList<String[]> list;
+            if (isCardWithThisNameExistsInExportedCSVCards(cardName, FILE_PATH_OF_MONSTER_CSV).get()) {
+                fileReader = new FileReader(FILE_PATH_OF_MONSTER_CSV);
+                list = new ArrayList<>(new CSVReaderBuilder(fileReader).withSkipLines(1).build().readAll());
+                list.forEach(info -> {
+                    if (info[0].equals(cardName)) {
+                        if (Cards.getCard(cardName) != null) {
+                            printerAndScanner.printNextLine(thereIsAlreadyACardWithThisName);
+                            return;
+                        }
+                        try {
+                            new MonsterCards(info[0], Integer.parseInt(info[1]), info[2], info[3], info[4],
+                                    Integer.parseInt(info[5]), Integer.parseInt(info[6]), info[7], info[9],
+                                    Integer.parseInt(info[10]), InstantiateCards.loadSpecialAbilities
+                                    (info[11].split("&&")), info[11]);
+                            Shop.addCard(info[0], Integer.parseInt(info[8]));
+                            printerAndScanner.printNextLine(cardImportedSuccessfully);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                fileReader.close();
+
+            } else if (isCardWithThisNameExistsInExportedCSVCards(cardName, FILE_PATH_OF_SPELL_CSV).get()) {
+                fileReader = new FileReader(FILE_PATH_OF_SPELL_CSV);
+                list = new ArrayList<>(new CSVReaderBuilder(fileReader).withSkipLines(1).build().readAll());
+                list.forEach(info -> {
+                    if (info[0].equals(cardName)) {
+                        if (Cards.getCard(cardName) != null) {
+                            printerAndScanner.printNextLine(thereIsAlreadyACardWithThisName);
+                            return;
+                        }
+                        try {
+                            new SpellCards(info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[6]),
+                                    InstantiateCards.loadSpecialAbilities(info[7].split("&&")),
+                                    InstantiateCards.getChainJobs(info[8]), info[7], info[8]);
+                            Shop.addCard(info[0], Integer.parseInt(info[5]));
+                            printerAndScanner.printNextLine(cardImportedSuccessfully);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                fileReader.close();
+            } else if (isCardWithThisNameExistsInExportedCSVCards(cardName, FILE_PATH_OF_TRAP_CSV).get()) {
+                fileReader = new FileReader(FILE_PATH_OF_TRAP_CSV);
+                list = new ArrayList<>(new CSVReaderBuilder(fileReader).withSkipLines(1).build().readAll());
+                list.forEach(info -> {
+                    if (info[0].equals(cardName)) {
+                        if (Cards.getCard(cardName) != null) {
+                            printerAndScanner.printNextLine(thereIsAlreadyACardWithThisName);
+                            return;
+                        }
+                        try {
+                            new TrapCards(info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[6]),
+                                    InstantiateCards.loadSpecialAbilities(info[7].split("&&")),
+                                    InstantiateCards.getChainJobs(info[8]), info[7], info[8]);
+                            Shop.addCard(info[0], Integer.parseInt(info[5]));
+                            printerAndScanner.printNextLine(cardImportedSuccessfully);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                fileReader.close();
+            } else {
+                printerAndScanner.printNextLine(thereIsNoCardWithThisNameToImport);
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+    }
+
+    public void exportCardInJson(String cardName) {
         Cards card = Cards.getCard(cardName);
         if (card == null) {
             printerAndScanner.printNextLine(cardWithThisNameIsNotValid);
@@ -91,7 +215,7 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
         printerAndScanner.printNextLine(cardExportedSuccessfully);
     }
 
-    public void importCard(String cardName) {
+    public void importCardFromJson(String cardName) {
         File file = new File("./src/main/resources/exportedCardsInJson/" + cardName + ".json");
         if (!file.exists()) {
             printerAndScanner.printNextLine(thereIsNoCardWithThisNameToImport);
@@ -145,6 +269,7 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
                                 ("&&")), InstantiateCards.getChainJobs((String) cardInJson.get("chainJobInString")
                 ), (String) cardInJson.get("specialsInString"), (String) cardInJson.get("chainJobInString"));
             }
+            Shop.addCard((String) cardInJson.get("name"), (Integer) cardInJson.get("Price"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -158,6 +283,7 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
         cardContent.put("status", card.getStatus());
         cardContent.put("specialSpeed", card.getSpecialSpeed());
         cardContent.put("specialsInString", card.getSpecialsInString());
+        cardContent.put("Price", Shop.getInstance().getItemPrize(card.getName()));
         if (card instanceof MonsterCards) {
             cardContent.put("cardType", "monster");
             MonsterCards monsterCards = (MonsterCards) card;
