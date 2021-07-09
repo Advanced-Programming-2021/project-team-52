@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fx:id="shopMenuScrollPane" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minViewportHeight="720.0" minViewportWidth="1280.0" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.view.shop.ShopViewController">
+   <content>
+      <Pane fx:id="shopScenePane" prefHeight="1400.0" prefWidth="1270.0">
+         <children>
+            <Label layoutX="100.0" layoutY="40.0" prefHeight="37.0" prefWidth="94.0" text="Shop" textFill="WHITE">
+               <font>
+                  <Font name="Open Sans" size="32.0" />
+               </font>
+            </Label>
+            <Line endX="982.9998779296875" layoutX="201.0" layoutY="96.0" startX="-100.0" stroke="#ffff22" />
+            <ImageView fx:id="coinIconInShopSceneHeader" fitHeight="43.0" fitWidth="39.0" layoutX="968.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/moneyIconInShopMenu.png" />
+               </image></ImageView>
+            <ImageView fx:id="shopCartIconInShopScene" fitHeight="50.0" fitWidth="57.0" layoutX="1120.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/shopCardInMainMenu34.png" />
+               </image></ImageView>
+            <Label fx:id="userBalanceInShopHeader" layoutX="1024.0" layoutY="61.0" text="Label" textFill="AQUA">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <JFXButton fx:id="backButton" buttonType="RAISED" layoutX="14.0" layoutY="45.0" onAction="#backButton" prefHeight="36.0" prefWidth="72.0">
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="31.0" onMouseClicked="#backButton" pickOnBounds="true">
+                     <image>
+                        <Image url="@../../../../resources/media/images/others/backButtonBackground.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <ImageView fx:id="card1ImageView" fitHeight="175.0" fitWidth="152.0" layoutX="101.0" layoutY="117.0" pickOnBounds="true" preserveRatio="true" />
+            <JFXButton fx:id="card1BuyButton" buttonType="RAISED" layoutX="98.0" layoutY="344.0" prefHeight="25.0" prefWidth="86.0" ripplerFill="#ffff33" text="Buy" />
+            <Label fx:id="card1NameLabel" contentDisplay="CENTER" layoutX="104.0" layoutY="301.0" prefHeight="17.0" prefWidth="149.0" text="card name" textAlignment="JUSTIFY" textFill="WHITE" />
+            <ProgressBar fx:id="card1ProgressBar" layoutX="100.0" layoutY="331.0" prefHeight="4.0" prefWidth="155.0" progress="0.0" />
+            <Label fx:id="card1LeftLabel" layoutX="204.0" layoutY="348.0" prefHeight="20.0" prefWidth="49.0" text="NO. :" textAlignment="JUSTIFY" textFill="WHITE" />
+         </children>
+      </Pane>
+   </content>
+</ScrollPane>
