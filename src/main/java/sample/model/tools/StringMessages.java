@@ -242,8 +242,13 @@ public interface StringMessages {
     String endAI = "end";
 
     //Card Creator
-    String thereIsNoCardWithThisName= "There is no card with this name";
+    String THERE_IS_NO_CARD_WITH_THIS_NAME_IN_MONSTERS = "There is no card with this name in Monsters";
+    String THERE_IS_NO_CARD_WITH_THIS_NAME_IN_SPELLS = "There is no card with this name in Spells";
+    String THERE_IS_NO_CARD_WITH_THIS_NAME_IN_TRAPS = "There is no card with this name in Traps";
     String invalidInputForCardCreator= "Invalid input";
     String thisCardDoesNotHaveSpecial= "This card doesn't have special";
+    String successful= "Successful";
+    String chooseNumberBetween1To3= "Choose a number between 1 to 3";
+    String CHOOSE_1_OR_2 = "Choose 1 or 2";
 
 }

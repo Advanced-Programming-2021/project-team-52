@@ -163,6 +163,12 @@ public class ShopController implements StringMessages, RegexPatterns {
         return mostExpensiveCard;
     }
 
+    // TODO : handle wrong input
+    public static String getCardImagePathByName(String cardName){
+        return "./src/main/resources/cards in lower case/" +
+                cardName.toLowerCase().trim().replace("\\s","")+ ".jpg";
+    }
+
 //    public int getPriceOfCheapestCard() {
 //        HashMap<String, Integer> items = Shop.getItems();
 //        int cheapestCard = 0;
