@@ -31,6 +31,7 @@ public class User extends Player {
         setPassword(password);
         setNickname(nickname);
         setImage(image);
+        System.out.println(image.getUrl());
         setDateOfBirth(dateOfBirth);
         this.score = 0;
         this.balance = 1000;

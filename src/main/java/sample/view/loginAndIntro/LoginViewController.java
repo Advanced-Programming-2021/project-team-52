@@ -88,7 +88,9 @@ public class LoginViewController implements Initializable {
             errorLabelInEntranceMenu.setDisable(false);
             errorLabelInEntranceMenu.setText(usernameAndPasswordDoNotMatch);
         } else {
-            UserKeeper.setCurrentUser(LoginController.getUserByUsername(usernameFieldInEntranceScene.getText()));
+//            System.out.println(LoginController.getUserByUsername(usernameFieldInEntranceScene.getText().trim()));
+//            UserKeeper.setCurrentUser(LoginController.getUserByUsername(usernameFieldInEntranceScene.getText().trim()));
+            System.out.println(UserKeeper.getInstance().getCurrentUser().getUsername());
             switchToMainMenu(e);
         }
     }

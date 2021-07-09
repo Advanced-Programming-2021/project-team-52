@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import sample.view.UserKeeper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,12 +31,12 @@ public class ProfileAndSettingViewController implements Initializable{
     @FXML
     ImageView profileImageImageView;
 
-    InputStream defaultProfileImageStream = new FileInputStream
-            ("./src/main/resources/media/images/profile/1.jpg");
+//    InputStream defaultProfileImageStream = new FileInputStream
+//            ("./src/main/resources/media/images/profile/1.jpg");
     InputStream dragAndDropGuidImageStream = new FileInputStream
             ("./src/main/resources/media/images/others/dragAndDropGuidImage.jpg");
     Image profileImageGuid = new Image(dragAndDropGuidImageStream);
-    Image defaultProfileImage = new Image(defaultProfileImageStream);
+    Image defaultProfileImage = UserKeeper.getInstance().getCurrentUser().getImage();
 
     public ProfileAndSettingViewController() throws FileNotFoundException {
     }

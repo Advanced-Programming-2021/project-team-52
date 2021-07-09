@@ -8,6 +8,7 @@ import sample.model.tools.RegexPatterns;
 import sample.view.PrinterAndScanner;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import sample.view.UserKeeper;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -113,26 +114,27 @@ public class LoginController implements RegexPatterns {
             userNames.add(username);
             nickNames.add(nickname);
             users.put(username, user);
+            UserKeeper.getInstance().setCurrentUser(user);
             return createUserSuccessfully;
         }
     }
 
     private Image getRandomImage() {
-//        try {
-//            return new Image(new FileInputStream("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\resources\\media\\images\\profile\\1.jpg"));
-//        } catch (FileNotFoundException exception) {
-//            exception.printStackTrace();
-//        }
-//        return null;
+        //            return new Image(new FileInputStream("./src/main/resources/media/images/profile/1.jpg"));
+//            return new Image(new FileInputStream("C:\\Users\\paitakht\\IdeaProjects\\project-ppp\\src\\main\\resources\\media\\images\\profile\\1.jpg"));
+        File f = new File("C:\\Users\\paitakht\\IdeaProjects\\project-ppp\\src\\main\\resources\\media\\images\\profile\\1.jpg");
+        Image img = new Image(f.toURI().toString());
+        return img;
 //        return new Image("src\\main\\resources\\media\\images\\profile\\1.jpg");
 //        Random random = new Random();
 //        int randomNumber = random.nextInt(5);
-        try {
-            return new Image(new FileInputStream ("./src/main/resources/media/images/profile/" +(new Random()).nextInt(5)+ ".jpg" ));
-        } catch (FileNotFoundException exception) {
-            exception.printStackTrace();
-        }
-        return null;
+//        try {
+////            System.out.println("./src/main/resources/media/images/profile/" /*+(new Random()).nextInt(5)+ */"1.jpg");
+//            return new Image(new FileInputStream ("./src/main/resources/media/images/profile/" +/*(new Random()).nextInt(4)/ + */"1.jpg" ));
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
     }
 
 
@@ -141,6 +143,9 @@ public class LoginController implements RegexPatterns {
         if (user == null || !user.getPassword().equals(password)) {
             return usernameAndPasswordDoNotMatch;
         }
+//        System.out.println(user.getUsername());
+        UserKeeper.getInstance().setCurrentUser(user);
+//        System.out.println(UserKeeper.getInstance().getCurrentUser());
         return userLoggedInSuccessfully;
     }
 

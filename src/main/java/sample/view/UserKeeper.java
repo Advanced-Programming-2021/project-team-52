@@ -3,13 +3,22 @@ package sample.view;
 import sample.model.User;
 
 public class UserKeeper {
-    static User currentUser;
+    private static UserKeeper userKeeper = null;
+     User currentUser;
 
-    public static void setCurrentUser(User currentUser) {
-        UserKeeper.currentUser = currentUser;
+    private UserKeeper(){}
+
+  public static UserKeeper getInstance(){
+       if(userKeeper == null)
+           userKeeper = new UserKeeper();
+       return userKeeper;
+  }
+
+    public User getCurrentUser() {
+        return currentUser;
     }
 
-    public static User getCurrentUser() {
-        return currentUser;
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
     }
 }
