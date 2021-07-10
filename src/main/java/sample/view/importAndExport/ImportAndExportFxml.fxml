@@ -57,9 +57,9 @@
          </font>
       </JFXRadioButton>
       <JFXTextArea fx:id="infoTextArea" focusColor="#ffff55" labelFloat="true" layoutX="625.0" layoutY="152.0" prefHeight="30.0" prefWidth="363.0" promptText="Info" unFocusColor="WHITE" />
-      <JFXButton fx:id="submitTypeButton" layoutX="101.0" layoutY="230.0" prefHeight="26.0" prefWidth="232.0" text="ok" textFill="#ffff55" />
+<!--      <JFXButton fx:id="submitTypeButton" layoutX="101.0" layoutY="230.0" prefHeight="26.0" prefWidth="232.0" text="ok" textFill="#ffff55" />-->
       <JFXButton fx:id="submitInfoButton" layoutX="958.0" layoutY="156.0" onAction="#importAndExport" prefHeight="26.0" prefWidth="38.0" text="ok" textFill="#ffff55" />
-      <Label fx:id="cardInfoLabel" layoutX="98.0" layoutY="308.0" prefHeight="304.0" prefWidth="239.0" textFill="WHITE">
+      <Label fx:id="cardInfoLabel" layoutX="98.0" layoutY="308.0" prefHeight="304.0" prefWidth="500.0" textFill="WHITE">
          <font>
             <Font name="System Bold Italic" size="14.0" />
          </font>

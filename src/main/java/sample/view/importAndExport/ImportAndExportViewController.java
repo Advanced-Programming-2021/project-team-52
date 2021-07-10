@@ -37,7 +37,7 @@ public class ImportAndExportViewController implements Initializable {
     JFXTextArea infoTextArea;
 
     @FXML
-    Label situationLabel;
+    Label cardInfoLabel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -67,6 +67,7 @@ public class ImportAndExportViewController implements Initializable {
             response = importAndExportController.importCardFromJson(cardName);
         else if(importCsvButton.isSelected())
             response = importAndExportController.importCardFromCSV(cardName);
-        situationLabel.setText(response);
+        System.out.println(response);
+        cardInfoLabel.setText(response);
     }
 }

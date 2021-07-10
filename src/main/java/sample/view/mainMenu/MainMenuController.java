@@ -180,8 +180,8 @@ public class MainMenuController implements Initializable {
 
     public void switchToImportAndExportScene(ActionEvent e) throws IOException {
         FXMLLoader loader = new FXMLLoader(new File
-//                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\java\\sample\\view\\deckManager\\DeckManagerFxml.fxml").toURI().toURL());
-                ("./src/main/java/sample/view/importAndExport/MainMenuFxml.fxml").toURI().toURL());
+//                ("C:\\Users\\paitakht\\IdeaProjects\\project-ppp\\src\\main\\java\\sample\\view\\importAndExport\\ImportAndExportFxml.fxml").toURI().toURL());
+                ("./src/main/java/sample/view/importAndExport/ImportAndExportFxml.fxml").toURI().toURL());
         Parent root = loader.load();
         stage = (Stage)((Node)e.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -191,7 +191,7 @@ public class MainMenuController implements Initializable {
 
     public void switchToEntranceScene(ActionEvent e) throws IOException{
         FXMLLoader loader = new FXMLLoader(new File
-//                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\java\\sample\\view\\loginAndIntro\\LoginViewFxml.fxml").toURI().toURL());
+//                ("C:\\Users\\paitakht\\IdeaProjects\\project-ppp\\src\\main\\java\\sample\\view\\importAndExport\\ImportAndExportFxml").toURI().toURL());
                 ("./src/main/java/sample/view/loginAndIntro/LoginViewFxml.fxml").toURI().toURL());
         Parent root = loader.load();
         stage = (Stage)((Node)e.getSource()).getScene().getWindow();
