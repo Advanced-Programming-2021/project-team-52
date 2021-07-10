@@ -127,7 +127,7 @@ public class LoginViewController implements Initializable {
     }
 
     public void exitApp(ActionEvent e){
-        stage.close();
+        System.exit(0);
     }
 
 }
