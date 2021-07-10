@@ -8,6 +8,7 @@ import sample.model.tools.RegexPatterns;
 import sample.model.tools.StringMessages;
 import sample.view.PrinterAndScanner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 
@@ -84,7 +85,7 @@ public class ShopController implements StringMessages, RegexPatterns {
 //        printerAndScanner.printNextLine(cardBoughtSuccessfully);
 //    }
 
-    private boolean checkBeforeTransaction(String cardName, int balance) {
+    public boolean checkBeforeTransaction(String cardName, int balance) {
         int cardPrice = Shop.getInstance().getItemPrize(cardName);
         return cardPrice <= balance;
     }
@@ -119,6 +120,7 @@ public class ShopController implements StringMessages, RegexPatterns {
         user.changeBalance(-sample.model.Shop.getInstance().getItemPrize(cardName));
         user.addCards(cardName);
         user.addCardToJustShowCards(cardName);
+//        System.out.println(user.getCards());
         return cardBoughtSuccessfully;
     }
 
@@ -138,18 +140,18 @@ public class ShopController implements StringMessages, RegexPatterns {
             return Color.RED;
         }
         int cardPrice = Shop.getInstance().getItemPrize(cardName);
-       if(cardPrice > mostExpensiveCard * 0.75)
-           return Color.AQUA;
-       if(cardPrice > mostExpensiveCard * 0.5)
-           return Color.GOLD;
-        if(cardPrice > mostExpensiveCard * 0.25)
+        if (cardPrice > mostExpensiveCard * 0.75)
+            return Color.AQUA;
+        if (cardPrice > mostExpensiveCard * 0.5)
+            return Color.GOLD;
+        if (cardPrice > mostExpensiveCard * 0.25)
             return Color.SILVER;
         else
             return Color.BROWN;
 
     }
 
-    public boolean DoesUserHaveEnoughMoney(User user, String cardName){
+    public boolean DoesUserHaveEnoughMoney(User user, String cardName) {
         return user.getBalance() >= Shop.getInstance().getItemPrize(cardName);
     }
 
@@ -164,9 +166,23 @@ public class ShopController implements StringMessages, RegexPatterns {
     }
 
     // TODO : handle wrong input
-    public static String getCardImagePathByName(String cardName){
+    public static String getCardImagePathByName(String cardName) {
         return "./src/main/resources/cards in lower case/" +
-                cardName.toLowerCase().trim().replace("\\s","")+ ".jpg";
+                cardName.toLowerCase().trim().replace("\\s", "") + ".jpg";
+    }
+
+    public String getAllUnusedCardsByString(User user) {
+        StringBuilder response = new StringBuilder();
+        ArrayList<String> unusedCards = user.getCards();
+        ArrayList<String> oneOfEachCard = new ArrayList<>();
+        for (String card : unusedCards) {
+            if (!oneOfEachCard.contains(card))
+                oneOfEachCard.add(card);
+        }
+        for (String card : oneOfEachCard) {
+            response.append(card).append("\n");
+        }
+        return response.toString();
     }
 
 //    public int getPriceOfCheapestCard() {

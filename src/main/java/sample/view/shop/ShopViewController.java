@@ -16,7 +16,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import sample.controller.PrintBuilderController;
 import sample.controller.ShopController;
+import sample.model.Shop;
+import sample.model.User;
 import sample.model.cards.Cards;
 import sample.model.tools.StringMessages;
 import sample.view.UserKeeper;
@@ -25,8 +28,11 @@ import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ShopViewController implements StringMessages , Initializable{
-
+public class ShopViewController implements StringMessages, Initializable {
+    ShopController shopController = ShopController.getInstance();
+    PrintBuilderController printBuilderController = PrintBuilderController.getInstance();
+    String cardNameInString;
+    User user = UserKeeper.getInstance().getCurrentUser();
     @FXML
     JFXButton backButton;
     @FXML
@@ -40,12 +46,11 @@ public class ShopViewController implements StringMessages , Initializable{
     @FXML
     JFXButton buyButton, submitSearchInUserCards, submitSearchInShop;
     @FXML
-    Label cardDoNotExistInUserCardsLabel,cardDoNotExistInShopLabel, cardNameLabelUnderUserCard, numberOfCardLabelUnderUserCard,
-            cardNameLabelUnderShopCard, numberOfCardLabelUnderShopCard;
+    Label cardDoNotExistInUserCardsLabel, cardDoNotExistInShopLabel, cardNameLabelUnderUserCard,
+            numberOfCardLabelUnderUserCard, cardNameLabelUnderShopCard, numberOfCardLabelUnderShopCard,
+            userCardDetailsLabel, shopCardDetailsLabel, shopCardsLabel,userCardsLabel;
     @FXML
     ImageView userCardInfoImageView, shopCardInfoImageView;
-
-    ShopController shopController = ShopController.getInstance();
 
     Scene scene;
     Stage stage;
@@ -54,7 +59,8 @@ public class ShopViewController implements StringMessages , Initializable{
     public void initialize(URL url, ResourceBundle resourceBundle) {
         shopScenePane.setStyle("-fx-background-color: black");
 
-        UserKeeper.getInstance().getCurrentUser().setBalance(1000000);
+
+//        UserKeeper.getInstance().getCurrentUser().setBalance(1000000);
         userBalanceInShopHeader.setText(String.valueOf(UserKeeper.getInstance().getCurrentUser().getBalance()));
 
 
@@ -70,6 +76,8 @@ public class ShopViewController implements StringMessages , Initializable{
 
         cardNameLabelUnderUserCard.setStyle("-fx-text-fill: white");
         cardNameLabelUnderShopCard.setStyle("-fx-text-fill: white");
+        showAllCardsOfShop();
+        showUnusedAllCardsOfUser();
     }
 
     public void backButton(ActionEvent e) throws IOException {
@@ -77,80 +85,154 @@ public class ShopViewController implements StringMessages , Initializable{
                 ("./src/main/java/sample/view/mainMenu/MainMenuFxml.fxml").toURI().toURL());
 //                ("src\\main\\java\\sample\\view\\mainMenu\\MainMenuFxml.fxml").toURI().toURL());
         Parent root = loader.load();
-        stage = (Stage)((Node)e.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
 
     public void searchInUserCards(ActionEvent e) throws FileNotFoundException {
-
-        if(cardDoNotExistInUserCardsLabel.isVisible()){
-            cardDoNotExistInUserCardsLabel.setVisible(false);
+        String cardName = searchInUserCardsTextArea.getText().trim();
+        Cards card = Cards.getCard(cardName);
+        if (card == null) {
+            cardDoNotExistInUserCardsLabel.setText("there is no card with this name");
+            numberOfCardLabelUnderUserCard.setText("");
+            userCardDetailsLabel.setText("");
+            return;
         }
+        cardDoNotExistInUserCardsLabel.setText("");
+        numberOfCardLabelUnderUserCard.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                (user, cardName)));
+        userCardDetailsLabel.setText(printBuilderController.showOneCard(card));
+//
+//        if (cardDoNotExistInUserCardsLabel.isVisible()) {
+//            cardDoNotExistInUserCardsLabel.setVisible(false);
+//        }
 
-        if(UserKeeper.getInstance().getCurrentUser()
-                .getCards().contains(searchInUserCardsTextArea.getText().trim())){
+//        if(UserKeeper.getInstance().getCurrentUser()
+//                .getCards().contains(searchInUserCardsTextArea.getText().trim())){
+//
+//            cardNameLabelUnderUserCard.setText(searchInShopTextArea.getText().trim());
+//            numberOfCardLabelUnderUserCard.setText(String.valueOf(UserKeeper.getInstance().
+//                    getCurrentUser().getNumberOfThisCardInCardsOutOfDeck(searchInUserCardsTextArea.getText().trim())));
+//
+//            InputStream userCardImage = new
+//                    FileInputStream(ShopController.getCardImagePathByName(searchInShopTextArea.getText().trim()));
+//            userCardInfoImageView.setImage(new Image(userCardImage));
 
-            cardNameLabelUnderUserCard.setText(searchInShopTextArea.getText().trim());
-            numberOfCardLabelUnderUserCard.setText(String.valueOf(UserKeeper.getInstance().
-                    getCurrentUser().getNumberOfThisCardInCardsOutOfDeck(searchInUserCardsTextArea.getText().trim())));
 
-            InputStream userCardImage = new
-                    FileInputStream(ShopController.getCardImagePathByName(searchInShopTextArea.getText().trim()));
-            userCardInfoImageView.setImage(new Image(userCardImage));
+//        } else {
+//            cardDoNotExistInUserCardsLabel.setVisible(true);
+//        }
 
-        } else {
-            cardDoNotExistInUserCardsLabel.setVisible(true);
-        }
 
     }
 
     public void searchInShop(ActionEvent e) throws FileNotFoundException {
-        if(cardDoNotExistInUserCardsLabel.isVisible()){
-            cardDoNotExistInUserCardsLabel.setVisible(false);
+        String cardName = searchInShopTextArea.getText().trim();
+        Cards card = Cards.getCard(cardName);
+        if (card == null) {
+            cardDoNotExistInShopLabel.setText("there is no card with this name");
+            cardNameLabelUnderShopCard.setText("");
+            numberOfCardLabelUnderShopCard.setText("");
+            shopCardDetailsLabel.setText("");
+            buyButton.setDisable(true);
+            buyButton.setStyle("-fx-background-color: #ff5959");
+            return;
         }
-        if(Cards.getAllNames().contains(searchInShopTextArea.getText().trim())){
+        cardNameInString = cardName;
+        cardDoNotExistInShopLabel.setText("");
+        cardNameLabelUnderShopCard.setText(String.valueOf(shopController.getCardPriceByName(cardName)));
+        numberOfCardLabelUnderShopCard.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                (UserKeeper.getInstance().getCurrentUser(), cardName)));
+        shopCardDetailsLabel.setText(printBuilderController.showOneCard(card));
 
-            cardNameLabelUnderShopCard.setText(searchInShopTextArea.getText().trim());
-            numberOfCardLabelUnderShopCard.setText(String.valueOf(UserKeeper.getInstance().
-                    getCurrentUser().getNumberOfThisCardInCardsOutOfDeck(searchInShopTextArea.getText().trim())));
+        if(shopController.checkBeforeTransaction(cardName, UserKeeper.getInstance().getCurrentUser().getBalance())){
+            buyButton.setDisable(false);
+            buyButton.setStyle("-fx-background-color: #fff59");
+        }else{
+            buyButton.setStyle("-fx-background-color: #ff5959");
+        }
+//        if(cardDoNotExistInUserCardsLabel.isVisible()){
+//            cardDoNotExistInUserCardsLabel.setVisible(false);
+//        }
+//        if(Cards.getAllNames().contains(searchInShopTextArea.getText().trim())){
+//
+//            cardNameLabelUnderShopCard.setText(searchInShopTextArea.getText().trim());
+//            numberOfCardLabelUnderShopCard.setText(String.valueOf(UserKeeper.getInstance().
+//                    getCurrentUser().getNumberOfThisCardInCardsOutOfDeck(searchInShopTextArea.getText().trim())));
+//
+//            InputStream shopCardImage = new
+//                    FileInputStream(ShopController.getCardImagePathByName(searchInShopTextArea.getText().trim()));
+//            shopCardInfoImageView.setImage(new Image(shopCardImage));
 
-            InputStream shopCardImage = new
-                    FileInputStream(ShopController.getCardImagePathByName(searchInShopTextArea.getText().trim()));
-            shopCardInfoImageView.setImage(new Image(shopCardImage));
 
-            Color progressColor = shopController.getColorOfCardBasedOnPrice(searchInShopTextArea.getText().trim());
-            if(progressColor == Color.AQUA){
-                shopCardProgressBar.setProgress(1);
-                shopCardProgressBar.setStyle("-fx-progress-color: Aqua");
-            } else if (progressColor == Color.GOLD){
-                shopCardProgressBar.setProgress(0.77);
-                shopCardProgressBar.setStyle("-fx-progress-color: #ffd830");
-            }else if (progressColor == Color.SILVER){
-                shopCardProgressBar.setProgress(0.6);
-                shopCardProgressBar.setStyle("-fx-progress-color: #c8c8c8");
-            } else {
-                shopCardProgressBar.setProgress(0.28);
-                shopCardProgressBar.setStyle("-fx-progress-color: #b03e3e");
-            }
+//            if(UserKeeper.getInstance().getCurrentUser().getBalance() >=
+//                    shopController.getCardPriceByName(Cards.getCard(searchInShopTextArea.getText().trim()).getName())){
+//                buyButton.setDisable(false);
+//            } else {
+//                buyButton.setDisable(true);
+//                buyButton.setStyle("-fx-background-color: #ff5959");
+//                buyButton.setText("Not enough money");
+//            }
+//
+//        } else {
+//            cardDoNotExistInShopLabel.setVisible(true);
+//        }
 
-            if(UserKeeper.getInstance().getCurrentUser().getBalance() >=
-                    shopController.getCardPriceByName(Cards.getCard(searchInShopTextArea.getText().trim()).getName())){
-                buyButton.setDisable(false);
-            } else {
-                buyButton.setDisable(true);
-                buyButton.setStyle("-fx-background-color: #ff5959");
-                buyButton.setText("Not enough money");
-            }
 
+        Color progressColor = shopController.getColorOfCardBasedOnPrice(cardName);
+        if (progressColor == Color.AQUA) {
+            shopCardProgressBar.setProgress(1);
+            shopCardProgressBar.setStyle("-fx-progress-color: Aqua");
+        } else if (progressColor == Color.GOLD) {
+            shopCardProgressBar.setProgress(0.77);
+            shopCardProgressBar.setStyle("-fx-progress-color: #ffd830");
+        } else if (progressColor == Color.SILVER) {
+            shopCardProgressBar.setProgress(0.6);
+            shopCardProgressBar.setStyle("-fx-progress-color: #c8c8c8");
         } else {
-            cardDoNotExistInShopLabel.setVisible(true);
+            shopCardProgressBar.setProgress(0.28);
+            shopCardProgressBar.setStyle("-fx-progress-color: #b03e3e");
+        }
+
+    }
+
+
+    public void buyACard(ActionEvent e) {
+        if(shopController.checkBeforeTransaction(cardNameInString, UserKeeper.getInstance().getCurrentUser().getBalance())){
+            buyButton.setDisable(false);
+            buyButton.setStyle("-fx-background-color: #fff59");
+        }else{
+            buyButton.setStyle("-fx-background-color: #ff5959");
+            buyButton.setDisable(true);
+        }
+        String response = "";
+        response =  shopController.buy(UserKeeper.getInstance().getCurrentUser(), cardNameInString);
+        cardDoNotExistInShopLabel.setText(response);
+        numberOfCardLabelUnderShopCard.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                (user, cardNameInString)));
+        userBalanceInShopHeader.setText(String.valueOf(user.getBalance()));
+        showUnusedAllCardsOfUser();
+        if(searchInUserCardsTextArea.getText().trim().equals(cardNameInString))
+            numberOfCardLabelUnderUserCard.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                    (user, cardNameInString)));
+        if(shopController.checkBeforeTransaction(cardNameInString, UserKeeper.getInstance().getCurrentUser().getBalance())){
+            buyButton.setDisable(false);
+            buyButton.setStyle("-fx-background-color: #fff59");
+        }else{
+            buyButton.setStyle("-fx-background-color: #ff5959");
+            buyButton.setDisable(true);
         }
     }
 
-    public void buyACard(){
-        UserKeeper.getInstance().getCurrentUser().getCards().add(cardNameLabelUnderShopCard.getText());
+    public void showAllCardsOfShop(){
+        shopCardsLabel.setText(Shop.getInstance().getAllCardsWithPrice());
     }
+
+    public void showUnusedAllCardsOfUser(){
+        userCardsLabel.setText(shopController.getAllUnusedCardsByString(user));
+    }
+
 
 }
