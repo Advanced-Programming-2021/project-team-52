@@ -36,7 +36,7 @@
                   <Font size="25.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="scoreboardButton" buttonType="RAISED" layoutX="450.0" layoutY="510.0" onMouseEntered="#onMouseEnteredScoreBoardButton" onMouseExited="#onMouseExitedScoreBoardButtos" prefHeight="45.0" prefWidth="380.0" text="Score Board" textFill="#ffff44">
+            <JFXButton fx:id="scoreboardButton" buttonType="RAISED" layoutX="450.0" layoutY="510.0" onAction="#switchToScoreboardScene" onMouseEntered="#onMouseEnteredScoreBoardButton" onMouseExited="#onMouseExitedScoreBoardButtos" prefHeight="45.0" prefWidth="380.0" text="Score Board" textFill="#ffff44">
                <font>
                   <Font size="25.0" />
                </font>

@@ -16,10 +16,12 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import sample.controller.LoginController;
+import sample.model.User;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 
 public class LoginView extends Application {
 
@@ -30,6 +32,16 @@ public class LoginView extends Application {
             e.printStackTrace();
         }
 //        LoginController.getInstance().readUser();
+//        User user1 = User.createUser("ali", "123ASDasd","ali", null, LocalDate.now());
+//        User user2= User.createUser("mamad", "123ASDasd","mamad", null, LocalDate.now());
+//        User user3 = User.createUser("reza", "123ASDasd","reza", null, LocalDate.now());
+//        User user4 = User.createUser("asghar", "123ASDasd","asghar", null, LocalDate.now());
+//        User user5 = User.createUser("haji", "123ASDasd","haji", null, LocalDate.now());
+//        user1.setScore(100);
+//        user2.setScore(100);
+//        user3.setScore(10);
+//        user4.setScore(200);
+//        user5.setScore(10);
         launch(args);
     }
 
