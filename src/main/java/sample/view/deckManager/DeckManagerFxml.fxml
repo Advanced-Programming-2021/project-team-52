@@ -105,18 +105,18 @@
                </selectedColor></JFXRadioButton>
             <JFXButton fx:id="submitCardTypeButton" layoutX="337.0" layoutY="445.0" onAction="#submitCardTypeAndSetting" text="ok" textFill="#ffff55" />
             <JFXTextArea fx:id="cardNameTextArea" focusColor="#ffff55" labelFloat="true" layoutX="36.0" layoutY="504.0" prefHeight="35.0" prefWidth="234.0" promptText="card name" unFocusColor="WHITE" />
-            <JFXButton fx:id="submitCardNameButton" layoutX="240.0" layoutY="510.0" text="ok" textFill="#ffff55" />
-            <JFXSlider fx:id="LVLBar" blockIncrement="1.0" layoutX="-4.0" layoutY="814.0" max="5000.0" rotate="270.0" visible="false" />
-            <JFXSlider fx:id="ATKBar" blockIncrement="1.0" layoutX="32.0" layoutY="814.0" max="5000.0" rotate="270.0" visible="false" />
-            <JFXSlider fx:id="DEFBar" blockIncrement="1.0" layoutX="67.0" layoutY="814.0" max="5000.0" rotate="270.0" visible="false" />
-            <JFXButton fx:id="submitMonsterLVLButton" layoutX="52.0" layoutY="930.0" text="ok" textFill="#ffff55" visible="false" />
-            <JFXButton fx:id="submitMonsterATKButton" layoutX="88.0" layoutY="930.0" text="ok" textFill="#ffff55" visible="false" />
-            <JFXButton fx:id="submitMonsterDEFButton" layoutX="123.0" layoutY="930.0" text="ok" textFill="#ffff55" visible="false" />
+            <JFXButton fx:id="submitCardNameButton" layoutX="240.0" layoutY="510.0" onAction="#submitCardName" text="ok" textFill="#ffff55" />
+            <JFXSlider fx:id="LVLBar" blockIncrement="1.0" layoutX="-4.0" layoutY="814.0" min ="1.0" max="11.0" rotate="270.0" visible="false" />
+            <JFXSlider fx:id="ATKBar" blockIncrement="1.0" layoutX="32.0" layoutY="814.0" max="4500.0" rotate="270.0" visible="false" />
+            <JFXSlider fx:id="DEFBar" blockIncrement="1.0" layoutX="67.0" layoutY="814.0" max="4500.0" rotate="270.0" visible="false" />
+            <JFXButton fx:id="submitMonsterLVLButton" layoutX="52.0" layoutY="930.0" onAction="#submitMonsterLVL" text="ok" textFill="#ffff55" visible="false" />
+            <JFXButton fx:id="submitMonsterATKButton" layoutX="88.0" layoutY="930.0" onAction="#submitMonsterATK" text="ok" textFill="#ffff55" visible="false" />
+            <JFXButton fx:id="submitMonsterDEFButton" layoutX="123.0" layoutY="930.0" onAction="#submitMonsterDEF" text="ok" textFill="#ffff55" visible="false" />
             <Label fx:id="LVLLabel" layoutX="57.0" layoutY="899.0" text="LVL" textFill="AQUA" visible="false" />
             <Label fx:id="ATKLabel" layoutX="92.0" layoutY="899.0" text="ATK" textFill="#ff5959" visible="false" />
             <Label fx:id="DEFLabel" layoutX="127.0" layoutY="900.0" prefHeight="17.0" prefWidth="23.0" text="DEF" textFill="#59ff59" visible="false" />
             <JFXTextArea fx:id="cardDescriptionTextArea" focusColor="#ffff55" labelFloat="true" layoutX="34.0" layoutY="557.0" prefHeight="35.0" prefWidth="234.0" promptText="card Description" unFocusColor="WHITE" />
-            <JFXButton fx:id="submitCardDescriptionButton" layoutX="238.0" layoutY="563.0" text="ok" textFill="#ffff55" />
+            <JFXButton fx:id="submitCardDescriptionButton" layoutX="238.0" layoutY="563.0" onAction="#submitCardDescription" text="ok" textFill="#ffff55" />
             <JFXRadioButton fx:id="limitedRadioButton" layoutX="38.0" layoutY="689.0" text="limited" textFill="AQUA">
                <toggleGroup>
                   <ToggleGroup fx:id="status" />
@@ -133,14 +133,14 @@
                <selectedColor>
                   <Color green="1.0" blue="1.0" />
                </selectedColor></JFXRadioButton>
-            <JFXButton fx:id="submitCardStatusButton" layoutX="339.0" layoutY="685.0" text="ok" textFill="#ffff55" />
+            <JFXButton fx:id="submitCardStatusButton" layoutX="339.0" layoutY="685.0" onAction="#submitCardStatus" text="ok" textFill="#ffff55" />
             <JFXTextArea fx:id="cardToGetSpecialFromTextArea" focusColor="#ffff55" labelFloat="true" layoutX="34.0" layoutY="626.0" prefHeight="35.0" prefWidth="234.0" promptText="special card " unFocusColor="WHITE" />
-            <JFXButton fx:id="submitCardToGetSpecialFromButton" layoutX="238.0" layoutY="632.0" text="ok" textFill="#ffff55" />
-            <JFXSlider fx:id="SpeedBar" blockIncrement="1.0" layoutX="170.0" layoutY="814.0" rotate="270.0" visible="false" />
-            <JFXButton fx:id="submitSpeedButton" layoutX="226.0" layoutY="930.0" text="ok" textFill="#ffff55" visible="false" />
+            <JFXButton fx:id="submitCardToGetSpecialFromButton" layoutX="238.0" layoutY="632.0" onAction="#submitCardToGetSpecialFrom" text="ok" textFill="#ffff55" />
+            <JFXSlider fx:id="SpeedBar" blockIncrement="1.0" layoutX="170.0" layoutY="814.0" min="1.0" max="3.0" rotate="270.0" visible="false" />
+            <JFXButton fx:id="submitSpeedButton" layoutX="226.0" layoutY="930.0" onAction="#submitSpeed" text="ok" textFill="#ffff55" visible="false" />
             <Label fx:id="SpeedLabel" layoutX="223.0" layoutY="899.0" prefHeight="17.0" prefWidth="35.0" text="Speed" textFill="AQUA" visible="false" />
             <JFXTextArea fx:id="monsterAttributeTextArea" focusColor="#ffff55" labelFloat="true" layoutX="27.0" layoutY="990.0" prefHeight="35.0" prefWidth="234.0" promptText="monster Attribute" unFocusColor="WHITE" visible="false" />
-            <JFXButton fx:id="submitMonsterAttributeButton" layoutX="237.0" layoutY="996.0" text="ok" textFill="#ffff55" visible="false" />
+            <JFXButton fx:id="submitMonsterAttributeButton" layoutX="237.0" layoutY="996.0" onAction="#submitMonsterAttribute" text="ok" textFill="#ffff55" visible="false" />
             <Label layoutX="59.0" layoutY="158.0" prefHeight="215.0" prefWidth="275.0" text="MAKE A NEW CARD" textFill="AQUA">
                <font>
                   <Font size="30.0" />
@@ -155,12 +155,12 @@
                   </ImageView>
                </graphic>
             </JFXButton>
-            <Label fx:id="situationAndPriceLabel" layoutX="32.0" layoutY="1063.0" prefHeight="83.0" prefWidth="226.0" textFill="WHITE">
+            <Label fx:id="situationAndPriceLabel" layoutX="32.0" layoutY="1063.0" prefHeight="83.0" prefWidth="426.0" textFill="WHITE">
                <font>
                   <Font name="System Italic" size="18.0" />
                </font>
             </Label>
-            <JFXButton fx:id="submitCardMakingProcessButton" layoutX="32.0" layoutY="1165.0" lineSpacing="20.0" prefHeight="74.0" prefWidth="224.0" text="make the Card" textFill="#59ff59" underline="true">
+            <JFXButton fx:id="submitCardMakingProcessButton" layoutX="32.0" layoutY="1165.0" onAction="#submitCardMakingProcess" lineSpacing="20.0" prefHeight="74.0" prefWidth="224.0" text="make the Card" textFill="#59ff59" underline="true">
                <font>
                   <Font name="System Bold" size="27.0" />
                </font>

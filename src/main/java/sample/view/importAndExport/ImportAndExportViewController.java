@@ -67,7 +67,6 @@ public class ImportAndExportViewController implements Initializable {
             response = importAndExportController.importCardFromJson(cardName);
         else if(importCsvButton.isSelected())
             response = importAndExportController.importCardFromCSV(cardName);
-        System.out.println(response);
         cardInfoLabel.setText(response);
     }
 }

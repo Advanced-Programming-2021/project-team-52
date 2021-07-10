@@ -253,5 +253,7 @@ public interface StringMessages {
     String PLEASE_CHOOSE_ALL_PROPERTIES = "Please choose all properties";
     String THERE_IS_AN_ERROR_IN_OUR_SIDE ="There is an error in our side";
     String CARD_CREATED_SUCCESSFULLY = "Card created successfully";
+    String THERE_IS_ALREADY_A_CARD_WITH_THIS_NAME = "There is already a card with this name";
+    String YOU_DON_T_HAVE_ENOUGH_MONEY = "You don't have enough money";
 
 }

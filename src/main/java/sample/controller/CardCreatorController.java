@@ -57,7 +57,7 @@ public class CardCreatorController implements StringMessages {
         if (!attackPointInString.matches("^\\d+$"))
             return invalidInputForCardCreator;
         int attackPoint = Integer.parseInt(attackPointInString);
-        attackPrice = attackPoint / 2;
+        attackPrice = (int) (attackPoint / 1.5);
         this.attackPoint = attackPoint;
         return String.valueOf(countPriceForMonster());
     }
@@ -66,7 +66,7 @@ public class CardCreatorController implements StringMessages {
         if (!defendPointInString.matches("^\\d+$"))
             return invalidInputForCardCreator;
         int defendPoint = Integer.parseInt(defendPointInString);
-        defendPrice = (int) (defendPoint / 2.5);
+        defendPrice = (int) (defendPoint / 2);
         this.defendPoint = defendPoint;
         return String.valueOf(countPriceForMonster());
     }
@@ -77,40 +77,64 @@ public class CardCreatorController implements StringMessages {
         int level = Integer.parseInt(levelInString);
         if (level > 12 || level < 1)
             return invalidInputForCardCreator;
-        if (level == 1 || level == 2)
-            levelPrice = 300;
-        else if (level == 3 || level == 4)
-            levelPrice = 350;
-        else if (level == 5 || level == 6)
-            levelPrice = 200;
-        else
-            levelPrice = 150;
+        levelPrice = 380 - level * 30;
+//        if (level == 1 || level == 2)
+//            levelPrice = 300;
+//        else if (level == 3 || level == 4)
+//            levelPrice = 350;
+//        else if (level == 5 || level == 6)
+//            levelPrice = 200;
+//        else if (level == 7 || level == 8)
+//            levelPrice = 100;
+//        else if (level == 9 || level == 10)
+//            levelPrice = 150;
+//        else
+//            levelPrice = 200;
         this.level = level;
         return String.valueOf(countPriceForMonster());
     }
 
-    public String statusCounter(String status) {
-        status = status.toLowerCase();
-        if (status.equals("unlimited"))
+    public String statusCounterForMonsters(String status) {
+//        status = status.toLowerCase();
+        if (status.equals("Unlimited"))
             statusPrice = 500;
-        else if (status.equals("half limited"))
+        else if (status.equals("Half limited"))
             statusPrice = 300;
-        else if (status.equals("limited"))
+        else if (status.equals("Limited"))
             statusPrice = 100;
         else
             return invalidInputForCardCreator;
         this.status = status;
         return String.valueOf(countPriceForMonster());
     }
+    public String statusCounterForSpellAndTrap(String status) {
+//        status = status.toLowerCase();
+        if (status.equals("Unlimited"))
+            statusPrice = 1000;
+        else if (status.equals("Half limited"))
+            statusPrice = 500;
+        else if (status.equals("Limited"))
+            statusPrice = 200;
+        else
+            return invalidInputForCardCreator;
+        this.status = status;
+        return String.valueOf(countPriceForSpellAndTrap());
+    }
 
     public String specialCounterForMonster(String cardName) {
         Cards card = Cards.getCard(cardName);
-        if (!(card instanceof MonsterCards))
+        if (!(card instanceof MonsterCards)) {
+            cardToUserSpecial = null;
+            specialPrice = 0;
             return THERE_IS_NO_CARD_WITH_THIS_NAME_IN_MONSTERS;
+        }
         if (card.getSpecialsInString().equals("nothing") ||
-                card.getSpecialsInString().equals("nothing\n"))
+                card.getSpecialsInString().equals("nothing\n")) {
+            cardToUserSpecial = null;
+            specialPrice = 0;
             return thisCardDoesNotHaveSpecial;
-        specialPrice = (int) (ShopController.getInstance().getCardPriceByName(cardName) / 2.5);
+        }
+        specialPrice = (int) (ShopController.getInstance().getCardPriceByName(cardName) / 2);
         this.cardToUserSpecial = card;
         return String.valueOf(countPriceForMonster());
     }
@@ -129,35 +153,51 @@ public class CardCreatorController implements StringMessages {
                 attribute.equals("DARK") || attribute.equals("FIRE") ||
                 attribute.equals("LIGHT") || attribute.equals("WIND")) {
             this.attribute = attribute;
-            return successful;
+            return String.valueOf(countPriceForMonster());
         }
+        this.attribute = null;
         return invalidInputForCardCreator;
     }
 
-    public String speedCounterForSpells(String speedInString) {
-        if (!speedInString.matches("^\\d+$"))
-            return invalidInputForCardCreator;
-        int speed = Integer.parseInt(speedInString);
-        if (speed == 1)
-            speedPrice = 150;
-        else if (speed == 2)
-            speedPrice = 350;
-        else
-            return CHOOSE_1_OR_2;
-        this.speed = speed;
-        return String.valueOf(countPriceForSpellAndTrap());
-    }
+//    public String speedCounterForSpells(String speedInString) {
+//        if (!speedInString.matches("^\\d+$"))
+//            return invalidInputForCardCreator;
+//        int speed = Integer.parseInt(speedInString);
+//        if (speed == 1)
+//            speedPrice = 150;
+//        else if (speed == 2)
+//            speedPrice = 350;
+//        else
+//            return CHOOSE_1_OR_2;
+//        this.speed = speed;
+//        return String.valueOf(countPriceForSpellAndTrap());
+//    }
 
-    public String speedCounterForTraps(String speedInString) {
+    //    public String speedCounterForTraps(String speedInString) {
+//        if (!speedInString.matches("^\\d+$"))
+//            return invalidInputForCardCreator;
+//        int speed = Integer.parseInt(speedInString);
+//        if (speed == 1)
+//            speedPrice = 150;
+//        else if (speed == 2)
+//            speedPrice = 350;
+//        else if (speed == 3)
+//            speedPrice = 700;
+//        else
+//            return chooseNumberBetween1To3;
+//        this.speed = speed;
+//        return String.valueOf(countPriceForSpellAndTrap());
+//    }
+    public String speedCounter(String speedInString) {
         if (!speedInString.matches("^\\d+$"))
             return invalidInputForCardCreator;
         int speed = Integer.parseInt(speedInString);
         if (speed == 1)
-            speedPrice = 150;
+            speedPrice = 300;
         else if (speed == 2)
-            speedPrice = 350;
-        else if (speed == 3)
             speedPrice = 700;
+        else if (speed == 3)
+            speedPrice = 1100;
         else
             return chooseNumberBetween1To3;
         this.speed = speed;
@@ -166,8 +206,11 @@ public class CardCreatorController implements StringMessages {
 
     public String specialCounterForSpell(String cardName) {
         Cards card = Cards.getCard(cardName);
-        if (!(card instanceof SpellCards))
+        if (!(card instanceof SpellCards)) {
+            cardToUserSpecial = null;
+            specialPrice = 0;
             return THERE_IS_NO_CARD_WITH_THIS_NAME_IN_SPELLS;
+        }
         specialPrice = (int) (ShopController.getInstance().getCardPriceByName(cardName) * 1.15);
         this.cardToUserSpecial = card;
         return String.valueOf(countPriceForSpellAndTrap());
@@ -175,8 +218,11 @@ public class CardCreatorController implements StringMessages {
 
     public String specialCounterForTrap(String cardName) {
         Cards card = Cards.getCard(cardName);
-        if (!(card instanceof TrapCards))
+        if (!(card instanceof TrapCards)) {
+            cardToUserSpecial = null;
+            specialPrice = 0;
             return THERE_IS_NO_CARD_WITH_THIS_NAME_IN_TRAPS;
+        }
         specialPrice = (int) (ShopController.getInstance().getCardPriceByName(cardName) * 1.2);
         this.cardToUserSpecial = card;
         return String.valueOf(countPriceForSpellAndTrap());
@@ -186,7 +232,12 @@ public class CardCreatorController implements StringMessages {
         if (name == null || status == null || cardToUserSpecial == null || description == null ||
                 level == 0 || attribute == null || attackPoint == 0 || defendPoint == 0)
             return PLEASE_CHOOSE_ALL_PROPERTIES;
+        Cards cards = Cards.getCard(name);
+        if (cards != null)
+            return THERE_IS_ALREADY_A_CARD_WITH_THIS_NAME;
         int price = countPriceForMonster();
+        if (user.getBalance() < price / 10)
+            return YOU_DON_T_HAVE_ENOUGH_MONEY;
         MonsterCards monsterCardToUseSpecial = (MonsterCards) cardToUserSpecial;
         try {
             new MonsterCards(name, level, attribute,
@@ -207,7 +258,12 @@ public class CardCreatorController implements StringMessages {
         if (name == null || status == null || cardToUserSpecial == null ||
                 description == null || speed == 0)
             return PLEASE_CHOOSE_ALL_PROPERTIES;
+        Cards cards = Cards.getCard(name);
+        if (cards != null)
+            return THERE_IS_ALREADY_A_CARD_WITH_THIS_NAME;
         int price = countPriceForSpellAndTrap();
+        if (user.getBalance() < price / 10)
+            return YOU_DON_T_HAVE_ENOUGH_MONEY;
         SpellCards spellCardToUseSpecial = (SpellCards) cardToUserSpecial;
         try {
             new SpellCards(name, "Spell", spellCardToUseSpecial.getIcon(), description, status, speed,
@@ -227,7 +283,12 @@ public class CardCreatorController implements StringMessages {
         if (name == null || status == null || cardToUserSpecial == null ||
                 description == null || speed == 0)
             return PLEASE_CHOOSE_ALL_PROPERTIES;
+        Cards cards = Cards.getCard(name);
+        if (cards != null)
+            return THERE_IS_ALREADY_A_CARD_WITH_THIS_NAME;
         int price = countPriceForSpellAndTrap();
+        if (user.getBalance() < price / 10)
+            return YOU_DON_T_HAVE_ENOUGH_MONEY;
         TrapCards spellCardToUseSpecial = (TrapCards) cardToUserSpecial;
         try {
             new SpellCards(name, "Trap", spellCardToUseSpecial.getIcon(), description, status, speed,

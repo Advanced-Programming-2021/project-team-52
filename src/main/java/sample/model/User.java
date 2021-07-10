@@ -34,7 +34,7 @@ public class User extends Player {
         System.out.println(image.getUrl());
         setDateOfBirth(dateOfBirth);
         this.score = 0;
-        this.balance = 1000;
+        this.balance = 100000;
     }
 
     public static User createUser(String username, String password,
