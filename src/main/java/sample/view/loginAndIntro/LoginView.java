@@ -29,7 +29,7 @@ public class LoginView extends Application {
         } catch (IOException | CsvException e) {
             e.printStackTrace();
         }
-        LoginController.getInstance().readUser();
+//        LoginController.getInstance().readUser();
         launch(args);
     }
 
