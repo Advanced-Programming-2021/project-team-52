@@ -32,16 +32,16 @@ public class DeckManagerViewController implements Initializable {
     Pane deckManagerPane;
     @FXML
     JFXTextArea monsterAttributeTextArea, cardToGetSpecialFromTextArea, cardDescriptionTextArea, cardNameTextArea,
-            cardNameToAddTextArea, cardNameToRemoveTextArea;
+            cardNameToAddTextArea, cardNameToRemoveTextArea, deckSearchTextArea;
     @FXML
     JFXRadioButton trapRadiobutton, monsterRadiobutton, spellRadiobutton, limitedRadioButton,
             halfLimitedRadioButton, unlimitedRadioButton;
     @FXML
-    Label LVLLabel, ATKLabel, DEFLabel, SpeedLabel, numberOfAvailableCardToAddLabel;
+    Label LVLLabel, ATKLabel, DEFLabel, SpeedLabel, numberOfAvailableCardToAddLabel, deckSearchStatusLabel;
     @FXML
     JFXButton submitCardTypeButton, submitCardNameButton, submitCardDescriptionButton, submitCardToGetSpecialFromButton,
             submitMonsterLVLButton, submitMonsterATKButton, submitMonsterDEFButton, submitCardStatusButton, submitSpeedButton,
-            submitMonsterAttributeButton, submitCardMakingProcessButton, add1ToMainButton;
+            submitMonsterAttributeButton, submitCardMakingProcessButton;
     @FXML
     JFXSlider LVLBar, ATKBar, DEFBar, SpeedBar;
 
@@ -55,8 +55,9 @@ public class DeckManagerViewController implements Initializable {
         cardToGetSpecialFromTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         cardDescriptionTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         cardNameTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
-        cardNameToAddTextArea.setStyle("-fx-prompt-text-fill: aqua");
-        cardNameToRemoveTextArea.setStyle("-fx-prompt-text-fill: aqua");
+        cardNameToAddTextArea.setStyle("-fx-prompt-text-fill: white");
+        cardNameToRemoveTextArea.setStyle("-fx-prompt-text-fill: white");
+        deckSearchTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
     }
 
     public void backButton(ActionEvent e) throws IOException {
@@ -235,4 +236,19 @@ public class DeckManagerViewController implements Initializable {
             return;
         situationAndPriceLabel.setText(response);
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////Deck Management Start
+
+    public void submitDeckSearch(ActionEvent e){
+
+    }
+
+    public void submitAddToDeckSearch(ActionEvent e){
+
+    }
+
+    public void submitRemoveFromDeckSearch(ActionEvent e){
+
+    }
+
 }
