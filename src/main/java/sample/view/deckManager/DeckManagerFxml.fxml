@@ -1,22 +1,193 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXRadioButton?>
+<?import com.jfoenix.controls.JFXSlider?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXToggleButton?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minViewportHeight="720.0" minViewportWidth="1280.0" minWidth="-Infinity" prefHeight="1174.0" prefWidth="1281.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minViewportHeight="720.0" minViewportWidth="1280.0" minWidth="-Infinity" prefHeight="1892.0" prefWidth="1281.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.view.deckManager.DeckManagerViewController">
    <content>
-      <Pane prefHeight="1172.0" prefWidth="1278.0">
+      <Pane fx:id="deckManagerPane" prefHeight="1890.0" prefWidth="1278.0">
          <children>
-            <Line endX="982.0" layoutX="214.0" layoutY="80.0" startX="-100.0" />
-            <Label layoutX="114.0" layoutY="35.0" prefHeight="45.0" prefWidth="252.0" text="Deck Manager">
+            <Line endX="982.0" fill="#ffff55" layoutX="214.0" layoutY="80.0" startX="-100.0" stroke="#ffff55" />
+            <Label layoutX="114.0" layoutY="35.0" prefHeight="45.0" prefWidth="252.0" text="Deck Manager" textFill="WHITE">
                <font>
                   <Font name="Open Sans" size="32.0" />
                </font>
             </Label>
-            <Line endX="736.9998779296875" layoutX="466.0" layoutY="810.0" startX="-101.19998168945312" />
+            <ImageView fx:id="deck1" fitHeight="265.0" fitWidth="178.0" layoutX="527.0" layoutY="108.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/cardTemp.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="deck2" fitHeight="265.0" fitWidth="178.0" layoutX="947.0" layoutY="108.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/cardTemp.jpg" />
+               </image>
+            </ImageView>
+            <Label fx:id="deck1NameLabel" layoutX="530.0" layoutY="380.0" prefHeight="47.0" prefWidth="174.0" text="Label" />
+            <Label fx:id="deck2NameLabel" layoutX="948.0" layoutY="380.0" prefHeight="47.0" prefWidth="174.0" text="Label" />
+            <JFXToggleButton fx:id="deck1ActivationButton" layoutX="528.0" layoutY="429.0" prefHeight="58.0" prefWidth="177.0" text="set as Active" />
+            <JFXToggleButton fx:id="deck2ActivationButton" layoutX="947.0" layoutY="429.0" prefHeight="58.0" prefWidth="177.0" text="set as Active" />
+            <JFXButton fx:id="deleteDeck1Button" layoutX="521.0" layoutY="494.0" prefHeight="45.0" prefWidth="193.0" text="delet Deck" textFill="#ff5959">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="deleteDeck2Button" layoutX="939.0" layoutY="494.0" prefHeight="45.0" prefWidth="193.0" text="delet deck" textFill="#ff5959">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </JFXButton>
+            <Label layoutX="469.0" layoutY="539.0" prefHeight="36.0" prefWidth="69.0" text="main" textFill="AQUA">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label layoutX="605.0" layoutY="539.0" prefHeight="36.0" prefWidth="69.0" text="side" textFill="AQUA">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label layoutX="714.0" layoutY="539.0" prefHeight="36.0" prefWidth="98.0" text="av. cards" textFill="#ffff55">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label fx:id="deck1Main1" layoutX="395.0" layoutY="575.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main1" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main2" layoutX="395.0" layoutY="612.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main2" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main3" layoutX="395.0" layoutY="646.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main3" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main4" layoutX="395.0" layoutY="680.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main4" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main5" layoutX="395.0" layoutY="714.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main5" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main6" layoutX="395.0" layoutY="751.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main6" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main7" layoutX="395.0" layoutY="785.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main7" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main8" layoutX="395.0" layoutY="819.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main8" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main9" layoutX="395.0" layoutY="853.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main9" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main10" layoutX="395.0" layoutY="890.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main10" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main11" layoutX="395.0" layoutY="924.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main11" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main12" layoutX="395.0" layoutY="958.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main12" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main13" layoutX="395.0" layoutY="992.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main13" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main14" layoutX="395.0" layoutY="1029.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main14" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main15" layoutX="395.0" layoutY="1063.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main15" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main16" layoutX="395.0" layoutY="1097.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main16" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main17" layoutX="395.0" layoutY="1131.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main17" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main18" layoutX="395.0" layoutY="1168.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main18" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main19" layoutX="395.0" layoutY="1202.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main19" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main20" layoutX="395.0" layoutY="1236.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main20" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main21" layoutX="395.0" layoutY="1270.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main21" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main22" layoutX="395.0" layoutY="1307.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main22" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main23" layoutX="395.0" layoutY="1341.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main23" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main24" layoutX="395.0" layoutY="1375.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main24" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main25" layoutX="395.0" layoutY="1409.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main25" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main26" layoutX="395.0" layoutY="1446.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main26" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main27" layoutX="395.0" layoutY="1480.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main27" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main28" layoutX="395.0" layoutY="1514.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main28" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main29" layoutX="395.0" layoutY="1548.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main29" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main30" layoutX="395.0" layoutY="1585.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main30" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main31" layoutX="487.0" layoutY="575.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main31" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main32" layoutX="487.0" layoutY="612.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main32" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main33" layoutX="487.0" layoutY="646.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main33" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main34" layoutX="487.0" layoutY="680.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main34" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main35" layoutX="487.0" layoutY="714.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main35" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main36" layoutX="487.0" layoutY="751.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main36" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main37" layoutX="487.0" layoutY="785.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main37" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main38" layoutX="487.0" layoutY="819.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main38" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main39" layoutX="487.0" layoutY="853.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main39" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main40" layoutX="487.0" layoutY="890.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main40" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main41" layoutX="487.0" layoutY="924.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main41" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main42" layoutX="487.0" layoutY="958.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main42" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main43" layoutX="487.0" layoutY="992.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main43" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main44" layoutX="487.0" layoutY="1029.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main44" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main45" layoutX="487.0" layoutY="1063.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main45" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main46" layoutX="487.0" layoutY="1097.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main46" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main47" layoutX="487.0" layoutY="1131.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main47" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main48" layoutX="487.0" layoutY="1168.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main48" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main49" layoutX="487.0" layoutY="1202.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main49" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main50" layoutX="487.0" layoutY="1236.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main50" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main51" layoutX="487.0" layoutY="1272.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main51" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main52" layoutX="487.0" layoutY="1309.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main52" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main53" layoutX="487.0" layoutY="1343.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main53" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main54" layoutX="487.0" layoutY="1377.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main54" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main55" layoutX="487.0" layoutY="1411.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main55" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main56" layoutX="487.0" layoutY="1448.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main56" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main57" layoutX="487.0" layoutY="1482.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main57" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main58" layoutX="487.0" layoutY="1516.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main58" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main59" layoutX="487.0" layoutY="1550.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main59" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1Main60" layoutX="487.0" layoutY="1587.0" prefHeight="34.0" prefWidth="102.0" text="deck1Main60" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1side1" layoutX="589.0" layoutY="575.0" prefHeight="34.0" prefWidth="102.0" text="deck1side1" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1side2" layoutX="589.0" layoutY="612.0" prefHeight="34.0" prefWidth="102.0" text="deck1side2" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1side3" layoutX="589.0" layoutY="646.0" prefHeight="34.0" prefWidth="102.0" text="deck1side3" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1side4" layoutX="589.0" layoutY="680.0" prefHeight="34.0" prefWidth="102.0" text="deck1side4" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1side5" layoutX="589.0" layoutY="714.0" prefHeight="34.0" prefWidth="102.0" text="deck1side5" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1side6" layoutX="589.0" layoutY="751.0" prefHeight="34.0" prefWidth="102.0" text="deck1side6" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1side7" layoutX="589.0" layoutY="785.0" prefHeight="34.0" prefWidth="102.0" text="deck1side7" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1side8" layoutX="589.0" layoutY="819.0" prefHeight="34.0" prefWidth="102.0" text="deck1side8" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1side9" layoutX="589.0" layoutY="853.0" prefHeight="34.0" prefWidth="102.0" text="deck1side9" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1side10" layoutX="589.0" layoutY="890.0" prefHeight="34.0" prefWidth="102.0" text="deck1side10" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1side11" layoutX="589.0" layoutY="924.0" prefHeight="34.0" prefWidth="102.0" text="deck1side11" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1side12" layoutX="589.0" layoutY="958.0" prefHeight="34.0" prefWidth="102.0" text="deck1side12" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1side13" layoutX="589.0" layoutY="992.0" prefHeight="34.0" prefWidth="102.0" text="deck1side13" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1side14" layoutX="589.0" layoutY="1029.0" prefHeight="34.0" prefWidth="102.0" text="deck1side14" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <Label fx:id="deck1side15" layoutX="588.0" layoutY="1063.0" prefHeight="34.0" prefWidth="102.0" text="deck1side15" textAlignment="JUSTIFY" textFill="#ffff33" />
+            <JFXRadioButton layoutX="36.0" layoutY="449.0" text="Monster" textFill="AQUA">
+               <toggleGroup>
+                  <ToggleGroup fx:id="cardType" />
+               </toggleGroup>
+            </JFXRadioButton>
+            <JFXRadioButton layoutX="151.0" layoutY="449.0" text="Trap" textFill="AQUA" toggleGroup="$cardType" />
+            <JFXRadioButton layoutX="252.0" layoutY="449.0" text="Spell" textFill="AQUA" toggleGroup="$cardType" />
+            <JFXButton fx:id="submitCardTypeButton" layoutX="337.0" layoutY="445.0" text="ok" textFill="#ffff55" />
+            <JFXTextArea fx:id="cardNameTextArea" focusColor="#ffff55" labelFloat="true" layoutX="36.0" layoutY="504.0" prefHeight="35.0" prefWidth="234.0" promptText="card name" unFocusColor="WHITE" />
+            <JFXButton fx:id="submitCardNameButton" layoutX="240.0" layoutY="510.0" text="ok" textFill="#ffff55" />
+            <JFXSlider fx:id="LVLBar" blockIncrement="1.0" layoutX="-34.0" layoutY="814.0" rotate="270.0" />
+            <JFXSlider fx:id="ATKBar" blockIncrement="1.0" layoutX="2.0" layoutY="814.0" rotate="270.0" />
+            <JFXSlider fx:id="DEFBar" blockIncrement="1.0" layoutX="37.0" layoutY="814.0" rotate="270.0" />
+            <JFXButton fx:id="submitMonsterLVLButton" layoutX="22.0" layoutY="930.0" text="ok" textFill="#ffff55" />
+            <JFXButton fx:id="submitMonsterATKButton" layoutX="58.0" layoutY="930.0" text="ok" textFill="#ffff55" />
+            <JFXButton fx:id="submitMonsterDEFButton" layoutX="93.0" layoutY="930.0" text="ok" textFill="#ffff55" />
+            <Label fx:id="LVLLabel" layoutX="27.0" layoutY="899.0" text="LVL" textFill="AQUA" />
+            <Label fx:id="ATKLable" layoutX="62.0" layoutY="899.0" text="ATK" textFill="#ff5959" />
+            <Label fx:id="DEFLabel" layoutX="97.0" layoutY="900.0" prefHeight="17.0" prefWidth="23.0" text="DEF" textFill="#59ff59" />
+            <JFXTextArea fx:id="cardDescriptionTextArea" focusColor="#ffff55" labelFloat="true" layoutX="34.0" layoutY="557.0" prefHeight="35.0" prefWidth="234.0" promptText="card Description" unFocusColor="WHITE" />
+            <JFXButton fx:id="submitCardDescriptionButton" layoutX="238.0" layoutY="563.0" text="ok" textFill="#ffff55" />
+            <JFXRadioButton layoutX="38.0" layoutY="689.0" text="limited" textFill="AQUA">
+               <toggleGroup>
+                  <ToggleGroup fx:id="status" />
+               </toggleGroup>
+            </JFXRadioButton>
+            <JFXRadioButton layoutX="153.0" layoutY="689.0" text="half limited" textFill="AQUA" toggleGroup="$status" />
+            <JFXRadioButton layoutX="254.0" layoutY="689.0" text="unlmited" textFill="AQUA" toggleGroup="$status" />
+            <JFXButton fx:id="submitCardTypeButton1" layoutX="339.0" layoutY="685.0" text="ok" textFill="#ffff55" />
+            <JFXTextArea fx:id="cardToGetSpecialFromTextArea" focusColor="#ffff55" labelFloat="true" layoutX="34.0" layoutY="626.0" prefHeight="35.0" prefWidth="234.0" promptText="card Description" unFocusColor="WHITE" />
+            <JFXButton fx:id="submitCardToGetSpecialFromButton" layoutX="238.0" layoutY="632.0" text="ok" textFill="#ffff55" />
+            <JFXSlider fx:id="SpeedBar" blockIncrement="1.0" layoutX="170.0" layoutY="814.0" rotate="270.0" />
+            <JFXButton fx:id="submitSpeedButton" layoutX="226.0" layoutY="930.0" text="ok" textFill="#ffff55" />
+            <Label fx:id="SpeedLabel" layoutX="223.0" layoutY="899.0" prefHeight="17.0" prefWidth="35.0" text="Speed" textFill="AQUA" />
+            <JFXTextArea fx:id="monsterAttributeTextArea" focusColor="#ffff55" labelFloat="true" layoutX="27.0" layoutY="990.0" prefHeight="35.0" prefWidth="234.0" promptText="monster Attribute" unFocusColor="WHITE" />
+            <JFXButton fx:id="submitMonsterAttributeButton" layoutX="237.0" layoutY="996.0" text="ok" textFill="#ffff55" />
+            <Label layoutX="59.0" layoutY="158.0" prefHeight="215.0" prefWidth="275.0" text="MAKE A NEW CARD" textFill="AQUA">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Label>
+            <JFXButton layoutX="26.0" layoutY="38.0" onAction="#backButton">
+               <graphic>
+                  <ImageView fitHeight="32.0" fitWidth="36.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../../../../resources/media/images/others/backButtonBackground.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
          </children>
       </Pane>
    </content>
