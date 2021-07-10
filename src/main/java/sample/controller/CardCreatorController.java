@@ -291,7 +291,7 @@ public class CardCreatorController implements StringMessages {
             return YOU_DON_T_HAVE_ENOUGH_MONEY;
         TrapCards spellCardToUseSpecial = (TrapCards) cardToUserSpecial;
         try {
-            new SpellCards(name, "Trap", spellCardToUseSpecial.getIcon(), description, status, speed,
+            new TrapCards(name, "Trap", spellCardToUseSpecial.getIcon(), description, status, speed,
                     InstantiateCards.loadSpecialAbilities((cardToUserSpecial.getSpecialsInString()).split("&&")),
                     InstantiateCards.getChainJobs(spellCardToUseSpecial.getChainJobInString()),
                     cardToUserSpecial.getSpecialsInString(), spellCardToUseSpecial.getChainJobInString());
