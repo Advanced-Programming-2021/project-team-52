@@ -93,7 +93,6 @@ public class MainMenuController implements Initializable {
     public void onMouseEnteredShopButton(MouseEvent e) throws MalformedURLException, FileNotFoundException {
         shopButton.setStyle("-fx-text-fill: #ffff00; -fx-border-width: 0.5 0 0.5 0; -fx-border-color: #ffff22");
         shopButton.setEffect(buttonGlow);
-//        InputStream img = new FileInputStream("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\resources\\media\\images\\others\\shopCardInMainMenu34.png");
         InputStream img = new FileInputStream("./src/main/resources/media/images/others/shopCardInMainMenu34.png");
         leftHandImageHelper.setImage(new Image(img));
         leftHandImageHelper.setOpacity(0.5);
@@ -182,7 +181,7 @@ public class MainMenuController implements Initializable {
     public void switchToImportAndExportScene(ActionEvent e) throws IOException {
         FXMLLoader loader = new FXMLLoader(new File
 //                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\java\\sample\\view\\deckManager\\DeckManagerFxml.fxml").toURI().toURL());
-                ("./src/main/java/sample/view/deckManager/DeckManagerFxml.fxml").toURI().toURL());
+                ("./src/main/java/sample/view/importAndExport/MainMenuFxml.fxml").toURI().toURL());
         Parent root = loader.load();
         stage = (Stage)((Node)e.getSource()).getScene().getWindow();
         scene = new Scene(root);

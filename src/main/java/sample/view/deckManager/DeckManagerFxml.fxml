@@ -63,7 +63,7 @@
                   <Font size="22.0" />
                </font>
             </Label>
-            <Label layoutX="605.0" layoutY="539.0" prefHeight="36.0" prefWidth="69.0" text="side" textFill="AQUA">
+            <Label layoutX="589.0" layoutY="539.0" prefHeight="36.0" prefWidth="69.0" text="side" textFill="AQUA">
                <font>
                   <Font size="22.0" />
                </font>

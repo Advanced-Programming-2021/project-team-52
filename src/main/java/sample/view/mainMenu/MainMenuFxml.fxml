@@ -31,7 +31,7 @@
                   <Font size="25.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="profileAndSettingButton" buttonType="RAISED" layoutX="450.0" layoutY="450.0" onAction="#switchToProfileAndSettingScene"  onMouseEntered="#onMouseEnteredProfileAndSettingButton" onMouseExited="#onMouseExitedProfileAndSettingButtos" prefHeight="45.0" prefWidth="380.0" text="Profile &amp; Setting" textFill="#ffff44">
+            <JFXButton fx:id="profileAndSettingButton" buttonType="RAISED" layoutX="450.0" layoutY="450.0" onAction="#switchToProfileAndSettingScene" onMouseEntered="#onMouseEnteredProfileAndSettingButton" onMouseExited="#onMouseExitedProfileAndSettingButtos" prefHeight="45.0" prefWidth="380.0" text="Profile &amp; Setting" textFill="#ffff44">
                <font>
                   <Font size="25.0" />
                </font>
@@ -41,7 +41,7 @@
                   <Font size="25.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="importAndExportButton" buttonType="RAISED" layoutX="450.0" layoutY="570.0" onMouseEntered="#onMouseEnteredImportAndExportButton" onMouseExited="#onMouseExitedImportAndExportButton" prefHeight="45.0" prefWidth="380.0" text="Import &amp; Export" textFill="#ffff44">
+            <JFXButton fx:id="importAndExportButton" buttonType="RAISED" layoutX="450.0" layoutY="570.0" onAction="#switchToImportAndExportScene" onMouseEntered="#onMouseEnteredImportAndExportButton" onMouseExited="#onMouseExitedImportAndExportButton" prefHeight="45.0" prefWidth="380.0" text="Import &amp; Export" textFill="#ffff44">
                <font>
                   <Font size="25.0" />
                </font>
