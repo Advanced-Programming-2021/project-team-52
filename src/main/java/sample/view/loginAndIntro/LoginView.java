@@ -3,6 +3,7 @@ package sample.view.loginAndIntro;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextArea;
+import com.opencsv.exceptions.CsvException;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +15,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
+import sample.controller.LoginController;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -22,6 +24,12 @@ import java.io.IOException;
 public class LoginView extends Application {
 
     public static void main(String[] args) {
+        try {
+            LoginController.instantiateCards();
+        } catch (IOException | CsvException e) {
+            e.printStackTrace();
+        }
+        LoginController.getInstance().readUser();
         launch(args);
     }
 

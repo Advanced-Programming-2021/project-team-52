@@ -49,12 +49,12 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
             e.printStackTrace();
         }
     }
+
     // TODO : does create cards by constructor work?
-    public void exportCardInCSV(String cardName) {
+    public String exportCardInCSV(String cardName) {
         Cards card = Cards.getCard(cardName);
         if (card == null) {
-            printerAndScanner.printNextLine(cardWithThisNameIsNotValid);
-            return;
+            return cardWithThisNameIsNotValid;
         }
         String filePath;
         String[] data;
@@ -85,11 +85,10 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
         }
         AtomicBoolean isCardAlreadyExported = isCardWithThisNameExistsInExportedCSVCards(cardName, filePath);
         if (isCardAlreadyExported.get()) {
-            System.out.println(cardWithThisNameHasAlreadyExported);
-            return;
+            return cardWithThisNameHasAlreadyExported;
         }
         writeDataLineByLine(filePath, data);
-        printerAndScanner.printNextLine(cardExportedSuccessfully);
+        return cardExportedSuccessfully;
     }
 
     private AtomicBoolean isCardWithThisNameExistsInExportedCSVCards(String cardName, String filePath) {
@@ -111,7 +110,8 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
         return isCardAlreadyExported;
     }
 
-    public void importCardFromCSV(String cardName) {
+    public String importCardFromCSV(String cardName) {
+        StringBuilder cardProperties = new StringBuilder();
         try {
             FileReader fileReader;
             ArrayList<String[]> list;
@@ -119,22 +119,32 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
                 fileReader = new FileReader(FILE_PATH_OF_MONSTER_CSV);
                 list = new ArrayList<>(new CSVReaderBuilder(fileReader).withSkipLines(1).build().readAll());
                 list.forEach(info -> {
-                    if (info[0].equals(cardName)) {
-                        if (Cards.getCard(cardName) != null) {
-                            printerAndScanner.printNextLine(thereIsAlreadyACardWithThisName);
-                            return;
-                        }
-                        try {
-                            new MonsterCards(info[0], Integer.parseInt(info[1]), info[2], info[3], info[4],
-                                    Integer.parseInt(info[5]), Integer.parseInt(info[6]), info[7], info[9],
-                                    Integer.parseInt(info[10]), InstantiateCards.loadSpecialAbilities
-                                    (info[11].split("&&")), info[11]);
-                            Shop.addCard(info[0], Integer.parseInt(info[8]));
-                            printerAndScanner.printNextLine(cardImportedSuccessfully);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
+//                    if (info[0].equals(cardName)) {
+//                        if (Cards.getCard(cardName) != null) {
+////                            return thereIsAlreadyACardWithThisName;
+//                        }
+//                        try {
+//                            new MonsterCards(info[0], Integer.parseInt(info[1]), info[2], info[3], info[4],
+//                                    Integer.parseInt(info[5]), Integer.parseInt(info[6]), info[7], info[9],
+//                                    Integer.parseInt(info[10]), InstantiateCards.loadSpecialAbilities
+//                                    (info[11].split("&&")), info[11]);
+//                            Shop.addCard(info[0], Integer.parseInt(info[8]));
+                            cardProperties.append("name : ").append(info[0]).append("\n");
+                            cardProperties.append("type : ").append(info[4]).append("\n");
+                            cardProperties.append("description : ").append(info[7]).append("\n");
+                            cardProperties.append("status : ").append(info[9]).append("\n");
+                            cardProperties.append("Price : ").append(info[8]).append("\n");
+                            cardProperties.append("level : ").append(info[1]).append("\n");
+                            cardProperties.append("attack : ").append(info[5]).append("\n");
+                            cardProperties.append("defense : ").append(info[6]).append("\n");
+                            cardProperties.append("attribute : ").append(info[2]).append("\n");
+                            cardProperties.append("monsterType : ").append(info[3]).append("\n");
+                            cardProperties.append("Special : ").append(info[11]).append("\n");
+//                            printerAndScanner.printNextLine(cardImportedSuccessfully);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
                 });
                 fileReader.close();
 
@@ -142,64 +152,75 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
                 fileReader = new FileReader(FILE_PATH_OF_SPELL_CSV);
                 list = new ArrayList<>(new CSVReaderBuilder(fileReader).withSkipLines(1).build().readAll());
                 list.forEach(info -> {
-                    if (info[0].equals(cardName)) {
-                        if (Cards.getCard(cardName) != null) {
-                            printerAndScanner.printNextLine(thereIsAlreadyACardWithThisName);
-                            return;
-                        }
-                        try {
-                            new SpellCards(info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[6]),
-                                    InstantiateCards.loadSpecialAbilities(info[7].split("&&")),
-                                    InstantiateCards.getChainJobs(info[8]), info[7], info[8]);
-                            Shop.addCard(info[0], Integer.parseInt(info[5]));
-                            printerAndScanner.printNextLine(cardImportedSuccessfully);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
+//                    if (info[0].equals(cardName)) {
+//                        if (Cards.getCard(cardName) != null) {
+//                            printerAndScanner.printNextLine(thereIsAlreadyACardWithThisName);
+
+//                            return;
+//                        }
+//                        try {
+//                            new SpellCards(info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[6]),
+//                                    InstantiateCards.loadSpecialAbilities(info[7].split("&&")),
+//                                    InstantiateCards.getChainJobs(info[8]), info[7], info[8]);
+//                            Shop.addCard(info[0], Integer.parseInt(info[5]));
+                            makeStringBuilderForSpellAndTrap(cardProperties, info);
+//                            printerAndScanner.printNextLine(cardImportedSuccessfully);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
                 });
                 fileReader.close();
             } else if (isCardWithThisNameExistsInExportedCSVCards(cardName, FILE_PATH_OF_TRAP_CSV).get()) {
                 fileReader = new FileReader(FILE_PATH_OF_TRAP_CSV);
                 list = new ArrayList<>(new CSVReaderBuilder(fileReader).withSkipLines(1).build().readAll());
                 list.forEach(info -> {
-                    if (info[0].equals(cardName)) {
-                        if (Cards.getCard(cardName) != null) {
-                            printerAndScanner.printNextLine(thereIsAlreadyACardWithThisName);
-                            return;
-                        }
-                        try {
-                            new TrapCards(info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[6]),
-                                    InstantiateCards.loadSpecialAbilities(info[7].split("&&")),
-                                    InstantiateCards.getChainJobs(info[8]), info[7], info[8]);
-                            Shop.addCard(info[0], Integer.parseInt(info[5]));
-                            printerAndScanner.printNextLine(cardImportedSuccessfully);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
+//                    if (info[0].equals(cardName)) {
+//                        if (Cards.getCard(cardName) != null) {
+//                            printerAndScanner.printNextLine(thereIsAlreadyACardWithThisName);
+//                            return;
+//                        }
+//                        try {
+//                            new TrapCards(info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[6]),
+//                                    InstantiateCards.loadSpecialAbilities(info[7].split("&&")),
+//                                    InstantiateCards.getChainJobs(info[8]), info[7], info[8]);
+//                            Shop.addCard(info[0], Integer.parseInt(info[5]));
+                            makeStringBuilderForSpellAndTrap(cardProperties, info);
+//                            printerAndScanner.printNextLine(cardImportedSuccessfully);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
                 });
                 fileReader.close();
             } else {
-                printerAndScanner.printNextLine(thereIsNoCardWithThisNameToImport);
-                return;
+                return thereIsNoCardWithThisNameToImport;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return;
+            return error;
         }
+        return cardProperties.toString();
     }
 
-    public void exportCardInJson(String cardName) {
+    private void makeStringBuilderForSpellAndTrap(StringBuilder cardProperties, String[] info) {
+        cardProperties.append("name : ").append(info[0]).append("\n");
+        cardProperties.append("type : ").append(info[1]).append("\n");
+        cardProperties.append("description : ").append(info[3]).append("\n");
+        cardProperties.append("status : ").append(info[4]).append("\n");
+        cardProperties.append("Price : ").append(info[5]).append("\n");
+        cardProperties.append("Icon : ").append(info[2]).append("\n");
+        cardProperties.append("Special : ").append(info[7]).append("\n");
+    }
+
+    public String exportCardInJson(String cardName) {
         Cards card = Cards.getCard(cardName);
         if (card == null) {
-            printerAndScanner.printNextLine(cardWithThisNameIsNotValid);
-            return;
+            return cardWithThisNameIsNotValid;
         }
         File file = new File("./src/main/resources/exportedCardsInJson/" + cardName + ".json");
         if (file.exists()) {
-            System.out.println(cardWithThisNameHasAlreadyExported);
-            return;
+            return cardWithThisNameHasAlreadyExported;
         }
 
         JSONObject cardContent;
@@ -210,38 +231,37 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
             writer.write(cardContent.toJSONString());
             writer.close();
         } catch (IOException e) {
-            System.out.println(error);
+            return error;
         }
-        printerAndScanner.printNextLine(cardExportedSuccessfully);
+        return cardExportedSuccessfully;
     }
 
-    public void importCardFromJson(String cardName) {
+    public String importCardFromJson(String cardName) {
         File file = new File("./src/main/resources/exportedCardsInJson/" + cardName + ".json");
         if (!file.exists()) {
-            printerAndScanner.printNextLine(thereIsNoCardWithThisNameToImport);
-            return;
+            return thereIsNoCardWithThisNameToImport;
         }
         Object object = null;
         try {
             object = new JSONParser().parse(new FileReader("./src/main/resources/exportedCardsInJson/"
                     + cardName + ".json"));
         } catch (IOException | ParseException e) {
-            printerAndScanner.printNextLine(error);
+            return error;
         }
         if (object == null) {
-            printerAndScanner.printNextLine(thereIsNoCardWithThisNameToImport);
-            return;
+            return thereIsNoCardWithThisNameToImport;
         }
         JSONObject cardInJson = (JSONObject) object;
-        printerAndScanner.printNextLine(cardInJson.toJSONString());
+//        printerAndScanner.printNextLine(cardInJson.toJSONString());
+        return createStringFromJson(cardInJson);
 
-        Cards card = Cards.getCard(cardName);
-        if (card != null) {
-            printerAndScanner.printNextLine(thereIsAlreadyACardWithThisName);
-            return;
-        }
-        createCard(cardInJson);
-        printerAndScanner.printNextLine(cardImportedSuccessfully);
+//        Cards card = Cards.getCard(cardName);
+//        if (card != null) {
+//            printerAndScanner.printNextLine(thereIsAlreadyACardWithThisName);
+//            return;
+//        }
+//        createCard(cardInJson);
+//        printerAndScanner.printNextLine(cardImportedSuccessfully);
     }
 
     private void createCard(JSONObject cardInJson) {
@@ -273,6 +293,33 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private String createStringFromJson(JSONObject cardInJson) {
+        StringBuilder response = new StringBuilder();
+        response.append("name : ").append((String) cardInJson.get("name")).append("\n");
+        response.append("type : ").append((String) cardInJson.get("type")).append("\n");
+        response.append("description : ").append((String) cardInJson.get("description")).append("\n");
+        response.append("status : ").append((String) cardInJson.get("status")).append("\n");
+        response.append("Price : ").append((Integer) cardInJson.get("Price")).append("\n");
+        try {
+            if (cardInJson.get("cardType").equals("monster")) {
+                response.append("level : ").append((Integer) cardInJson.get("level")).append("\n");
+                response.append("attack : ").append((Integer) cardInJson.get("attack")).append("\n");
+                response.append("defense : ").append((Integer) cardInJson.get("defense")).append("\n");
+                response.append("attribute : ").append((String) cardInJson.get("attribute")).append("\n");
+                response.append("monsterType : ").append((String) cardInJson.get("monsterType")).append("\n");
+            } else if (cardInJson.get("cardType").equals("spell")) {
+                response.append("icon : ").append((String) cardInJson.get("icon")).append("\n");
+            } else if (cardInJson.get("cardType").equals("trap")) {
+                response.append("icon : ").append((String) cardInJson.get("icon")).append("\n");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return error;
+        }
+        return response.toString();
     }
 
     public JSONObject setJsonOfCard(Cards card) {
