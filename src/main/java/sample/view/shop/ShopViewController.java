@@ -84,6 +84,11 @@ public class ShopViewController implements StringMessages , Initializable{
     }
 
     public void searchInUserCards(ActionEvent e) throws FileNotFoundException {
+
+        if(cardDoNotExistInUserCardsLabel.isVisible()){
+            cardDoNotExistInUserCardsLabel.setVisible(false);
+        }
+
         if(UserKeeper.getInstance().getCurrentUser()
                 .getCards().contains(searchInUserCardsTextArea.getText().trim())){
 
@@ -102,6 +107,9 @@ public class ShopViewController implements StringMessages , Initializable{
     }
 
     public void searchInShop(ActionEvent e) throws FileNotFoundException {
+        if(cardDoNotExistInUserCardsLabel.isVisible()){
+            cardDoNotExistInUserCardsLabel.setVisible(false);
+        }
         if(Cards.getAllNames().contains(searchInShopTextArea.getText().trim())){
 
             cardNameLabelUnderShopCard.setText(searchInShopTextArea.getText().trim());
