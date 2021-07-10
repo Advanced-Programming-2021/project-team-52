@@ -119,7 +119,7 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
                 fileReader = new FileReader(FILE_PATH_OF_MONSTER_CSV);
                 list = new ArrayList<>(new CSVReaderBuilder(fileReader).withSkipLines(1).build().readAll());
                 list.forEach(info -> {
-//                    if (info[0].equals(cardName)) {
+                    if (info[0].equals(cardName)) {
 //                        if (Cards.getCard(cardName) != null) {
 ////                            return thereIsAlreadyACardWithThisName;
 //                        }
@@ -144,7 +144,7 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
 //                        } catch (Exception e) {
 //                            e.printStackTrace();
 //                        }
-//                    }
+                    }
                 });
                 fileReader.close();
 
@@ -152,7 +152,7 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
                 fileReader = new FileReader(FILE_PATH_OF_SPELL_CSV);
                 list = new ArrayList<>(new CSVReaderBuilder(fileReader).withSkipLines(1).build().readAll());
                 list.forEach(info -> {
-//                    if (info[0].equals(cardName)) {
+                    if (info[0].equals(cardName)) {
 //                        if (Cards.getCard(cardName) != null) {
 //                            printerAndScanner.printNextLine(thereIsAlreadyACardWithThisName);
 
@@ -168,14 +168,14 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
 //                        } catch (Exception e) {
 //                            e.printStackTrace();
 //                        }
-//                    }
+                    }
                 });
                 fileReader.close();
             } else if (isCardWithThisNameExistsInExportedCSVCards(cardName, FILE_PATH_OF_TRAP_CSV).get()) {
                 fileReader = new FileReader(FILE_PATH_OF_TRAP_CSV);
                 list = new ArrayList<>(new CSVReaderBuilder(fileReader).withSkipLines(1).build().readAll());
                 list.forEach(info -> {
-//                    if (info[0].equals(cardName)) {
+                    if (info[0].equals(cardName)) {
 //                        if (Cards.getCard(cardName) != null) {
 //                            printerAndScanner.printNextLine(thereIsAlreadyACardWithThisName);
 //                            return;
@@ -190,7 +190,7 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
 //                        } catch (Exception e) {
 //                            e.printStackTrace();
 //                        }
-//                    }
+                    }
                 });
                 fileReader.close();
             } else {
@@ -301,12 +301,12 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
         response.append("type : ").append((String) cardInJson.get("type")).append("\n");
         response.append("description : ").append((String) cardInJson.get("description")).append("\n");
         response.append("status : ").append((String) cardInJson.get("status")).append("\n");
-        response.append("Price : ").append((Integer) cardInJson.get("Price")).append("\n");
+        response.append("Price : ").append( cardInJson.get("Price")).append("\n");
         try {
             if (cardInJson.get("cardType").equals("monster")) {
-                response.append("level : ").append((Integer) cardInJson.get("level")).append("\n");
-                response.append("attack : ").append((Integer) cardInJson.get("attack")).append("\n");
-                response.append("defense : ").append((Integer) cardInJson.get("defense")).append("\n");
+                response.append("level : ").append( cardInJson.get("level")).append("\n");
+                response.append("attack : ").append( cardInJson.get("attack")).append("\n");
+                response.append("defense : ").append( cardInJson.get("defense")).append("\n");
                 response.append("attribute : ").append((String) cardInJson.get("attribute")).append("\n");
                 response.append("monsterType : ").append((String) cardInJson.get("monsterType")).append("\n");
             } else if (cardInJson.get("cardType").equals("spell")) {
@@ -314,6 +314,7 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
             } else if (cardInJson.get("cardType").equals("trap")) {
                 response.append("icon : ").append((String) cardInJson.get("icon")).append("\n");
             }
+            response.append("Special : ").append((String) cardInJson.get("specialsInString"));
 
         } catch (Exception e) {
             e.printStackTrace();
