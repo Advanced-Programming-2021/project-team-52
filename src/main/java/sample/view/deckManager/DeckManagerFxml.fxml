@@ -349,6 +349,9 @@
                   <Image url="@../../../../resources/media/images/others/makeCardIcon.png" />
                </image>
             </ImageView>
+            <JFXTextArea fx:id="newDeckNameTextField" focusColor="#ffff55" labelFloat="true" layoutX="670.0" layoutY="139.0" prefHeight="36.0" prefWidth="166.0" promptText="new deck name" unFocusColor="WHITE" visible="false" />
+            <JFXButton fx:id="submitNewDeckNameButton" layoutX="804.0" layoutY="142.0" prefHeight="30.0" prefWidth="40.0" text="ok" textFill="#ffff55" visible="false" />
+            <Label fx:id="newDeckNameSituationLabel" layoutX="670.0" layoutY="180.0" prefHeight="17.0" prefWidth="155.0" text="Label" textFill="#ff5959" visible="false" />
          </children>
       </Pane>
    </content>
