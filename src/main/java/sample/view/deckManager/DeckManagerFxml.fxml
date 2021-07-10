@@ -11,6 +11,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
@@ -34,16 +35,25 @@
                   <Image url="@../../../../resources/media/images/others/cardTemp.jpg" />
                </image>
             </ImageView>
-            <Label fx:id="deck1NameLabel" layoutX="530.0" layoutY="380.0" prefHeight="47.0" prefWidth="174.0" text="Label" />
-            <Label fx:id="deck2NameLabel" layoutX="948.0" layoutY="380.0" prefHeight="47.0" prefWidth="174.0" text="Label" />
-            <JFXToggleButton fx:id="deck1ActivationButton" layoutX="528.0" layoutY="429.0" prefHeight="58.0" prefWidth="177.0" text="set as Active" />
-            <JFXToggleButton fx:id="deck2ActivationButton" layoutX="947.0" layoutY="429.0" prefHeight="58.0" prefWidth="177.0" text="set as Active" />
-            <JFXButton fx:id="deleteDeck1Button" layoutX="521.0" layoutY="494.0" prefHeight="45.0" prefWidth="193.0" text="delet Deck" textFill="#ff5959">
+            <Label fx:id="deck1NameLabel" layoutX="530.0" layoutY="380.0" prefHeight="47.0" prefWidth="174.0" text="Label" textFill="#ffff55" />
+            <Label fx:id="deck2NameLabel" layoutX="948.0" layoutY="380.0" prefHeight="47.0" prefWidth="174.0" text="Label" textFill="#ffff55" />
+            <JFXToggleButton fx:id="deck1ActivationButton" layoutX="528.0" layoutY="429.0" prefHeight="58.0" prefWidth="177.0" text="set as Active" textFill="WHITE">
+               <toggleGroup>
+                  <ToggleGroup fx:id="activeDeck" />
+               </toggleGroup>
+               <font>
+                  <Font size="16.0" />
+               </font></JFXToggleButton>
+            <JFXToggleButton fx:id="deck2ActivationButton" layoutX="947.0" layoutY="429.0" prefHeight="58.0" prefWidth="177.0" text="set as Active" textFill="WHITE" toggleGroup="$activeDeck">
+               <font>
+                  <Font size="16.0" />
+               </font></JFXToggleButton>
+            <JFXButton fx:id="deleteDeck1Button" layoutX="521.0" layoutY="494.0" prefHeight="45.0" prefWidth="193.0" text="delete Deck" textFill="#ff5959">
                <font>
                   <Font size="20.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="deleteDeck2Button" layoutX="939.0" layoutY="494.0" prefHeight="45.0" prefWidth="193.0" text="delet deck" textFill="#ff5959">
+            <JFXButton fx:id="deleteDeck2Button" layoutX="939.0" layoutY="494.0" prefHeight="45.0" prefWidth="193.0" text="delete deck" textFill="#ff5959">
                <font>
                   <Font size="20.0" />
                </font>
@@ -142,30 +152,48 @@
                <toggleGroup>
                   <ToggleGroup fx:id="cardType" />
                </toggleGroup>
+               <selectedColor>
+                  <Color green="1.0" blue="1.0" />
+               </selectedColor>
             </JFXRadioButton>
-            <JFXRadioButton layoutX="151.0" layoutY="449.0" text="Trap" textFill="AQUA" toggleGroup="$cardType" />
-            <JFXRadioButton layoutX="252.0" layoutY="449.0" text="Spell" textFill="AQUA" toggleGroup="$cardType" />
+            <JFXRadioButton layoutX="151.0" layoutY="449.0" text="Trap" textFill="AQUA" toggleGroup="$cardType">
+               <selectedColor>
+                  <Color green="1.0" blue="1.0" />
+               </selectedColor></JFXRadioButton>
+            <JFXRadioButton layoutX="252.0" layoutY="449.0" text="Spell" textFill="AQUA" toggleGroup="$cardType">
+               <selectedColor>
+                  <Color green="1.0" blue="1.0" />
+               </selectedColor></JFXRadioButton>
             <JFXButton fx:id="submitCardTypeButton" layoutX="337.0" layoutY="445.0" text="ok" textFill="#ffff55" />
             <JFXTextArea fx:id="cardNameTextArea" focusColor="#ffff55" labelFloat="true" layoutX="36.0" layoutY="504.0" prefHeight="35.0" prefWidth="234.0" promptText="card name" unFocusColor="WHITE" />
             <JFXButton fx:id="submitCardNameButton" layoutX="240.0" layoutY="510.0" text="ok" textFill="#ffff55" />
-            <JFXSlider fx:id="LVLBar" blockIncrement="1.0" layoutX="-34.0" layoutY="814.0" rotate="270.0" />
-            <JFXSlider fx:id="ATKBar" blockIncrement="1.0" layoutX="2.0" layoutY="814.0" rotate="270.0" />
-            <JFXSlider fx:id="DEFBar" blockIncrement="1.0" layoutX="37.0" layoutY="814.0" rotate="270.0" />
-            <JFXButton fx:id="submitMonsterLVLButton" layoutX="22.0" layoutY="930.0" text="ok" textFill="#ffff55" />
-            <JFXButton fx:id="submitMonsterATKButton" layoutX="58.0" layoutY="930.0" text="ok" textFill="#ffff55" />
-            <JFXButton fx:id="submitMonsterDEFButton" layoutX="93.0" layoutY="930.0" text="ok" textFill="#ffff55" />
-            <Label fx:id="LVLLabel" layoutX="27.0" layoutY="899.0" text="LVL" textFill="AQUA" />
-            <Label fx:id="ATKLable" layoutX="62.0" layoutY="899.0" text="ATK" textFill="#ff5959" />
-            <Label fx:id="DEFLabel" layoutX="97.0" layoutY="900.0" prefHeight="17.0" prefWidth="23.0" text="DEF" textFill="#59ff59" />
+            <JFXSlider fx:id="LVLBar" blockIncrement="1.0" layoutX="-4.0" layoutY="814.0" max="5000.0" rotate="270.0" />
+            <JFXSlider fx:id="ATKBar" blockIncrement="1.0" layoutX="32.0" layoutY="814.0" max="5000.0" rotate="270.0" />
+            <JFXSlider fx:id="DEFBar" blockIncrement="1.0" layoutX="67.0" layoutY="814.0" max="5000.0" rotate="270.0" />
+            <JFXButton fx:id="submitMonsterLVLButton" layoutX="52.0" layoutY="930.0" text="ok" textFill="#ffff55" />
+            <JFXButton fx:id="submitMonsterATKButton" layoutX="88.0" layoutY="930.0" text="ok" textFill="#ffff55" />
+            <JFXButton fx:id="submitMonsterDEFButton" layoutX="123.0" layoutY="930.0" text="ok" textFill="#ffff55" />
+            <Label fx:id="LVLLabel" layoutX="57.0" layoutY="899.0" text="LVL" textFill="AQUA" />
+            <Label fx:id="ATKLable" layoutX="92.0" layoutY="899.0" text="ATK" textFill="#ff5959" />
+            <Label fx:id="DEFLabel" layoutX="127.0" layoutY="900.0" prefHeight="17.0" prefWidth="23.0" text="DEF" textFill="#59ff59" />
             <JFXTextArea fx:id="cardDescriptionTextArea" focusColor="#ffff55" labelFloat="true" layoutX="34.0" layoutY="557.0" prefHeight="35.0" prefWidth="234.0" promptText="card Description" unFocusColor="WHITE" />
             <JFXButton fx:id="submitCardDescriptionButton" layoutX="238.0" layoutY="563.0" text="ok" textFill="#ffff55" />
             <JFXRadioButton layoutX="38.0" layoutY="689.0" text="limited" textFill="AQUA">
                <toggleGroup>
                   <ToggleGroup fx:id="status" />
                </toggleGroup>
+               <selectedColor>
+                  <Color green="1.0" blue="1.0" />
+               </selectedColor>
             </JFXRadioButton>
-            <JFXRadioButton layoutX="153.0" layoutY="689.0" text="half limited" textFill="AQUA" toggleGroup="$status" />
-            <JFXRadioButton layoutX="254.0" layoutY="689.0" text="unlmited" textFill="AQUA" toggleGroup="$status" />
+            <JFXRadioButton layoutX="153.0" layoutY="689.0" text="half limited" textFill="AQUA" toggleGroup="$status">
+               <selectedColor>
+                  <Color green="1.0" blue="1.0" />
+               </selectedColor></JFXRadioButton>
+            <JFXRadioButton layoutX="254.0" layoutY="689.0" text="unlmited" textFill="AQUA" toggleGroup="$status">
+               <selectedColor>
+                  <Color green="1.0" blue="1.0" />
+               </selectedColor></JFXRadioButton>
             <JFXButton fx:id="submitCardTypeButton1" layoutX="339.0" layoutY="685.0" text="ok" textFill="#ffff55" />
             <JFXTextArea fx:id="cardToGetSpecialFromTextArea" focusColor="#ffff55" labelFloat="true" layoutX="34.0" layoutY="626.0" prefHeight="35.0" prefWidth="234.0" promptText="card Description" unFocusColor="WHITE" />
             <JFXButton fx:id="submitCardToGetSpecialFromButton" layoutX="238.0" layoutY="632.0" text="ok" textFill="#ffff55" />
@@ -187,6 +215,21 @@
                      </image>
                   </ImageView>
                </graphic>
+            </JFXButton>
+            <Label fx:id="situationLabel" layoutX="32.0" layoutY="1063.0" prefHeight="83.0" prefWidth="226.0" textFill="WHITE">
+               <font>
+                  <Font name="System Italic" size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="priceLabel" layoutX="31.0" layoutY="1148.0" prefHeight="83.0" prefWidth="226.0" textFill="AQUA">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Label>
+            <JFXButton fx:id="submitCardMakingProcessButton" layoutX="21.0" layoutY="1274.0" lineSpacing="20.0" prefHeight="74.0" prefWidth="224.0" text="make the Card" textFill="#59ff59" underline="true">
+               <font>
+                  <Font name="System Bold" size="27.0" />
+               </font>
             </JFXButton>
          </children>
       </Pane>

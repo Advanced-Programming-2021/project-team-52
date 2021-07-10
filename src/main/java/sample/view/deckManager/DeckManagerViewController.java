@@ -1,5 +1,6 @@
 package sample.view.deckManager;
 
+import com.jfoenix.controls.JFXTextArea;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,11 +23,17 @@ public class DeckManagerViewController implements Initializable {
 
     @FXML
     Pane deckManagerPane;
+    @FXML
+    JFXTextArea monsterAttributeTextArea,cardToGetSpecialFromTextArea,cardDescriptionTextArea,cardNameTextArea;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         deckManagerPane.setStyle("-fx-background-color: black");
+        monsterAttributeTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        cardToGetSpecialFromTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        cardDescriptionTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        cardNameTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
     }
 
     public void backButton(ActionEvent e) throws IOException {
