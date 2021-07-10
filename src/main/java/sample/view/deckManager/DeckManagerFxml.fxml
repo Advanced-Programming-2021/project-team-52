@@ -40,13 +40,13 @@
                <font>
                   <Font size="20.0" />
                </font></Label>
-            <JFXToggleButton fx:id="deckActivationButton" layoutX="862.0" layoutY="486.0" prefHeight="62.0" prefWidth="219.0" text="set as Active" textFill="WHITE">
-               <toggleGroup>
-                  <ToggleGroup fx:id="activeDeck" />
-               </toggleGroup>
+            <JFXButton fx:id="deckActivationButton" layoutX="862.0" layoutY="486.0" onAction="#activateDeck" prefHeight="62.0" prefWidth="219.0" text="set as Active" textFill="WHITE">
+<!--               <toggleGroup>-->
+<!--                  <ToggleGroup fx:id="activeDeck" />-->
+<!--               </toggleGroup>-->
                <font>
                   <Font size="16.0" />
-               </font></JFXToggleButton>
+               </font></JFXButton>
             <JFXButton fx:id="deleteDeckButton" layoutX="869.0" layoutY="541.0" onAction="#deleteDeck" prefHeight="45.0" prefWidth="215.0" text="delete Deck" textFill="#ff5959">
                <font>
                   <Font size="20.0" />
@@ -195,7 +195,7 @@
                   <Blend />
                </effect>
             </Label>
-            <JFXButton fx:id="addToMainButton" buttonType="RAISED" layoutX="909.0" layoutY="826.0" onAction="#addToMainButton" prefHeight="41.0" prefWidth="140.0" text="add 1 to main" textFill="#ffff55">
+            <JFXButton fx:id="addToMainButton" buttonType="RAISED" layoutX="909.0" layoutY="826.0" onAction="#addCardToMain" prefHeight="41.0" prefWidth="140.0" text="add 1 to main" textFill="#ffff55">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -207,7 +207,7 @@
                   </ImageView>
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="addToSideButton" buttonType="RAISED" layoutX="909.0" layoutY="867.0" prefHeight="41.0" prefWidth="135.0" text="add 1 to side" textFill="#ffff55">
+            <JFXButton fx:id="addToSideButton" buttonType="RAISED" layoutX="909.0" layoutY="867.0" onAction="#addCardToSide" prefHeight="41.0" prefWidth="135.0" text="add 1 to side" textFill="#ffff55">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -250,7 +250,7 @@
                   <Blend />
                </effect>
             </Label>
-            <JFXButton fx:id="removeFromMainButton" buttonType="RAISED" layoutX="1111.0" layoutY="826.0" prefHeight="41.0" prefWidth="167.0" text=" remove 1 from main" textFill="#ff5959">
+            <JFXButton fx:id="removeFromMainButton" buttonType="RAISED" onAction="#removeCardFromMain" layoutX="1111.0" layoutY="826.0" prefHeight="41.0" prefWidth="167.0" text=" remove 1 from main" textFill="#ff5959">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -262,7 +262,7 @@
                   </ImageView>
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="removeFromSideButton" buttonType="RAISED" layoutX="1111.0" layoutY="867.0" prefHeight="41.0" prefWidth="159.0" text="remove 1 from side" textFill="#ff5959">
+            <JFXButton fx:id="removeFromSideButton" buttonType="RAISED" layoutX="1111.0" layoutY="867.0" onAction="#removeCardFromSide" prefHeight="41.0" prefWidth="159.0" text="remove 1 from side" textFill="#ff5959">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -274,18 +274,18 @@
                   </ImageView>
                </graphic>
             </JFXButton>
-            <Label fx:id="cardAdditionSituationLabel" layoutX="899.0" layoutY="916.0" prefHeight="54.0" prefWidth="254.0" textFill="WHITE">
+            <Label fx:id="cardAdditionSituationLabel" layoutX="899.0" layoutY="916.0" prefHeight="54.0" prefWidth="400.0" textFill="WHITE">
                <font>
                   <Font name="System Bold Italic" size="16.0" />
                </font>
             </Label>
-            <Label fx:id="allDecksLabel" alignment="TOP_LEFT" layoutX="405.0" layoutY="273.0" prefHeight="1161.0" prefWidth="143.0" text="Label" textFill="#e4e4e4">
+            <Label fx:id="allDecksLabel" alignment="TOP_LEFT" layoutX="405.0" layoutY="273.0" prefHeight="1161.0" prefWidth="343.0"  textFill="#e4e4e4">
                <font>
                   <Font name="System Bold Italic" size="12.0" />
                </font></Label>
             <JFXTextArea fx:id="deckSearchTextArea" focusColor="#ffff55" labelFloat="true" layoutX="411.0" layoutY="207.0" prefHeight="31.0" prefWidth="273.0" promptText="name a deck to edit" unFocusColor="WHITE" />
-            <Label fx:id="mainDeckLabel" alignment="TOP_LEFT" layoutX="588.0" layoutY="645.0" prefHeight="1161.0" prefWidth="143.0" text="Label" textFill="#e4e4e4" />
-            <Label fx:id="sideDeckLabel" alignment="TOP_LEFT" layoutX="731.0" layoutY="645.0" prefHeight="1161.0" prefWidth="143.0" text="Label" textFill="#e4e4e4" />
+            <Label fx:id="mainDeckLabel" alignment="TOP_CENTER" layoutX="588.0" layoutY="645.0" prefHeight="1161.0" prefWidth="143.0"  textFill="#e4e4e4" />
+            <Label fx:id="sideDeckLabel" alignment="TOP_CENTER" layoutX="731.0" layoutY="645.0" prefHeight="1161.0" prefWidth="143.0"  textFill="#e4e4e4" />
 <!--            <JFXButton fx:id="newDeckButton" layoutX="411.0" layoutY="135.0" prefHeight="45.0" prefWidth="276.0" text=" new deck" textFill="#59ff59">-->
 <!--               <font>-->
 <!--                  <Font size="20.0" />-->
@@ -324,7 +324,7 @@
                   </ImageView>
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="submitRemoveCardSearchButton" layoutX="1196.0" layoutY="683.0" prefHeight="30.0" prefWidth="60.0" text="ok" textFill="AQUA">
+            <JFXButton fx:id="submitRemoveCardSearchButton" layoutX="1196.0" layoutY="683.0" onAction="#submitRemoveCardSearch" prefHeight="30.0" prefWidth="60.0" text="ok" textFill="AQUA">
                <graphic>
                   <ImageView fitHeight="22.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
                      <image>

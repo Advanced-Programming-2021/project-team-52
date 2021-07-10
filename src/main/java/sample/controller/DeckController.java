@@ -98,6 +98,7 @@ public class DeckController implements RegexPatterns, StringMessages {
         userCards.addAll(deck.getAllMainCards());
         userCards.addAll(deck.getAllSideCards());
         user.deleteDeck(deckName);
+        user.setActiveDeck(null);
 //        printerAndScanner.printNextLine(deckDeletedSuccessfully);
         return deckDeletedSuccessfully;
     }
@@ -191,8 +192,9 @@ public class DeckController implements RegexPatterns, StringMessages {
         return cardRemovedFormDeckSuccessfully;
     }
 
-    public void showAllDecks(User user) {
-        printerAndScanner.printNextLine(printBuilderController.showAllDecks(user));
+    public String showAllDecks(User user) {
+//        printerAndScanner.printNextLine();
+        return printBuilderController.showAllDecks(user);
     }
 
     public void showDeck(User user, String deckName, boolean isSide) {
@@ -201,7 +203,7 @@ public class DeckController implements RegexPatterns, StringMessages {
         printerAndScanner.printNextLine(printBuilderController.showOneDeck(deck, isSide));
     }
 
-    public String getMainDeckByString(String deckName, User user){
+    public String getMainDeckByString(String deckName, User user) {
         Deck deck = user.getDeckByName(deckName);
         if (deckDoesNotExists(deckName, deck))
             return printBuilderController.deckWithThisNameDoesNotExist(deckName);
@@ -213,7 +215,8 @@ public class DeckController implements RegexPatterns, StringMessages {
         }
         return response.toString();
     }
-    public String getSideDeckByString(String deckName, User user){
+
+    public String getSideDeckByString(String deckName, User user) {
         Deck deck = user.getDeckByName(deckName);
         if (deckDoesNotExists(deckName, deck))
             return printBuilderController.deckWithThisNameDoesNotExist(deckName);

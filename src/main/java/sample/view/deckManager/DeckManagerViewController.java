@@ -68,7 +68,7 @@ public class DeckManagerViewController implements Initializable {
             addToSideButton, addToMainButton, removeFromMainButton, removeFromSideButton;
     @FXML
     Label newDeckNameSituationLabel, mainDeckLabel, sideDeckLabel, cardAdditionSituationLabel,
-            numberOfAvailableCardToAddLabel, numberOfAvailableCardToRemoveLabel;
+            numberOfAvailableCardToAddLabel, numberOfAvailableCardToRemoveLabel,allDecksLabel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -81,6 +81,7 @@ public class DeckManagerViewController implements Initializable {
         cardNameToAddTextArea.setStyle("-fx-prompt-text-fill: white");
         cardNameToRemoveTextArea.setStyle("-fx-prompt-text-fill: white");
         deckSearchTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        showAllDecksOfUser();
     }
 
     public void backButton(ActionEvent e) throws IOException {
@@ -266,20 +267,23 @@ public class DeckManagerViewController implements Initializable {
         String response = "";
         response = deckController.createDeck(newDeckNameTextField.getText(), user);
         newDeckNameSituationLabel.setText(response);
+        showAllDecksOfUser();
     }
 
     public void submitDeckSearch(ActionEvent e) {
         String deckName = deckSearchTextArea.getText().trim();
         String mainDeckResponse = "";
         String sideDeckResponse = "";
-        mainDeckResponse = deckController.getSideDeckByString(deckName, user);
-        sideDeckResponse = deckController.getMainDeckByString(deckName, user);
+        sideDeckResponse = deckController.getSideDeckByString(deckName, user);
+        mainDeckResponse = deckController.getMainDeckByString(deckName, user);
         if (mainDeckResponse.equals(printBuilderController.deckWithThisNameDoesNotExist(deckName))) {
 
         } else {
             deckNameInString = deckName;
             mainDeckLabel.setText(mainDeckResponse);
             sideDeckLabel.setText(sideDeckResponse);
+            newDeckNameSituationLabel.setText("");
+            newDeckNameTextField.setText("");
         }
     }
 
@@ -291,6 +295,10 @@ public class DeckManagerViewController implements Initializable {
         if (response.equals(StringMessages.deckDeletedSuccessfully)) {
             mainDeckLabel.setText("");
             sideDeckLabel.setText("");
+            numberOfAvailableCardToAddLabel.setText("No");
+            numberOfAvailableCardToRemoveLabel.setText("No");
+            deckSearchTextArea.setText("");
+            showAllDecksOfUser();
         }
     }
 
@@ -308,16 +316,94 @@ public class DeckManagerViewController implements Initializable {
         cardAdditionSituationLabel.setText("");
     }
 
-    public void addToMainButton(ActionEvent e){
+    public void addCardToMain(ActionEvent e){
         String response = "";
         response = deckController.addCardToDeck(cardAdditionInString,deckNameInString,false,user);
         if(response.equals(StringMessages.cardAddedToDeckSuccessfully)){
             cardAdditionSituationLabel.setText(response);
-
-        }else{
+            mainDeckLabel.setText(deckController.getMainDeckByString(deckNameInString, user));
+            numberOfAvailableCardToRemoveLabel.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                    (user, cardRemoveInString)));
+            numberOfAvailableCardToAddLabel.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                    (user, cardAdditionInString)));
+            showAllDecksOfUser();
+        }
+        else{
             cardAdditionSituationLabel.setText(response);
         }
     }
 
+    public void addCardToSide(ActionEvent e){
+        String response = "";
+        response = deckController.addCardToDeck(cardAdditionInString,deckNameInString,true,user);
+        if(response.equals(StringMessages.cardAddedToDeckSuccessfully)){
+            cardAdditionSituationLabel.setText(response);
+            sideDeckLabel.setText(deckController.getSideDeckByString(deckNameInString, user));
+            numberOfAvailableCardToRemoveLabel.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                    (user, cardRemoveInString)));
+            numberOfAvailableCardToAddLabel.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                    (user, cardAdditionInString)));
+            showAllDecksOfUser();
+        }
+        else{
+        cardAdditionSituationLabel.setText(response);
+        }
+    }
 
+    public void submitRemoveCardSearch(ActionEvent e){
+        String cardName = cardNameToRemoveTextArea.getText().trim();
+        Cards card = Cards.getCard(cardName);
+        if(card == null){
+            numberOfAvailableCardToRemoveLabel.setText("No");
+            cardAdditionSituationLabel.setText("there is no card with this name");
+            return;
+        }
+        cardRemoveInString = cardName;
+        numberOfAvailableCardToRemoveLabel.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                (user, cardName)));
+        cardAdditionSituationLabel.setText("");
+    }
+
+    public void removeCardFromMain(ActionEvent e){
+        String response = "";
+        response = deckController.removeCardFromDeck(cardRemoveInString, deckNameInString, false, user);
+        if(response.equals(StringMessages.cardRemovedFormDeckSuccessfully)){
+            cardAdditionSituationLabel.setText(response);
+            mainDeckLabel.setText(deckController.getMainDeckByString(deckNameInString, user));
+            numberOfAvailableCardToRemoveLabel.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                    (user, cardRemoveInString)));
+            numberOfAvailableCardToAddLabel.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                    (user, cardAdditionInString)));
+            showAllDecksOfUser();
+        }
+        else{
+            cardAdditionSituationLabel.setText(response);
+        }
+    }
+
+    public void removeCardFromSide(ActionEvent e){
+        String response = "";
+        response = deckController.removeCardFromDeck(cardRemoveInString, deckNameInString, true, user);
+        if(response.equals(StringMessages.cardRemovedFormDeckSuccessfully)){
+            cardAdditionSituationLabel.setText(response);
+            sideDeckLabel.setText(deckController.getSideDeckByString(deckNameInString, user));
+            numberOfAvailableCardToRemoveLabel.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                    (user, cardRemoveInString)));
+            numberOfAvailableCardToAddLabel.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                    (user, cardAdditionInString)));
+            showAllDecksOfUser();
+        }
+        else{
+            cardAdditionSituationLabel.setText(response);
+        }
+    }
+
+    public void activateDeck(ActionEvent e){
+        cardAdditionSituationLabel.setText(deckController.activateDeck(deckNameInString,user));
+        showAllDecksOfUser();
+    }
+
+    public void showAllDecksOfUser(){
+        allDecksLabel.setText(deckController.showAllDecks(user));
+    }
 }
