@@ -15,6 +15,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import sample.controller.CardCreatorController;
+import sample.controller.DeckController;
+import sample.controller.PrintBuilderController;
+import sample.controller.ShopController;
+import sample.model.User;
+import sample.model.cards.Cards;
+import sample.model.tools.StringMessages;
 import sample.view.UserKeeper;
 
 import java.io.File;
@@ -24,6 +30,13 @@ import java.util.ResourceBundle;
 
 public class DeckManagerViewController implements Initializable {
     CardCreatorController cardCreatorController = CardCreatorController.getInstance();
+    DeckController deckController = DeckController.getInstance();
+    ShopController shopController = ShopController.getInstance();
+    User user = UserKeeper.getInstance().getCurrentUser();
+    PrintBuilderController printBuilderController = PrintBuilderController.getInstance();
+    String cardAdditionInString;
+    String cardRemoveInString;
+    String deckNameInString;
 
     Scene scene;
     Stage stage;
@@ -37,7 +50,7 @@ public class DeckManagerViewController implements Initializable {
     JFXRadioButton trapRadiobutton, monsterRadiobutton, spellRadiobutton, limitedRadioButton,
             halfLimitedRadioButton, unlimitedRadioButton;
     @FXML
-    Label LVLLabel, ATKLabel, DEFLabel, SpeedLabel, numberOfAvailableCardToAddLabel, deckSearchStatusLabel;
+    Label LVLLabel, ATKLabel, DEFLabel, SpeedLabel, deckSearchStatusLabel;
     @FXML
     JFXButton submitCardTypeButton, submitCardNameButton, submitCardDescriptionButton, submitCardToGetSpecialFromButton,
             submitMonsterLVLButton, submitMonsterATKButton, submitMonsterDEFButton, submitCardStatusButton, submitSpeedButton,
@@ -48,8 +61,18 @@ public class DeckManagerViewController implements Initializable {
     @FXML
     Label situationAndPriceLabel;
 
+    @FXML
+    JFXTextArea newDeckNameTextField;
+    @FXML
+    JFXButton submitNewDeckNameButton, deleteDeckButton, submitAddCardSearchButton, submitRemoveCardSearchButton,
+            addToSideButton, addToMainButton, removeFromMainButton, removeFromSideButton;
+    @FXML
+    Label newDeckNameSituationLabel, mainDeckLabel, sideDeckLabel, cardAdditionSituationLabel,
+            numberOfAvailableCardToAddLabel, numberOfAvailableCardToRemoveLabel;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        newDeckNameTextField.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         deckManagerPane.setStyle("-fx-background-color: black");
         monsterAttributeTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         cardToGetSpecialFromTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
@@ -239,16 +262,62 @@ public class DeckManagerViewController implements Initializable {
 
     ///////////////////////////////////////////////////////////////////////////////////////Deck Management Start
 
-    public void submitDeckSearch(ActionEvent e){
-
+    public void createDeck(ActionEvent e) {
+        String response = "";
+        response = deckController.createDeck(newDeckNameTextField.getText(), user);
+        newDeckNameSituationLabel.setText(response);
     }
 
-    public void submitAddToDeckSearch(ActionEvent e){
+    public void submitDeckSearch(ActionEvent e) {
+        String deckName = deckSearchTextArea.getText().trim();
+        String mainDeckResponse = "";
+        String sideDeckResponse = "";
+        mainDeckResponse = deckController.getSideDeckByString(deckName, user);
+        sideDeckResponse = deckController.getMainDeckByString(deckName, user);
+        if (mainDeckResponse.equals(printBuilderController.deckWithThisNameDoesNotExist(deckName))) {
 
+        } else {
+            deckNameInString = deckName;
+            mainDeckLabel.setText(mainDeckResponse);
+            sideDeckLabel.setText(sideDeckResponse);
+        }
     }
 
-    public void submitRemoveFromDeckSearch(ActionEvent e){
-
+    public void deleteDeck(ActionEvent e) {
+        String deckName = deckSearchTextArea.getText();
+        String response = "";
+        response = deckController.deleteDeck(deckName, user);
+        cardAdditionSituationLabel.setText(response);
+        if (response.equals(StringMessages.deckDeletedSuccessfully)) {
+            mainDeckLabel.setText("");
+            sideDeckLabel.setText("");
+        }
     }
+
+    public void submitAddCardSearch(ActionEvent e) {
+        String cardName = cardNameToAddTextArea.getText().trim();
+        Cards card = Cards.getCard(cardName);
+        if(card == null){
+            numberOfAvailableCardToAddLabel.setText("No");
+            cardAdditionSituationLabel.setText("there is no card with this name");
+            return;
+        }
+        cardAdditionInString= cardName;
+        numberOfAvailableCardToAddLabel.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                (user, cardName)));
+        cardAdditionSituationLabel.setText("");
+    }
+
+    public void addToMainButton(ActionEvent e){
+        String response = "";
+        response = deckController.addCardToDeck(cardAdditionInString,deckNameInString,false,user);
+        if(response.equals(StringMessages.cardAddedToDeckSuccessfully)){
+            cardAdditionSituationLabel.setText(response);
+
+        }else{
+            cardAdditionSituationLabel.setText(response);
+        }
+    }
+
 
 }
