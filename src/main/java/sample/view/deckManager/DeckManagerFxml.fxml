@@ -35,7 +35,7 @@
                   <Image url="@../../../../resources/media/images/others/cardTemp.jpg" />
                </image>
             </ImageView>
-            <Label fx:id="deck1NameLabel" layoutX="530.0" layoutY="380.0" prefHeight="47.0" prefWidth="174.0" text="Label" textFill="#ffff55" />
+            <Label fx:id="deck1NameLabel" layoutX="530.0" layoutY="380.0" prefHeight="47.0" prefWidth="175.0" text="Label" textFill="#ffff55" />
             <Label fx:id="deck2NameLabel" layoutX="948.0" layoutY="380.0" prefHeight="47.0" prefWidth="174.0" text="Label" textFill="#ffff55" />
             <JFXToggleButton fx:id="deck1ActivationButton" layoutX="528.0" layoutY="429.0" prefHeight="58.0" prefWidth="177.0" text="set as Active" textFill="WHITE">
                <toggleGroup>
@@ -230,6 +230,29 @@
                <font>
                   <Font name="System Bold" size="27.0" />
                </font>
+            </JFXButton>
+            <JFXTextArea layoutX="686.0" layoutY="575.0" prefHeight="36.0" prefWidth="154.0" />
+            <Label layoutX="725.0" layoutY="629.0" prefHeight="43.0" prefWidth="77.0" text="you have:" textFill="WHITE">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <Label fx:id="numberOfAvaliableCardLabel" layoutX="750.0" layoutY="664.0" prefHeight="43.0" prefWidth="27.0" text="No" textFill="AQUA">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <JFXButton fx:id="add1ToMainButton" layoutX="696.0" layoutY="744.0" prefHeight="41.0" prefWidth="135.0" text="add 1 to main" />
+            <JFXButton fx:id="add1ToSideButton" layoutX="696.0" layoutY="785.0" prefHeight="41.0" prefWidth="135.0" text="add 1 to side" />
+            <Label layoutX="719.0" layoutY="698.0" prefHeight="43.0" prefWidth="89.0" text="of this card" textFill="WHITE">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <JFXButton layoutX="575.0" layoutY="202.0">
+               <graphic>
+                  <ImageView fitHeight="70.0" fitWidth="74.0" pickOnBounds="true" preserveRatio="true" />
+               </graphic>
             </JFXButton>
          </children>
       </Pane>

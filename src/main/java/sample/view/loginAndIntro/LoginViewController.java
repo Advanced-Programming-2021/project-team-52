@@ -37,7 +37,7 @@ public class LoginViewController implements Initializable {
     @FXML
     JFXTextArea nickNameFieldInEntranceScene, usernameFieldInEntranceScene, passwordFieldInEntranceScene;
     @FXML
-    JFXButton nextButtonInEntranceScene, loginButtonInEntranceScene, signupButtonInEntranceScene;
+    JFXButton nextButtonInEntranceScene, loginButtonInEntranceScene, signupButtonInEntranceScene, exitButton;
     @FXML
     DatePicker userBirthDateFieldInEntranceScene;
     @FXML
@@ -124,6 +124,10 @@ public class LoginViewController implements Initializable {
             else {
                 switchToMainMenu(e);
             }
+    }
+
+    public void exitApp(ActionEvent e){
+        stage.close();
     }
 
 }
