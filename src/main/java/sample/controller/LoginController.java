@@ -136,9 +136,9 @@ public class LoginController implements RegexPatterns {
 //        }
 //        return null;
         Random random = new Random();
-        int a = random.nextInt(4);
-        a++;
-        return   "./src/main/resources/media/images/profile/" +a +".jpg";
+        int randomInt = random.nextInt(4);
+        randomInt++;
+        return "./src/main/resources/media/images/profile/" + randomInt + ".jpg";
 
     }
 
