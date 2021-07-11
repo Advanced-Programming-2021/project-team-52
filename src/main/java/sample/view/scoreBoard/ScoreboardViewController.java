@@ -2,12 +2,18 @@ package sample.view.scoreBoard;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import sample.controller.ScoreBoardController;
 import sample.model.User;
 import sample.view.UserKeeper;
@@ -47,4 +53,16 @@ public class ScoreboardViewController implements Initializable {
 //            topUsers.add(scoreBoardList.get(i));
 //        }
 //    }
+
+    public void backButton(ActionEvent e) throws IOException {
+        FXMLLoader loader = new FXMLLoader(new File
+                ("./src/main/java/sample/view/mainMenu/MainMenuFxml.fxml").toURI().toURL());
+//                ("src\\main\\java\\sample\\view\\mainMenu\\MainMenuFxml.fxml").toURI().toURL());
+        Parent root = loader.load();
+        stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
 }
