@@ -1,3 +1,6 @@
-.root{
-    -fx-background-image: url(media/images/backgrounds/scoreBoardWallpaper.jpg)
+#scoreBoardScenePane{
+    -fx-background-image: url(media/images/backgrounds/scoreBoardWallpaper.jpg);
+    -fx-background-repeat: stretch;
+    -fx-background-size: 900 506;
+    -fx-background-position: center center;
 }
