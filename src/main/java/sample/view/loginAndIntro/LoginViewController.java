@@ -128,7 +128,13 @@ public class LoginViewController implements Initializable {
                 errorLabelInEntranceMenu.setText(situation);
             }
             else {
-                switchToMainMenu(e);
+//                switchToMainMenu(e);
+                errorLabelInEntranceMenu.setText(situation);
+                passwordFieldInEntranceScene.setVisible(true);
+                loginButtonInEntranceScene.setVisible(true);
+                nickNameFieldInEntranceScene.setVisible(false);
+                signupButtonInEntranceScene.setVisible(false);
+                userBirthDateFieldInEntranceScene.setVisible(false);
             }
     }
 
