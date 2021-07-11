@@ -8,8 +8,12 @@ import sample.model.cards.spell.SpellCards;
 import sample.model.cards.trap.TrapCards;
 import sample.model.tools.StringMessages;
 
+import java.util.ArrayList;
+
 public class CardCreatorController implements StringMessages {
     private static CardCreatorController cardCreatorController = null;
+
+    static ArrayList<String> newCardNames = new ArrayList<>();
 
     // card price counter
     private int statusPrice = 0;
@@ -229,6 +233,7 @@ public class CardCreatorController implements StringMessages {
     }
 
     public String createMonsterCard(User user) {
+        System.out.println(newCardNames);
         if (name == null || status == null || cardToUserSpecial == null || description == null ||
                 level == 0 || attribute == null || attackPoint == 0 || defendPoint == 0)
             return PLEASE_CHOOSE_ALL_PROPERTIES;
@@ -245,6 +250,7 @@ public class CardCreatorController implements StringMessages {
                     defendPoint, description, status, monsterCardToUseSpecial.getSpecialSpeed(),
                     InstantiateCards.loadSpecialAbilities((cardToUserSpecial.getSpecialsInString()).split("&&")),
                     cardToUserSpecial.getSpecialsInString());
+            newCardNames.add(name);
             Shop.addCard(name, price);
             user.changeBalance(-price / 10);
         } catch (Exception exception) {
@@ -270,6 +276,7 @@ public class CardCreatorController implements StringMessages {
                     InstantiateCards.loadSpecialAbilities((cardToUserSpecial.getSpecialsInString()).split("&&")),
                     InstantiateCards.getChainJobs(spellCardToUseSpecial.getChainJobInString()),
                     cardToUserSpecial.getSpecialsInString(), spellCardToUseSpecial.getChainJobInString());
+            newCardNames.add(name);
             Shop.addCard(name, price);
             user.changeBalance(-price / 10);
         } catch (Exception exception) {
@@ -295,6 +302,7 @@ public class CardCreatorController implements StringMessages {
                     InstantiateCards.loadSpecialAbilities((cardToUserSpecial.getSpecialsInString()).split("&&")),
                     InstantiateCards.getChainJobs(spellCardToUseSpecial.getChainJobInString()),
                     cardToUserSpecial.getSpecialsInString(), spellCardToUseSpecial.getChainJobInString());
+            newCardNames.add(name);
             Shop.addCard(name, price);
             user.changeBalance(-price / 10);
         } catch (Exception exception) {

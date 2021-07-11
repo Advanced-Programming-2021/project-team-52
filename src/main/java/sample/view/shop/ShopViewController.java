@@ -98,12 +98,14 @@ public class ShopViewController implements StringMessages, Initializable {
             cardDoNotExistInUserCardsLabel.setText("there is no card with this name");
             numberOfCardLabelUnderUserCard.setText("");
             userCardDetailsLabel.setText("");
+            userCardInfoImageView.setImage(new Image(new FileInputStream("./src/main/resources/cardsInLowerCase/unknown.jpg")));
             return;
         }
         cardDoNotExistInUserCardsLabel.setText("");
         numberOfCardLabelUnderUserCard.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
                 (user, cardName)));
         userCardDetailsLabel.setText(printBuilderController.showOneCard(card));
+        userCardInfoImageView.setImage(new Image(new FileInputStream(ShopController.getCardImagePathByName(searchInUserCardsTextArea.getText()))));
 //
 //        if (cardDoNotExistInUserCardsLabel.isVisible()) {
 //            cardDoNotExistInUserCardsLabel.setVisible(false);
@@ -132,6 +134,7 @@ public class ShopViewController implements StringMessages, Initializable {
         String cardName = searchInShopTextArea.getText().trim();
         Cards card = Cards.getCard(cardName);
         if (card == null) {
+            shopCardInfoImageView.setImage(new Image(new FileInputStream("./src/main/resources/cardsInLowerCase/unknown.jpg")));
             cardDoNotExistInShopLabel.setText("there is no card with this name");
             cardNameLabelUnderShopCard.setText("");
             numberOfCardLabelUnderShopCard.setText("");
@@ -140,6 +143,7 @@ public class ShopViewController implements StringMessages, Initializable {
             buyButton.setStyle("-fx-background-color: #ff5959");
             return;
         }
+        shopCardInfoImageView.setImage(new Image(new FileInputStream(ShopController.getCardImagePathByName(searchInShopTextArea.getText()))));
         cardNameInString = cardName;
         cardDoNotExistInShopLabel.setText("");
         cardNameLabelUnderShopCard.setText(String.valueOf(shopController.getCardPriceByName(cardName)));

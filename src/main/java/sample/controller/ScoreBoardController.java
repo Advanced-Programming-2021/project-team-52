@@ -10,6 +10,7 @@ import sample.view.PrinterAndScanner;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 
 public class ScoreBoardController implements RegexPatterns, StringMessages {
@@ -75,14 +76,22 @@ public class ScoreBoardController implements RegexPatterns, StringMessages {
         printerAndScanner.printNextLine(getShowCurrentInScoreboardController);
     }
 
-    public ObservableList<User> getTopUsers(){
+    public List<User> getTopUsers(){
         sortUserByScore();
-        ObservableList<User> topUsers = FXCollections.observableArrayList();
+        List<User> topUsers = new ArrayList<>();
         for (int i = 0; i < usersInScoreOrder.size(); i++) {
             if(i < 20)
             topUsers.add(usersInScoreOrder.get(i));
+            System.out.println(usersInScoreOrder.get(i).getUsername());
         }
         return topUsers;
+
+//        ObservableList<User> topUsers = FXCollections.observableArrayList();
+//        for (int i = 0; i < usersInScoreOrder.size(); i++) {
+//            if(i < 20)
+//            topUsers.add(usersInScoreOrder.get(i));
+//        }
+//        return topUsers;
     }
 
     @Override

@@ -17,6 +17,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import sample.controller.ProfileController;
+import sample.model.User;
 import sample.view.UserKeeper;
 
 import java.io.*;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class ProfileAndSettingViewController implements Initializable {
+    User user = UserKeeper.getInstance().getCurrentUser();
 
     Scene scene;
     Stage stage;
@@ -50,13 +52,22 @@ public class ProfileAndSettingViewController implements Initializable {
     InputStream dragAndDropGuidImageStream = new FileInputStream
             ("./src/main/resources/media/images/others/dragAndDropGuidImage.jpg");
     Image profileImageGuid = new Image(dragAndDropGuidImageStream);
-    Image defaultProfileImage = UserKeeper.getInstance().getCurrentUser().getImage();
+//    Image defaultProfileImage = UserKeeper.getInstance().getCurrentUser().getImage();
+    String imageAddress = user.getImageAddress();
+    Image defaultProfileImage;
 
     public ProfileAndSettingViewController() throws FileNotFoundException {
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            defaultProfileImage =new Image(new FileInputStream(imageAddress));
+            profileImageImageView.setImage(defaultProfileImage);
+
+        } catch (FileNotFoundException exception) {
+            exception.printStackTrace();
+        }
         usernameLabelInProfileScene.setText(UserKeeper.getInstance().getCurrentUser().getUsername());
         nicknameLabelInProfileScene.setText(UserKeeper.getInstance().getCurrentUser().getNickname());
         ProfileAndSettingViewPane.setStyle("-fx-background-color: black");

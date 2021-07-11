@@ -105,7 +105,7 @@ public class ProfileController implements RegexPatterns, StringMessages {
 //            exception.printStackTrace();
 //        }
 //        return noImageWithThisName;
-        user.setImage(image);
+//        user.setImage(image);
         return imageChangedSuccessfully;
     }
 

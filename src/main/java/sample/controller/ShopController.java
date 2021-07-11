@@ -167,8 +167,12 @@ public class ShopController implements StringMessages, RegexPatterns {
 
     // TODO : handle wrong input
     public static String getCardImagePathByName(String cardName) {
-        return "./src/main/resources/cards in lower case/" +
-                cardName.toLowerCase().trim().replace("\\s", "") + ".jpg";
+//        System.out.println("./src/main/resources/cardsInLowerCase/" +
+//                cardName.toLowerCase().trim().replace(" ", "") + ".jpg");
+        if(CardCreatorController.newCardNames.contains(cardName))
+            return "./src/main/resources/cardsInLowerCase/minimalfuck.jpg";
+        return "./src/main/resources/cardsInLowerCase/" +
+                cardName.toLowerCase().trim().replace(" ", "") + ".jpg";
     }
 
     public String getAllUnusedCardsByString(User user) {

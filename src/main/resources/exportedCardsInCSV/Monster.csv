@@ -1,2 +1,1 @@
 Name,Level,Attribute, Monster Type , Card Type ,Atk,Def,Description,Price,Status,Special Speed,Special Ability
-"ali","2","WATER","Machine","Machine","2150","2835","perfect","7470","Half limited","1","ActivateNoChain : scanner&&FaceUp : addScannerHistory"

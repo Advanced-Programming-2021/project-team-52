@@ -18,9 +18,9 @@
          </font>
       </Label>
       <ImageView fx:id="profileImageImageView" fitHeight="254.0" fitWidth="207.0" layoutX="68.0" layoutY="97.0" onDragDropped="#setNewImageProcessDragDropped" onDragExited="#dragAndDropExited" onDragOver="#dragAndDropEnteredOver" pickOnBounds="true">
-         <image>
+<!--         <image>
             <Image url="@../../../../resources/media/images/profile/1.jpg" />
-         </image></ImageView>
+         </image>--></ImageView>
       <Label fx:id="usernameLabelInProfileScene" layoutX="286.0" layoutY="91.0" onMouseClicked="#changeUsername" prefHeight="66.0" prefWidth="310.0" text="Username" textFill="#ffff55">
          <font>
             <Font size="32.0" />

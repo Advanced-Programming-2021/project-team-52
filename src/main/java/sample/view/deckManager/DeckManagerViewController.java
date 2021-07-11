@@ -12,6 +12,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import sample.controller.CardCreatorController;
@@ -24,8 +26,11 @@ import sample.model.tools.StringMessages;
 import sample.view.UserKeeper;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class DeckManagerViewController implements Initializable {
@@ -69,6 +74,8 @@ public class DeckManagerViewController implements Initializable {
     @FXML
     Label newDeckNameSituationLabel, mainDeckLabel, sideDeckLabel, cardAdditionSituationLabel,
             numberOfAvailableCardToAddLabel, numberOfAvailableCardToRemoveLabel,allDecksLabel;
+    @FXML
+    ImageView deckImageView;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -299,6 +306,11 @@ public class DeckManagerViewController implements Initializable {
             numberOfAvailableCardToRemoveLabel.setText("No");
             deckSearchTextArea.setText("");
             showAllDecksOfUser();
+            try {
+                deckImageView.setImage(new Image(new FileInputStream("./src/main/resources/cardsInLowerCase/unknown.jpg")));
+            } catch (FileNotFoundException exception) {
+                exception.printStackTrace();
+            }
         }
     }
 
@@ -308,12 +320,22 @@ public class DeckManagerViewController implements Initializable {
         if(card == null){
             numberOfAvailableCardToAddLabel.setText("No");
             cardAdditionSituationLabel.setText("there is no card with this name");
+            try {
+                deckImageView.setImage(new Image(new FileInputStream("./src/main/resources/cardsInLowerCase/unknown.jpg")));
+            } catch (FileNotFoundException exception) {
+                exception.printStackTrace();
+            }
             return;
         }
         cardAdditionInString= cardName;
         numberOfAvailableCardToAddLabel.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
                 (user, cardName)));
         cardAdditionSituationLabel.setText("");
+        try {
+            deckImageView.setImage(new Image(new FileInputStream(ShopController.getCardImagePathByName(cardNameToAddTextArea.getText()))));
+        } catch (FileNotFoundException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public void addCardToMain(ActionEvent e){
@@ -356,12 +378,22 @@ public class DeckManagerViewController implements Initializable {
         if(card == null){
             numberOfAvailableCardToRemoveLabel.setText("No");
             cardAdditionSituationLabel.setText("there is no card with this name");
+            try {
+                deckImageView.setImage(new Image(new FileInputStream("./src/main/resources/cardsInLowerCase/unknown.jpg")));
+            } catch (FileNotFoundException exception) {
+                exception.printStackTrace();
+            }
             return;
         }
         cardRemoveInString = cardName;
         numberOfAvailableCardToRemoveLabel.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
                 (user, cardName)));
         cardAdditionSituationLabel.setText("");
+        try {
+            deckImageView.setImage(new Image(new FileInputStream(ShopController.getCardImagePathByName(cardNameToRemoveTextArea.getText()))));
+        } catch (FileNotFoundException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public void removeCardFromMain(ActionEvent e){

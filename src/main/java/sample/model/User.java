@@ -13,7 +13,7 @@ public class User extends Player {
     private String password;
     private int balance;
     private int score;
-    private Image image;
+    private String imageAddress;
     private LocalDate dateOfBirth;
     private Deck activeDeck;
     private HashMap<String, Deck> decks;
@@ -26,20 +26,20 @@ public class User extends Player {
         cardsToJustShow = new ArrayList<>();
     }
 
-    private User(String username, String password, String nickname, Image image, LocalDate dateOfBirth) {
+    private User(String username, String password, String nickname, String imageAddress, LocalDate dateOfBirth) {
         setUsername(username);
         setPassword(password);
         setNickname(nickname);
-        setImage(image);
-        System.out.println(image.getUrl());
+        this.imageAddress = imageAddress;
+//        System.out.println(image.getUrl());
         setDateOfBirth(dateOfBirth);
         this.score = 0;
         this.balance = 100000;
     }
 
     public static User createUser(String username, String password,
-                                  String nickname, Image image, LocalDate dateOfBirth) {
-        return new User(username, password, nickname, image, dateOfBirth);
+                                  String nickname, String imageAddress, LocalDate dateOfBirth) {
+        return new User(username, password, nickname, imageAddress, dateOfBirth);
     }
 
 
@@ -63,8 +63,8 @@ public class User extends Player {
         this.score = score;
     }
 
-    public void setImage(Image image) {
-        this.image = image;
+    public void setImageAddress(String imageAddress) {
+        this.imageAddress = imageAddress;
     }
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
@@ -95,8 +95,8 @@ public class User extends Player {
         return score;
     }
 
-    public Image getImage() {
-        return image;
+    public String getImageAddress() {
+        return imageAddress;
     }
 
     public LocalDate getDateOfBirth() {

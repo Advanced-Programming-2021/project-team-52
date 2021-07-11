@@ -119,12 +119,12 @@ public class LoginController implements RegexPatterns {
         }
     }
 
-    private Image getRandomImage() {
+    private String getRandomImage() {
         //            return new Image(new FileInputStream("./src/main/resources/media/images/profile/1.jpg"));
 //            return new Image(new FileInputStream("C:\\Users\\paitakht\\IdeaProjects\\project-ppp\\src\\main\\resources\\media\\images\\profile\\1.jpg"));
-        File f = new File("C:\\Users\\paitakht\\IdeaProjects\\project-ppp\\src\\main\\resources\\media\\images\\profile\\1.jpg");
-        Image img = new Image(f.toURI().toString());
-        return img;
+//        File f = new File("C:\\Users\\paitakht\\IdeaProjects\\project-ppp\\src\\main\\resources\\media\\images\\profile\\1.jpg");
+//        Image img = new Image(f.toURI().toString());
+//        return img;
 //        return new Image("src\\main\\resources\\media\\images\\profile\\1.jpg");
 //        Random random = new Random();
 //        int randomNumber = random.nextInt(5);
@@ -135,6 +135,11 @@ public class LoginController implements RegexPatterns {
 //            e.printStackTrace();
 //        }
 //        return null;
+        Random random = new Random();
+        int a = random.nextInt(4);
+        a++;
+        return   "./src/main/resources/media/images/profile/" +a +".jpg";
+
     }
 
 
