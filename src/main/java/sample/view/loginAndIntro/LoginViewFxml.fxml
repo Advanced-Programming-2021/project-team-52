@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:id="loginViewStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.view.loginAndIntro.LoginViewController">
+   <children>
+      <AnchorPane fx:id="entranceScenePane" prefHeight="200.0" prefWidth="200.0" stylesheets="@../../../../resources/cssFiles/LoginViewCss.css">
+         <children>
+            <JFXTextArea fx:id="usernameFieldInEntranceScene" focusColor="#ffff22" labelFloat="true" layoutX="66.0" layoutY="55.0" prefHeight="36.0" prefWidth="250.0" promptText="Username" unFocusColor="WHITE" wrapText="true" />
+            <JFXButton fx:id="nextButtonInEntranceScene" buttonType="RAISED" layoutX="112.0" layoutY="118.0" onAction="#onNextButtonClick" prefHeight="26.0" prefWidth="158.0" text="Next" textFill="WHITE" />
+            <JFXTextArea fx:id="nickNameFieldInEntranceScene" focusColor="#ffff22" labelFloat="true" layoutX="65.0" layoutY="259.0" prefHeight="37.0" prefWidth="250.0" promptText="Nickname" unFocusColor="WHITE" visible="false" wrapText="true" />
+            <JFXTextArea fx:id="passwordFieldInEntranceScene" focusColor="#ffff22" labelFloat="true" layoutX="66.0" layoutY="175.0" prefHeight="36.0" prefWidth="250.0" promptText="password" unFocusColor="WHITE" visible="false" wrapText="true" />
+            <JFXButton fx:id="loginButtonInEntranceScene" buttonType="RAISED" layoutX="112.0" layoutY="225.0" onAction="#onLoginButtonClick" prefHeight="26.0" prefWidth="158.0" text="login" textFill="WHITE" visible="false" />
+            <JFXButton fx:id="signupButtonInEntranceScene" buttonType="RAISED" layoutX="112.0" layoutY="351.0" onAction="#onSignupButtonClick" prefHeight="26.0" prefWidth="158.0" text="signup" textFill="WHITE" visible="false" />
+<!--            <JFXButton fx:id="exitButtonInEntranceScene" buttonType="RAISED" layoutX="200" layoutY="351.0" onAction="#onSignupButtonClick" prefHeight="26.0" prefWidth="158.0" text="signup" textFill="WHITE" visible="false" />-->
+            <DatePicker fx:id="userBirthDateFieldInEntranceScene" layoutX="103.0" layoutY="316.0" visible="false" />
+            <Label fx:id="errorLabelInEntranceMenu" layoutX="313.0" prefHeight="400.0" prefWidth="183.0" textFill="#ff5b5b" wrapText="true">
+               <font>
+                  <Font name="System Italic" size="15.0" />
+               </font>
+            </Label>
+            <JFXButton fx:id="exitButton" buttonType="RAISED" layoutX="14.0" layoutY="14.0" onAction="#exitApp" ripplerFill="#ff5959" textFill="WHITE">
+               <graphic>
+                  <ImageView fitHeight="32.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/media/images/others/logoutIcon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

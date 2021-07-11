@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="ProfileAndSettingViewPane" onDragEntered="#dragAndDropEnteredOver" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.view.profileAndSetting.ProfileAndSettingViewController">
+   <children>
+      <Line endX="1041.4000244140625" endY="7.62939453125E-6" layoutX="169.0" layoutY="78.0" startX="-100.0" stroke="#ffff33" />
+      <Label layoutX="68.0" layoutY="29.0" prefHeight="47.0" prefWidth="247.0" text="Profile &amp; Setting" textFill="WHITE">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="profileImageImageView" fitHeight="254.0" fitWidth="207.0" layoutX="68.0" layoutY="97.0" onDragDropped="#setNewImageProcessDragDropped" onDragExited="#dragAndDropExited" onDragOver="#dragAndDropEnteredOver" pickOnBounds="true">
+<!--         <image>
+            <Image url="@../../../../resources/media/images/profile/1.jpg" />
+         </image>--></ImageView>
+      <Label fx:id="usernameLabelInProfileScene" layoutX="286.0" layoutY="91.0" onMouseClicked="#changeUsername" prefHeight="66.0" prefWidth="310.0" text="Username" textFill="#ffff55">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
+      <Label fx:id="nicknameLabelInProfileScene" layoutX="286.0" layoutY="224.0" onMouseClicked="#changeNickname" prefHeight="66.0" prefWidth="310.0" text="nickname" textFill="#ffff55">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
+      <JFXButton fx:id="changePasswordButton" buttonType="RAISED" layoutX="601.0" layoutY="99.0" onAction="#changePassword" prefHeight="47.0" prefWidth="260.0" text="Change Password" textFill="AQUA">
+         <font>
+            <Font size="19.0" />
+         </font></JFXButton>
+      <JFXTextArea fx:id="newUsernameTextArea" focusColor="#ffff55" labelFloat="true" layoutX="286.0" layoutY="169.0" prefHeight="34.0" prefWidth="233.0" promptText="new Username" unFocusColor="WHITE" visible="false" />
+      <JFXTextArea fx:id="newNicknameTextArea" focusColor="#ffff55" labelFloat="true" layoutX="286.0" layoutY="304.0" prefHeight="34.0" prefWidth="233.0" promptText="new Nickname" unFocusColor="WHITE" visible="false" />
+      <JFXTextArea fx:id="oldPasswordTextArea" focusColor="#ffff55" labelFloat="true" layoutX="614.0" layoutY="168.0" prefHeight="34.0" prefWidth="233.0" promptText="old Password" unFocusColor="WHITE" visible="false" />
+      <JFXTextArea fx:id="newPasswordTextArea" focusColor="#ffff55" labelFloat="true" layoutX="614.0" layoutY="239.0" prefHeight="34.0" prefWidth="233.0" promptText="new Password" unFocusColor="WHITE" visible="false" />
+      <JFXTextArea fx:id="newPasswordAgainTextArea" focusColor="#ffff55" labelFloat="true" layoutX="614.0" layoutY="304.0" prefHeight="34.0" prefWidth="233.0" promptText="new Password Again" unFocusColor="WHITE" visible="false" />
+      <Line endX="1041.4000244140625" endY="7.62939453125E-6" layoutX="169.0" layoutY="507.0" startX="-100.0" stroke="#ffff22" />
+      <Label layoutX="68.0" layoutY="449.0" prefHeight="47.0" prefWidth="247.0" text="Achievements" textFill="WHITE">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="47.0" fitWidth="62.0" layoutX="1164.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../resources/media/images/others/profileAndSettingIconInProfileAndSettingMenu.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="nicknameLabelInProfileScene1" layoutX="945.0" layoutY="90.0" prefHeight="66.0" prefWidth="278.0" text="Player's Level:" textFill="#ffff55">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
+      <Label fx:id="PlayerLevelInfo" layoutX="945.0" layoutY="171.0" prefHeight="66.0" prefWidth="247.0" textFill="#ffff55">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
+      <JFXButton fx:id="usernameEditButton" disable="true" layoutX="433.0" layoutY="106.0" onAction="#changeUsername" prefHeight="26.0" prefWidth="32.0">
+         <graphic>
+            <ImageView fitHeight="26.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/editIcon.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </JFXButton>
+      <JFXButton fx:id="nicknameEditButton" layoutX="424.0" layoutY="240.0" onAction="#changeNickname" prefHeight="26.0" prefWidth="32.0">
+         <graphic>
+            <ImageView fitHeight="26.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/editIcon.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </JFXButton>
+      <JFXButton fx:id="usernameChangeSubmitButton" buttonType="RAISED" layoutX="497.0" layoutY="174.0" ripplerFill="#ffff22" text="ok" textFill="#ffff22" visible="false" />
+      <JFXButton fx:id="nicknameChangeSubmitButton" buttonType="RAISED" layoutX="497.0" layoutY="309.0" onAction="#changeNicknameFromController" ripplerFill="#ffff22" text="ok" textFill="#ffff22" visible="false" />
+      <JFXButton fx:id="passwordChangeSubmitButton" buttonType="RAISED" layoutX="614.0" layoutY="351.0" onAction="#changePasswordFromController" prefHeight="26.0" prefWidth="234.0" ripplerFill="AQUA" text="ok" textFill="AQUA" visible="false" />
+      <Label layoutX="-54.0" layoutY="203.0" prefHeight="18.0" prefWidth="226.0" rotate="90.0" text="*Drag And Drop Your Image to Change It" textFill="#00ffffc3" />
+      <Label fx:id="situationLabel" layoutX="275.0" layoutY="369.0" prefHeight="116.0" prefWidth="938.0" text=" " textFill="WHITE">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font></Label>
+      <JFXButton fx:id="backButton" layoutX="8.0" layoutY="34.0" onAction="#backButton">
+         <graphic>
+            <ImageView fitHeight="29.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/backButtonBackground.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </JFXButton>
+   </children>
+</AnchorPane>

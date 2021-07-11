@@ -1,0 +1,4 @@
+.jfx-button:hover{
+    -fx-text-fill: #ffff00;
+    -fx-border-width: 2;
+}
