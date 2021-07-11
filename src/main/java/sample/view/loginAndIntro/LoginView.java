@@ -48,6 +48,7 @@ public class LoginView extends Application {
 //        user3.setScore(10);
 //        user4.setScore(200);
 //        user5.setScore(10);
+        loginController.readUser();
         launch(args);
     }
 

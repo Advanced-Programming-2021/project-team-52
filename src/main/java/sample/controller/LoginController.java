@@ -1,13 +1,12 @@
 package sample.controller;
 
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.opencsv.exceptions.CsvException;
 import javafx.scene.image.Image;
 import sample.model.User;
 import sample.model.tools.RegexPatterns;
 import sample.view.PrinterAndScanner;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import sample.view.UserKeeper;
 
 import java.io.*;

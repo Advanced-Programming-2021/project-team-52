@@ -47,6 +47,7 @@ public class LoginViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         nextButtonInEntranceScene.setStyle("-fx-text-fill: white");
         loginButtonInEntranceScene.setStyle("-fx-text-fill: white");
         signupButtonInEntranceScene.setStyle("-fx-text-fill: white");
@@ -71,20 +72,25 @@ public class LoginViewController implements Initializable {
     }
 
     public void onNextButtonClick(ActionEvent e){
-        if(loginController.isUserWithThisUsernameExists(usernameFieldInEntranceScene.getText())){
+        System.out.println(loginController.isUserWithThisUsernameExists(usernameFieldInEntranceScene.getText().trim()));
+        if(loginController.isUserWithThisUsernameExists(usernameFieldInEntranceScene.getText().trim())){
             passwordFieldInEntranceScene.setVisible(true);
             loginButtonInEntranceScene.setVisible(true);
+            nickNameFieldInEntranceScene.setVisible(false);
+            signupButtonInEntranceScene.setVisible(false);
+            userBirthDateFieldInEntranceScene.setVisible(false);
         } else {
             passwordFieldInEntranceScene.setVisible(true);
             nickNameFieldInEntranceScene.setVisible(true);
             signupButtonInEntranceScene.setVisible(true);
             userBirthDateFieldInEntranceScene.setVisible(true);
+            loginButtonInEntranceScene.setVisible(false);
         }
     }
 
     public void onLoginButtonClick(ActionEvent e) throws IOException {
-        String situation = loginController.loginUser(usernameFieldInEntranceScene.getText()
-                , passwordFieldInEntranceScene.getText());
+        String situation = loginController.loginUser(usernameFieldInEntranceScene.getText().trim()
+                , passwordFieldInEntranceScene.getText().trim());
         if(situation.equals(usernameAndPasswordDoNotMatch)){
             errorLabelInEntranceMenu.setDisable(false);
             errorLabelInEntranceMenu.setText(usernameAndPasswordDoNotMatch);
@@ -127,6 +133,7 @@ public class LoginViewController implements Initializable {
     }
 
     public void exitApp(ActionEvent e){
+        loginController.saveUsers();
         System.exit(0);
     }
 

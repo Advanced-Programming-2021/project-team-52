@@ -33,7 +33,7 @@
                   <Image url="@../../../../resources/media/images/others/cardTemp.jpg" />
                </image>
             </ImageView>
-            <Label fx:id="deckNameLabel" alignment="CENTER" layoutX="864.0" layoutY="439.0" prefHeight="47.0" prefWidth="210.0" text="Label" textFill="#ffff55">
+            <Label fx:id="deckNameLabel" alignment="CENTER" layoutX="864.0" layoutY="439.0" prefHeight="47.0" prefWidth="210.0"  textFill="#ffff55">
                <effect>
                   <Glow />
                </effect>
