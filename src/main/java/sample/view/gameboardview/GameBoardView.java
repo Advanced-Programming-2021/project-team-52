@@ -142,7 +142,7 @@ public class GameBoardView{
         Image lightImageOfTheBackground = new Image("./misc/b1.jpg");
         lightBackground = new BackgroundImage(lightImageOfTheBackground, BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-        Image darkImageOfTheBackground = new Image("./misc/b2.jpg");
+        Image darkImageOfTheBackground = new Image("./misc/b2.png");
         darkBackground = new BackgroundImage(darkImageOfTheBackground, BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         Background background = new Background(lightBackground);
