@@ -130,7 +130,15 @@ public class MainMenuController implements Initializable {
         logoutButton.setEffect(null);
     }
 
-    public void switchToGameScene(ActionEvent e){}
+    public void switchToGameScene(ActionEvent e) throws IOException {
+        FXMLLoader loader = new FXMLLoader(
+                new File("./src/main/java/sample/view/newduel/newDuelFxml.fxml").toURI().toURL());
+        Parent root = loader.load();
+        stage = (Stage)((Node)e.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
 
     public void switchToDeckManagerScene(ActionEvent e) throws IOException {
         FXMLLoader loader = new FXMLLoader(new File

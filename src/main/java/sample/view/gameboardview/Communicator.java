@@ -417,4 +417,12 @@ public class Communicator implements Runnable {
     public void shutdown(Stage stage, Stage stage1, boolean changeScene){
         gameBoardView.shutdown(stage, stage1, changeScene);
     }
+
+    public void pause(){
+        gameBoardView.pause();
+    }
+
+    public void resume(){
+        gameBoardView.resume();
+    }
 }

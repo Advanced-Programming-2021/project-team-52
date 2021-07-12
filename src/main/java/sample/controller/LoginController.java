@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.opencsv.exceptions.CsvException;
 import javafx.scene.image.Image;
+import sample.model.Deck;
 import sample.model.User;
 import sample.model.tools.RegexPatterns;
 import sample.view.PrinterAndScanner;
@@ -36,6 +37,17 @@ public class LoginController implements RegexPatterns {
         userNames = new ArrayList<>();
         nickNames = new ArrayList<>();
         users = new HashMap<>();
+        User user = User.createUser("a", "a", "a", "", LocalDate.now());
+        Deck deck = new Deck("a");
+        for (int i = 0; i < 10; i++) deck.addCard("Battle OX", false);
+        for (int i = 0; i < 10; i++) deck.addCard("Closed Forest", false);
+        user.setActiveDeck(deck);
+        User user1 = User.createUser("b", "b", "b", "", LocalDate.now());
+        Deck deck1 = new Deck("b");
+        for (int i = 0; i < 20; i++) deck1.addCard("Battle OX", false);
+        user1.setActiveDeck(deck1);
+        users.put("b", user1);
+        users.put("a", user);
     }
 
     private LoginController() {

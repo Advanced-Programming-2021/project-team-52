@@ -59,6 +59,8 @@ public class GameBoardView{
     private Communicator communicator, opponentCommunicator;
     private Rectangle drawPhase, standbyPhase, mainPhaseOne, battlePhase, mainPhaseTwo, endPhase;
     private boolean blocked;
+    private ToggleButton darkMode;
+    private BackgroundImage lightBackground, darkBackground;
 
     public GameBoardView(Stage stage){
         this.stage = stage;
@@ -92,6 +94,7 @@ public class GameBoardView{
         this.anchorPane.setPrefWidth(1317);
         this.anchorPane.setPrefHeight(734);
         this.communicator = new Communicator(anchorPane, this, myPlaces, enemyPlaces);
+        this.darkMode = new ToggleButton();
         Thread thread = new Thread(communicator);
         thread.setDaemon(true);
         thread.start();
@@ -136,10 +139,13 @@ public class GameBoardView{
         anchorPane.getChildren().add(dummy);
         stage.setHeight(dummy.getHeight() + 37);
         stage.setWidth(dummy.getWidth() + 14);
-        Image imageOfTheBackground = new Image("./misc/b1.jpg");
-        BackgroundImage backgroundImage = new BackgroundImage(imageOfTheBackground, BackgroundRepeat.NO_REPEAT,
+        Image lightImageOfTheBackground = new Image("./misc/b1.jpg");
+        lightBackground = new BackgroundImage(lightImageOfTheBackground, BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-        Background background = new Background(backgroundImage);
+        Image darkImageOfTheBackground = new Image("./misc/b2.jpg");
+        darkBackground = new BackgroundImage(darkImageOfTheBackground, BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        Background background = new Background(lightBackground);
         anchorPane.setBackground(background);
         initializeCardPlaces(myPlaces, anchorPane, false);
         initializeCardPlaces(enemyPlaces, anchorPane, true);
@@ -188,7 +194,7 @@ public class GameBoardView{
         pauseButton.setLayoutX(1202);
         pauseButton.setLayoutY(14);
         pauseButton.setText("pause");
-        pauseButton.setOnMouseClicked(e -> pause());
+        setPause(pauseButton);
         surrenderButton.setPrefWidth(63);
         surrenderButton.setPrefHeight(38);
         surrenderButton.setLayoutX(1202);
@@ -226,13 +232,50 @@ public class GameBoardView{
             if (mouseEvent.getButton() == MouseButton.SECONDARY)
                 primaryMouse =!primaryMouse;
         });
-//        setNextPhase(drawPhase, standbyPhase, mainPhaseOne, battlePhase, mainPhaseTwo, endPhase);
-//        Scene scene = new Scene(anchorPane);
-//        stage.setScene(scene);
+        darkMode.setLayoutX(693);
+        darkMode.setLayoutY(327);
+        darkMode.setPrefWidth(144);
+        darkMode.setPrefHeight(66);
+        darkMode.setText("dark mode");
+        changeBackground(darkMode);
     }
 
     public boolean getBlocked(){
         return blocked;
+    }
+
+    private void changeBackground(ToggleButton toggleButton){
+        toggleButton.setOnAction(actionEvent -> {
+            if (toggleButton.isSelected()){
+                anchorPane.setBackground(new Background(darkBackground));
+            } else anchorPane.setBackground(new Background(lightBackground));
+        });
+    }
+
+    private void setPause(Button button){
+        button.setOnAction(mouseEvent -> {
+            if (button.getText().equals("pause")) {
+                button.setText("resume");
+                pause();
+                opponentCommunicator.pause();
+            } else {
+                button.setText("pause");
+                resume();
+                opponentCommunicator.resume();
+            }
+        });
+    }
+
+    public void pause(){
+        blocked = true;
+        pauseButton.setText("resume");
+        anchorPane.getChildren().add(darkMode);
+    }
+
+    public void resume(){
+        blocked = false;
+        pauseButton.setText("pause");
+        anchorPane.getChildren().remove(darkMode);
     }
 
     private void setNextPhase(Rectangle... rectangles){
@@ -463,8 +506,6 @@ public class GameBoardView{
         double progress = progressBar.getProgress() + change;
         progressBar.setProgress(Math.max(0, progress));
     }
-
-    private void pause(){}
 
     private void surrender(){
         communicator.setAction(Action.NOTHING);
