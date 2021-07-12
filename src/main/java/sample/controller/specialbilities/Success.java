@@ -66,10 +66,10 @@ public class Success implements SpecialAbility, StringMessages {
         boolean existsInDeck = monsterOfThisTypeExistsInDeck();
         int emptyPlace = gamePlayController.getGamePlay().getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER);
         if (emptyPlace != -1 && (existsInDeck || existsInHand || existsInGraveYard)) {
-            printerAndScanner.printNextLine(askActivateSpecial);
-            if (printerAndScanner.scanNextLine().equals("yes")) {
-                printerAndScanner.printNextLine(whereDoYouWantToSpecialSummonFrom);
-                String command = printerAndScanner.scanNextLine();
+            gamePlayController.getMyCommunicator().askOptions(askActivateSpecial, "yes", "no");
+            if (gamePlayController.takeCommand().equals("yes")) {
+                gamePlayController.getMyCommunicator().specialSummonFromAnywhere(whereDoYouWantToSpecialSummonFrom);
+                String command = gamePlayController.takeCommand();
                 while (!command.equals("cancel")) {
                     if (command.equals("graveyard") && existsInGraveYard) {
                         summonFromGraveYard();
@@ -81,8 +81,8 @@ public class Success implements SpecialAbility, StringMessages {
                         summonFromDeck();
                         break;
                     } else {
-                        printerAndScanner.printNextLine(invalidCommand);
-                        command = printerAndScanner.scanNextLine();
+                        gamePlayController.getMyCommunicator().specialSummonFromAnywhere(whereDoYouWantToSpecialSummonFrom);
+                        command = gamePlayController.takeCommand();
                     }
                 }
             }
@@ -92,7 +92,7 @@ public class Success implements SpecialAbility, StringMessages {
     private void summonFromGraveYard() {
         ArrayList<Cards> graveYard = gamePlayController.getGamePlay().getMyGameBoard().getGraveyard();
         printerAndScanner.printString(printBuilderController.buildGraveyard(graveYard));
-        String cardName = printerAndScanner.scanNextLine();
+        String cardName = gamePlayController.takeCommand();
         Cards toSummon;
         while (true) {
             toSummon = Cards.getCard(cardName);
@@ -101,17 +101,17 @@ public class Success implements SpecialAbility, StringMessages {
                     if (graveYard.contains(toSummon))
                         break;
             printerAndScanner.printNextLine(wrongCard);
-            cardName = printerAndScanner.scanNextLine();
+            cardName = gamePlayController.takeCommand();
         }
         graveYard.remove(toSummon);
-        Place toPlace = new Place(PLACE_NAME.HAND);
+        Place toPlace = new Place(PLACE_NAME.HAND, -1);
         toPlace.setCard(toSummon);
         gamePlayController.placeCard(toPlace, false, STATUS.ATTACK);
     }
 
     private void summonFromHand() {
         printerAndScanner.printNextLine(cardNumber);
-        int cardNumber = printerAndScanner.scanNextInt();
+        int cardNumber = Integer.parseInt(gamePlayController.takeCommand());
         while (true) {
             if (cardNumber < 6 && cardNumber >= 0) {
                 Place place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(cardNumber, PLACE_NAME.HAND);
@@ -122,7 +122,7 @@ public class Success implements SpecialAbility, StringMessages {
                     }
             }
             printerAndScanner.printNextLine(wrongCard);
-            cardNumber = printerAndScanner.scanNextInt();
+            cardNumber = Integer.parseInt(gamePlayController.takeCommand());
         }
     }
 
@@ -130,7 +130,7 @@ public class Success implements SpecialAbility, StringMessages {
         ArrayList<Cards> mainCards = gamePlayController.getGamePlay().getMyGameBoard().getMainCards();
         ArrayList<Integer> cardsPicked = gamePlayController.getGamePlay().getMyGameBoard().getCardsPicked();
         printerAndScanner.printNextLine(nameOfTheCardYouWantToSummon);
-        String cardName = printerAndScanner.scanNextLine();
+        String cardName = gamePlayController.takeCommand();
         outerLoop:
         while (true) {
             Cards card = Cards.getCard(cardName);
@@ -138,7 +138,7 @@ public class Success implements SpecialAbility, StringMessages {
                 if (((MonsterCards) card).getMonsterType().equals(monsterType) && card.getSpecial().size() == 0)
                     for (int i = 0; i < mainCards.size(); i++) {
                         if (mainCards.get(i).equals(card) && !cardsPicked.contains(i)) {
-                            Place toSummon = new Place(PLACE_NAME.HAND);
+                            Place toSummon = new Place(PLACE_NAME.HAND, -1);
                             toSummon.setCard(card);
                             gamePlayController.placeCard(place, false, STATUS.ATTACK);
                             cardsPicked.add(i);
@@ -147,7 +147,7 @@ public class Success implements SpecialAbility, StringMessages {
                         }
                     }
             printerAndScanner.printNextLine(wrongCard);
-            cardName = printerAndScanner.scanNextLine();
+            cardName = gamePlayController.takeCommand();
         }
         gamePlayController.shuffleDeck();
     }

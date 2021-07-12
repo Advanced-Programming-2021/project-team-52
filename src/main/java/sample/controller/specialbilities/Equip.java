@@ -149,10 +149,10 @@ public class Equip implements SpecialAbility, StringMessages {
         }
         place = null;
         if (i != 6) {
-            printerAndScanner.printNextLine(askForMonsterInGameToEquip);
+            gamePlayController.getMyCommunicator().selectCard("monster", true, true, false);
             int placeNumber = -1;
             while (true) {
-                String toChek = printerAndScanner.scanNextLine();
+                String toChek = gamePlayController.takeCommand();
                 if (toChek.matches("^[-+]?[12345]$")) {
                     GamePlayController gamePlayController = toChek.matches("^-\\d$") ?
                             this.gamePlayController.getGamePlay().getOpponentGamePlayController() : this.gamePlayController;

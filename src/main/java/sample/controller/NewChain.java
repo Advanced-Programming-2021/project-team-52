@@ -106,11 +106,12 @@ public class NewChain implements StringMessages, RegexPatterns {
     private void addChain(ArrayList<Place> chainAble, GamePlayController gamePlayController) {
         SpecialAbilityActivationController specialAbilityActivationController =
                 gamePlayController.getSpecialAbilityActivationController();
-        printerAndScanner.printNextLine(askActivateChain);
-        if (printerAndScanner.scanNextLine().equals("yes")) {
+        gamePlayController.getMyCommunicator().askOptions(askActivateChain, "yes", "no");
+        if (gamePlayController.takeCommand().equals("yes")) {
+            gamePlayController.getMyCommunicator().changeGameState("chain");
             chainOwner = gamePlayController.getGamePlay().getName();
             String command;
-            for (command = printerAndScanner.scanNextLine(); !command.equals("cancel"); command = printerAndScanner.scanNextLine()) {
+            for (command = gamePlayController.takeCommand(); !command.equals("cancel"); command = gamePlayController.takeCommand()) {
                 if (handCommand(chainAble, gamePlayController, specialAbilityActivationController, command)) break;
             }
             if (command.equals("cancel"))
@@ -118,7 +119,8 @@ public class NewChain implements StringMessages, RegexPatterns {
         }
     }
 
-    private boolean handCommand(ArrayList<Place> chainAble, GamePlayController gamePlayController, SpecialAbilityActivationController specialAbilityActivationController, String command) {
+    private boolean handCommand(ArrayList<Place> chainAble, GamePlayController gamePlayController,
+                                SpecialAbilityActivationController specialAbilityActivationController, String command) {
         if (command.startsWith("select")) {
             Matcher matcher = RegexController.getMatcher(command, selectCardPattern);
             if (matcher != null)
@@ -130,7 +132,7 @@ public class NewChain implements StringMessages, RegexPatterns {
                 if (specialAbilityActivationController.runUponActivation(place)) {
                     place.setAffect(this.place);
                     if (place.getStatus() == STATUS.SET)
-                        gamePlayController.flip(place, STATUS.ATTACK, true, true);
+                        gamePlayController.flip(place, STATUS.ATTACK, true, true, true);
                     new NewChain(gamePlayController, place, findChainJob(place),
                             place.getCard().getSpecialSpeed(), CHAINED_PLACES);
                 }
@@ -181,8 +183,12 @@ public class NewChain implements StringMessages, RegexPatterns {
 
     private void attackDirectly() {
         MonsterZone attacker = (MonsterZone) place;
+        attacker.getTemporaryFeatures().add(TEMPORARY_FEATURES.CARD_ATTACKED_IN_THIS_TURN);
+        GamePlayController opponentGamePlayController = gamePlayController.getGamePlay().getOpponentGamePlayController();
         gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().
                 getMyGameBoard().changeHealth(attacker.getAttack() * -1);
+        opponentGamePlayController.getMyCommunicator().reduceHealth(attacker.getAttack() * -1, false);
+        gamePlayController.getMyCommunicator().reduceHealth(attacker.getAttack() * -1, true);
         printerAndScanner.printString(printBuilderController.attackDirectly(attacker.getAttack()));
     }
 
@@ -199,8 +205,7 @@ public class NewChain implements StringMessages, RegexPatterns {
         defender.setAffect(attacker);
         boolean defenderWasHidden = defender.getStatus() == STATUS.SET;
         if (defenderWasHidden)
-            gamePlayController.getGamePlay().getOpponentGamePlayController().flip(defender, STATUS.DEFENCE, true, true);
-        defender.setAffect(previousAffect);
+            gamePlayController.getGamePlay().getOpponentGamePlayController().flip(defender, STATUS.DEFENCE, true, true, true);
         if (attacker.getCard() != null) {
             gamePlayController.getGamePlay().getOpponentGamePlayController().getSpecialAbilityActivationController()
                     .runAttackSpecial(defender);
@@ -278,6 +283,8 @@ public class NewChain implements StringMessages, RegexPatterns {
     private boolean reduceHealth(int amount, GameBoard board, GamePlayController gamePlayController) {
         if (!gamePlayController.getGamePlay().getUniversalHistory().contains("noHealthReduction")) {
             board.changeHealth(amount);
+            gamePlayController.getMyCommunicator().reduceHealth(amount * -1, false);
+            gamePlayController.getOpponentCommunicator().reduceHealth(amount * -1, true);
             return true;
         } else return false;
     }
@@ -311,7 +318,10 @@ public class NewChain implements StringMessages, RegexPatterns {
         for (String history : gamePlayController.getGamePlay().getUniversalHistory()) {
             if (history.startsWith("getLPIfSpellIsActivated")) {
                 Matcher matcher = RegexController.getMatcher(history, RegexPatterns.extractEndingNumber);
-                gamePlayController.getGamePlay().getMyGameBoard().changeHealth(Integer.parseInt(matcher.group(1)));
+                int amount = Integer.parseInt(matcher.group(1));
+                gamePlayController.getGamePlay().getMyGameBoard().changeHealth(amount);
+                gamePlayController.getMyCommunicator().reduceHealth(amount, false);
+                gamePlayController.getOpponentCommunicator().reduceHealth(amount, true);
             }
         }
     }
@@ -319,7 +329,7 @@ public class NewChain implements StringMessages, RegexPatterns {
     private void flipSummon(boolean runFlipSpecial) {
         place.removeTemporaryFeatures(TEMPORARY_FEATURES.CARD_POSITION_CHANGED_IN_THIS_TURN);
         place.addTemporaryFeatures(TEMPORARY_FEATURES.CARD_POSITION_CHANGED_IN_THIS_TURN);
-        gamePlayController.flip(place, STATUS.ATTACK, runFlipSpecial, true);
+        gamePlayController.flip(place, STATUS.ATTACK, runFlipSpecial, true, true);
     }
 
     private void checkIfTheGameEnded() {

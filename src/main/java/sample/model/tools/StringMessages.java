@@ -196,6 +196,7 @@ public interface StringMessages {
     // DuelController
     String thereIsNoPlayerWithThisUsername = "there is no player with this username";
     String numberOfRoundsIsNotSupported = "number of rounds is not supported";
+    String youCantDuelWithYourself = "you cant duel with yourself";
 
     //MainController
     String impossibilityOfMenuNavigation = "menu navigation is not possible";

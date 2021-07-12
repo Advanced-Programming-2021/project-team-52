@@ -18,13 +18,13 @@ public class GameBoard {
 
     public GameBoard(ArrayList<Cards> mainCards, ArrayList<Cards> sideCards) {
         place = new HashMap<>();
-        place.put(0, new Place(PLACE_NAME.HAND));
+        place.put(0, new Place(PLACE_NAME.HAND, 0));
         for (int i = 1; i < 6; i++) {
-            place.put(PLACE_NAME.HAND.getNumber() + i, new Place(PLACE_NAME.HAND));
-            place.put(PLACE_NAME.MONSTER.getNumber() + i, new MonsterZone());
-            place.put(PLACE_NAME.SPELL_AND_TRAP.getNumber() + i, new Place(PLACE_NAME.SPELL_AND_TRAP));
+            place.put(PLACE_NAME.HAND.getNumber() + i, new Place(PLACE_NAME.HAND, PLACE_NAME.HAND.getNumber() + i));
+            place.put(PLACE_NAME.MONSTER.getNumber() + i, new MonsterZone(PLACE_NAME.MONSTER.getNumber() + i));
+            place.put(PLACE_NAME.SPELL_AND_TRAP.getNumber() + i, new Place(PLACE_NAME.SPELL_AND_TRAP, PLACE_NAME.SPELL_AND_TRAP.getNumber() + i));
         }
-        place.put(PLACE_NAME.FIELD.getNumber(), new Field());
+        place.put(PLACE_NAME.FIELD.getNumber(), new Field(PLACE_NAME.FIELD.getNumber()));
         graveyard = new ArrayList<>();
         this.mainCards = mainCards;
         this.sideCards = sideCards;
@@ -101,6 +101,10 @@ public class GameBoard {
 
     public Place getPlace(int placeNumber, PLACE_NAME placeName) {
         return place.get(placeName.getNumber() + placeNumber);
+    }
+
+    public Place getPlace(int placeNumber){
+        return place.get(placeNumber);
     }
 
     public Cards getACardByType(String type) {

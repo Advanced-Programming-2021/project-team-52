@@ -68,10 +68,11 @@ public class FaceUp implements SpecialAbility, StringMessages {
                             break;
             }
             if (i < 6) {
-                printerAndScanner.printNextLine(askActivateSpecial);
-                if (printerAndScanner.scanNextLine().equals("yes")) {
+                gamePlayController.getMyCommunicator().askOptions(askActivateSpecial, "yes", "no");
+                if (gamePlayController.takeCommand().equals("yes")) {
                     printerAndScanner.printNextLine(cardNumber);
-                    int cardNumber = printerAndScanner.scanNextInt();
+                    gamePlayController.getMyCommunicator().selectCard("monster", true, false, false);
+                    int cardNumber = Integer.parseInt(gamePlayController.takeCommand());
                     while (true) {
                         if (cardNumber < 6 && cardNumber > -1) {
                             Place place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(cardNumber, PLACE_NAME.HAND);
@@ -79,8 +80,8 @@ public class FaceUp implements SpecialAbility, StringMessages {
                                 if (((MonsterCards) place.getCard()).getLevel() <= boostAmount)
                                     break;
                         }
-                        printerAndScanner.printNextLine(wrongCard);
-                        cardNumber = printerAndScanner.scanNextInt();
+                        gamePlayController.getMyCommunicator().selectCard("monster", true, false, false);
+                        cardNumber = Integer.parseInt(gamePlayController.takeCommand());
                     }
                     Place hand = gamePlayController.getGamePlay().getMyGameBoard().getPlace(cardNumber, PLACE_NAME.HAND);
                     Place toPlaceTo = gamePlayController.getGamePlay().getMyGameBoard().getPlace(emptyMonsterPlace, PLACE_NAME.MONSTER);

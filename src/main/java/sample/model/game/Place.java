@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class Place {
 
+    private final int NUM;
     protected Cards card;
     protected ArrayList<String> history;
     private STATUS status;
@@ -14,9 +15,10 @@ public class Place {
     private ArrayList<TEMPORARY_FEATURES> temporaryFeatures;
     private Place affect;
 
-    public Place(PLACE_NAME type) {
+    public Place(PLACE_NAME type, int num) {
         this.type = type;
-        temporaryFeatures = new ArrayList<>();
+        this.temporaryFeatures = new ArrayList<>();
+        this.NUM = num;
     }
 
     public void setHistory(ArrayList<String> history) {
@@ -57,6 +59,10 @@ public class Place {
 
     public void setAffect(Place affect) {
         this.affect = affect;
+    }
+
+    public int getNUM() {
+        return NUM;
     }
 
     public void killCard() {

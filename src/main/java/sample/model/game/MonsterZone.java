@@ -11,8 +11,8 @@ public class MonsterZone extends Place {
     private HashMap<Place, Integer[]> equippedCards;
 
 
-    protected MonsterZone() {
-        super(PLACE_NAME.MONSTER);
+    protected MonsterZone(int number) {
+        super(PLACE_NAME.MONSTER, number);
         equippedCards = new HashMap<>();
     }
 

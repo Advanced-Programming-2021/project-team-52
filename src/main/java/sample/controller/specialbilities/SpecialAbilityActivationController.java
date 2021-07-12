@@ -57,8 +57,8 @@ public class SpecialAbilityActivationController implements StringMessages {
             }
         }
         if (specials.contains("canSummonNormally") && checkForConditions(place)) {
-            printerAndScanner.printNextLine(summonWithoutTribute);
-            if (printerAndScanner.scanNextLine().equals("yes")) {
+            gamePlayController.getMyCommunicator().askOptions(summonWithoutTribute, "yes", "no");
+            if (gamePlayController.takeCommand().equals("yes")) {
                 for (SpecialAbility specialAbility : place.getCard().getSpecial()) {
                     if (specialAbility.getMethodName().equals("canSummonNormally")) {
                         specialAbility.run(gamePlayController, gamePlayController.getGamePlay().getSelectedCard());
@@ -169,10 +169,6 @@ public class SpecialAbilityActivationController implements StringMessages {
     }
 
     public void removeMonsterFromEffect(Place place) {
-//        Place field = gamePlayController.getGamePlay().getMyGameBoard().getPlace(0, PLACE_NAME.FIELD);
-//        if (field.getCard() != null) {
-//            ((Field) field).removeFromAffect(place);
-//        }
         GameBoard myGameBoard = gamePlayController.getGamePlay().getMyGameBoard();
         GameBoard opponentGameBoard = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard();
         for (int i = 1; i < 6; i++) {
@@ -211,8 +207,8 @@ public class SpecialAbilityActivationController implements StringMessages {
         place.setCard(Cards.getCard("Scanner"));
         place.setStatus(status);
         if (phase == PHASE.DRAW) {
-            printerAndScanner.printNextLine(askActivateScanner);
-            if (printerAndScanner.scanNextLine().equals("yes")) {
+            gamePlayController.getMyCommunicator().askOptions(askActivateScanner, "yes", "on");
+            if (gamePlayController.takeCommand().equals("yes")) {
                 place.getCard().getSpecial().get(0).run(gamePlayController, place);
                 runFlipSpecial(place);
                 runFacUpSpecial(place);
@@ -224,8 +220,9 @@ public class SpecialAbilityActivationController implements StringMessages {
 
     public boolean getHealthOrDestroyCard(Place place, String command) {
         Matcher matcher = RegexController.getMatcher(command, RegexPatterns.extractEndingNumber);
-        printerAndScanner.printString(printBuilderController.askForPayingLp(matcher.group(1), place.getCard().getName()));
-        if (printerAndScanner.scanNextLine().equals("yes")) {
+        gamePlayController.getMyCommunicator().askOptions(
+                printBuilderController.askForPayingLp(matcher.group(1), place.getCard().getName()).toString(), "yes", "no");
+        if (gamePlayController.takeCommand().equals("yes")) {
             gamePlayController.getGamePlay().getMyGameBoard().changeHealth(Integer.parseInt(matcher.group(1)) * -1);
             return false;
         } else {
@@ -361,8 +358,9 @@ public class SpecialAbilityActivationController implements StringMessages {
             place = gameBoard.getPlace(i, PLACE_NAME.MONSTER);
             if (place.getCard() != null)
                 if (history.get(place).contains("canBeActivated") && checkForConditions(place)) {
-                    printerAndScanner.printNextLine(printBuilderController.askActivateMonster(place.getCard().getName()));
-                    if (printerAndScanner.scanNextLine().equals("yes"))
+                    gamePlayController.getMyCommunicator().askOptions(
+                            printBuilderController.askActivateMonster(place.getCard().getName()), "yes", "no");
+                    if (gamePlayController.takeCommand().equals("yes"))
                         if (runUponActivation(place)) {
                             activateEffectWithChain(place);
                             activateEffectWithoutChain(place);

@@ -64,7 +64,8 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
                 !gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().getGraveyard().isEmpty()) {
             int emptyPlace = gamePlayController.getGamePlay().getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER);
             if (emptyPlace != -1) {
-                for (String command = printerAndScanner.scanNextLine(); true; command = printerAndScanner.scanNextLine()) {
+                gamePlayController.getMyCommunicator().specialSummonFromGraveYard(false);
+                for (String command = gamePlayController.takeCommand(); true; command = gamePlayController.takeCommand()) {
                     if (command.equals("show graveyard")) {
                         gamePlayController.showGraveYard();
                         continue;
@@ -83,6 +84,7 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
                                     break;
                     }
                     printerAndScanner.printNextLine(invalidInput);
+                    gamePlayController.getOpponentCommunicator().specialSummonFromGraveYard(false);
                 }
             }
         }
@@ -96,7 +98,7 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
                     if (((MonsterCards) card).getLevel() >= amount) {
                         STATUS status = STATUS.getStatusByString(type);
                         graveYard.remove(card);
-                        Place temporary = new Place(PLACE_NAME.HAND);
+                        Place temporary = new Place(PLACE_NAME.HAND, -1);
                         temporary.setCard(card);
                         temporary.setAffect(place);
                         new NewChain(gamePlayController, temporary, CHAIN_JOB.SPECIAL_SUMMON,
@@ -117,6 +119,8 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
             Cards card = gamePlayController.getGamePlay().getMyGameBoard().getACardByType("Field");
             if (card != null) {
                 gamePlayController.getGamePlay().getMyGameBoard().getPlace(emptyHand, PLACE_NAME.HAND).setCard(card);
+                gamePlayController.getMyCommunicator().addToHand(emptyHand, false, card.getName(), card.getDescription());
+                gamePlayController.getOpponentCommunicator().addToHand(emptyHand, true, "UNKNOWN", "");
             } else printerAndScanner.printNextLine(couldNotFindASuitableCard);
         } else printerAndScanner.printNextLine(fullHand);
     }
@@ -135,11 +139,13 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
         int myEmptyMonsterPlace;
         myEmptyMonsterPlace = gamePlayController.getGamePlay().getMyGameBoard().getFirstEmptyPlace(PLACE_NAME.MONSTER);
         if (myEmptyMonsterPlace != -1) {
-            int monsterCard = printerAndScanner.scanNextInt();
+            gamePlayController.getMyCommunicator().selectCard("monster", false, true, false);
+            int monsterCard = Integer.parseInt(gamePlayController.takeCommand());
             while (opponentGamePlayController.getGamePlay()
                     .getMyGameBoard().getPlace(monsterCard, PLACE_NAME.MONSTER) == null) {
                 printerAndScanner.printNextLine(wrongCard);
-                monsterCard = printerAndScanner.scanNextInt();
+                gamePlayController.getMyCommunicator().selectCard("monster", false, true, false);
+                monsterCard = Integer.parseInt(gamePlayController.takeCommand());
             }
             Place opponentPlace = opponentGamePlayController.getGamePlay()
                     .getMyGameBoard().getPlace(monsterCard, PLACE_NAME.MONSTER);
@@ -173,7 +179,7 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
             if (place.getCard() != null) {
                 if (place.getStatus() == STATUS.SET) {
                     gamePlayController.getGamePlay().getOpponentGamePlayController().flip(place,
-                            place instanceof MonsterZone ? STATUS.DEFENCE : STATUS.ATTACK, true, true);
+                            place instanceof MonsterZone ? STATUS.DEFENCE : STATUS.ATTACK, true, true, true);
                 }
             }
         }
@@ -192,23 +198,26 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
         ArrayList<Cards> opponentGraveYard =
                 gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().getGraveyard();
         if (!opponentGraveYard.isEmpty()) {
-            printerAndScanner.printNextLine(askForName);
-            String cardName = printerAndScanner.scanNextLine();
+            gamePlayController.getMyCommunicator().askOptions(askForName, "ok");
+            gamePlayController.takeCommand();
+            gamePlayController.getMyCommunicator().scanner();
+            String cardName = gamePlayController.takeCommand();
             Cards card;
             while (true) {
                 card = Cards.getCard(cardName);
                 if (opponentGraveYard.contains(card))
                     break;
                 printerAndScanner.printNextLine(wrongCard);
-                cardName = printerAndScanner.scanNextLine();
+                gamePlayController.getMyCommunicator().scanner();
+                cardName = gamePlayController.takeCommand();
             }
             place.setCard(card);
         } else printerAndScanner.printNextLine(emptyOpponentGraveYard);
     }
 
     public void mindCrush() {
-        printerAndScanner.printNextLine(askForName);
-        if (removeAllOfThisCardFromHand(printerAndScanner.scanNextLine())) {
+        gamePlayController.getMyCommunicator().mindCrush();
+        if (removeAllOfThisCardFromHand(gamePlayController.takeCommand())) {
             for (int i = 0; i < 6; i++) {
                 if (gamePlayController.getGamePlay().getMyGameBoard().getPlace(i, PLACE_NAME.HAND).getCard() != null) {
                     removeARandomCardFromMyHand();

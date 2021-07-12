@@ -40,9 +40,11 @@ public class RitualSummon implements SpecialAbility, StringMessages {
     public void ritualSummon() {
         Place toSummon = this.place.getAffect();
         String[] tributes;
+        gamePlayController.getMyCommunicator().askOptions(ritualSummonTribute, "ok");
+        gamePlayController.takeCommand();
         while (true) {
-            printerAndScanner.printNextLine(ritualSummonTribute);
-            tributes = printerAndScanner.scanNextLine().split("\\s+");
+            gamePlayController.getMyCommunicator().ritualSummon();
+            tributes = gamePlayController.takeCommand().split("\\s+");
             if (checkCredibility(tributes, ((MonsterCards) toSummon.getCard()).getLevel()))
                 break;
         }

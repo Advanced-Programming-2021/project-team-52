@@ -59,8 +59,8 @@ public class ActivateChain implements SpecialAbility, StringMessages {
         String command;
         Place toKill;
         while (amount > 0) {
-            printerAndScanner.printNextLine(askForSpellInGameToDestroy);
-            command = printerAndScanner.scanNextLine();
+            gamePlayController.getMyCommunicator().selectCard("spell", true, true, false);
+            command = gamePlayController.takeCommand();
             if (command.equalsIgnoreCase("cancel"))
                 break;
             if (!command.matches("^[+-]?[12345]$"))

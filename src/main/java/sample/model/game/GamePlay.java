@@ -21,7 +21,7 @@ public class GamePlay {
         this.isAi = isAi;
         this.myGameBoard = myGameBoard;
         this.history = new HashMap<>();
-        this.selectedCard = new Place(PLACE_NAME.HAND);
+        this.selectedCard = myGameBoard.getPlace(0);
         this.universalHistory = new ArrayList<>();
         this.name = name;
         instantiateHistories();

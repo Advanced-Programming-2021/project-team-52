@@ -43,12 +43,11 @@ public class AttackSpecial implements SpecialAbility, StringMessages {
 
     public void reduceAttackToZero() {
         if (!gamePlayController.getGamePlay().getHistory().get(place).contains("noSpecial")) {
-            printerAndScanner.printNextLine(askActivateSpecial);
-            if (printerAndScanner.scanNextLine().equals("yes")) {
-                ArrayList<String> history = gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay()
-                        .getHistory().get(place.getAffect());
-                history.add("temporaryAttackBoost" + ((MonsterZone) place.getAffect()).getAttack());
-                history.add("neutralizeAttack");
+            gamePlayController.getMyCommunicator().askOptions(askActivateSpecial, "yes", "no");
+            if (gamePlayController.takeCommand().equals("yes")) {
+                gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getHistory().
+                        get(place.getAffect()).add("temporaryAttackBoost" + (((MonsterZone) place.getAffect()).getAttack() * -1));
+                gamePlayController.getGamePlay().getHistory().get(place).add("neutralizeAttack");
                 GeneralSpecialAbility.attackBoost(place.getAffect(), ((MonsterZone) place.getAffect()).getAttack(), true);
                 gamePlayController.getGamePlay().getHistory().get(place).add("noSpecial");
             }

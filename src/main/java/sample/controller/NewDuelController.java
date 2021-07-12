@@ -1,5 +1,6 @@
 package sample.controller;
 
+import javafx.stage.Stage;
 import sample.model.User;
 import sample.model.cards.Cards;
 import sample.model.game.GameBoard;
@@ -8,6 +9,9 @@ import sample.model.game.PLACE_NAME;
 import sample.model.tools.RegexPatterns;
 import sample.model.tools.StringMessages;
 import sample.view.PrinterAndScanner;
+import sample.view.UserKeeper;
+import sample.view.gameboardview.Communicator;
+import sample.view.gameboardview.GameBoardView;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -18,6 +22,7 @@ public class NewDuelController implements RegexPatterns, StringMessages {
     private static final PrinterAndScanner PRINTER_AND_SCANNER;
     private static final PrintBuilderController PRINT_BUILDER_CONTROLLER;
     private static final Random RANDOM;
+    public static GameBoardView hostGameBoardView, guestGameBoardView;
 
     static {
         PRINTER_AND_SCANNER = PrinterAndScanner.getInstance();
@@ -30,44 +35,56 @@ public class NewDuelController implements RegexPatterns, StringMessages {
     private GameBoard hostGameBoard, guestGameBoard;
     private GamePlay hostGamePlay, guestGamePlay;
     private GamePlayController hostGamePlayController, guestGamePlayController;
+    private Communicator hostCommunicator, guestCommunicator;
+    private Stage stage, stage1;
 
-    public NewDuelController(User host) {
+    public NewDuelController(User host, Stage stage) {
         this.host = host;
-        run();
+        this.stage = stage;
     }
 
-    private void run() {
-        String command;
+    public String run(String command) {
         Matcher matcher;
-        while (true) {
-            command = PRINTER_AND_SCANNER.scanNextLine();
-            matcher = newDuelPattern.matcher(command);
-            if (command.equals("menu exit") || matcher.find())
-                break;
-            else System.out.println(invalidCommand);
-        }
-        if (!command.equals("menu exit"))
-            if (checkBeforeStartingANewGame(matcher)) {
+        String result = "";
+        matcher = RegexController.getMatcher(command, RegexPatterns.newDuelPattern);
+        if (matcher == null)
+        result = invalidCommand;
+        else {
+            result = checkBeforeStartingANewGame(matcher);
+            if (result.isEmpty()) {
                 makeNeededObjects();
-                startTheGame(Integer.parseInt(matcher.group("rounds")));
+                int rounds = Integer.parseInt(matcher.group("rounds"));
+                Thread thread = new Thread(() -> {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException interruptedException) {
+                        interruptedException.printStackTrace();
+                    }
+                    hostGamePlayController.shuffleDeck();
+                    guestGamePlayController.shuffleDeck();
+                    startTheGame(rounds);
+                });
+                thread.setDaemon(true);
+                thread.start();
             }
+        }
+        return result;
     }
 
-    private boolean checkBeforeStartingANewGame(Matcher matcher) {
+    private String checkBeforeStartingANewGame(Matcher matcher) {
         this.guest = LoginController.getUserByUsername(matcher.group("secondPlayer"));
         if (guest != null) {
-            if (host.getActiveDeck() != null) {
-                if (guest.getActiveDeck() != null) {
-                    rounds = Integer.parseInt(matcher.group("rounds"));
-                    if (rounds == 1 || rounds == 3)
-                        return true;
-                    else PRINTER_AND_SCANNER.printNextLine(numberOfRoundsIsNotSupported);
-                } else PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.
-                        userDoesntHaveActiveDeck(guest.getUsername()));
-            } else PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.
-                    userDoesntHaveActiveDeck(host.getUsername()));
-        } else PRINTER_AND_SCANNER.printNextLine(thereIsNoPlayerWithThisUsername);
-        return false;
+            if (guest != UserKeeper.getInstance().getCurrentUser()) {
+                if (host.getActiveDeck() != null) {
+                    if (guest.getActiveDeck() != null) {
+                        rounds = Integer.parseInt(matcher.group("rounds"));
+                        if (rounds == 1 || rounds == 3)
+                            return "";
+                        else return numberOfRoundsIsNotSupported;
+                    } else return PRINT_BUILDER_CONTROLLER.userDoesntHaveActiveDeck(guest.getUsername()).toString();
+                } else return PRINT_BUILDER_CONTROLLER.userDoesntHaveActiveDeck(host.getUsername()).toString();
+            } else return youCantDuelWithYourself;
+        } else return thereIsNoPlayerWithThisUsername;
     }
 
     private void makeNeededObjects() {
@@ -75,12 +92,22 @@ public class NewDuelController implements RegexPatterns, StringMessages {
         guestGameBoard = makeCards(guest);
         hostGamePlay = new GamePlay(true, hostGameBoard, false, host.getUsername());
         guestGamePlay = new GamePlay(false, guestGameBoard, false, guest.getUsername());
-        hostGamePlayController = new GamePlayController(hostGamePlay);
-        guestGamePlayController = new GamePlayController(guestGamePlay);
+        GameBoardView hostGameBoardView = new GameBoardView(stage);
+//        hostGameBoardView.initialize();
+        stage1 = new Stage();
+        GameBoardView guestGameBoardView = new GameBoardView(stage1);
+        stage1.show();
+//        guestGameBoardView.initialize();
+        hostCommunicator = hostGameBoardView.getCommunicator();
+        guestCommunicator = guestGameBoardView.getCommunicator();
+        hostGameBoardView.setOpponentCommunicator(guestCommunicator);
+        guestGameBoardView.setOpponentCommunicator(hostCommunicator);
+        hostGamePlayController = new GamePlayController(hostGamePlay, hostGameBoardView.getCommunicator(), guestGameBoardView.getCommunicator());
+        guestGamePlayController = new GamePlayController(guestGamePlay, guestGameBoardView.getCommunicator(), hostGameBoardView.getCommunicator());
+        hostGameBoardView.setGamePlayController(hostGamePlayController);
+        guestGameBoardView.setGamePlayController(guestGamePlayController);
         hostGamePlay.setOpponentGamePlayController(guestGamePlayController);
         guestGamePlay.setOpponentGamePlayController(hostGamePlayController);
-        hostGamePlayController.shuffleDeck();
-        guestGamePlayController.shuffleDeck();
     }
 
     private GameBoard makeCards(User user) {
@@ -137,6 +164,8 @@ public class NewDuelController implements RegexPatterns, StringMessages {
     }
 
     private void resetEverything() {
+        hostCommunicator.reset();
+        guestCommunicator.reset();
         resetGame(hostGameBoard, hostGamePlay, hostGamePlayController);
         resetGame(guestGameBoard, guestGamePlay, guestGamePlayController);
         swapCards(host.getUsername(), hostGameBoard.getMainCards(), hostGameBoard.getSideCards());
@@ -166,20 +195,50 @@ public class NewDuelController implements RegexPatterns, StringMessages {
         int score = (1000 + winnerLp) * multiplier;
         winner.changeBalance(score);
         loser.changeBalance(100 * multiplier);
+        winner.addToNumberOfRoundsWon(1);
+        loser.addToNumberOfRoundsLost(1);
         winner.setScore(winner.getScore() + 1000 * multiplier);
         PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.showEndRoundOrGameMessage(winnerName, score, theWholeMatch));
+        String message = PRINT_BUILDER_CONTROLLER.showEndRoundOrGameMessage(winnerName, score, theWholeMatch).toString();
+        hostCommunicator.askOptions(message, "exit");
+        guestCommunicator.askOptions(message, "exit");
+        hostGamePlayController.takeCommand();
+        guestGamePlayController.takeCommand();
+        if (theWholeMatch) {
+            hostCommunicator.shutdown(stage, stage1, true);
+            guestCommunicator.shutdown(stage, stage1, false);
+            winner.addToNumberOfGamesWon(1);
+            loser.addToNumberOfGamesLost(1);
+        } else {
+            hostCommunicator.reset();
+            guestCommunicator.reset();
+        }
     }
 
     private GamePlayController flipACoin() {
+        GamePlayController starter;
         if (RANDOM.nextBoolean()) {
             PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.thisPlayerWillStartTheGame(host.getUsername()));
             hostGamePlayController.getGamePlay().getUniversalHistory().add("starter");
-            return hostGamePlayController;
+            starter = hostGamePlayController;
         } else {
             PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.thisPlayerWillStartTheGame(guest.getUsername()));
             guestGamePlayController.getGamePlay().getUniversalHistory().add("starter");
-            return guestGamePlayController;
+            starter = guestGamePlayController;
         }
+        hostGamePlayController.getMyCommunicator().flipCoin(starter == hostGamePlayController ? 1 : 11);
+        guestGamePlayController.getMyCommunicator().flipCoin(starter == guestGamePlayController ? 11 : 1);
+        hostGamePlayController.takeCommand();
+        guestGamePlayController.takeCommand();
+        hostGamePlayController.getMyCommunicator().askOptions(starter == hostGamePlayController ?
+                "you will go first" : "your opponent will go first", "ok");
+        hostGamePlayController.getMyCommunicator().removeCoin();
+        guestGamePlayController.getMyCommunicator().askOptions(starter == guestGamePlayController ?
+                "you will go first" : "your opponent will go first", "ok");
+        guestGamePlayController.getMyCommunicator().removeCoin();
+        hostGamePlayController.takeCommand();
+        guestGamePlayController.takeCommand();
+        return starter;
     }
 
     private void resetGame(GameBoard board, GamePlay gamePlay, GamePlayController gamePlayController) {

@@ -45,11 +45,12 @@ public class Flip implements SpecialAbility, StringMessages {
         }
         if (i == 6)
             return;
-        printerAndScanner.printNextLine(askActivateSpecial);
-        if (printerAndScanner.scanNextLine().equals("yes")) {
+        gamePlayController.getMyCommunicator().askOptions(askActivateSpecial, "yes", "no");
+        if (gamePlayController.takeCommand().equals("yes")) {
             String number;
             while (true) {
-                number = printerAndScanner.scanNextLine();
+                gamePlayController.getMyCommunicator().selectCard("monster", false, true, false);
+                number = gamePlayController.takeCommand();
                 if (number.matches("[^12345]"))
                     continue;
                 if (gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard()

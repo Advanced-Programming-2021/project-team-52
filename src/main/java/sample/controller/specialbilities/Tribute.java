@@ -88,8 +88,8 @@ public class Tribute implements SpecialAbility, StringMessages {
     }
 
     private void summonWithSacrificingCardFromHand() {
-        printerAndScanner.printNextLine(cardNumber);
-        int handNumberToSacrifice = printerAndScanner.scanNextInt();
+        gamePlayController.getMyCommunicator().selectCard("monster", true, false, false);
+        int handNumberToSacrifice = Integer.parseInt(gamePlayController.takeCommand());
         Place place;
         while (true) {
             place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(handNumberToSacrifice, PLACE_NAME.HAND);
@@ -97,7 +97,8 @@ public class Tribute implements SpecialAbility, StringMessages {
                 if (place != this.place && place.getCard() != null)
                     break;
             printerAndScanner.printNextLine(wrongTribute);
-            handNumberToSacrifice = printerAndScanner.scanNextInt();
+            gamePlayController.getMyCommunicator().selectCard("monster", true, false, false);
+            handNumberToSacrifice = Integer.parseInt(gamePlayController.takeCommand());
         }
         gamePlayController.killCard(place);
         if (status == STATUS.SET)
@@ -116,11 +117,10 @@ public class Tribute implements SpecialAbility, StringMessages {
                 numberOfMonsterToTribute++;
         }
         if (amount <= numberOfMonsterToTribute) {
-            printerAndScanner.printNextLine(doYouWantToTribute);
-            if (printerAndScanner.scanNextLine().equals("yes")) {
+            gamePlayController.getMyCommunicator().askOptions(doYouWantToTribute, "yes", "no");
+            if (gamePlayController.takeCommand().equals("yes")) {
                 int[] cardsToTribute = new int[amount];
-                do
-                    scanTributes(amount, cardsToTribute);
+                do scanTributes(amount, cardsToTribute);
                 while (!validForTribute(cardsToTribute));
                 for (int i = 0; i < cardsToTribute.length; i++) {
                     Place toKill = gamePlayController.getGamePlay().getMyGameBoard().getPlace(cardsToTribute[i], PLACE_NAME.MONSTER);
@@ -141,9 +141,22 @@ public class Tribute implements SpecialAbility, StringMessages {
     }
 
     private void scanTributes(int amount, int[] cardsToTribute) {
+        outerLoop:
         while (amount > 0) {
-            printerAndScanner.printNextLine(pleaseEnterNextCard);
-            cardsToTribute[amount - 1] = printerAndScanner.scanNextInt();
+            gamePlayController.getMyCommunicator().askOptions(pleaseEnterNextCard, "ok");
+            String command = gamePlayController.takeCommand();
+            while (!command.matches("^\\d+$")){
+                gamePlayController.getMyCommunicator().selectCard("monster", true, false, false);
+                command = gamePlayController.takeCommand();
+            }
+            int tribute = Integer.parseInt(command);
+            for (int i = cardsToTribute.length - 1; i >= amount; i--) {
+                if (cardsToTribute[i] == tribute){
+                    gamePlayController.getMyCommunicator().askOptions(wrongTribute, "ok");
+                    continue outerLoop;
+                }
+            }
+            cardsToTribute[amount - 1] = tribute;
             amount--;
         }
     }

@@ -19,6 +19,10 @@ public class User extends Player {
     private HashMap<String, Deck> decks;
     private ArrayList<String> cards;
     private ArrayList<String> cardsToJustShow; // don't use this
+    private int numberOfWins;
+    private int numberOfLosses;
+    private int numberOfRoundsWon;
+    private int numberOfRoundsLost;
 
     {
         decks = new HashMap<>();
@@ -35,6 +39,10 @@ public class User extends Player {
         setDateOfBirth(dateOfBirth);
         this.score = 0;
         this.balance = 100000;
+        this.numberOfWins = 0;
+        this.numberOfLosses = 0;
+        this.numberOfRoundsWon = 0;
+        this.numberOfRoundsLost = 0;
     }
 
     public static User createUser(String username, String password,
@@ -129,6 +137,37 @@ public class User extends Player {
         return decks.get(name);
     }
 
+    public int getNumberOfLosses() {
+        return numberOfLosses;
+    }
+
+    public int getNumberOfWins() {
+        return numberOfWins;
+    }
+
+    public int getNumberOfRoundsWon() {
+        return numberOfRoundsWon;
+    }
+
+    public int getNumberOfRoundsLost() {
+        return numberOfRoundsLost;
+    }
+
+    public void addToNumberOfGamesWon(int amount){
+        this.numberOfWins += amount;
+    }
+
+    public void addToNumberOfGamesLost(int amount){
+        this.numberOfLosses += amount;
+    }
+
+    public void addToNumberOfRoundsWon(int amount){
+        this.numberOfRoundsWon += amount;
+    }
+
+    public void addToNumberOfRoundsLost(int amount){
+        this.numberOfRoundsLost += amount;
+    }
 
     public void addDeck(Deck deck) {
         decks.put(deck.getName(), deck);
