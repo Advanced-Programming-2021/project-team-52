@@ -113,7 +113,7 @@ public class LoginController implements RegexPatterns {
             userNames.add(username);
             nickNames.add(nickname);
             users.put(username, user);
-            UserKeeper.getInstance().setCurrentUser(user);
+//            UserKeeper.getInstance().setCurrentUser(user);
             return createUserSuccessfully;
         }
     }

@@ -158,6 +158,7 @@ public class MainMenuController implements Initializable {
     public void switchToScoreboardScene(ActionEvent e) throws IOException {
         FXMLLoader loader = new FXMLLoader(new File
 //                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\java\\sample\\view\\deckManager\\DeckManagerFxml.fxml").toURI().toURL());
+//                ("C:\\Users\\paitakht\\IdeaProjects\\project-ppp\\src\\main\\java\\sample\\view\\scoreBoard\\ScoreBoardFxml.fxml").toURI().toURL());
                 ("./src/main/java/sample/view/scoreBoard/ScoreBoardFxml.fxml").toURI().toURL());
         Parent root = loader.load();
         stage = (Stage)((Node)e.getSource()).getScene().getWindow();

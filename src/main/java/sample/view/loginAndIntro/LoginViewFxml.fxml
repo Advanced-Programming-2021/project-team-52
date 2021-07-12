@@ -22,7 +22,7 @@
             <JFXButton fx:id="signupButtonInEntranceScene" buttonType="RAISED" layoutX="112.0" layoutY="351.0" onAction="#onSignupButtonClick" prefHeight="26.0" prefWidth="158.0" text="signup" textFill="WHITE" visible="false" />
 <!--            <JFXButton fx:id="exitButtonInEntranceScene" buttonType="RAISED" layoutX="200" layoutY="351.0" onAction="#onSignupButtonClick" prefHeight="26.0" prefWidth="158.0" text="signup" textFill="WHITE" visible="false" />-->
             <DatePicker fx:id="userBirthDateFieldInEntranceScene" layoutX="103.0" layoutY="316.0" visible="false" />
-            <Label fx:id="errorLabelInEntranceMenu" layoutX="313.0" prefHeight="400.0" prefWidth="183.0" textFill="#ff5b5b" wrapText="true">
+            <Label fx:id="errorLabelInEntranceMenu" layoutX="313.0" prefHeight="400.0" prefWidth="183.0" textFill="#ff5b5b" wrapText="true" alignment="TOP_CENTER">
                <font>
                   <Font name="System Italic" size="15.0" />
                </font>

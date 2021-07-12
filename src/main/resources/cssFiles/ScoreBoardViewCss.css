@@ -1,6 +1,10 @@
 #scoreBoardScenePane{
-    -fx-background-image: url(media/images/backgrounds/scoreBoardWallpaper.jpg);
-    -fx-background-repeat: stretch;
-    -fx-background-size: 900 506;
+    -fx-background-image: url(media/images/backgrounds/scoreBoardWallpaper.png);
+    /*-fx-background-repeat: stretch;*/
+    -fx-background-size: 1280 720;
     -fx-background-position: center center;
+}
+
+.label{
+    -fx-text-fill: black;
 }

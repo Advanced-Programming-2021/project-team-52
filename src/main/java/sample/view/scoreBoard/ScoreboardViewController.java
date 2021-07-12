@@ -18,11 +18,14 @@ import sample.controller.ScoreBoardController;
 import sample.model.User;
 import sample.view.UserKeeper;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class ScoreboardViewController implements Initializable {
+    ScoreBoardController scoreBoardController = ScoreBoardController.getInstance();
 
 //    ScoreBoardController scoreBoardController = ScoreBoardController.getInstance();
 //
@@ -43,7 +46,17 @@ public class ScoreboardViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        scoreBoardScenePane.setStyle("-fx-background-image: url(media/images/backgrounds/scoreBoardWallpaper.jpg); -fx-background-color: black");
+        String topUsersInOneString = scoreBoardController.toString();
+        String[] eachUser = topUsersInOneString.split("\n");
+        for (String s : eachUser) {
+            System.out.println(s);
+        }
+        scoreBoardScenePane.setStyle("-fx-background-image: url(media/images/backgrounds/scoreBoardWallpaper.png); -fx-background-color: black");
+    }
+
+    public void separateUsers(String usersInString){
+
+
     }
 
 //    public void getObservableList (){
@@ -54,15 +67,15 @@ public class ScoreboardViewController implements Initializable {
 //        }
 //    }
 
-    public void backButton(ActionEvent e) throws IOException {
-        FXMLLoader loader = new FXMLLoader(new File
-                ("./src/main/java/sample/view/mainMenu/MainMenuFxml.fxml").toURI().toURL());
-//                ("src\\main\\java\\sample\\view\\mainMenu\\MainMenuFxml.fxml").toURI().toURL());
-        Parent root = loader.load();
-        stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
+//    public void backButton(ActionEvent e) throws IOException {
+//        FXMLLoader loader = new FXMLLoader(new File
+//                ("./src/main/java/sample/view/mainMenu/MainMenuFxml.fxml").toURI().toURL());
+////                ("src\\main\\java\\sample\\view\\mainMenu\\MainMenuFxml.fxml").toURI().toURL());
+//        Parent root = loader.load();
+//        stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+//        scene = new Scene(root);
+//        stage.setScene(scene);
+//        stage.show();
+//    }
 
 }

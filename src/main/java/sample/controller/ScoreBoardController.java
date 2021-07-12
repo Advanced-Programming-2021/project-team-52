@@ -76,15 +76,15 @@ public class ScoreBoardController implements RegexPatterns, StringMessages {
         printerAndScanner.printNextLine(getShowCurrentInScoreboardController);
     }
 
-    public List<User> getTopUsers(){
-        sortUserByScore();
-        List<User> topUsers = new ArrayList<>();
-        for (int i = 0; i < usersInScoreOrder.size(); i++) {
-            if(i < 20)
-            topUsers.add(usersInScoreOrder.get(i));
-            System.out.println(usersInScoreOrder.get(i).getUsername());
-        }
-        return topUsers;
+//    public List<User> getTopUsers(){
+//        sortUserByScore();
+//        List<User> topUsers = new ArrayList<>();
+//        for (int i = 0; i < usersInScoreOrder.size(); i++) {
+//            if(i < 20)
+//            topUsers.add(usersInScoreOrder.get(i));
+//            System.out.println(usersInScoreOrder.get(i).getUsername());
+//        }
+//        return topUsers;
 
 //        ObservableList<User> topUsers = FXCollections.observableArrayList();
 //        for (int i = 0; i < usersInScoreOrder.size(); i++) {
@@ -92,7 +92,27 @@ public class ScoreBoardController implements RegexPatterns, StringMessages {
 //            topUsers.add(usersInScoreOrder.get(i));
 //        }
 //        return topUsers;
-    }
+//    }
+
+//    @Override
+//    public String toString() {
+//        sortUserByScore();
+//        StringBuilder response = new StringBuilder();
+//        int temporaryRank = 1;
+//        for (int i = 0; i < usersInScoreOrder.size(); i++) {
+//            if (i != 0) {
+//                if (usersInScoreOrder.get(i).getScore() != usersInScoreOrder.get(i - 1).getScore())
+//                    temporaryRank = i + 1;
+//            }
+//            response.append(temporaryRank);
+//            response.append("- ");
+//            response.append(usersInScoreOrder.get(i).getNickname());
+//            response.append(": ");
+//            response.append(usersInScoreOrder.get(i).getScore());
+//            response.append("\n");
+//        }
+//        return response.toString();
+//    }
 
     @Override
     public String toString() {
@@ -105,12 +125,14 @@ public class ScoreBoardController implements RegexPatterns, StringMessages {
                     temporaryRank = i + 1;
             }
             response.append(temporaryRank);
-            response.append("- ");
+            response.append("      ");
             response.append(usersInScoreOrder.get(i).getNickname());
-            response.append(": ");
+            response.append("      ");
             response.append(usersInScoreOrder.get(i).getScore());
             response.append("\n");
         }
         return response.toString();
     }
+
+
 }
