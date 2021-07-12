@@ -6,6 +6,7 @@ import sample.model.tools.RegexPatterns;
 import sample.view.PrinterAndScanner;
 import sample.model.tools.StringMessages;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.regex.Matcher;
@@ -97,15 +98,12 @@ public class ProfileController implements RegexPatterns, StringMessages {
         return passwordChangedSuccessfully;
     }
 
-    public String changeProfileImage(/*String path*/Image image, User user){
-//        try {
-//            user.setImage(new Image(new FileInputStream(path)));
-//            return imageChangedSuccessfully;
-//        } catch (FileNotFoundException exception) {
-//            exception.printStackTrace();
-//        }
-//        return noImageWithThisName;
-//        user.setImage(image);
+    public String changeProfileImage(String path, User user){
+        File file = new File(path);
+        if(!file.exists()) {
+            return THERE_IS_NO_IMAGE_WITH_THIS_PATH;
+        }
+       user.setImageAddress(path);
         return imageChangedSuccessfully;
     }
 

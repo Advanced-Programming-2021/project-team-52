@@ -125,13 +125,24 @@ public class ScoreBoardController implements RegexPatterns, StringMessages {
                     temporaryRank = i + 1;
             }
             response.append(temporaryRank);
-            response.append("      ");
+            response.append(".");
             response.append(usersInScoreOrder.get(i).getNickname());
-            response.append("      ");
+            response.append(",");
             response.append(usersInScoreOrder.get(i).getScore());
             response.append("\n");
         }
         return response.toString();
+    }
+
+    public void separateUsers(String usersInString){
+        String[] eachUser = usersInString.split("\n");
+        for (String userInfo : eachUser) {
+            String[] eachInfo = userInfo.split(",");
+            for (String s : eachInfo) {
+                System.out.println(s);
+            }
+        }
+
     }
 
 

@@ -124,6 +124,7 @@ public interface StringMessages {
     String noImageWithThisName = "There is no image with this name";
     String imageChangedSuccessfully = "Image changed successfully";
     String inputPasswordsDoesNotMatch = "Input passwords doesn't match";
+    String THERE_IS_NO_IMAGE_WITH_THIS_PATH = "There is no image with this path";
 
 
     // ShopController
