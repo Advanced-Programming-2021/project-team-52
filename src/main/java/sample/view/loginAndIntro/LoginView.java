@@ -38,6 +38,11 @@ public class LoginView extends Application {
         loginController.createUser("reza", "123ASDasd","reza", LocalDate.now());
         loginController.createUser("asghar", "123ASDasd","asghar", LocalDate.now());
         loginController.createUser("haji", "123ASDasd","haji", LocalDate.now());
+        LoginController.getUserByUsername("ali").setScore(1000);
+        LoginController.getUserByUsername("mamad").setScore(100);
+        LoginController.getUserByUsername("reza").setScore(100);
+        LoginController.getUserByUsername("asghar").setScore(0);
+        LoginController.getUserByUsername("haji").setScore(10);
 //        User user1 = User.createUser("ali", "123ASDasd","ali", null, LocalDate.now());
 //        User user2= User.createUser("mamad", "123ASDasd","mamad", null, LocalDate.now());
 //        User user3 = User.createUser("reza", "123ASDasd","reza", null, LocalDate.now());

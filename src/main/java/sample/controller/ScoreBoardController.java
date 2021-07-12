@@ -127,7 +127,7 @@ public class ScoreBoardController implements RegexPatterns, StringMessages {
             response.append(temporaryRank);
             response.append(".");
             response.append(usersInScoreOrder.get(i).getNickname());
-            response.append(",");
+            response.append(" ,");
             response.append(usersInScoreOrder.get(i).getScore());
             response.append("\n");
         }

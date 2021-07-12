@@ -23,102 +23,102 @@
             <Image url="@../../../../resources/media/images/others/scoreboardIcon.png" />
          </image>
       </ImageView>
-      <Label fx:id="player01" layoutX="85.0" layoutY="106.0" prefHeight="29.0" prefWidth="672.0" text="player01" textFill="GOLD">
+      <Label fx:id="player01" layoutX="85.0" layoutY="106.0" prefHeight="29.0" prefWidth="672.0"  textFill="GOLD">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="player02" layoutX="85.0" layoutY="136.0" prefHeight="29.0" prefWidth="672.0" text="player02" textFill="SILVER">
+      <Label fx:id="player02" layoutX="85.0" layoutY="136.0" prefHeight="29.0" prefWidth="672.0"  textFill="SILVER">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="player03" layoutX="85.0" layoutY="166.0" prefHeight="29.0" prefWidth="672.0" text="player03" textFill="#a15024">
+      <Label fx:id="player03" layoutX="85.0" layoutY="166.0" prefHeight="29.0" prefWidth="672.0"  textFill="#a15024">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="player04" layoutX="85.0" layoutY="196.0" prefHeight="29.0" prefWidth="672.0" text="player04" textFill="WHITE">
+      <Label fx:id="player04" layoutX="85.0" layoutY="196.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player05" layoutX="85.0" layoutY="226.0" prefHeight="29.0" prefWidth="672.0" text="player05" textFill="WHITE">
+      <Label fx:id="player05" layoutX="85.0" layoutY="226.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player06" layoutX="85.0" layoutY="256.0" prefHeight="29.0" prefWidth="672.0" text="player06" textFill="WHITE">
+      <Label fx:id="player06" layoutX="85.0" layoutY="256.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player07" layoutX="85.0" layoutY="286.0" prefHeight="29.0" prefWidth="672.0" text="player07" textFill="WHITE">
+      <Label fx:id="player07" layoutX="85.0" layoutY="286.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player08" layoutX="85.0" layoutY="316.0" prefHeight="29.0" prefWidth="672.0" text="player08" textFill="WHITE">
+      <Label fx:id="player08" layoutX="85.0" layoutY="316.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player09" layoutX="85.0" layoutY="346.0" prefHeight="29.0" prefWidth="672.0" text="player09" textFill="WHITE">
+      <Label fx:id="player09" layoutX="85.0" layoutY="346.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player10" layoutX="85.0" layoutY="376.0" prefHeight="29.0" prefWidth="672.0" text="player10" textFill="WHITE">
+      <Label fx:id="player10" layoutX="85.0" layoutY="376.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player11" layoutX="86.0" layoutY="406.0" prefHeight="29.0" prefWidth="672.0" text="player11" textFill="WHITE">
+      <Label fx:id="player11" layoutX="86.0" layoutY="406.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player12" layoutX="85.0" layoutY="436.0" prefHeight="29.0" prefWidth="672.0" text="player12" textFill="WHITE">
+      <Label fx:id="player12" layoutX="85.0" layoutY="436.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player13" layoutX="85.0" layoutY="466.0" prefHeight="29.0" prefWidth="672.0" text="player13" textFill="WHITE">
+      <Label fx:id="player13" layoutX="85.0" layoutY="466.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player14" layoutX="85.0" layoutY="496.0" prefHeight="29.0" prefWidth="672.0" text="player14" textFill="WHITE">
+      <Label fx:id="player14" layoutX="85.0" layoutY="496.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player15" layoutX="85.0" layoutY="526.0" prefHeight="29.0" prefWidth="672.0" text="player15" textFill="WHITE">
+      <Label fx:id="player15" layoutX="85.0" layoutY="526.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player16" layoutX="85.0" layoutY="556.0" prefHeight="29.0" prefWidth="672.0" text="player16" textFill="WHITE">
+      <Label fx:id="player16" layoutX="85.0" layoutY="556.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player17" layoutX="85.0" layoutY="586.0" prefHeight="29.0" prefWidth="672.0" text="player17" textFill="WHITE">
+      <Label fx:id="player17" layoutX="85.0" layoutY="586.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player18" layoutX="85.0" layoutY="616.0" prefHeight="29.0" prefWidth="672.0" text="player18" textFill="WHITE">
+      <Label fx:id="player18" layoutX="85.0" layoutY="616.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player19" layoutX="85.0" layoutY="646.0" prefHeight="29.0" prefWidth="672.0" text="player19" textFill="WHITE">
+      <Label fx:id="player19" layoutX="85.0" layoutY="646.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player20" layoutX="85.0" layoutY="676.0" prefHeight="29.0" prefWidth="672.0" text="player20" textFill="WHITE">
+      <Label fx:id="player20" layoutX="85.0" layoutY="676.0" prefHeight="29.0" prefWidth="672.0"  textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
@@ -143,102 +143,102 @@
             <Font size="19.0" />
          </font>
       </Label>
-      <Label fx:id="player01Score" layoutX="657.0" layoutY="105.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player01Score" layoutX="657.0" layoutY="105.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="player02Score" layoutX="657.0" layoutY="136.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player02Score" layoutX="657.0" layoutY="136.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="player03Score" layoutX="657.0" layoutY="165.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player03Score" layoutX="657.0" layoutY="165.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="player04Score" layoutX="657.0" layoutY="196.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player04Score" layoutX="657.0" layoutY="196.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player05Score" layoutX="657.0" layoutY="226.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player05Score" layoutX="657.0" layoutY="226.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player06Score" layoutX="657.0" layoutY="256.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player06Score" layoutX="657.0" layoutY="256.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player07Score" layoutX="657.0" layoutY="286.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player07Score" layoutX="657.0" layoutY="286.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player08Score" layoutX="657.0" layoutY="316.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player08Score" layoutX="657.0" layoutY="316.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player09Score" layoutX="657.0" layoutY="346.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player09Score" layoutX="657.0" layoutY="346.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player10Score" layoutX="657.0" layoutY="376.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player10Score" layoutX="657.0" layoutY="376.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player11Score" layoutX="657.0" layoutY="406.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player11Score" layoutX="657.0" layoutY="406.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player12Score" layoutX="657.0" layoutY="436.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player12Score" layoutX="657.0" layoutY="436.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player13Score" layoutX="657.0" layoutY="466.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player13Score" layoutX="657.0" layoutY="466.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player14Score" layoutX="657.0" layoutY="496.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player14Score" layoutX="657.0" layoutY="496.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player15Score" layoutX="657.0" layoutY="526.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player15Score" layoutX="657.0" layoutY="526.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player16Score" layoutX="657.0" layoutY="556.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player16Score" layoutX="657.0" layoutY="556.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player17Score" layoutX="657.0" layoutY="586.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player17Score" layoutX="657.0" layoutY="586.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player18Score" layoutX="657.0" layoutY="616.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player18Score" layoutX="657.0" layoutY="616.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player19Score" layoutX="657.0" layoutY="646.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player19Score" layoutX="657.0" layoutY="646.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="player20Score" layoutX="657.0" layoutY="676.0" prefHeight="30.0" prefWidth="50.0" text="Label">
+      <Label fx:id="player20Score" layoutX="657.0" layoutY="676.0" prefHeight="30.0" prefWidth="50.0" >
          <font>
             <Font size="16.0" />
          </font>
@@ -248,7 +248,7 @@
             <Font size="19.0" />
          </font>
       </Label>
-      <JFXButton fx:id="backbutton" buttonType="RAISED" layoutX="27.0" layoutY="26.0" ripplerFill="AQUA">
+      <JFXButton fx:id="backbutton" buttonType="RAISED" layoutX="27.0" layoutY="26.0" onAction="#backButton" ripplerFill="AQUA">
          <graphic>
             <ImageView fitHeight="30.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                <image>

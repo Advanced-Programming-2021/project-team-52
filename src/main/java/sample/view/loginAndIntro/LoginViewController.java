@@ -104,7 +104,7 @@ public class LoginViewController implements Initializable {
 
     public void onSignupButtonClick(ActionEvent e) throws IOException {
         String situation = loginController.createUser(usernameFieldInEntranceScene.getText().trim(), passwordFieldInEntranceScene.getText()
-        , nickNameFieldInEntranceScene.getText(), userBirthDateFieldInEntranceScene.getValue());
+        , nickNameFieldInEntranceScene.getText().trim(), userBirthDateFieldInEntranceScene.getValue());
 //        if(situation.equals(createUserFailedBecauseOfUsername)){
 //            errorLabelInEntranceMenu.setDisable(false);
 //            errorLabelInEntranceMenu.setText(createUserFailedBecauseOfUsername);
