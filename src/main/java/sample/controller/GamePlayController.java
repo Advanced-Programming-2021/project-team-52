@@ -222,6 +222,11 @@ public class GamePlayController extends RegexController implements RegexPatterns
             drawCard();
         new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2, sendChainedPlaces());
         specialAbilityActivationController.handleMonstersThatCanBeActivated();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException interruptedException) {
+            interruptedException.printStackTrace();
+        }
         standByPhase();
     }
 
@@ -230,6 +235,11 @@ public class GamePlayController extends RegexController implements RegexPatterns
         checkIndividualHistory();
         myCommunicator.changePhase("SB", false);
         opponentCommunicator.changePhase("SB", true);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException interruptedException) {
+            interruptedException.printStackTrace();
+        }
         nextPhase();
     }
 
@@ -239,6 +249,11 @@ public class GamePlayController extends RegexController implements RegexPatterns
         new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2, sendChainedPlaces());
         gamePlay.getUniversalHistory().remove("starter");
         checkIndividualHistory();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException interruptedException) {
+            interruptedException.printStackTrace();
+        }
     }
 
     public void drawCard() {

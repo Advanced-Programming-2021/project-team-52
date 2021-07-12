@@ -57,11 +57,11 @@ public class ScoreboardViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        LoginController.getUserByUsername("ali").setScore(1000);
-        LoginController.getUserByUsername("mamad").setScore(100);
-        LoginController.getUserByUsername("reza").setScore(100);
-        LoginController.getUserByUsername("asghar").setScore(0);
-        LoginController.getUserByUsername("haji").setScore(10);
+//        LoginController.getUserByUsername("ali").setScore(1000);
+//        LoginController.getUserByUsername("mamad").setScore(100);
+//        LoginController.getUserByUsername("reza").setScore(100);
+//        LoginController.getUserByUsername("asghar").setScore(0);
+//        LoginController.getUserByUsername("haji").setScore(10);
         scoreBoardScenePane.setStyle("-fx-background-image: url(media/images/backgrounds/scoreBoardWallpaper.png); -fx-background-color: black");
 
         String topUsersInOneString = scoreBoardController.toString();

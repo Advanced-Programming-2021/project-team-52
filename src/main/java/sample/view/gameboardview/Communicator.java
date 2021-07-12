@@ -285,26 +285,29 @@ public class Communicator implements Runnable {
     }
 
     public void mindCrush() {
+        System.out.println("fuck");
         gameBoardView.setBlocked(true);
         Rectangle rectangle = new Rectangle(anchorPane.getWidth(), anchorPane.getHeight());
         rectangle.setFill(Color.TRANSPARENT);
-        anchorPane.getChildren().add(rectangle);
+        Platform.runLater(() -> anchorPane.getChildren().add(rectangle));
         TextField textField = new TextField();
         textField.setPromptText("please enter the card name");
-        textField.setLayoutX(100);
-        textField.setLayoutY(100);
+        textField.setLayoutX(anchorPane.getWidth() / 2);
+        textField.setLayoutY(anchorPane.getHeight() / 2);
         textField.setPrefWidth(50);
         textField.setPrefHeight(20);
         Button button = new Button();
         button.setText("send");
-        button.setLayoutX(151);
-        button.setLayoutY(100);
+        button.setLayoutX(anchorPane.getWidth() / 2 + 51);
+        button.setLayoutY(anchorPane.getHeight() / 2);
+        button.setPrefWidth(50);
+        button.setPrefHeight(20);
         button.setOnMouseClicked(e -> {
-            anchorPane.getChildren().removeAll(button, textField, rectangle);
+            Platform.runLater(() -> anchorPane.getChildren().removeAll(button, textField, rectangle));
             gamePlayController.putCommand(textField.getText());
             gameBoardView.setBlocked(false);
         });
-        anchorPane.getChildren().addAll(textField, button);
+        Platform.runLater(() -> anchorPane.getChildren().addAll(textField, button));
     }
 
     public void ritualSummon() {
@@ -380,7 +383,7 @@ public class Communicator implements Runnable {
         coin.setFitHeight(100);
         coin.setX(anchorPane.getPrefWidth() / 2 - coin.getFitWidth() / 2);
         coin.setY(anchorPane.getPrefHeight() / 2 - coin.getFitHeight() / 2 - 300);
-        timeline.setCycleCount(1);
+        timeline.setCycleCount(3);
         timeline.setOnFinished(e -> {
             Timeline timeline1 = new Timeline();
             for (int i = 1; i < finishingPicture + 1; i++) {

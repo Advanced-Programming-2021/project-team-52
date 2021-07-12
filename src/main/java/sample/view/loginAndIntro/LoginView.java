@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -24,6 +25,14 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 public class LoginView extends Application {
+
+    private static Image windowIcon;
+
+    MediaView introMediaView = new MediaView();
+    AnchorPane introScenePane = new AnchorPane();
+
+    Stage pStage;
+    Scene pScene;
 
     public static void main(String[] args) {
         try {
@@ -57,16 +66,15 @@ public class LoginView extends Application {
         launch(args);
     }
 
-
-    MediaView introMediaView = new MediaView();
-    AnchorPane introScenePane = new AnchorPane();
-
-    Stage pStage;
-    Scene pScene;
+    public static Image getWindowIcon() {
+        return windowIcon;
+    }
 
     @Override
     public void start(Stage stage) throws IOException {
-
+        windowIcon = new Image("./misc/icon.png");
+        stage.getIcons().add(windowIcon);
+        stage.setTitle("Yu Gi Oh");
         Media media = new Media(new File
 //                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\resources\\media\\videos\\introVideo.mp4").toURI().toURL().toExternalForm());
 //        Media media = new Media(new File

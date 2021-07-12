@@ -2,6 +2,7 @@ package sample.view.gameboardview;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.text.Font;
 import sample.controller.Action;
 import sample.controller.GamePlayController;
 import sample.controller.GameState;
@@ -26,6 +27,8 @@ import javafx.util.Duration;
 import sample.model.game.STATUS;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -61,8 +64,12 @@ public class GameBoardView{
     private boolean blocked;
     private ToggleButton darkMode;
     private BackgroundImage lightBackground, darkBackground;
+    private ImageView myProfileImage, enemyProfileImage;
+    private VerticalLabel myNickname, enemyNickname;
+    private String myNicknameString;
 
-    public GameBoardView(Stage stage){
+    public GameBoardView(Stage stage, String myNickname, String myProfileImageAddress, String enemyNickname,
+                         String enemyImageAddress){
         this.stage = stage;
         this.anchorPane = new AnchorPane();
         this.primaryMouse = true;
@@ -95,6 +102,15 @@ public class GameBoardView{
         this.anchorPane.setPrefHeight(734);
         this.communicator = new Communicator(anchorPane, this, myPlaces, enemyPlaces);
         this.darkMode = new ToggleButton();
+        try {
+            this.myProfileImage = new ImageView(new Image(new FileInputStream(myProfileImageAddress)));
+            this.enemyProfileImage = new ImageView(new Image(new FileInputStream(enemyImageAddress)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        this.myNickname = new VerticalLabel(myNickname);
+        this.myNicknameString = myNickname;
+        this.enemyNickname = new VerticalLabel(enemyNickname);
         Thread thread = new Thread(communicator);
         thread.setDaemon(true);
         thread.start();
@@ -162,7 +178,7 @@ public class GameBoardView{
         previewLabel.setLayoutY(417);
         previewLabel.setAlignment(Pos.CENTER_LEFT);
         previewLabel.setTextFill(Color.WHITE);
-//        previewLabel.setFont(new Font(14));
+        previewLabel.setFont(new Font(14));
         previewLabel.setWrapText(true);
         anchorPane.getChildren().add(previewLabel);
         messageField.setPrefWidth(215);
@@ -177,7 +193,7 @@ public class GameBoardView{
         sendMessageButton.setPrefHeight(26);
         sendMessageButton.setLayoutX(219);
         sendMessageButton.setLayoutY(680);
-//        chatTexts.setFont(new Font(12));
+        chatTexts.setFont(new Font(12));
         chatTexts.setWrapText(true);
         chatTexts.setPrefWidth(279);
         chatTexts.setPrefHeight(162);
@@ -238,6 +254,19 @@ public class GameBoardView{
         darkMode.setPrefHeight(66);
         darkMode.setText("dark mode");
         changeBackground(darkMode);
+        myProfileImage.setFitWidth(51);
+        myProfileImage.setFitHeight(46);
+        myProfileImage.setX(1134);
+        myProfileImage.setY(674);
+        enemyProfileImage.setFitWidth(51);
+        enemyProfileImage.setFitHeight(46);
+        enemyProfileImage.setX(1134);
+        enemyProfileImage.setY(0);
+        myNickname.setValues(1134, 598, 51, 76, 90, myNickname.getText());
+        myNickname.setTextFill(Color.WHITE);
+        enemyNickname.setValues(1134, 46, 51, 76, 90, enemyNickname.getText());
+        enemyNickname.setTextFill(Color.WHITE);
+        anchorPane.getChildren().addAll(myProfileImage, myNickname, enemyProfileImage, enemyNickname);
     }
 
     public boolean getBlocked(){
@@ -323,8 +352,9 @@ public class GameBoardView{
         String text = messageField.getText();
         if (!text.isEmpty()){
             messageField.clear();
-            chatTexts.appendText("\n" + text);
-            opponentCommunicator.sendMessage("\n" + text);
+            text = "\n" + myNicknameString + " : " + text;
+            chatTexts.appendText(text);
+            opponentCommunicator.sendMessage(text);
         }
     }
 
@@ -435,11 +465,13 @@ public class GameBoardView{
             if (!blocked){
                 cardView.setActions(gamePlayController.getPossibleAction(cardView.getPLACE_NUMBER(), cardView.getIsEnemy(), gameState));
                 getActionImage(cardView);
-                TranslateTransition translateTransition = new TranslateTransition();
-                translateTransition.setToY(originalY + (enemy ? 40 : -40));
-                translateTransition.setDuration(Duration.millis(400));
-                translateTransition.setNode(cardView);
-                translateTransition.play();
+                if (cardView.playExitMouseTransition) {
+                    TranslateTransition translateTransition = new TranslateTransition();
+                    translateTransition.setToY(originalY + (enemy ? 40 : -40));
+                    translateTransition.setDuration(Duration.millis(400));
+                    translateTransition.setNode(cardView);
+                    translateTransition.play();
+                }
             } else cardView.changeImageViewOpacity(0);
             if (cardView.getPaint() != Color.TRANSPARENT) {
                 previewRectangle.setFill(new ImagePattern(cardView.getPreview()));
@@ -525,7 +557,6 @@ public class GameBoardView{
         communicator.setJob("select " + getType(placeNumber) + " " + placeNumber % 10);
         communicator.start();
         try {
-            //TODO for timing problem
             Thread.sleep(150);
         } catch (InterruptedException interruptedException) {
             interruptedException.printStackTrace();
