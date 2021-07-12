@@ -54,7 +54,7 @@ public class NewDuelController implements RegexPatterns, StringMessages {
             if (result.isEmpty()) {
                 makeNeededObjects();
                 int rounds = Integer.parseInt(matcher.group("rounds"));
-                new Thread(() -> {
+                Thread thread = new Thread(() -> {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException interruptedException) {
@@ -63,7 +63,9 @@ public class NewDuelController implements RegexPatterns, StringMessages {
                     hostGamePlayController.shuffleDeck();
                     guestGamePlayController.shuffleDeck();
                     startTheGame(rounds);
-                }).start();
+                });
+                thread.setDaemon(true);
+                thread.start();
             }
         }
         return result;
