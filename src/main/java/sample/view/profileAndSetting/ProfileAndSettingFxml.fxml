@@ -98,6 +98,6 @@
       </JFXButton>
       <JFXTextArea fx:id="newPhotoTextArea" focusColor="#ffff59" labelFloat="true" layoutX="71.0" layoutY="364.0" prefHeight="47.0" prefWidth="458.0" promptText="new Photo address" unFocusColor="WHITE" />
       <JFXButton fx:id="usernameChangeSubmitButton1" buttonType="RAISED" layoutX="507.0" layoutY="184.0" ripplerFill="#ffff22" text="ok" textFill="#ffff22" visible="false" />
-      <JFXButton fx:id="photoChangeSubmitButton" buttonType="RAISED" layoutX="497.0" layoutY="385.0" onAction="#changeNicknameFromController" ripplerFill="#ffff22" text="ok" textFill="#ffff22" />
+      <JFXButton fx:id="photoChangeSubmitButton" buttonType="RAISED" layoutX="497.0" layoutY="385.0" onAction="#changeImageByPath" ripplerFill="#ffff22" text="ok" textFill="#ffff22" />
    </children>
 </AnchorPane>

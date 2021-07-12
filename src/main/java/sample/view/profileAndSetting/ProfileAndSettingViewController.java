@@ -18,6 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import sample.controller.ProfileController;
 import sample.model.User;
+import sample.model.tools.StringMessages;
 import sample.view.UserKeeper;
 
 import java.io.*;
@@ -35,10 +36,12 @@ public class ProfileAndSettingViewController implements Initializable {
     @FXML
     AnchorPane ProfileAndSettingViewPane;
     @FXML
-    JFXTextArea newNicknameTextArea, newUsernameTextArea, newPasswordTextArea, newPasswordAgainTextArea, oldPasswordTextArea;
+    JFXTextArea newNicknameTextArea, newUsernameTextArea, newPasswordTextArea, newPasswordAgainTextArea,
+            oldPasswordTextArea, newPhotoTextArea;
     @FXML
     JFXButton nicknameEditButton, usernameEditButton, changePasswordButton,
-            nicknameChangeSubmitButton, usernameChangeSubmitButton, passwordChangeSubmitButton, backButton;
+            nicknameChangeSubmitButton, usernameChangeSubmitButton, passwordChangeSubmitButton, backButton,
+            photoChangeSubmitButton;
     @FXML
     ImageView profileImageImageView;
 
@@ -52,7 +55,7 @@ public class ProfileAndSettingViewController implements Initializable {
     InputStream dragAndDropGuidImageStream = new FileInputStream
             ("./src/main/resources/media/images/others/dragAndDropGuidImage.jpg");
     Image profileImageGuid = new Image(dragAndDropGuidImageStream);
-//    Image defaultProfileImage = UserKeeper.getInstance().getCurrentUser().getImage();
+    //    Image defaultProfileImage = UserKeeper.getInstance().getCurrentUser().getImage();
     String imageAddress = user.getImageAddress();
     Image defaultProfileImage;
 
@@ -62,7 +65,7 @@ public class ProfileAndSettingViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            defaultProfileImage =new Image(new FileInputStream(imageAddress));
+            defaultProfileImage = new Image(new FileInputStream(imageAddress));
             profileImageImageView.setImage(defaultProfileImage);
 
         } catch (FileNotFoundException exception) {
@@ -76,6 +79,7 @@ public class ProfileAndSettingViewController implements Initializable {
         newPasswordTextArea.setStyle("-fx-text-fill: White; -fx-prompt-text-fill: white");
         newPasswordAgainTextArea.setStyle("-fx-text-fill: White; -fx-prompt-text-fill: white");
         oldPasswordTextArea.setStyle("-fx-text-fill: White; -fx-prompt-text-fill: white");
+        newPhotoTextArea.setStyle("-fx-text-fill: White; -fx-prompt-text-fill: white");
     }
 
     public void changeUsername(ActionEvent e) {
@@ -123,18 +127,33 @@ public class ProfileAndSettingViewController implements Initializable {
         }
     }
 
-    public void changePasswordFromController(){
+    public void changePasswordFromController() {
         String response = profileController.changePassword(newPasswordTextArea.getText(),
                 newPasswordAgainTextArea.getText(), oldPasswordTextArea.getText(),
                 UserKeeper.getInstance().getCurrentUser());
         situationLabel.setText(response);
     }
 
-    public void changeNicknameFromController(){
+    public void changeNicknameFromController() {
         String response = profileController.changeNickname(newNicknameTextArea.getText(),
                 UserKeeper.getInstance().getCurrentUser());
         nicknameLabelInProfileScene.setText(UserKeeper.getInstance().getCurrentUser().getNickname());
         situationLabel.setText(response);
+    }
+
+    public void changeImageByPath(ActionEvent e) {
+        String response = profileController.changeProfileImage(newPhotoTextArea.getText(), user);
+        if (!response.equals(StringMessages.THERE_IS_NO_IMAGE_WITH_THIS_PATH)) {
+            try {
+                profileImageImageView.setImage(new Image(new FileInputStream(newPhotoTextArea.getText())));
+                newPhotoTextArea.setText("");
+            } catch (FileNotFoundException exception) {
+                situationLabel.setText(StringMessages.THERE_IS_NO_IMAGE_WITH_THIS_PATH);
+                return;
+            }
+        }
+        situationLabel.setText(response);
+
     }
 
     public void backButton(ActionEvent e) throws IOException {
@@ -142,7 +161,7 @@ public class ProfileAndSettingViewController implements Initializable {
                 ("./src/main/java/sample/view/mainMenu/MainMenuFxml.fxml").toURI().toURL());
 //                ("src\\main\\java\\sample\\view\\mainMenu\\MainMenuFxml.fxml").toURI().toURL());
         Parent root = loader.load();
-        stage = (Stage)((Node)e.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
