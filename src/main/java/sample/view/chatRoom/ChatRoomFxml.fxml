@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="chatRoomScenePane" prefHeight="720.0" prefWidth="1291.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.view.chatRoom.ChatRoomViewController">
+   <children>
+      <Line endX="1030.800048828125" layoutX="182.0" layoutY="73.0" startX="-100.0" stroke="#ffff55" />
+      <Label layoutX="81.0" layoutY="28.0" prefHeight="30.0" prefWidth="130.0" text="Chat" textFill="WHITE">
+         <font>
+            <Font name="Open Sans" size="32.0" />
+         </font>
+      </Label>
+      <Label layoutX="81.0" layoutY="80.0" prefHeight="18.0" prefWidth="140.0" text="All Users:" textFill="AQUA">
+         <font>
+            <Font size="25.0" />
+         </font>
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
+      <JFXTextArea fx:id="enterNewMessageTextArea" focusColor="#ffff55" labelFloat="true" layoutX="296.0" layoutY="639.0" prefHeight="38.0" prefWidth="486.0" promptText="enter your message" unFocusColor="WHITE" />
+      <JFXButton fx:id="messagePinButton" layoutX="937.0" layoutY="376.0" onAction="#message1Setting" prefHeight="36.0" prefWidth="42.0" ripplerFill="#ffff57">
+         <graphic>
+            <ImageView fitHeight="21.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/pinIcon.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+         </graphic>
+         <tooltip>
+            <Tooltip fx:id="pinButtonToolTip" text="Pin/unpin">
+               <font>
+                  <Font name="System Italic" size="12.0" />
+               </font>
+            </Tooltip>
+         </tooltip>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+      <Label fx:id="pinMessageLabel" layoutX="296.0" layoutY="124.0" prefHeight="36.0" prefWidth="486.0" text="Label" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="296.0" layoutY="80.0" prefHeight="18.0" prefWidth="140.0" text="Chat Box:" textFill="AQUA">
+         <font>
+            <Font size="25.0" />
+         </font>
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
+      <JFXButton fx:id="messageReplyButton" layoutX="984.0" layoutY="376.0" prefHeight="36.0" prefWidth="42.0">
+         <graphic>
+            <ImageView fx:id="message1ReplyImage" fitHeight="19.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/replyIcon.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <tooltip>
+            <Tooltip fx:id="messageReplyButtonToolTip" text="reply">
+               <font>
+                  <Font name="System Italic" size="13.0" />
+               </font>
+            </Tooltip>
+         </tooltip>
+         <font>
+            <Font name="System Italic" size="13.0" />
+         </font>
+      </JFXButton>
+      <JFXButton fx:id="messageEditButton" layoutX="1035.0" layoutY="376.0" prefHeight="36.0" prefWidth="32.0" ripplerFill="#59ff59">
+         <graphic>
+            <ImageView fitHeight="19.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/editButton.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <tooltip>
+            <Tooltip fx:id="messageEditButtonToolTip" text="edit">
+               <font>
+                  <Font name="System Italic" size="13.0" />
+               </font>
+            </Tooltip>
+         </tooltip>
+         <font>
+            <Font name="System Italic" size="13.0" />
+         </font>
+      </JFXButton>
+      <JFXButton fx:id="messageRemoveButton" layoutX="1083.0" layoutY="376.0" prefHeight="36.0" prefWidth="32.0" ripplerFill="#ff5959">
+         <graphic>
+            <ImageView fitHeight="25.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/trashIcon.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <tooltip>
+            <Tooltip fx:id="messageRemoveButtonToolTip" text="remove">
+               <font>
+                  <Font name="System Italic" size="13.0" />
+               </font>
+            </Tooltip>
+         </tooltip>
+      </JFXButton>
+      <JFXButton fx:id="backbutton" layoutX="27.0" layoutY="30.0" onAction="#backButton">
+         <graphic>
+            <ImageView fitHeight="33.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/backButtonBackground.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </JFXButton>
+<!--      <JFXTextArea fx:id="chatTextArea" editable="false" focusColor="#ffff59" layoutX="296.0" layoutY="169.0" prefHeight="442.0" prefWidth="486.0"  unFocusColor="#ffff59; " />-->
+<!--      <JFXTextArea fx:id="searchMessageTextArea" focusColor="AQUA" labelFloat="true" layoutX="822.0" layoutY="123.0" prefHeight="38.0" prefWidth="402.0" promptText="search id to edit or reply" unFocusColor="WHITE" />-->
+<!--      <JFXTextArea fx:id="searchedMessageTextArea" editable="false" focusColor="BLACK" layoutX="822.0" layoutY="202.0" prefHeight="152.0" prefWidth="402.0" unFocusColor="BLACK" />-->
+      <Label fx:id="searchedUserInfoLabel" alignment="TOP_LEFT" layoutX="847.0" layoutY="425.0" prefHeight="257.0" prefWidth="375.0" text="Label" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="16.0" />
+         </font></Label>
+      <JFXButton fx:id="sendMessageButton" layoutX="721.0" layoutY="643.0" text="send" textFill="#ffff55">
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/sendIcon.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+      <Label fx:id="messageSearchSituation" layoutX="834.0" layoutY="172.0" prefHeight="18.0" prefWidth="402.0" textFill="WHITE" />
+      <JFXTextArea fx:id="searchMessageTextArea" focusColor="AQUA" labelFloat="true" layoutX="832.0" layoutY="123.0" prefHeight="38.0" prefWidth="402.0" promptText="search Message" unFocusColor="WHITE" />
+      <JFXButton fx:id="searchMessageButton" layoutX="1163.0" layoutY="128.0" text="search" textFill="AQUA">
+         <graphic>
+            <ImageView fitHeight="21.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/searchIconAqua.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+      <JFXTextArea fx:id="searchedMessageTextArea" layoutX="942.0" layoutY="191.0" prefHeight="176.0" prefWidth="295.0" unFocusColor="WHITE" />
+      <JFXTextArea fx:id="chatBoxTextArea" editable="false" layoutX="296.0" layoutY="166.0" prefHeight="455.0" prefWidth="486.0" unFocusColor="WHITE" />
+      <Line endX="-62.0" layoutX="948.0" layoutY="683.0" startX="-100.0" stroke="AQUA" strokeLineCap="ROUND" strokeWidth="4.0" />
+      <JFXTextArea fx:id="allUsersTextArea" editable="false" focusColor="BLACK" layoutX="81.0" layoutY="120.0" prefHeight="559.0" prefWidth="154.0" unFocusColor="BLACK" />
+      <JFXButton fx:id="showUserInfoButton" layoutX="839.0" layoutY="191.0" prefHeight="98.0" prefWidth="74.0">
+         <graphic>
+            <ImageView fx:id="searchedUserImageView" fitHeight="110.0" fitWidth="66.0" pickOnBounds="true" preserveRatio="true" />
+         </graphic>
+      </JFXButton>
+      <ImageView fitHeight="46.0" fitWidth="50.0" layoutX="1163.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../resources/media/images/others/chatIcon.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
