@@ -66,11 +66,9 @@ public class ShopViewController implements StringMessages, Initializable {
 
         buyButton.setStyle("-fx-border-width: 0 0 0.5 0; -fx-border-color: #ffff55");
 
-        searchInShopTextArea.setStyle("-fx-prompt-text-fill: white");
-        searchInUserCardsTextArea.setStyle("-fx-prompt-text-fill: white");
-        searchInUserCardsTextArea.setStyle("-fx-text-fill: white");
-        searchInShopTextArea.setStyle("-fx-text-fill: white");
-
+        searchInShopTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        searchInUserCardsTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        
         numberOfCardLabelUnderUserCard.setStyle("-fx-text-fill: white");
         numberOfCardLabelUnderShopCard.setStyle("-fx-text-fill: white");
 

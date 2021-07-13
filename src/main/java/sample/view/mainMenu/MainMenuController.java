@@ -229,6 +229,7 @@ public class MainMenuController implements Initializable {
         stage = (Stage)((Node)e.getSource()).getScene().getWindow();
         scene = new Scene(root);
         LoginView.getWelcomeMediaPlayer().stop();
+        MainMenuController.getAfterGameMediaPlayer().stop();
         gameBackGroundMediaPlayer.play();
         gameBackGroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         stage.setScene(scene);
@@ -242,7 +243,7 @@ public class MainMenuController implements Initializable {
 //                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\java\\sample\\view\\deckManager\\DeckManagerFxml.fxml").toURI().toURL());
         Parent root = loader.load();
         stage = (Stage)((Node)e.getSource()).getScene().getWindow();
-        scene = new Scene(root);
+        scene = new Scene(root, 1280,720);
         stage.setScene(scene);
         stage.show();
     }
@@ -255,7 +256,7 @@ public class MainMenuController implements Initializable {
 
         Parent root = loader.load();
         stage = (Stage)((Node)e.getSource()).getScene().getWindow();
-        scene = new Scene(root);
+        scene = new Scene(root, 1280,720);
         stage.setScene(scene);
         stage.show();
     }

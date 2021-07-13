@@ -12,12 +12,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Pane;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import sample.controller.NewDuelController;
 import sample.view.UserKeeper;
+import sample.view.mainMenu.MainMenuController;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -34,11 +38,21 @@ public class DuelController implements Initializable{
 
     private int rounds = 1;
 
+    @FXML
+    Pane startGame;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ToggleGroup toggleGroup = new ToggleGroup();
         oneRound.setToggleGroup(toggleGroup);
         threeRounds.setToggleGroup(toggleGroup);
+        startGame.setId("startGame");
+        try {
+            startGame.getStylesheets().add(new File
+                    ("./src/main/resources/cssFiles/NewDuelViewCss.css").toURI().toURL().toExternalForm());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -67,6 +81,9 @@ public class DuelController implements Initializable{
             Scene scene = new Scene(root);
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             stage.setScene(scene);
+            MainMenuController.getGameBackGroundMediaPlayer().stop();
+            MainMenuController.getAfterGameMediaPlayer().setCycleCount(MediaPlayer.INDEFINITE);
+            MainMenuController.getAfterGameMediaPlayer().play();
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
