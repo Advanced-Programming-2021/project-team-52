@@ -1,3 +1,0 @@
-Name,Level,Attribute, Monster Type , Card Type ,Atk,Def,Description,Price,Status,Special Speed,Special Ability
-"Gate Guardian","11","DARK","Warrior","Effect","3750","3400","Cannot be Normal Summoned/Set. Must first be Special Summoned (from your hand) by Tributing 1 ""Sanga of the Thunder"", ""Kazejin"", and ""Suijin"".","20000","Unlimited","1","Tribute : summonWithTribute/false/3/special"
-"ali","5","WATER","Machine","Machine","1742","1657","des","6719","Unlimited","1","ActivateNoChain : scanner&&FaceUp : addScannerHistory"
