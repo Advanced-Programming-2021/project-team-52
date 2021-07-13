@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
@@ -13,7 +17,42 @@
       <MediaView fx:id="mainMenuBackgroundMediaView" fitHeight="720.0" fitWidth="1280.0" StackPane.alignment="CENTER" />
       <Pane focusTraversable="true" prefHeight="720.0" prefWidth="1280.0">
          <children>
-            <JFXButton fx:id="newGameButton" buttonType="RAISED" layoutX="450.0" layoutY="270.0" onAction="#switchToGameScene" onMouseEntered="#onMouseEnteredNewGameButton" onMouseExited="#onMouseExitedNewGameButtos" prefHeight="45.0" prefWidth="380.0" text="New Game" textFill="#ffff44" wrapText="true">
+            <ImageView fx:id="deckManagerImageView" fitHeight="51.0" fitWidth="71.0" layoutX="366.0" layoutY="360.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/deckManagerIcon.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="profileAndSettingImageView" fitHeight="57.0" fitWidth="61.0" layoutX="601.0" layoutY="357.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/profileAndSettingIconInProfileAndSettingMenu.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="chatImageview" fitHeight="70.0" fitWidth="57.0" layoutX="852.0" layoutY="357.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/chatIcon.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="importAndExportImageView" fitHeight="57.0" fitWidth="57.0" layoutX="851.0" layoutY="548.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/importAndExportIcon.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="scoreBoardImageView" fitHeight="51.0" fitWidth="57.0" layoutX="605.0" layoutY="551.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/scoreboardIcon.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="shopImageView" fitHeight="68.0" fitWidth="57.0" layoutX="363.0" layoutY="548.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/shopCardInMainMenu34.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="newGameImageView" fitHeight="119.0" fitWidth="92.0" layoutX="121.0" layoutY="502.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/swordIcon.png" />
+               </image>
+            </ImageView>
+            <JFXButton fx:id="newGameButton" buttonType="RAISED" layoutX="67.0" layoutY="261.0" onAction="#switchToGameScene" onMouseEntered="#onMouseEnteredNewGameButton" onMouseExited="#onMouseExitedNewGameButton" prefHeight="375.0" prefWidth="200.0" text="New Game" textFill="#ffff44" wrapText="true">
                <font>
                   <Font size="25.0" />
                </font>
@@ -21,38 +60,59 @@
                   <Insets />
                </opaqueInsets>
             </JFXButton>
-            <JFXButton fx:id="deckManagerButton" buttonType="RAISED" layoutX="450.0" layoutY="330.0" onAction="#switchToDeckManagerScene" onMouseEntered="#onMouseEnteredDeckManagerButton" onMouseExited="#onMouseExitedDeckManagerButtos" prefHeight="45.0" prefWidth="380.0" text="Deck Manager" textFill="#ffff44">
+            <JFXButton fx:id="deckManagerButton" alignment="TOP_CENTER" buttonType="RAISED" layoutX="291.0" layoutY="290.0" onAction="#switchToDeckManagerScene" onMouseEntered="#onMouseEnteredDeckManagerButton" onMouseExited="#onMouseExitedDeckManagerButton" prefHeight="150.0" prefWidth="200.0" text="Deck Manager" textFill="#ffff44">
                <font>
                   <Font size="25.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="shopButton" buttonType="RAISED" layoutX="450.0" layoutY="390.0" onAction="#switchToShopScene" onMouseEntered="#onMouseEnteredShopButton" onMouseExited="#onMouseExitedShopButtos" prefHeight="45.0" prefWidth="380.0" text="Shop" textFill="#ffff44">
+            <JFXButton fx:id="shopButton" alignment="TOP_CENTER" buttonType="RAISED" layoutX="291.0" layoutY="482.0" onAction="#switchToShopScene" onMouseEntered="#onMouseEnteredShopButton" onMouseExited="#onMouseExitedShopButton" prefHeight="150.0" prefWidth="200.0" text="Shop" textFill="#ffff44">
                <font>
                   <Font size="25.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="profileAndSettingButton" buttonType="RAISED" layoutX="450.0" layoutY="450.0" onAction="#switchToProfileAndSettingScene" onMouseEntered="#onMouseEnteredProfileAndSettingButton" onMouseExited="#onMouseExitedProfileAndSettingButtos" prefHeight="45.0" prefWidth="380.0" text="Profile &amp; Setting" textFill="#ffff44">
+            <JFXButton fx:id="profileAndSettingButton" alignment="TOP_CENTER" buttonType="RAISED" layoutX="520.0" layoutY="291.0" onAction="#switchToProfileAndSettingScene" onMouseEntered="#onMouseEnteredProfileAndSettingButton" onMouseExited="#onMouseExitedProfileAndSettingButton" prefHeight="150.0" prefWidth="220.0" text="Profile &amp; Setting" textFill="#ffff44">
                <font>
                   <Font size="25.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="scoreboardButton" buttonType="RAISED" layoutX="450.0" layoutY="510.0" onAction="#switchToScoreboardScene" onMouseEntered="#onMouseEnteredScoreBoardButton" onMouseExited="#onMouseExitedScoreBoardButtos" prefHeight="45.0" prefWidth="380.0" text="Score Board" textFill="#ffff44">
+            <JFXButton fx:id="scoreboardButton" alignment="TOP_CENTER" buttonType="RAISED" layoutX="520.0" layoutY="481.0" onAction="#switchToScoreboardScene" onMouseEntered="#onMouseEnteredScoreBoardButton" onMouseExited="#onMouseExitedScoreBoardButton" prefHeight="150.0" prefWidth="220.0" text="Score Board" textFill="#ffff44">
                <font>
                   <Font size="25.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="importAndExportButton" buttonType="RAISED" layoutX="450.0" layoutY="570.0" onAction="#switchToImportAndExportScene" onMouseEntered="#onMouseEnteredImportAndExportButton" onMouseExited="#onMouseExitedImportAndExportButton" prefHeight="45.0" prefWidth="380.0" text="Import &amp; Export" textFill="#ffff44">
+            <JFXButton fx:id="importAndExportButton" alignment="TOP_CENTER" buttonType="RAISED" layoutX="770.0" layoutY="483.0" onAction="#switchToImportAndExportScene" onMouseEntered="#onMouseEnteredImportAndExportButton" onMouseExited="#onMouseExitedImportAndExportButton" prefHeight="150.0" prefWidth="220.0" text="Import &amp; Export" textFill="#ffff44">
                <font>
                   <Font size="25.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="logoutButton" buttonType="RAISED" layoutX="450.0" layoutY="630.0" onAction="#switchToEntranceScene" onMouseEntered="#onMouseEnteredLogoutButton" onMouseExited="#onMouseExitedLogoutButton" prefHeight="45.0" prefWidth="380.0" ripplerFill="#ff4545" text="Log Out" textFill="#ffff44">
+            <JFXButton fx:id="logoutButton" alignment="TOP_CENTER" buttonType="RAISED" layoutX="995.0" layoutY="574.0" onAction="#switchToEntranceScene" onMouseEntered="#onMouseEnteredLogoutButton" onMouseExited="#onMouseExitedLogoutButton" prefHeight="57.0" prefWidth="254.0" ripplerFill="#ff4545" text="Log Out" textFill="#ffff44">
                <font>
                   <Font size="25.0" />
                </font>
             </JFXButton>
-            <ImageView fx:id="leftHandImageHelper" fitHeight="202.0" fitWidth="219.0" layoutX="91.0" layoutY="461.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="rightHandImageHelper" fitHeight="320.0" fitWidth="300.0" layoutX="867.0" layoutY="436.0" pickOnBounds="true" preserveRatio="true" />
+            <JFXButton fx:id="chatButton" alignment="TOP_CENTER" buttonType="RAISED" layoutX="770.0" layoutY="291.0" onAction="#switchToChatRoomScene" prefHeight="150.0" prefWidth="220.0" text="Chat" textFill="#ffff55">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </JFXButton>
+            <JFXTextArea fx:id="allUsersTextArea" editable="false" focusColor="AQUA" layoutX="996.0" layoutY="322.0" prefHeight="245.0" prefWidth="254.0" unFocusColor="BLACK" />
+            <JFXTextArea fx:id="searchPlayerToPlayTextArea" focusColor="AQUA" labelFloat="true" layoutX="996.0" layoutY="273.0" prefHeight="37.0" prefWidth="254.0" promptText="player you want to play" unFocusColor="WHITE" />
+            <Label fx:id="userSearchSituationLabel" layoutX="1110.0" layoutY="431.0" prefHeight="19.0" prefWidth="300.0" rotate="90.0" textFill="#ff5959" />
+            <JFXButton fx:id="searchAndPlayButton" layoutX="1129.0" layoutY="278.0" prefHeight="28.0" prefWidth="122.0" text="search&amp;play" textFill="#ffff55">
+               <font>
+                  <Font size="13.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/media/images/others/sendIcon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
          </children>
       </Pane>
    </children>

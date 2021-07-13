@@ -4,7 +4,6 @@
 <?import com.jfoenix.controls.JFXRadioButton?>
 <?import com.jfoenix.controls.JFXSlider?>
 <?import com.jfoenix.controls.JFXTextArea?>
-<?import com.jfoenix.controls.JFXToggleButton?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -33,7 +32,7 @@
                   <Image url="@../../../../resources/media/images/others/cardTemp.jpg" />
                </image>
             </ImageView>
-            <Label fx:id="deckNameLabel" alignment="CENTER" layoutX="864.0" layoutY="439.0" prefHeight="47.0" prefWidth="210.0"  textFill="#ffff55">
+            <Label fx:id="deckNameLabel" alignment="CENTER" layoutX="864.0" layoutY="439.0" prefHeight="47.0" prefWidth="210.0" textFill="#ffff55">
                <effect>
                   <Glow />
                </effect>
@@ -166,6 +165,9 @@
                <font>
                   <Font name="System Bold" size="27.0" />
                </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
                <graphic>
                   <ImageView fitHeight="48.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -173,9 +175,6 @@
                      </image>
                   </ImageView>
                </graphic>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
             </JFXButton>
             <JFXTextArea fx:id="cardNameToAddTextArea" focusColor="AQUA" labelFloat="true" layoutX="899.0" layoutY="669.0" prefHeight="36.0" prefWidth="154.0" promptText="card name" unFocusColor="WHITE">
                <font>
@@ -250,7 +249,7 @@
                   <Blend />
                </effect>
             </Label>
-            <JFXButton fx:id="removeFromMainButton" buttonType="RAISED" onAction="#removeCardFromMain" layoutX="1111.0" layoutY="826.0" prefHeight="41.0" prefWidth="167.0" text=" remove 1 from main" textFill="#ff5959">
+            <JFXButton fx:id="removeFromMainButton" buttonType="RAISED" layoutX="1111.0" layoutY="826.0" onAction="#removeCardFromMain" prefHeight="41.0" prefWidth="167.0" text=" remove 1 from main" textFill="#ff5959">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -279,13 +278,13 @@
                   <Font name="System Bold Italic" size="16.0" />
                </font>
             </Label>
-            <Label fx:id="allDecksLabel" alignment="TOP_LEFT" layoutX="405.0" layoutY="273.0" prefHeight="1161.0" prefWidth="343.0"  textFill="#e4e4e4">
+            <Label fx:id="allDecksLabel" alignment="TOP_LEFT" layoutX="405.0" layoutY="273.0" prefHeight="1161.0" prefWidth="314.0" textFill="#e4e4e4">
                <font>
                   <Font name="System Bold Italic" size="12.0" />
                </font></Label>
-            <JFXTextArea fx:id="deckSearchTextArea" focusColor="#ffff55" labelFloat="true" layoutX="411.0" layoutY="207.0" prefHeight="31.0" prefWidth="273.0" promptText="name a deck to edit" unFocusColor="WHITE" />
-            <Label fx:id="mainDeckLabel" alignment="TOP_CENTER" layoutX="588.0" layoutY="645.0" prefHeight="1161.0" prefWidth="143.0"  textFill="#e4e4e4" />
-            <Label fx:id="sideDeckLabel" alignment="TOP_CENTER" layoutX="731.0" layoutY="645.0" prefHeight="1161.0" prefWidth="143.0"  textFill="#e4e4e4" />
+            <JFXTextArea fx:id="deckSearchTextArea" focusColor="#ffff55" labelFloat="true" layoutX="412.0" layoutY="218.0" prefHeight="31.0" prefWidth="273.0" promptText="name a deck to edit" unFocusColor="WHITE" />
+            <Label fx:id="mainDeckLabel" alignment="TOP_CENTER" layoutX="588.0" layoutY="645.0" prefHeight="1161.0" prefWidth="143.0" textFill="#e4e4e4" />
+            <Label fx:id="sideDeckLabel" alignment="TOP_CENTER" layoutX="731.0" layoutY="645.0" prefHeight="1161.0" prefWidth="143.0" textFill="#e4e4e4" />
 <!--            <JFXButton fx:id="newDeckButton" layoutX="411.0" layoutY="135.0" prefHeight="45.0" prefWidth="276.0" text=" new deck" textFill="#59ff59">-->
 <!--               <font>-->
 <!--                  <Font size="20.0" />-->
@@ -306,7 +305,7 @@
                   <Font size="17.0" />
                </font>
             </Label>
-            <JFXButton fx:id="submitDeckSearchButton" layoutX="626.0" layoutY="210.0" onAction="#submitDeckSearch"  prefHeight="30.0" prefWidth="58.0" text="ok" textFill="#ffff55">
+            <JFXButton fx:id="submitDeckSearchButton" layoutX="627.0" layoutY="221.0" onAction="#submitDeckSearch" prefHeight="30.0" prefWidth="58.0" text="ok" textFill="#ffff55">
                <graphic>
                   <ImageView fitHeight="22.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -349,9 +348,16 @@
                   <Image url="@../../../../resources/media/images/others/makeCardIcon.png" />
                </image>
             </ImageView>
-            <JFXTextArea fx:id="newDeckNameTextField" focusColor="#ffff55" labelFloat="true" layoutX="670.0" layoutY="139.0" prefHeight="36.0" prefWidth="166.0" promptText="new deck name" unFocusColor="WHITE"  />
-            <JFXButton fx:id="submitNewDeckNameButton" layoutX="804.0" layoutY="142.0" onAction="#createDeck" prefHeight="30.0" prefWidth="40.0" text="ok" textFill="#ffff55"  />
-            <Label fx:id="newDeckNameSituationLabel" layoutX="670.0" layoutY="180.0" prefHeight="17.0" prefWidth="155.0"  textFill="#ff5959"   />
+            <JFXTextArea fx:id="newDeckNameTextField" focusColor="#ffff55" labelFloat="true" layoutX="410.0" layoutY="139.0" prefHeight="36.0" prefWidth="280.0" promptText="new deck name" unFocusColor="WHITE" />
+            <JFXButton fx:id="submitNewDeckNameButton" layoutX="629.0" layoutY="142.0" onAction="#createDeck" prefHeight="31.0" prefWidth="60.0" ripplerFill="#59ff59" text="ok" textFill="#59ff59">
+               <graphic>
+                  <ImageView fitHeight="29.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/media/images/others/makeNewCarDConfirmIcon.png" />
+                     </image>
+                  </ImageView>
+               </graphic></JFXButton>
+            <Label fx:id="newDeckNameSituationLabel" layoutX="412.0" layoutY="188.0" prefHeight="17.0" prefWidth="155.0" textFill="#ff5959" />
          </children>
       </Pane>
    </content>

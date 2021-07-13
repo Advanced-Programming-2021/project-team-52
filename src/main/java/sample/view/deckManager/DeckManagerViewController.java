@@ -88,6 +88,8 @@ public class DeckManagerViewController implements Initializable {
         cardNameToAddTextArea.setStyle("-fx-prompt-text-fill: white");
         cardNameToRemoveTextArea.setStyle("-fx-prompt-text-fill: white");
         deckSearchTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        cardNameToAddTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        cardNameToRemoveTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         showAllDecksOfUser();
     }
 

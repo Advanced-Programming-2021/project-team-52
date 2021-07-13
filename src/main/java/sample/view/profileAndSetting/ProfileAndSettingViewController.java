@@ -1,6 +1,7 @@
 package sample.view.profileAndSetting;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXSlider;
 import com.jfoenix.controls.JFXTextArea;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +21,9 @@ import sample.controller.ProfileController;
 import sample.model.User;
 import sample.model.tools.StringMessages;
 import sample.view.UserKeeper;
+import sample.view.loginAndIntro.LoginView;
+import sample.view.loginAndIntro.LoginViewController;
+import sample.view.mainMenu.MainMenuController;
 
 import java.io.*;
 import java.net.URL;
@@ -41,7 +45,7 @@ public class ProfileAndSettingViewController implements Initializable {
     @FXML
     JFXButton nicknameEditButton, usernameEditButton, changePasswordButton,
             nicknameChangeSubmitButton, usernameChangeSubmitButton, passwordChangeSubmitButton, backButton,
-            photoChangeSubmitButton;
+            photoChangeSubmitButton, volumeSliderSubmit;
     @FXML
     ImageView profileImageImageView;
 
@@ -49,6 +53,9 @@ public class ProfileAndSettingViewController implements Initializable {
     Label usernameLabelInProfileScene, nicknameLabelInProfileScene;
     @FXML
     Label situationLabel;
+
+    @FXML
+    JFXSlider volumeSlider;
 
     //    InputStream defaultProfileImageStream = new FileInputStream
 //            ("./src/main/resources/media/images/profile/1.jpg");
@@ -165,6 +172,19 @@ public class ProfileAndSettingViewController implements Initializable {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void volumeSetting(ActionEvent e){
+        MainMenuController.getAfterGameMediaPlayer().setVolume(volumeSlider.getValue()/100);
+        MainMenuController.getGameBackGroundMediaPlayer().setVolume(volumeSlider.getValue()/100);
+        LoginView.getWelcomeMediaPlayer().setVolume(volumeSlider.getValue()/100);
+    }
+
+    public void MuteVolume(ActionEvent e){
+        volumeSlider.setValue(0);
+        MainMenuController.getAfterGameMediaPlayer().setVolume(0);
+        MainMenuController.getGameBackGroundMediaPlayer().setVolume(0);
+        LoginView.getWelcomeMediaPlayer().setVolume(0);
     }
 
 }

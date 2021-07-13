@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXSlider?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -83,7 +84,7 @@
       <JFXButton fx:id="nicknameChangeSubmitButton" buttonType="RAISED" layoutX="497.0" layoutY="309.0" onAction="#changeNicknameFromController" ripplerFill="#ffff22" text="ok" textFill="#ffff22" visible="false" />
       <JFXButton fx:id="passwordChangeSubmitButton" buttonType="RAISED" layoutX="614.0" layoutY="351.0" onAction="#changePasswordFromController" prefHeight="26.0" prefWidth="234.0" ripplerFill="AQUA" text="ok" textFill="AQUA" visible="false" />
       <Label layoutX="-54.0" layoutY="203.0" prefHeight="18.0" prefWidth="226.0" rotate="90.0" text="*Drag And Drop Your Image to Change It" textFill="#00ffffc3" />
-      <Label fx:id="situationLabel" alignment="TOP_LEFT" layoutX="609.0" layoutY="369.0" prefHeight="116.0" prefWidth="604.0" text=" " textFill="WHITE">
+      <Label fx:id="situationLabel" alignment="TOP_LEFT" layoutX="609.0" layoutY="383.0" prefHeight="102.0" prefWidth="604.0" text=" " textFill="WHITE">
          <font>
             <Font name="System Italic" size="12.0" />
          </font></Label>
@@ -99,5 +100,13 @@
       <JFXTextArea fx:id="newPhotoTextArea" focusColor="#ffff59" labelFloat="true" layoutX="71.0" layoutY="364.0" prefHeight="47.0" prefWidth="458.0" promptText="new Photo address" unFocusColor="WHITE" />
       <JFXButton fx:id="usernameChangeSubmitButton1" buttonType="RAISED" layoutX="507.0" layoutY="184.0" ripplerFill="#ffff22" text="ok" textFill="#ffff22" visible="false" />
       <JFXButton fx:id="photoChangeSubmitButton" buttonType="RAISED" layoutX="497.0" layoutY="385.0" onAction="#changeImageByPath" ripplerFill="#ffff22" text="ok" textFill="#ffff22" />
+      <JFXSlider fx:id="volumeSlider" indicatorPosition="RIGHT" layoutX="941.0" layoutY="302.0" prefHeight="14.0" prefWidth="159.0" showTickMarks="true" value="100.0" />
+      <Label layoutX="945.0" layoutY="233.0" prefHeight="47.0" prefWidth="119.0" text="volume:" textFill="#ffff55">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
+      <JFXButton fx:id="volumeSliderSubmit" buttonType="RAISED" layoutX="1112.0" layoutY="296.0" onAction="#volumeSetting" text="ok" textFill="#ffff55" />
+      <JFXButton buttonType="RAISED" layoutX="1142.0" layoutY="296.0" onAction="#MuteVolume" ripplerFill="#ff5959" text="Mute" textFill="#ff5959" />
    </children>
 </AnchorPane>

@@ -31,7 +31,7 @@ public class LoginView extends Application {
     MediaView introMediaView = new MediaView();
     AnchorPane introScenePane = new AnchorPane();
     MediaPlayer introMediaPlayer;
-    MediaPlayer welcomeMediaPlayer;
+    static MediaPlayer welcomeMediaPlayer;
     Media media1;
 
     Stage pStage;
@@ -89,6 +89,7 @@ public class LoginView extends Application {
 
          introMediaPlayer = new MediaPlayer(media);
          welcomeMediaPlayer = new MediaPlayer(media1);
+         welcomeMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         introMediaView.setMediaPlayer(introMediaPlayer);
 
         introMediaPlayer.setAutoPlay(true);
@@ -120,7 +121,11 @@ public class LoginView extends Application {
         stage.show();
     }
 
-//    public void nextButtonAction(ActionEvent e) throws IOException {
+    public static MediaPlayer getWelcomeMediaPlayer() {
+        return welcomeMediaPlayer;
+    }
+
+    //    public void nextButtonAction(ActionEvent e) throws IOException {
 //        passwordFieldInEntranceScene.setVisible(true);
 //        nickNameFieldInEntranceScene.setVisible(true);
 //        loginButtonInEntranceScene.setVisible(true);
