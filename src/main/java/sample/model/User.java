@@ -153,19 +153,19 @@ public class User extends Player {
         return numberOfRoundsLost;
     }
 
-    public void addToNumberOfGamesWon(int amount){
+    public void addToNumberOfGamesWon(int amount) {
         this.numberOfWins += amount;
     }
 
-    public void addToNumberOfGamesLost(int amount){
+    public void addToNumberOfGamesLost(int amount) {
         this.numberOfLosses += amount;
     }
 
-    public void addToNumberOfRoundsWon(int amount){
+    public void addToNumberOfRoundsWon(int amount) {
         this.numberOfRoundsWon += amount;
     }
 
-    public void addToNumberOfRoundsLost(int amount){
+    public void addToNumberOfRoundsLost(int amount) {
         this.numberOfRoundsLost += amount;
     }
 
@@ -197,10 +197,10 @@ public class User extends Player {
         cards.add(cardName);
     }
 
-    public int getNumberOfThisCardInCardsOutOfDeck(String cardName){
+    public int getNumberOfThisCardInCardsOutOfDeck(String cardName) {
         int numberOfCards = 0;
         for (String card : cards) {
-            if(card.equals(cardName))
+            if (card.equals(cardName))
                 ++numberOfCards;
         }
         return numberOfCards;
@@ -213,5 +213,16 @@ public class User extends Player {
     public void addCardToJustShowCards(String cardName) {
         if (!cardsToJustShow.contains(cardName))
             cardsToJustShow.add(cardName);
+    }
+
+    public String getUserProfile() {
+        StringBuilder response = new StringBuilder();
+        response.append("Name : ").append(username).append("\n");
+        response.append("Score : ").append(score).append("\n");
+        response.append("Wins : ").append(numberOfWins).append("\n");
+        response.append("Losses : ").append(numberOfLosses).append("\n");
+        response.append("imageAddress").append(imageAddress);
+        return response.toString();
+
     }
 }
