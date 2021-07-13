@@ -55,6 +55,7 @@ public class ChatRoomViewController implements Initializable {
         enterNewMessageTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         searchMessageTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         searchedMessageTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        System.out.println("start");
     }
 
     public void backButton(ActionEvent e) throws IOException {
