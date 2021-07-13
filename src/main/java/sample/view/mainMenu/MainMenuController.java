@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -23,6 +24,7 @@ import sample.view.UserKeeper;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 public class MainMenuController implements Initializable {
@@ -43,6 +45,9 @@ public class MainMenuController implements Initializable {
     ImageView leftHandImageHelper, rightHandImageHelper;
 
     Glow buttonGlow = new Glow(0.7);
+
+//    AudioClip audioClip = new AudioClip("./src/main/resources/media/sounds/buttonClickSound.mp3");
+    AudioClip audioClip = new AudioClip(Paths.get("./src/main/resources/media/sounds/buttonClickSound.mp3").toUri().toString());
 
     Stage stage;
     Scene scene;
@@ -131,6 +136,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void switchToGameScene(ActionEvent e) throws IOException {
+        audioClip.play();
         FXMLLoader loader = new FXMLLoader(
                 new File("./src/main/java/sample/view/newduel/newDuelFxml.fxml").toURI().toURL());
         Parent root = loader.load();
@@ -141,6 +147,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void switchToDeckManagerScene(ActionEvent e) throws IOException {
+        audioClip.play();
         FXMLLoader loader = new FXMLLoader(new File
                 ("./src/main/java/sample/view/deckManager/DeckManagerFxml.fxml").toURI().toURL());
 //                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\java\\sample\\view\\deckManager\\DeckManagerFxml.fxml").toURI().toURL());
@@ -152,6 +159,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void switchToShopScene(ActionEvent e) throws IOException {
+        audioClip.play();
         FXMLLoader loader = new FXMLLoader(new File
 //                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\java\\sample\\view\\shop\\ShopViewFxml.fxml").toURI().toURL());
                 ("./src/main/java/sample/view/shop/ShopViewFxml.fxml").toURI().toURL());
@@ -164,6 +172,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void switchToScoreboardScene(ActionEvent e) throws IOException {
+        audioClip.play();
         FXMLLoader loader = new FXMLLoader(new File
 //                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\java\\sample\\view\\deckManager\\DeckManagerFxml.fxml").toURI().toURL());
 //                ("C:\\Users\\paitakht\\IdeaProjects\\project-ppp\\src\\main\\java\\sample\\view\\scoreBoard\\ScoreBoardFxml.fxml").toURI().toURL());
@@ -176,6 +185,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void switchToProfileAndSettingScene(ActionEvent e) throws IOException {
+        audioClip.play();
 //        System.out.println(UserKeeper.getInstance().getCurrentUser().getUsername());
         FXMLLoader loader = new FXMLLoader(new File
 //                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\java\\sample\\view\\deckManager\\DeckManagerFxml.fxml").toURI().toURL());
@@ -188,6 +198,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void switchToImportAndExportScene(ActionEvent e) throws IOException {
+        audioClip.play();
         FXMLLoader loader = new FXMLLoader(new File
 //                ("C:\\Users\\paitakht\\IdeaProjects\\project-ppp\\src\\main\\java\\sample\\view\\importAndExport\\ImportAndExportFxml.fxml").toURI().toURL());
                 ("./src/main/java/sample/view/importAndExport/ImportAndExportFxml.fxml").toURI().toURL());
@@ -199,6 +210,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void switchToEntranceScene(ActionEvent e) throws IOException{
+        audioClip.play();
         FXMLLoader loader = new FXMLLoader(new File
 //                ("C:\\Users\\paitakht\\IdeaProjects\\project-ppp\\src\\main\\java\\sample\\view\\importAndExport\\ImportAndExportFxml").toURI().toURL());
                 ("./src/main/java/sample/view/loginAndIntro/LoginViewFxml.fxml").toURI().toURL());

@@ -30,6 +30,9 @@ public class LoginView extends Application {
 
     MediaView introMediaView = new MediaView();
     AnchorPane introScenePane = new AnchorPane();
+    MediaPlayer introMediaPlayer;
+    MediaPlayer welcomeMediaPlayer;
+    Media media1;
 
     Stage pStage;
     Scene pScene;
@@ -79,13 +82,13 @@ public class LoginView extends Application {
 //                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\resources\\media\\videos\\introVideo.mp4").toURI().toURL().toExternalForm());
 //        Media media = new Media(new File
                 ("./src/main/resources/media/videos/introVideo.mp4").toURI().toURL().toExternalForm());
-        Media media1 = new Media(new File
+        media1 = new Media(new File
 //                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\resources\\media\\videos\\welcomeVideo.mp4").toURI().toURL().toExternalForm());
 //        Media media1 = new Media(new File
                 ("./src/main/resources/media/videos/welcomeVideo.mp4").toURI().toURL().toExternalForm());
 
-        MediaPlayer introMediaPlayer = new MediaPlayer(media);
-        MediaPlayer welcomeMediaPlayer = new MediaPlayer(media1);
+         introMediaPlayer = new MediaPlayer(media);
+         welcomeMediaPlayer = new MediaPlayer(media1);
         introMediaView.setMediaPlayer(introMediaPlayer);
 
         introMediaPlayer.setAutoPlay(true);
