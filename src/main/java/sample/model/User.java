@@ -14,6 +14,7 @@ public class User extends Player {
     private int balance;
     private int score;
     private String imageAddress;
+    private String avatarAddress;
     private LocalDate dateOfBirth;
     private Deck activeDeck;
     private HashMap<String, Deck> decks;
@@ -30,13 +31,14 @@ public class User extends Player {
         cardsToJustShow = new ArrayList<>();
     }
 
-    private User(String username, String password, String nickname, String imageAddress, LocalDate dateOfBirth) {
+    private User(String username, String password, String nickname, String imageAddress,String avatarAddress, LocalDate dateOfBirth) {
         setUsername(username);
         setPassword(password);
         setNickname(nickname);
         this.imageAddress = imageAddress;
 //        System.out.println(image.getUrl());
         setDateOfBirth(dateOfBirth);
+        this.avatarAddress = avatarAddress;
         this.score = 0;
         this.balance = 100000;
         this.numberOfWins = 0;
@@ -46,8 +48,8 @@ public class User extends Player {
     }
 
     public static User createUser(String username, String password,
-                                  String nickname, String imageAddress, LocalDate dateOfBirth) {
-        return new User(username, password, nickname, imageAddress, dateOfBirth);
+                                  String nickname, String imageAddress, String avatarAddress, LocalDate dateOfBirth) {
+        return new User(username, password, nickname, imageAddress,avatarAddress, dateOfBirth);
     }
 
 
@@ -83,6 +85,10 @@ public class User extends Player {
         this.activeDeck = activeDeck;
     }
 
+    public void setAvatarAddress(String avatarAddress) {
+        this.avatarAddress = avatarAddress;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -105,6 +111,10 @@ public class User extends Player {
 
     public String getImageAddress() {
         return imageAddress;
+    }
+
+    public String getAvatarAddress() {
+        return avatarAddress;
     }
 
     public LocalDate getDateOfBirth() {
@@ -221,7 +231,7 @@ public class User extends Player {
         response.append("Score : ").append(score).append("\n");
         response.append("Wins : ").append(numberOfWins).append("\n");
         response.append("Losses : ").append(numberOfLosses).append("\n");
-        response.append("imageAddress").append(imageAddress);
+//        response.append("imageAddress").append(imageAddress);
         return response.toString();
 
     }

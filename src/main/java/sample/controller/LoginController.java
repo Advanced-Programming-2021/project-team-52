@@ -114,7 +114,7 @@ public class LoginController implements RegexPatterns {
         } else if (nickNames.contains(nickname)) {
             return printBuilderController.thisNicknameAlreadyExists(nickname);
         } else {
-            User user = User.createUser(username, password, nickname, getRandomImage(), dateOfBirth);
+            User user = User.createUser(username, password, nickname, getRandomImage(),getRandomAvatarAddress(), dateOfBirth);
             userNames.add(username);
             nickNames.add(nickname);
             users.put(username, user);
@@ -144,6 +144,15 @@ public class LoginController implements RegexPatterns {
         randomInt++;
         return "./src/main/resources/media/images/profile/" + randomInt + ".jpg";
 
+    }
+
+    public String getRandomAvatarAddress(){
+        Random random = new Random();
+        int randomInt = random.nextInt(4);
+        randomInt++;
+        System.out.println(randomInt);
+//        return "./src/main/resource/media/images/avatars/" + randomInt + ".jpg";
+        return "./src/main/resources/media/images/avatars/"+randomInt+".jpg";
     }
 
 

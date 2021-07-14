@@ -75,7 +75,22 @@ public class ActionFinder implements StringMessages {
             return chatroomController.addMessage(user, elements[1], "null");
         if (command.startsWith(CHAT_PREFIX + "getAllMessages"))
             return chatroomController.getAllMessages();
-
+        if (command.startsWith(CHAT_PREFIX + "searchMessage"))
+            return chatroomController.getMessageByIdForClient(elements[1]);
+        if (command.startsWith(CHAT_PREFIX + "editMessage"))
+            return chatroomController.editMessage(user, elements[1], elements[2]);
+        if (command.startsWith(CHAT_PREFIX + "deleteMessage"))
+            return chatroomController.deleteMessage(user, elements[1]);
+        if (command.startsWith(CHAT_PREFIX + "replyMessage"))
+            return chatroomController.addMessage(user, elements[1], elements[2]);
+        if (command.startsWith(CHAT_PREFIX + "pinMessage"))
+            return chatroomController.pinMessage(elements[1]);
+        if (command.startsWith(CHAT_PREFIX + "getPinMessage"))
+            return chatroomController.getPinnedMessageContent();
+        if (command.startsWith(CHAT_PREFIX + "getSenderProfile"))
+            return chatroomController.getSenderProfile(elements[1]);
+        if (command.startsWith(CHAT_PREFIX + "getAvatarAddress"))
+            return chatroomController.getAvatarAddress(elements[1]);
         return invalidCommand;
     }
 
