@@ -51,6 +51,11 @@
                   <Font size="25.0" />
                </font>
             </JFXButton>
+            <JFXButton fx:id="chatRoomButton" buttonType="RAISED" layoutX="850.0" layoutY="390.0" onAction="#switchToChatRoom" onMouseEntered="#onMouseEnteredShopButton" onMouseExited="#onMouseExitedShopButtos" prefHeight="45.0" prefWidth="380.0" text="ChatRoom" textFill="#ffff44">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </JFXButton>
             <ImageView fx:id="leftHandImageHelper" fitHeight="202.0" fitWidth="219.0" layoutX="91.0" layoutY="461.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="rightHandImageHelper" fitHeight="320.0" fitWidth="300.0" layoutX="867.0" layoutY="436.0" pickOnBounds="true" preserveRatio="true" />
          </children>

@@ -38,7 +38,7 @@ public class MainMenuController implements Initializable {
 
     @FXML
     JFXButton newGameButton, deckManagerButton, shopButton, profileAndSettingButton,
-            scoreboardButton, importAndExportButton, logoutButton;
+            scoreboardButton, importAndExportButton, logoutButton,chatRoomButton;
 
     @FXML
     ImageView leftHandImageHelper, rightHandImageHelper;
@@ -204,6 +204,17 @@ public class MainMenuController implements Initializable {
         FXMLLoader loader = new FXMLLoader(new File
 //                ("C:\\Users\\paitakht\\IdeaProjects\\project-ppp\\src\\main\\java\\sample\\view\\importAndExport\\ImportAndExportFxml").toURI().toURL());
                 ("./src/main/java/sample/view/loginAndIntro/LoginViewFxml.fxml").toURI().toURL());
+        Parent root = loader.load();
+        stage = (Stage)((Node)e.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void switchToChatRoom(ActionEvent e) throws IOException{
+//        LoginController.getInstance().logout();
+        FXMLLoader loader = new FXMLLoader(new File
+//                ("C:\\Users\\paitakht\\IdeaProjects\\project-ppp\\src\\main\\java\\sample\\view\\importAndExport\\ImportAndExportFxml").toURI().toURL());
+                ("./src/main/java/sample/view/chatRoom/ChatRoomFxml.fxml").toURI().toURL());
         Parent root = loader.load();
         stage = (Stage)((Node)e.getSource()).getScene().getWindow();
         scene = new Scene(root);

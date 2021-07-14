@@ -143,7 +143,7 @@
          <font>
             <Font name="System Bold Italic" size="16.0" />
          </font></Label>
-      <JFXButton fx:id="sendMessageButton" layoutX="721.0" layoutY="643.0" text="send" textFill="#ffff55">
+      <JFXButton fx:id="sendMessageButton" layoutX="721.0" layoutY="643.0" onAction="#SendMessage" text="send" textFill="#ffff55">
          <graphic>
             <ImageView fitHeight="20.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
                <image>
