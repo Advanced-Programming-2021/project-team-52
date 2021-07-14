@@ -66,6 +66,7 @@ public class Sender {
             messageBuilder.append(",");
             messageBuilder.append(s);
         }
+//        System.out.println(messageBuilder.toString());
         return messageBuilder.toString();
     }
     public synchronized String setMessageWithToken(String prefix, String methodName, String ...arg){

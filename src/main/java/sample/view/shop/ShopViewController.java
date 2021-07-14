@@ -106,6 +106,7 @@ public class ShopViewController implements StringMessages, Initializable {
                 ( cardName)));
         userCardDetailsLabel.setText(printBuilderController.showOneCard2(card));
         userCardInfoImageView.setImage(new Image(new FileInputStream(shopController.getCardImagePathByName(searchInUserCardsTextArea.getText()))));
+//        System.out.println(shopController.getCardImagePathByName(searchInUserCardsTextArea.getText()));
 //
 //        if (cardDoNotExistInUserCardsLabel.isVisible()) {
 //            cardDoNotExistInUserCardsLabel.setVisible(false);

@@ -66,6 +66,7 @@ public class ProfileAndSettingViewController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             defaultProfileImage = new Image(new FileInputStream(imageAddress));
+//            System.out.println(imageAddress);
             profileImageImageView.setImage(defaultProfileImage);
 
         } catch (FileNotFoundException exception) {
