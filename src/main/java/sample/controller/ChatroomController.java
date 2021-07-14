@@ -69,7 +69,7 @@ public class ChatroomController {
         return null;
     }
 
-    private String sendAllMessages(){
+    public String getAllMessages(){
         StringBuilder response = new StringBuilder();
         for (int i = 0; i < allMessages.size(); i++) {
             response.append(allMessages.get(i));

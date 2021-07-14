@@ -19,6 +19,7 @@ public class ActionFinder implements StringMessages {
     private ImportAndExportController importAndExportController = ImportAndExportController.getInstance();
     private ShopController shopController = ShopController.getInstance();
     private PrintBuilderController printBuilderController = PrintBuilderController.getInstance();
+    private ChatroomController chatroomController = ChatroomController.getInstance();
     private final String LOGIN_PREFIX = "-LC-";
     private final String PROFILE_PREFIX = "-PC-";
     private final String SCOREBOARD_PREFIX = "-SBC-";
@@ -29,6 +30,7 @@ public class ActionFinder implements StringMessages {
     private final String USER_PREFIX = "-UM-";
     private final String CARD_PREFIX = "-CM-";
     private final String PRINT_BUILDER_PREFIX = "-PBC-";
+    private final String CHAT_PREFIX = "-CRC-";
     private String command = "";
     private User user;
     private String[] elements;
@@ -63,6 +65,17 @@ public class ActionFinder implements StringMessages {
             return chooseMethodFromCards();
         else if (command.startsWith(PRINT_BUILDER_PREFIX))
             return chooseMethodFromPrintBuilder();
+        else if (command.startsWith(CHAT_PREFIX))
+            return chooseMethodFromChat();
+        return invalidCommand;
+    }
+
+    public String chooseMethodFromChat(){
+        if (command.startsWith(CHAT_PREFIX + "sendMessage"))
+            return chatroomController.addMessage(user, elements[1], "null");
+        if (command.startsWith(CHAT_PREFIX + "getAllMessages"))
+            return chatroomController.getAllMessages();
+
         return invalidCommand;
     }
 

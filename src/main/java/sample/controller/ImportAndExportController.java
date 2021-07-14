@@ -253,6 +253,7 @@ public class ImportAndExportController implements RegexPatterns, StringMessages 
             return error;
         }
         return cardExportedSuccessfully;
+
     }
 
     public String importCardFromJson(String cardName) {

@@ -8,7 +8,7 @@ public class Message {
     private Message repliedMessage;
     private LocalDate sentDate;
     private String id;
-    private int idCounter = 1000;
+    private static int idCounter = 1000;
 
     public Message(String content, User author) {
         this.author = author;
@@ -73,7 +73,7 @@ public class Message {
         response.append(author.getUsername());
         if (repliedMessage != null)
             response.append("(Replied ").append(repliedMessage.getId()).append(")");
-        response.append(" : ").append(content).append("(ID ").append(id).append(")");
+        response.append(" : ").append(content).append("  (").append(id).append(")");
         return response.toString();
     }
 }
