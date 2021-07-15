@@ -1,5 +1,6 @@
 package sample.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -7,20 +8,17 @@ import java.util.TreeMap;
 public class Shop {
     private static Shop shop = null;
     private static HashMap<String, Integer> items;
+    private static HashMap<String, Integer> numberOfItems;
+    private static ArrayList<String> bannedCards;
+    private int shopBalance = 0;
 
     static {
         items = new HashMap<>();
+        numberOfItems = new HashMap<>();
+        bannedCards = new ArrayList<>();
     }
 
     private Shop() {
-    }
-
-    public static HashMap<String, Integer> getItems() {
-        return items;
-    }
-
-    public static void addCard(String name, int price) {
-        items.put(name, price);
     }
 
     public static Shop getInstance() {
@@ -28,6 +26,50 @@ public class Shop {
             shop = new Shop();
         return shop;
     }
+
+    public static HashMap<String, Integer> getItems() {
+        return items;
+    }
+
+    public static HashMap<String, Integer> getNumberOfItems() {
+        return numberOfItems;
+    }
+
+    public static ArrayList<String> getBannedCards() {
+        return bannedCards;
+    }
+
+    public static void addCard(String name, int price) {
+        items.put(name, price);
+        numberOfItems.put(name, 50);
+    }
+
+    public static void increaseNumberOfCard(String name, int number) {
+        numberOfItems.put(name, numberOfItems.get(name) + number);
+
+    }
+
+    public static void decreaseNumberOfCard(String name) {
+        numberOfItems.put(name, numberOfItems.get(name) - 1);
+    }
+
+    public static int getNumberOfAvailableOfThisCard(String name) {
+        return numberOfItems.get(name);
+    }
+
+    public static void addCardToForbiddenCards(String name){
+        if(!bannedCards.contains(name))
+        bannedCards.add(name);
+    }
+
+    public static void removeCardFromForbiddenCards(String name){
+        bannedCards.remove(name);
+    }
+
+    public void changeBalanceOfShop(int amount) {
+        shopBalance = shopBalance + amount;
+    }
+
 
     public int getItemPrize(String name) {
         return items.get(name);
