@@ -24,8 +24,8 @@ public class Auction {
 
     private long totalTime;
 
-    private final long FIRST_TOTAL_TIME = 300000;
-    private final long TOTAL_TIME_AFTER_OFFER = 100000;
+    private final long FIRST_TOTAL_TIME = 20000;
+    private final long TOTAL_TIME_AFTER_OFFER = 10000;
 
     public Auction(User auctioneer, int firstPriceByAuctioneer, Cards card) {
         this.auctioneer = auctioneer;
@@ -42,13 +42,21 @@ public class Auction {
         this.lastOffer = lastOffer;
     }
 
+    public void setOriginTime() {
+        this.originTime = System.currentTimeMillis();
+    }
+
     public void setUserWithBestOffer(User userWithBestOffer) {
         this.userWithBestOffer = userWithBestOffer;
     }
 
     public void setTotalTime() {
-        if (this.totalTime < TOTAL_TIME_AFTER_OFFER)
+        if (userWithBestOffer == null) {
+            if ((System.currentTimeMillis() - originTime) > TOTAL_TIME_AFTER_OFFER)
+                this.totalTime = TOTAL_TIME_AFTER_OFFER;
+        }else{
             this.totalTime = TOTAL_TIME_AFTER_OFFER;
+        }
     }
 
     public int getId() {
@@ -71,6 +79,10 @@ public class Auction {
         return card;
     }
 
+    public long getTotalTime() {
+        return totalTime;
+    }
+
     public void countdown() {
         Auction thisAuction = this;
         countdownTimer.schedule(new TimerTask() {
@@ -88,10 +100,11 @@ public class Auction {
 
     @Override
     public String toString() {
-        return "#" + this.id + " #" +
-                "card : " + card.getName() + " #" +
-                "owner : " + auctioneer.getUsername() + " #" +
-                "last offer : " + lastOffer + " #" +
-                "remaining timer : " + (totalTime - System.currentTimeMillis());
+        return "#" + this.id + ", " +
+                "card: " + card.getName() + ", " +
+                "owner: " + auctioneer.getUsername() + ", " +
+                "last offer: " + lastOffer + " ," +
+                "remaining timer: " + ((totalTime - (System.currentTimeMillis() - originTime)) / 1000) + "\n";
+
     }
 }

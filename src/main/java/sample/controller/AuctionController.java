@@ -73,8 +73,10 @@ public class AuctionController implements StringMessages {
         Auction auction = getActiveActionById(id);
         if (auction == null)
             return THERE_IS_NO_AUCTION_WITH_THIS_ID;
+        if(auction.getAuctioneer() == participant)
+            return YOU_CAN_NOT_ATTEND_TO_YOUR_OWN_AUCTION;
         if (offer <= auction.getLastOffer())
-            return YOUR_OFFER_IS_LESS_THAN_BEST_OFFER;
+            return YOUR_OFFER_IS_LESS_OR_EQUAL_THAN_BEST_OFFER;
         if (offer > participant.getBalance())
             return YOU_DO_NOT_HAVE_ENOUGH_MONEY;
 
@@ -83,8 +85,9 @@ public class AuctionController implements StringMessages {
             lastUserWithBestOffer.changeBalance(+auction.getLastOffer());
 
         participant.changeBalance(-offer);
-        auction.setTotalTime();
         auction.setLastOffer(offer);
+        auction.setOriginTime();
+        auction.setTotalTime();
         auction.setUserWithBestOffer(participant);
         return YOU_ATTENDED_TO_AUCTION_SUCCESSFULLY;
     }

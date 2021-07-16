@@ -268,6 +268,7 @@ public interface StringMessages {
     String AUCTION_HAS_BEEN_CREATED_SUCCESSFULLY = "Auction has been created successfully";
     String YOU_DO_NOT_HAVE_ENOUGH_MONEY = "Error : You do not have enough money";
     String THERE_IS_NO_AUCTION_WITH_THIS_ID = "Error : There is no auction with this ID";
-    String YOUR_OFFER_IS_LESS_THAN_BEST_OFFER = "Error : Your offer is less than best offer";
+    String YOUR_OFFER_IS_LESS_OR_EQUAL_THAN_BEST_OFFER = "Error : Your offer is less or equal than best offer";
     String YOU_ATTENDED_TO_AUCTION_SUCCESSFULLY = "You attended to auction successfully";
+    String YOU_CAN_NOT_ATTEND_TO_YOUR_OWN_AUCTION = "Error : You can not attend to your own auction";
 }
