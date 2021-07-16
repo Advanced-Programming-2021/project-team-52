@@ -1,6 +1,8 @@
 package sample.view.listener;
 
 import sample.controller.*;
+import sample.controller.matchmaking.MatchMaker;
+import sample.controller.matchmaking.ReadyUser;
 import sample.controller.matchmaking.ReadyUser;
 import sample.model.Shop;
 import sample.model.User;
@@ -14,6 +16,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ActionFinder implements StringMessages {
+
     private static Map<String, User> authorizedUsers = new ConcurrentHashMap<>();
     private LoginController loginController = LoginController.getInstance();
     private ProfileController profileController = ProfileController.getInstance();
@@ -44,8 +47,6 @@ public class ActionFinder implements StringMessages {
     private String[] elements;
     private Communicator communicator;
 
-
-
     public ActionFinder(Communicator communicator) {
         this.communicator = communicator;
     }
@@ -53,7 +54,6 @@ public class ActionFinder implements StringMessages {
     public Communicator getCommunicator() {
         return communicator;
     }
-
 
     public String chooseClass(String command) {
         this.command = command;
