@@ -185,20 +185,20 @@ public class ShopViewController implements StringMessages, Initializable {
 //        }
 
 
-        Color progressColor = shopController.getColorOfCardBasedOnPrice(cardName);
-        if (progressColor == Color.AQUA) {
-            shopCardProgressBar.setProgress(1);
-            shopCardProgressBar.setStyle("-fx-progress-color: Aqua");
-        } else if (progressColor == Color.GOLD) {
-            shopCardProgressBar.setProgress(0.77);
-            shopCardProgressBar.setStyle("-fx-progress-color: #ffd830");
-        } else if (progressColor == Color.SILVER) {
-            shopCardProgressBar.setProgress(0.6);
-            shopCardProgressBar.setStyle("-fx-progress-color: #c8c8c8");
-        } else {
-            shopCardProgressBar.setProgress(0.28);
-            shopCardProgressBar.setStyle("-fx-progress-color: #b03e3e");
-        }
+//        Color progressColor = shopController.getColorOfCardBasedOnPrice(cardName);
+//        if (progressColor == Color.AQUA) {
+//            shopCardProgressBar.setProgress(1);
+//            shopCardProgressBar.setStyle("-fx-progress-color: Aqua");
+//        } else if (progressColor == Color.GOLD) {
+//            shopCardProgressBar.setProgress(0.77);
+//            shopCardProgressBar.setStyle("-fx-progress-color: #ffd830");
+//        } else if (progressColor == Color.SILVER) {
+//            shopCardProgressBar.setProgress(0.6);
+//            shopCardProgressBar.setStyle("-fx-progress-color: #c8c8c8");
+//        } else {
+//            shopCardProgressBar.setProgress(0.28);
+//            shopCardProgressBar.setStyle("-fx-progress-color: #b03e3e");
+//        }
 
     }
 

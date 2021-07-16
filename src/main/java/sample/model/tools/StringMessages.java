@@ -247,15 +247,27 @@ public interface StringMessages {
     String THERE_IS_NO_CARD_WITH_THIS_NAME_IN_MONSTERS = "There is no card with this name in Monsters";
     String THERE_IS_NO_CARD_WITH_THIS_NAME_IN_SPELLS = "There is no card with this name in Spells";
     String THERE_IS_NO_CARD_WITH_THIS_NAME_IN_TRAPS = "There is no card with this name in Traps";
-    String invalidInputForCardCreator= "Invalid input";
-    String thisCardDoesNotHaveSpecial= "This card doesn't have special";
-    String successful= "Successful";
-    String chooseNumberBetween1To3= "Choose a number between 1 to 3";
+    String invalidInputForCardCreator = "Invalid input";
+    String thisCardDoesNotHaveSpecial = "This card doesn't have special";
+    String successful = "Successful";
+    String chooseNumberBetween1To3 = "Choose a number between 1 to 3";
     String CHOOSE_1_OR_2 = "Choose 1 or 2";
     String PLEASE_CHOOSE_ALL_PROPERTIES = "Please choose all properties";
-    String THERE_IS_AN_ERROR_IN_OUR_SIDE ="There is an error in our side";
+    String THERE_IS_AN_ERROR_IN_OUR_SIDE = "There is an error in our side";
     String CARD_CREATED_SUCCESSFULLY = "Card created successfully";
     String THERE_IS_ALREADY_A_CARD_WITH_THIS_NAME = "There is already a card with this name";
     String YOU_DON_T_HAVE_ENOUGH_MONEY = "You don't have enough money";
 
+
+    // Auction Controller
+    String USER_IS_INVALID = "Error : User is invalid";
+    String PLEASE_ONLY_ENTER_NUMBER_FOR_PRICE_OR_ID = "Error : Please only enter number for price or ID";
+    String FIRST_PRICE_MOST_BE_BETWEEN_100_AND_10000 = "Error : First Price most be between 100 and 10000";
+    String CARD_NAME_IS_INVALID = "Error : Card name is invalid";
+    String YOU_DO_NOT_HAVE_ANY_OF_THIS_CARD_OUT_OF_DECK = "Error : You do not have any of this card out of deck";
+    String AUCTION_HAS_BEEN_CREATED_SUCCESSFULLY = "Auction has been created successfully";
+    String YOU_DO_NOT_HAVE_ENOUGH_MONEY = "Error : You do not have enough money";
+    String THERE_IS_NO_AUCTION_WITH_THIS_ID = "Error : There is no auction with this ID";
+    String YOUR_OFFER_IS_LESS_THAN_BEST_OFFER = "Error : Your offer is less than best offer";
+    String YOU_ATTENDED_TO_AUCTION_SUCCESSFULLY = "You attended to auction successfully";
 }

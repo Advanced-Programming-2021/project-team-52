@@ -20,6 +20,7 @@ public class User extends Player {
     private HashMap<String, Deck> decks;
     private ArrayList<String> cards;
     private ArrayList<String> cardsToJustShow; // don't use this
+    private ArrayList<String> cardsInAuction = new ArrayList<>();
     private int numberOfWins;
     private int numberOfLosses;
     private int numberOfRoundsWon;
@@ -31,7 +32,7 @@ public class User extends Player {
         cardsToJustShow = new ArrayList<>();
     }
 
-    private User(String username, String password, String nickname, String imageAddress,String avatarAddress, LocalDate dateOfBirth) {
+    private User(String username, String password, String nickname, String imageAddress, String avatarAddress, LocalDate dateOfBirth) {
         setUsername(username);
         setPassword(password);
         setNickname(nickname);
@@ -49,7 +50,7 @@ public class User extends Player {
 
     public static User createUser(String username, String password,
                                   String nickname, String imageAddress, String avatarAddress, LocalDate dateOfBirth) {
-        return new User(username, password, nickname, imageAddress,avatarAddress, dateOfBirth);
+        return new User(username, password, nickname, imageAddress, avatarAddress, dateOfBirth);
     }
 
 
@@ -83,6 +84,10 @@ public class User extends Player {
 
     public void setActiveDeck(Deck activeDeck) {
         this.activeDeck = activeDeck;
+    }
+
+    public void setCardsInAuction(ArrayList<String> cardsInAuction) {
+        this.cardsInAuction = cardsInAuction;
     }
 
     public void setAvatarAddress(String avatarAddress) {
@@ -123,6 +128,10 @@ public class User extends Player {
 
     public ArrayList<String> getCards() {
         return cards;
+    }
+
+    public ArrayList<String> getCardsInAuction() {
+        return cardsInAuction;
     }
 
     public HashMap<String, Deck> getDecks() {
@@ -183,6 +192,10 @@ public class User extends Player {
         decks.put(deck.getName(), deck);
     }
 
+    public void addCardToAuctionCards(String cardName) {
+        cardsInAuction.add(cardName);
+    }
+
     public void deleteDeck(String name) {
         decks.remove(name);
     }
@@ -205,6 +218,10 @@ public class User extends Player {
 
     public void addCardToCardsWithoutDeck(String cardName) {
         cards.add(cardName);
+    }
+
+    public void removeCardFromAuctionCards(String cardName) {
+        cardsInAuction.remove(cardName);
     }
 
     public int getNumberOfThisCardInCardsOutOfDeck(String cardName) {
