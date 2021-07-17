@@ -70,9 +70,9 @@ public class Communicator implements Runnable {
         this.action = action;
     }
 
-    public void setGamePlayController(GamePlayController gamePlayController) {
-        this.gamePlayController = gamePlayController;
-    }
+//    public void setGamePlayController(GamePlayController gamePlayController) {
+//        this.gamePlayController = gamePlayController;
+//    }
 
     public void setJob(String job) {
         try {
@@ -418,7 +418,7 @@ public class Communicator implements Runnable {
     }
 
     public void shutdown(Stage stage, Stage stage1, boolean changeScene){
-        gameBoardView.shutdown(stage, stage1, changeScene);
+        gameBoardView.shutdown(stage, stage1, changeScene, null);
     }
 
     public void pause(){

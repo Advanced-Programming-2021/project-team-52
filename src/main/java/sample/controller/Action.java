@@ -22,4 +22,18 @@ public enum Action {
     public Image getImage() {
         return image;
     }
+
+    public static Action getActionByValue(String value){
+        switch (value.toUpperCase()){
+            case "ATTACK":return ATTACK;
+            case "DIRECT_ATTACK":return DIRECT_ATTACK;
+            case "SET":return SET;
+            case "NORMAL_SUMMON":return NORMAL_SUMMON;
+            case "SPECIAL_SUMMON":return SPECIAL_SUMMON;
+            case "CHANGE_POSITION":return CHANGE_POSITION;
+            case "ACTIVATE_EFFECT":return ACTIVATE_EFFECT;
+            case "FLIP_SUMMON":return FLIP_SUMMON;
+            default:return NOTHING;
+        }
+    }
 }

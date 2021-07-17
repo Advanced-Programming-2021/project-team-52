@@ -41,13 +41,14 @@ public class DuelController implements Initializable{
         ToggleGroup toggleGroup = new ToggleGroup();
         oneRound.setToggleGroup(toggleGroup);
         threeRounds.setToggleGroup(toggleGroup);
+        errorLabel.setWrapText(true);
     }
 
     @FXML
     private void startGame(ActionEvent actionEvent){
-        if (opponentUsername.getText().isEmpty())
-            errorLabel.setText("please enter a username");
-        else {
+//        if (opponentUsername.getText().isEmpty())
+//            errorLabel.setText("please enter a username");
+//        else {
 //            NewDuelController newDuelController = new NewDuelController(UserKeeper.getInstance().getCurrentUser(),
 //                    (Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
 //            String result = newDuelController.run("duel -n -r " + rounds + " -sp " + opponentUsername.getText());
@@ -58,7 +59,7 @@ public class DuelController implements Initializable{
             Thread thread = new Thread(gameBoardHandler);
             thread.setDaemon(true);
             thread.start();
-        }
+//        }
     }
 
     @FXML
