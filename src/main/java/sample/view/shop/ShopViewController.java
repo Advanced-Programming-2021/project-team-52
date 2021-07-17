@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import sample.controller.AuctionController;
 import sample.controller.PrintBuilderController;
 import sample.controller.ShopController;
 import sample.model.Shop;
@@ -27,9 +28,12 @@ import sample.view.UserKeeper;
 import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ShopViewController implements StringMessages, Initializable {
     ShopController shopController = ShopController.getInstance();
+    AuctionController auctionController = AuctionController.getInstance();
     PrintBuilderController printBuilderController = PrintBuilderController.getInstance();
     String cardNameInString;
     User user = UserKeeper.getInstance().getCurrentUser();
@@ -48,15 +52,44 @@ public class ShopViewController implements StringMessages, Initializable {
     @FXML
     Label cardDoNotExistInUserCardsLabel, cardDoNotExistInShopLabel, cardNameLabelUnderUserCard,
             numberOfCardLabelUnderUserCard, cardNameLabelUnderShopCard, numberOfCardLabelUnderShopCard,
-            userCardDetailsLabel, shopCardDetailsLabel, shopCardsLabel,userCardsLabel;
+            userCardDetailsLabel, shopCardDetailsLabel, shopCardsLabel, userCardsLabel;
     @FXML
     ImageView userCardInfoImageView, shopCardInfoImageView;
+
+    @FXML
+    JFXTextArea auctionPanelSearchACardToAuctionTextArea, auctionPanelSetAPriceToAuctionTextArea, auctionPanelAllCardsInAuctionTextArea,
+            auctionPanelSearchAuctionIdTextArea, auctionPanelPriceOfAuctionedCardTextArea, auctionPanelTimeLeftToBidTextArea,
+            adminPanelUsernameTextArea, adminPanelPasswordTextArea, adminPanelCardSearchTextArea;
+
+    @FXML
+    Label auctionPanelSearchCArdToAuctionSituationLabel, auctionPanelSearchAuctionIdSituationLabel;
+
+    boolean isInShopMenu = true;
+
 
     Scene scene;
     Stage stage;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        isInShopMenu = true;
+        new Thread(() -> {
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (isInShopMenu) {
+                        getAllActiveAuctions();
+//                    userBalanceInShopHeader.setText(String.valueOf(user.getBalance()));
+                                            showUnusedAllCardsOfUser();
+                    } else {
+                        timer.cancel();
+                        timer.purge();
+                    }
+                }
+            }, 5000, 2000);
+        }).start();
+
         shopScenePane.setStyle("-fx-background-color: black");
 
 
@@ -76,11 +109,23 @@ public class ShopViewController implements StringMessages, Initializable {
 
         cardNameLabelUnderUserCard.setStyle("-fx-text-fill: white");
         cardNameLabelUnderShopCard.setStyle("-fx-text-fill: white");
+
+        auctionPanelSearchACardToAuctionTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        auctionPanelSetAPriceToAuctionTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        auctionPanelAllCardsInAuctionTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        auctionPanelSearchAuctionIdTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        auctionPanelPriceOfAuctionedCardTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        auctionPanelTimeLeftToBidTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        adminPanelUsernameTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        adminPanelPasswordTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        adminPanelCardSearchTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+
         showAllCardsOfShop();
         showUnusedAllCardsOfUser();
     }
 
     public void backButton(ActionEvent e) throws IOException {
+        isInShopMenu = false;
         FXMLLoader loader = new FXMLLoader(new File
                 ("./src/main/java/sample/view/mainMenu/MainMenuFxml.fxml").toURI().toURL());
 //                ("src\\main\\java\\sample\\view\\mainMenu\\MainMenuFxml.fxml").toURI().toURL());
@@ -103,7 +148,7 @@ public class ShopViewController implements StringMessages, Initializable {
         }
         cardDoNotExistInUserCardsLabel.setText("");
         numberOfCardLabelUnderUserCard.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
-                ( cardName)));
+                (cardName)));
         userCardDetailsLabel.setText(printBuilderController.showOneCard2(card));
         userCardInfoImageView.setImage(new Image(new FileInputStream(shopController.getCardImagePathByName(searchInUserCardsTextArea.getText()))));
 //        System.out.println(shopController.getCardImagePathByName(searchInUserCardsTextArea.getText()));
@@ -152,91 +197,82 @@ public class ShopViewController implements StringMessages, Initializable {
                 (cardName)));
         shopCardDetailsLabel.setText(printBuilderController.showOneCard2(card));
 
-        if(shopController.checkBeforeTransaction(cardName, UserKeeper.getInstance().getCurrentUser().getBalance())){
+        if (shopController.checkBeforeTransaction(cardName, UserKeeper.getInstance().getCurrentUser().getBalance())) {
             buyButton.setDisable(false);
             buyButton.setStyle("-fx-background-color: #fff59");
-        }else{
+        } else {
             buyButton.setStyle("-fx-background-color: #ff5959");
         }
-//        if(cardDoNotExistInUserCardsLabel.isVisible()){
-//            cardDoNotExistInUserCardsLabel.setVisible(false);
-//        }
-//        if(Cards.getAllNames().contains(searchInShopTextArea.getText().trim())){
-//
-//            cardNameLabelUnderShopCard.setText(searchInShopTextArea.getText().trim());
-//            numberOfCardLabelUnderShopCard.setText(String.valueOf(UserKeeper.getInstance().
-//                    getCurrentUser().getNumberOfThisCardInCardsOutOfDeck(searchInShopTextArea.getText().trim())));
-//
-//            InputStream shopCardImage = new
-//                    FileInputStream(ShopController.getCardImagePathByName(searchInShopTextArea.getText().trim()));
-//            shopCardInfoImageView.setImage(new Image(shopCardImage));
-
-
-//            if(UserKeeper.getInstance().getCurrentUser().getBalance() >=
-//                    shopController.getCardPriceByName(Cards.getCard(searchInShopTextArea.getText().trim()).getName())){
-//                buyButton.setDisable(false);
-//            } else {
-//                buyButton.setDisable(true);
-//                buyButton.setStyle("-fx-background-color: #ff5959");
-//                buyButton.setText("Not enough money");
-//            }
-//
-//        } else {
-//            cardDoNotExistInShopLabel.setVisible(true);
-//        }
-
-
-//        Color progressColor = shopController.getColorOfCardBasedOnPrice(cardName);
-//        if (progressColor == Color.AQUA) {
-//            shopCardProgressBar.setProgress(1);
-//            shopCardProgressBar.setStyle("-fx-progress-color: Aqua");
-//        } else if (progressColor == Color.GOLD) {
-//            shopCardProgressBar.setProgress(0.77);
-//            shopCardProgressBar.setStyle("-fx-progress-color: #ffd830");
-//        } else if (progressColor == Color.SILVER) {
-//            shopCardProgressBar.setProgress(0.6);
-//            shopCardProgressBar.setStyle("-fx-progress-color: #c8c8c8");
-//        } else {
-//            shopCardProgressBar.setProgress(0.28);
-//            shopCardProgressBar.setStyle("-fx-progress-color: #b03e3e");
-//        }
-
     }
 
 
     public void buyACard(ActionEvent e) {
-        if(shopController.checkBeforeTransaction(cardNameInString, UserKeeper.getInstance().getCurrentUser().getBalance())){
+        if (shopController.checkBeforeTransaction(cardNameInString, UserKeeper.getInstance().getCurrentUser().getBalance())) {
             buyButton.setDisable(false);
             buyButton.setStyle("-fx-background-color: #fff59");
-        }else{
+        } else {
             buyButton.setStyle("-fx-background-color: #ff5959");
             buyButton.setDisable(true);
         }
         String response = "";
-        response =  shopController.buy( cardNameInString);
+        response = shopController.buy(cardNameInString);
         cardDoNotExistInShopLabel.setText(response);
         numberOfCardLabelUnderShopCard.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
-                ( cardNameInString)));
+                (cardNameInString)));
         userBalanceInShopHeader.setText(String.valueOf(user.getBalance()));
         showUnusedAllCardsOfUser();
-        if(searchInUserCardsTextArea.getText().trim().equals(cardNameInString))
+        if (searchInUserCardsTextArea.getText().trim().equals(cardNameInString))
             numberOfCardLabelUnderUserCard.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
                     (cardNameInString)));
-        if(shopController.checkBeforeTransaction(cardNameInString, UserKeeper.getInstance().getCurrentUser().getBalance())){
+        if (shopController.checkBeforeTransaction(cardNameInString, UserKeeper.getInstance().getCurrentUser().getBalance())) {
             buyButton.setDisable(false);
             buyButton.setStyle("-fx-background-color: #fff59");
-        }else{
+        } else {
             buyButton.setStyle("-fx-background-color: #ff5959");
             buyButton.setDisable(true);
         }
     }
 
-    public void showAllCardsOfShop(){
+    public void showAllCardsOfShop() {
         shopCardsLabel.setText(Shop.getInstance().getAllCardsWithPrice());
     }
 
-    public void showUnusedAllCardsOfUser(){
+    public void showUnusedAllCardsOfUser() {
         userCardsLabel.setText(shopController.getAllUnusedCardsByString());
+    }
+
+    public void getAllActiveAuctions() {
+        auctionPanelAllCardsInAuctionTextArea.setText(auctionController.getAllActiveActionsInString());
+    }
+
+    public void makeAnAuction(ActionEvent e) {
+        String firstPrice = auctionPanelSetAPriceToAuctionTextArea.getText();
+        String cardName = auctionPanelSearchACardToAuctionTextArea.getText();
+        if (firstPrice != null && cardName != null && !firstPrice.equals("") && !cardName.equals("")) {
+            String response = auctionController.makeAnAuction(firstPrice, cardName);
+            if (response.startsWith("Error")) {
+                auctionPanelSearchCArdToAuctionSituationLabel.setText(response.split(" : ")[1]);
+            } else {
+                auctionPanelSearchCArdToAuctionSituationLabel.setText("");
+                auctionPanelSetAPriceToAuctionTextArea.setText("");
+                auctionPanelSearchACardToAuctionTextArea.setText("");
+            }
+        }
+    }
+
+    public void participateToAuction(ActionEvent e) {
+        String id = auctionPanelSearchAuctionIdTextArea.getText();
+        String offer = auctionPanelPriceOfAuctionedCardTextArea.getText();
+        if (id != null && offer != null && !id.equals("") && !offer.equals("")) {
+            String response = auctionController.participateToAuction(id, offer);
+            if (response.startsWith("Error")) {
+                auctionPanelSearchAuctionIdSituationLabel.setText(response.split(" : ")[1]);
+            } else {
+                auctionPanelSearchAuctionIdTextArea.setText("");
+                auctionPanelSetAPriceToAuctionTextArea.setText("");
+                auctionPanelSearchAuctionIdSituationLabel.setText("");
+            }
+        }
     }
 
 

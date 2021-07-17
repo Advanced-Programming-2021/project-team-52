@@ -1,5 +1,7 @@
 package sample.model;
 
+import sample.view.sender.Sender;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -46,7 +48,6 @@ public class Shop {
     }
 
     public String getAllCardsWithPrice() {
-        return toString();
-
+        return Sender.getInstance().getResponseWithToken("-SC-", "getAllCardsWithPrice");
     }
 }
