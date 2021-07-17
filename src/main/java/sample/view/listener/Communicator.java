@@ -84,12 +84,60 @@ public class Communicator {
     }
 
     public void addToHand(int emptyHandPlace, String enemy, String cardName, String cardDescription){
-        sendMessage("addToHand," + enemy + "," + cardName + "," + cardDescription);
+        sendMessage("addToHand," + emptyHandPlace + "," + enemy + "," + cardName + "," + cardDescription);
     }
 
     public void moveFromHandToBoard(int handNumber, int destination, String enemy, String status, String cardName,
                                     String description){
         sendMessage("moveFromHandToBoard," + handNumber + "," + destination + "," + enemy + "," + status + "," +
                 cardName + "," + description);
+    }
+
+    public void changePosition(int number, boolean enemy, String status){
+        sendMessage("changePosition," + number + "," + enemy + "," + status);
+    }
+
+    public void flipSummon(int num, boolean enemy, String cardName){
+        sendMessage("flipSummon," + num + "," + enemy + "," + cardName);
+    }
+
+    public void showCard(int placeNumber, String cardName, String description, boolean enemy){
+        sendMessage("showCard," + placeNumber + "," + cardName + "," + description + "," + enemy);
+    }
+
+    public void moveToGraveyard(int number, boolean enemy, String cardName, String description){
+        sendMessage("moveToGraveyard," + number + "," + enemy + "," + cardName + "," + description);
+    }
+
+    public void selectCard(String cardType, boolean me, boolean enemy, boolean addType){
+        sendMessage("selectCard," + cardType + "," + me + "," + enemy + "," + addType);
+    }
+
+    public void specialSummonFromGraveYard(boolean justName){
+        sendMessage("specialSummonFromGraveYard," + justName);
+    }
+
+    public void scanner(){
+        sendMessage("scanner");
+    }
+
+    public void mindCrush(){
+        sendMessage("mindCrush");
+    }
+
+    public void askOptions(String message, String... options){
+        sendMessage(Communicator.askOption(message, options));
+    }
+
+    public void ritualSummon(){
+        sendMessage("ritualSummon");
+    }
+
+    public void specialSummonFromAnywhere(String message){
+        sendMessage("specialSummonFromAnywhere," + message);
+    }
+
+    public void reduceHealth(int amount, boolean enemy){
+        sendMessage("reduceHealth," + amount + "," + enemy);
     }
 }

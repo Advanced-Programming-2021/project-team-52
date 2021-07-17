@@ -9,6 +9,7 @@ import sample.model.game.*;
 import sample.model.tools.CHAIN_JOB;
 import sample.model.tools.RegexPatterns;
 import sample.model.tools.StringMessages;
+import sample.view.listener.Communicator;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -119,8 +120,8 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
             Cards card = gamePlayController.getGamePlay().getMyGameBoard().getACardByType("Field");
             if (card != null) {
                 gamePlayController.getGamePlay().getMyGameBoard().getPlace(emptyHand, PLACE_NAME.HAND).setCard(card);
-                gamePlayController.getMyCommunicator().addToHand(emptyHand, false, card.getName(), card.getDescription());
-                gamePlayController.getOpponentCommunicator().addToHand(emptyHand, true, "UNKNOWN", "");
+                gamePlayController.getMyCommunicator().addToHand(emptyHand, "false", card.getName(), card.getDescription());
+                gamePlayController.getOpponentCommunicator().addToHand(emptyHand, "true", "UNKNOWN", "");
             } else printerAndScanner.printNextLine(couldNotFindASuitableCard);
         } else printerAndScanner.printNextLine(fullHand);
     }
@@ -198,7 +199,7 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
         ArrayList<Cards> opponentGraveYard =
                 gamePlayController.getGamePlay().getOpponentGamePlayController().getGamePlay().getMyGameBoard().getGraveyard();
         if (!opponentGraveYard.isEmpty()) {
-            gamePlayController.getMyCommunicator().askOptions(askForName, "ok");
+            gamePlayController.getMyCommunicator().sendMessage(Communicator.askOption(askForName, "ok"));
             gamePlayController.takeCommand();
             gamePlayController.getMyCommunicator().scanner();
             String cardName = gamePlayController.takeCommand();

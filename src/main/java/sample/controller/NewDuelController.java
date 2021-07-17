@@ -207,6 +207,8 @@ public class NewDuelController implements RegexPatterns, StringMessages {
             guestCommunicator.sendMessage("reset changeScene");
             winner.addToNumberOfGamesWon(1);
             loser.addToNumberOfGamesLost(1);
+            hostGamePlayController.setRun(false);
+            guestGamePlayController.setRun(false);
         } else {
             hostCommunicator.sendMessage("reset");
             guestCommunicator.sendMessage("reset");
