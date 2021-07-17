@@ -1,6 +1,7 @@
 package sample.view.listener;
 
 import sample.controller.*;
+import sample.controller.matchmaking.ReadyUser;
 import sample.model.Shop;
 import sample.model.User;
 import sample.model.cards.Cards;
@@ -9,9 +10,11 @@ import sample.model.tools.StringMessages;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ActionFinder implements StringMessages {
-    private static HashMap<String, User> authorizedUsers = new HashMap<>();
+    private static Map<String, User> authorizedUsers = new ConcurrentHashMap<>();
     private LoginController loginController = LoginController.getInstance();
     private ProfileController profileController = ProfileController.getInstance();
     private ScoreBoardController scoreBoardController = ScoreBoardController.getInstance();
@@ -34,12 +37,23 @@ public class ActionFinder implements StringMessages {
     private final String PRINT_BUILDER_PREFIX = "-PBC-";
     private final String CHAT_PREFIX = "-CRC-";
     private final String AUCTION_PREFIX = "-AC-";
+    private final String NEW_DUEL_PREFIX = "-ND-";
+    private final String GAME_PLAY_CONTROLLER_PREFIX = "-GPC-";
     private String command = "";
     private User user;
     private String[] elements;
+    private Communicator communicator;
 
-    public ActionFinder() {
+
+
+    public ActionFinder(Communicator communicator) {
+        this.communicator = communicator;
     }
+
+    public Communicator getCommunicator() {
+        return communicator;
+    }
+
 
     public String chooseClass(String command) {
         this.command = command;
@@ -72,6 +86,8 @@ public class ActionFinder implements StringMessages {
             return chooseMethodFromChat();
         else if (command.startsWith(AUCTION_PREFIX))
             return chooseMethodFromAuction();
+        else if (command.startsWith(NEW_DUEL_PREFIX))
+            return chooseMethodFromNewDuel();
         return invalidCommand;
     }
 
@@ -125,7 +141,7 @@ public class ActionFinder implements StringMessages {
         if (command.startsWith(LOGIN_PREFIX + "createUser"))
             return loginController.createUser(elements[1], elements[2], elements[3], LocalDate.now());
         else if (command.startsWith(LOGIN_PREFIX + "loginUser"))
-            return loginController.loginUser(elements[1], elements[2]);
+            return loginController.loginUser(elements[1], elements[2], this);
         else if (command.startsWith(LOGIN_PREFIX + "isUserWithThisUsernameExists"))
             return convertBooleanToString(loginController.isUserWithThisUsernameExists(elements[1]));
         else if (command.startsWith(LOGIN_PREFIX + "logout"))
@@ -248,6 +264,13 @@ public class ActionFinder implements StringMessages {
         return invalidCommand;
     }
 
+    private String chooseMethodFromNewDuel(){
+//        NewDuelController newDuelController = new NewDuelController(user);
+//        newDuelController.run(elements[1], elements[2]);
+        ReadyUser.tryToGetOpponent(user, Integer.parseInt(elements[1]));
+        return "trying to find opponent";
+    }
+
     public boolean convertStringToBoolean(String message) {
         return message.toLowerCase().trim().equals("true");
     }
@@ -258,7 +281,7 @@ public class ActionFinder implements StringMessages {
         return "false";
     }
 
-    public static void addUser(User user, String token) {
+    public  void addUser(User user, String token) {
         ArrayList<String> offlineUsers = new ArrayList<>();
         for (String s : authorizedUsers.keySet()) {
             if (authorizedUsers.get(s).equals(user))
@@ -267,6 +290,7 @@ public class ActionFinder implements StringMessages {
         for (String offlineUser : offlineUsers) {
             authorizedUsers.remove(offlineUser);
         }
+        user.setActionFinder(this);
         authorizedUsers.put(token, user);
 //        for (String s : authorizedUsers.keySet()) {
 //            System.out.println(s);

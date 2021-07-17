@@ -88,19 +88,19 @@ public class LoginViewController implements Initializable {
         }
     }
 
-    public void onLoginButtonClick(ActionEvent e) throws IOException {
-        String situation = loginController.loginUser(usernameFieldInEntranceScene.getText().trim()
-                , passwordFieldInEntranceScene.getText().trim());
-        if(situation.equals(usernameAndPasswordDoNotMatch)){
-            errorLabelInEntranceMenu.setDisable(false);
-            errorLabelInEntranceMenu.setText(usernameAndPasswordDoNotMatch);
-        } else {
-//            System.out.println(LoginController.getUserByUsername(usernameFieldInEntranceScene.getText().trim()));
-//            UserKeeper.setCurrentUser(LoginController.getUserByUsername(usernameFieldInEntranceScene.getText().trim()));
-            System.out.println(UserKeeper.getInstance().getCurrentUser().getUsername());
-            switchToMainMenu(e);
-        }
-    }
+//    public void onLoginButtonClick(ActionEvent e) throws IOException {
+////        String situation = loginController.loginUser(usernameFieldInEntranceScene.getText().trim()
+////                , passwordFieldInEntranceScene.getText().trim());
+//        if(situation.equals(usernameAndPasswordDoNotMatch)){
+//            errorLabelInEntranceMenu.setDisable(false);
+//            errorLabelInEntranceMenu.setText(usernameAndPasswordDoNotMatch);
+//        } else {
+////            System.out.println(LoginController.getUserByUsername(usernameFieldInEntranceScene.getText().trim()));
+////            UserKeeper.setCurrentUser(LoginController.getUserByUsername(usernameFieldInEntranceScene.getText().trim()));
+//            System.out.println(UserKeeper.getInstance().getCurrentUser().getUsername());
+//            switchToMainMenu(e);
+//        }
+//    }
 
     public void onSignupButtonClick(ActionEvent e) throws IOException {
         String situation = loginController.createUser(usernameFieldInEntranceScene.getText().trim(), passwordFieldInEntranceScene.getText()

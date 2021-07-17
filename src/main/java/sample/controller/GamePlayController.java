@@ -11,12 +11,9 @@ import sample.model.tools.CHAIN_JOB;
 import sample.model.tools.RegexPatterns;
 import sample.model.tools.StringMessages;
 import sample.view.PrinterAndScanner;
-import sample.view.gameboardview.Communicator;
+import sample.view.listener.Communicator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.regex.Matcher;
 
@@ -37,6 +34,7 @@ public class GamePlayController extends RegexController implements RegexPatterns
     private boolean surrendered;
     private ArrayBlockingQueue<String> commands;
     private Communicator myCommunicator, opponentCommunicator;
+    private boolean run;
 
     static {
         printerAndScanner = PrinterAndScanner.getInstance();
@@ -52,11 +50,21 @@ public class GamePlayController extends RegexController implements RegexPatterns
         this.commands = new ArrayBlockingQueue<>(1);
         this.myCommunicator = myCommunicator;
         this.opponentCommunicator = opponentCommunicator;
+        this.run = true;
+        startListening();
     }
 
     public ArrayList<Place> sendChainedPlaces() {
         CHAINED_PLACES.clear();
         return CHAINED_PLACES;
+    }
+
+    public void setRun(boolean run) {
+        this.run = run;
+    }
+
+    public boolean getRun(){
+        return this.run;
     }
 
     public GamePlay getGamePlay() {
@@ -93,6 +101,14 @@ public class GamePlayController extends RegexController implements RegexPatterns
 
     public boolean getSurrendered() {
         return surrendered;
+    }
+
+    private void startListening(){
+        GamePlayControllerCommandReceiver gamePlayControllerCommandReceiver =
+                new GamePlayControllerCommandReceiver(this, myCommunicator);
+        Thread thread = new Thread(gamePlayControllerCommandReceiver);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     public void run() {
@@ -184,15 +200,15 @@ public class GamePlayController extends RegexController implements RegexPatterns
         if (phase == PHASE.MAIN) {
             if (!didBattlePhase && canAttack() && !gamePlay.getUniversalHistory().contains("starter")) {
                 phase = PHASE.BATTLE;
-                myCommunicator.changePhase("BP", false);
-                opponentCommunicator.changePhase("BP", true);
+                myCommunicator.changePhase("BP", "false");
+                opponentCommunicator.changePhase("BP", "true");
                 didBattlePhase = true;
             } else phase = PHASE.END;
         } else {
             phase = PHASE.MAIN;
             String string = didBattlePhase ? "M2" : "M1";
-            myCommunicator.changePhase(string, false);
-            opponentCommunicator.changePhase(string, true);
+            myCommunicator.changePhase(string, "false");
+            opponentCommunicator.changePhase(string, "true");
         }
     }
 
@@ -216,8 +232,8 @@ public class GamePlayController extends RegexController implements RegexPatterns
         removeTemporaryFeatures();
         checkHistory();
         phase = PHASE.DRAW;
-        myCommunicator.changePhase("DP", false);
-        opponentCommunicator.changePhase("DP", true);
+        myCommunicator.changePhase("DP", "false");
+        opponentCommunicator.changePhase("DP", "true");
         if (!gamePlay.getOpponentGamePlayController().getGamePlay().getUniversalHistory().contains("cannotDraw"))
             drawCard();
         new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2, sendChainedPlaces());
@@ -228,14 +244,14 @@ public class GamePlayController extends RegexController implements RegexPatterns
     private void standByPhase() {
         phase = PHASE.STAND_BY;
         checkIndividualHistory();
-        myCommunicator.changePhase("SB", false);
-        opponentCommunicator.changePhase("SB", true);
+        myCommunicator.changePhase("SB", "false");
+        opponentCommunicator.changePhase("SB", "true");
         nextPhase();
     }
 
     private void end() {
-        myCommunicator.changePhase("EP", false);
-        opponentCommunicator.changePhase("EP", true);
+        myCommunicator.changePhase("EP", "false");
+        opponentCommunicator.changePhase("EP", "true");
         new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2, sendChainedPlaces());
         gamePlay.getUniversalHistory().remove("starter");
         checkIndividualHistory();
@@ -253,8 +269,8 @@ public class GamePlayController extends RegexController implements RegexPatterns
         if (emptyHandPlace != null) {
             Cards card = gamePlay.getMyGameBoard().drawCard();
             emptyHandPlace.setCard(card);
-            myCommunicator.addToHand(emptyHandPlace.getNUM(), false, card.getName(), card.getDescription());
-            opponentCommunicator.addToHand(emptyHandPlace.getNUM(), true, "UNKNOWN", "");
+            myCommunicator.addToHand(emptyHandPlace.getNUM(), "false", card.getName(), card.getDescription());
+            opponentCommunicator.addToHand(emptyHandPlace.getNUM(), "true", "UNKNOWN", "");
             try {
                 Thread.sleep(500);
             } catch (InterruptedException interruptedException) {
@@ -364,9 +380,9 @@ public class GamePlayController extends RegexController implements RegexPatterns
             place.setCard(null);
             applyUniversalEffectsToSummonCards(placeTo);
             myCommunicator.moveFromHandToBoard(place.getNUM() < 6 && place.getNUM() >= 0 ? place.getNUM() : 6,
-                    placeTo.getNUM(), false, status.name().toLowerCase(), placeTo.getCard().getName(), placeTo.getCard().getDescription());
+                    placeTo.getNUM(), "false", status.name().toLowerCase(), placeTo.getCard().getName(), placeTo.getCard().getDescription());
             opponentCommunicator.moveFromHandToBoard(place.getNUM() < 6 && place.getNUM() >= 0 ? place.getNUM() : 6,
-                    placeTo.getNUM(), true, status.name().toLowerCase(), placeTo.getCard().getName(), placeTo.getCard().getDescription());
+                    placeTo.getNUM(), "true", status.name().toLowerCase(), placeTo.getCard().getName(), placeTo.getCard().getDescription());
             if (normalSummon)
                 alreadySummonedOrSet = true;
             if (status == STATUS.ATTACK || !normalSummon)
@@ -402,10 +418,10 @@ public class GamePlayController extends RegexController implements RegexPatterns
                         Place place = putSpellOrField(selectedCard, STATUS.SET);
                         if (place != null) {
                             myCommunicator.moveFromHandToBoard(selectedCard.getNUM()
-                                    , place.getNUM(), false
+                                    , place.getNUM(), "false"
                                     , "set", place.getCard().getName(), place.getCard().getDescription());
                             opponentCommunicator.moveFromHandToBoard(selectedCard.getNUM()
-                                    , place.getNUM(), true
+                                    , place.getNUM(), "true"
                                     , "set", place.getCard().getName(), place.getCard().getDescription());
                         }
                     }
@@ -441,9 +457,9 @@ public class GamePlayController extends RegexController implements RegexPatterns
         alreadySummonedOrSet = true;
 //        printerAndScanner.printNextLine(setSuccessfully);
         myCommunicator.moveFromHandToBoard(selectedCard.getNUM() >= 0 && selectedCard.getNUM() < 6 ? selectedCard.getNUM() : 6,
-                placeTo.getNUM(), false, "set", placeTo.getCard().getName(), placeTo.getCard().getDescription());
+                placeTo.getNUM(), "false", "set", placeTo.getCard().getName(), placeTo.getCard().getDescription());
         opponentCommunicator.moveFromHandToBoard(selectedCard.getNUM() >= 0 && selectedCard.getNUM() < 6 ? selectedCard.getNUM() : 6,
-                placeTo.getNUM(), true, "set", placeTo.getCard().getName(), placeTo.getCard().getDescription());
+                placeTo.getNUM(), "true", "set", placeTo.getCard().getName(), placeTo.getCard().getDescription());
         return placeTo;
     }
 
@@ -636,9 +652,9 @@ public class GamePlayController extends RegexController implements RegexPatterns
         }
         if (place != null) {
             place.addTemporaryFeatures(TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN);
-            myCommunicator.moveFromHandToBoard(toPlace.getNUM(), place.getNUM(), false, status.name(),
+            myCommunicator.moveFromHandToBoard(toPlace.getNUM(), place.getNUM(), "false", status.name(),
                     place.getCard().getName(), place.getCard().getDescription());
-            opponentCommunicator.moveFromHandToBoard(toPlace.getNUM(), place.getNUM(), true, status.name(),
+            opponentCommunicator.moveFromHandToBoard(toPlace.getNUM(), place.getNUM(), "true", status.name(),
                     place.getCard().getName(), place.getCard().getDescription());
         }
         return place;
@@ -924,7 +940,7 @@ public class GamePlayController extends RegexController implements RegexPatterns
     }
 
     public STATUS askStatus() {
-        myCommunicator.askOptions(askStatus, "attack", "defense");
+        myCommunicator.sendMessage(Communicator.askOption(askStatus, "attack", "defense"));
         STATUS status;
         for (String string = takeCommand(); true; string = takeCommand()) {
             status = STATUS.getStatusByString(string);

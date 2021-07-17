@@ -17,10 +17,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 
 import static sample.model.tools.StringMessages.*;
@@ -28,18 +26,21 @@ import static sample.model.tools.StringMessages.*;
 public class LoginController implements RegexPatterns {
 
     static LoginController loginController = null;
-    static ArrayList<String> userNames;
-    static ArrayList<String> nickNames;
-    static HashMap<String, User> users;
+    static List<String> userNames;
+    static List<String> nickNames;
+    static Map<String, User> users;
     private static PrintBuilderController printBuilderController;
     private static PrinterAndScanner printerAndScanner;
 
     static {
         printBuilderController = PrintBuilderController.getInstance();
         printerAndScanner = PrinterAndScanner.getInstance();
-        userNames = new ArrayList<>();
-        nickNames = new ArrayList<>();
-        users = new HashMap<>();
+//        userNames = new ArrayList<>();
+//        nickNames = new ArrayList<>();
+//        users = new HashMap<>();
+        userNames = Collections.synchronizedList(new ArrayList<>());
+        nickNames = Collections.synchronizedList(new ArrayList<>());
+        users = new ConcurrentHashMap<>();
     }
 
     private LoginController() {
@@ -55,7 +56,7 @@ public class LoginController implements RegexPatterns {
         return loginController;
     }
 
-    public static ArrayList<String> getNickNames() {
+    public static List<String> getNickNames() {
         return nickNames;
     }
 
@@ -156,7 +157,7 @@ public class LoginController implements RegexPatterns {
     }
 
 
-    public String loginUser(String username, String password) {
+    public String loginUser(String username, String password, ActionFinder actionFinder) {
         User user = users.get(username);
         if (user == null || !user.getPassword().equals(password)) {
             return usernameAndPasswordDoNotMatch;
@@ -165,7 +166,7 @@ public class LoginController implements RegexPatterns {
 //        UserKeeper.getInstance().setCurrentUser(user);
 //        System.out.println(UserKeeper.getInstance().getCurrentUser());
         String token = UUID.randomUUID().toString();
-        ActionFinder.addUser(user, token);
+        actionFinder.addUser(user, token);
         return token;
     }
 

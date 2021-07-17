@@ -1,6 +1,7 @@
 package sample.model;
 
 import javafx.scene.image.Image;
+import sample.view.listener.ActionFinder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class User extends Player {
     private int numberOfLosses;
     private int numberOfRoundsWon;
     private int numberOfRoundsLost;
+    private ActionFinder actionFinder;
 
     {
         decks = new HashMap<>();
@@ -94,6 +96,10 @@ public class User extends Player {
         this.avatarAddress = avatarAddress;
     }
 
+    public void setActionFinder(ActionFinder actionFinder) {
+        this.actionFinder = actionFinder;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -136,6 +142,10 @@ public class User extends Player {
 
     public HashMap<String, Deck> getDecks() {
         return decks;
+    }
+
+    public ActionFinder getActionFinder() {
+        return actionFinder;
     }
 
     public ArrayList<String> getCardsToJustShow() {

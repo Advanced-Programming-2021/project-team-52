@@ -10,8 +10,8 @@ import sample.model.tools.RegexPatterns;
 import sample.model.tools.StringMessages;
 import sample.view.PrinterAndScanner;
 import sample.view.UserKeeper;
-import sample.view.gameboardview.Communicator;
 import sample.view.gameboardview.GameBoardView;
+import sample.view.listener.Communicator;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -22,7 +22,7 @@ public class NewDuelController implements RegexPatterns, StringMessages {
     private static final PrinterAndScanner PRINTER_AND_SCANNER;
     private static final PrintBuilderController PRINT_BUILDER_CONTROLLER;
     private static final Random RANDOM;
-    public static GameBoardView hostGameBoardView, guestGameBoardView;
+//    public static GameBoardView hostGameBoardView, guestGameBoardView;
 
     static {
         PRINTER_AND_SCANNER = PrinterAndScanner.getInstance();
@@ -36,24 +36,22 @@ public class NewDuelController implements RegexPatterns, StringMessages {
     private GamePlay hostGamePlay, guestGamePlay;
     private GamePlayController hostGamePlayController, guestGamePlayController;
     private Communicator hostCommunicator, guestCommunicator;
-    private Stage stage, stage1;
 
-    public NewDuelController(User host, Stage stage) {
+    public NewDuelController(User host) {
         this.host = host;
-        this.stage = stage;
     }
 
-    public String run(String command) {
-        Matcher matcher;
+    public String run(String username, String rounds, Communicator hostCommunicator, Communicator guestCommunicator) {
         String result = "";
-        matcher = RegexController.getMatcher(command, RegexPatterns.newDuelPattern);
-        if (matcher == null)
-        result = invalidCommand;
+        if (!rounds.matches("^\\d+$"))
+            result = invalidCommand;
         else {
-            result = checkBeforeStartingANewGame(matcher);
+            result = checkBeforeStartingANewGame(username, Integer.parseInt(rounds));
             if (result.isEmpty()) {
+                this.hostCommunicator = hostCommunicator;
+                this.guestCommunicator = guestCommunicator;
                 makeNeededObjects();
-                int rounds = Integer.parseInt(matcher.group("rounds"));
+                int roundsNum = Integer.parseInt(rounds);
                 Thread thread = new Thread(() -> {
                     try {
                         Thread.sleep(1000);
@@ -62,7 +60,7 @@ public class NewDuelController implements RegexPatterns, StringMessages {
                     }
                     hostGamePlayController.shuffleDeck();
                     guestGamePlayController.shuffleDeck();
-                    startTheGame(rounds);
+                    startTheGame(roundsNum);
                 });
                 thread.setDaemon(true);
                 thread.start();
@@ -71,16 +69,16 @@ public class NewDuelController implements RegexPatterns, StringMessages {
         return result;
     }
 
-    private String checkBeforeStartingANewGame(Matcher matcher) {
-        this.guest = LoginController.getUserByUsername(matcher.group("secondPlayer"));
+    private String checkBeforeStartingANewGame(String username, int rounds) {
+        this.guest = LoginController.getUserByUsername(username);
         if (guest != null) {
             if (guest != UserKeeper.getInstance().getCurrentUser()) {
                 if (host.getActiveDeck() != null) {
                     if (guest.getActiveDeck() != null) {
-                        rounds = Integer.parseInt(matcher.group("rounds"));
-                        if (rounds == 1 || rounds == 3)
+                        if (rounds == 1 || rounds == 3) {
+                            this.rounds = rounds;
                             return "";
-                        else return numberOfRoundsIsNotSupported;
+                        } else return numberOfRoundsIsNotSupported;
                     } else return PRINT_BUILDER_CONTROLLER.userDoesntHaveActiveDeck(guest.getUsername()).toString();
                 } else return PRINT_BUILDER_CONTROLLER.userDoesntHaveActiveDeck(host.getUsername()).toString();
             } else return youCantDuelWithYourself;
@@ -92,20 +90,20 @@ public class NewDuelController implements RegexPatterns, StringMessages {
         guestGameBoard = makeCards(guest);
         hostGamePlay = new GamePlay(true, hostGameBoard, false, host.getUsername());
         guestGamePlay = new GamePlay(false, guestGameBoard, false, guest.getUsername());
-        GameBoardView hostGameBoardView = new GameBoardView(stage);
-//        hostGameBoardView.initialize();
-        stage1 = new Stage();
-        GameBoardView guestGameBoardView = new GameBoardView(stage1);
-        stage1.show();
-//        guestGameBoardView.initialize();
-        hostCommunicator = hostGameBoardView.getCommunicator();
-        guestCommunicator = guestGameBoardView.getCommunicator();
-        hostGameBoardView.setOpponentCommunicator(guestCommunicator);
-        guestGameBoardView.setOpponentCommunicator(hostCommunicator);
-        hostGamePlayController = new GamePlayController(hostGamePlay, hostGameBoardView.getCommunicator(), guestGameBoardView.getCommunicator());
-        guestGamePlayController = new GamePlayController(guestGamePlay, guestGameBoardView.getCommunicator(), hostGameBoardView.getCommunicator());
-        hostGameBoardView.setGamePlayController(hostGamePlayController);
-        guestGameBoardView.setGamePlayController(guestGamePlayController);
+//        GameBoardView hostGameBoardView = new GameBoardView(stage);
+////        hostGameBoardView.initialize();
+//        stage1 = new Stage();
+//        GameBoardView guestGameBoardView = new GameBoardView(stage1);
+//        stage1.show();
+////        guestGameBoardView.initialize();
+//        hostCommunicator = hostGameBoardView.getCommunicator();
+//        guestCommunicator = guestGameBoardView.getCommunicator();
+//        hostGameBoardView.setOpponentCommunicator(guestCommunicator);
+//        guestGameBoardView.setOpponentCommunicator(hostCommunicator);
+        hostGamePlayController = new GamePlayController(hostGamePlay, hostCommunicator, guestCommunicator);
+        guestGamePlayController = new GamePlayController(guestGamePlay, guestCommunicator, hostCommunicator);
+//        hostGameBoardView.setGamePlayController(hostGamePlayController);
+//        guestGameBoardView.setGamePlayController(guestGamePlayController);
         hostGamePlay.setOpponentGamePlayController(guestGamePlayController);
         guestGamePlay.setOpponentGamePlayController(hostGamePlayController);
     }
@@ -164,8 +162,8 @@ public class NewDuelController implements RegexPatterns, StringMessages {
     }
 
     private void resetEverything() {
-        hostCommunicator.reset();
-        guestCommunicator.reset();
+        hostCommunicator.sendMessage("reset");
+        guestCommunicator.sendMessage("reset");
         resetGame(hostGameBoard, hostGamePlay, hostGamePlayController);
         resetGame(guestGameBoard, guestGamePlay, guestGamePlayController);
         swapCards(host.getUsername(), hostGameBoard.getMainCards(), hostGameBoard.getSideCards());
@@ -200,18 +198,20 @@ public class NewDuelController implements RegexPatterns, StringMessages {
         winner.setScore(winner.getScore() + 1000 * multiplier);
         PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.showEndRoundOrGameMessage(winnerName, score, theWholeMatch));
         String message = PRINT_BUILDER_CONTROLLER.showEndRoundOrGameMessage(winnerName, score, theWholeMatch).toString();
-        hostCommunicator.askOptions(message, "exit");
-        guestCommunicator.askOptions(message, "exit");
+        hostCommunicator.sendMessage(Communicator.askOption(message, "exit"));
+        guestCommunicator.sendMessage(Communicator.askOption(message, "exit"));
         hostGamePlayController.takeCommand();
         guestGamePlayController.takeCommand();
         if (theWholeMatch) {
-            hostCommunicator.shutdown(stage, stage1, true);
-            guestCommunicator.shutdown(stage, stage1, false);
+            hostCommunicator.sendMessage("reset changeScene");
+            guestCommunicator.sendMessage("reset changeScene");
             winner.addToNumberOfGamesWon(1);
             loser.addToNumberOfGamesLost(1);
+            hostGamePlayController.setRun(false);
+            guestGamePlayController.setRun(false);
         } else {
-            hostCommunicator.reset();
-            guestCommunicator.reset();
+            hostCommunicator.sendMessage("reset");
+            guestCommunicator.sendMessage("reset");
         }
     }
 
@@ -226,16 +226,16 @@ public class NewDuelController implements RegexPatterns, StringMessages {
             guestGamePlayController.getGamePlay().getUniversalHistory().add("starter");
             starter = guestGamePlayController;
         }
-        hostGamePlayController.getMyCommunicator().flipCoin(starter == hostGamePlayController ? 1 : 11);
-        guestGamePlayController.getMyCommunicator().flipCoin(starter == guestGamePlayController ? 11 : 1);
+        hostGamePlayController.getMyCommunicator().sendMessage("flipCoin " + (starter == hostGamePlayController ? "1" : "11"));
+        guestGamePlayController.getMyCommunicator().sendMessage("flipCoin " + (starter == hostGamePlayController ? "11" : "1"));
         hostGamePlayController.takeCommand();
         guestGamePlayController.takeCommand();
-        hostGamePlayController.getMyCommunicator().askOptions(starter == hostGamePlayController ?
-                "you will go first" : "your opponent will go first", "ok");
-        hostGamePlayController.getMyCommunicator().removeCoin();
-        guestGamePlayController.getMyCommunicator().askOptions(starter == guestGamePlayController ?
-                "you will go first" : "your opponent will go first", "ok");
-        guestGamePlayController.getMyCommunicator().removeCoin();
+        hostGamePlayController.getMyCommunicator().sendMessage(Communicator.askOption(starter == hostGamePlayController ?
+                "you will go first" : "your opponent will go first", "ok"));
+        hostGamePlayController.getMyCommunicator().sendMessage("removeCoin");
+        guestGamePlayController.getMyCommunicator().sendMessage(Communicator.askOption(starter == guestGamePlayController ?
+                "you will go first" : "your opponent will go first", "ok"));
+        guestGamePlayController.getMyCommunicator().sendMessage("removeCoin");
         hostGamePlayController.takeCommand();
         guestGamePlayController.takeCommand();
         return starter;
