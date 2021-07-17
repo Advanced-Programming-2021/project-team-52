@@ -86,4 +86,23 @@ public class Sender {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public void send(String message){
+        try {
+            dataOutputStream.writeUTF(message);
+            dataOutputStream.flush();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+    }
+
+    public String receive(){
+        String message = "";
+        try {
+            message = dataInputStream.readUTF();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        return message;
+    }
 }

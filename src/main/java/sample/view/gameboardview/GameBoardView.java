@@ -24,6 +24,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import sample.model.game.STATUS;
+import sample.view.sender.Sender;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class GameBoardView{
     }
 
     private AnchorPane anchorPane;
-    private GamePlayController gamePlayController;
+//    private GamePlayController gamePlayController;
     private boolean primaryMouse;
     private Stage stage;
     private HashMap<Integer, CardView> myPlaces;
@@ -61,6 +62,7 @@ public class GameBoardView{
     private boolean blocked;
     private ToggleButton darkMode;
     private BackgroundImage lightBackground, darkBackground;
+    private Sender sender;
 
     public GameBoardView(Stage stage){
         this.stage = stage;
@@ -95,6 +97,7 @@ public class GameBoardView{
         this.anchorPane.setPrefHeight(734);
         this.communicator = new Communicator(anchorPane, this, myPlaces, enemyPlaces);
         this.darkMode = new ToggleButton();
+        this.sender = Sender.getInstance();
         Thread thread = new Thread(communicator);
         thread.setDaemon(true);
         thread.start();
@@ -108,10 +111,10 @@ public class GameBoardView{
         return communicator;
     }
 
-    public void setGamePlayController(GamePlayController gamePlayController) {
-        this.gamePlayController = gamePlayController;
-        communicator.setGamePlayController(gamePlayController);
-    }
+//    public void setGamePlayController(GamePlayController gamePlayController) {
+//        this.gamePlayController = gamePlayController;
+//        communicator.setGamePlayController(gamePlayController);
+//    }
 
     public void setBlocked(boolean blocked) {
         this.blocked = blocked;
@@ -398,11 +401,24 @@ public class GameBoardView{
         cardView.setPaint(Color.TRANSPARENT);
     }
 
+    private void askActions(int number, boolean isEnemy, GameState gameState){
+        sender.send("getPossibleAction," + number + "," + isEnemy + "," + gameState.name());
+    }
+
+    private Action[] getAction(){
+        String[] actionsString = sender.receive().split(",");
+        Action[] actions = new Action[2];
+        actions[0] = Action.getActionByValue(actionsString[0]);
+        actions[1] = Action.getActionByValue(actionsString[1]);
+        return actions;
+    }
+
     private void putMonsterAndSpellMouseEvent(CardView cardView){
         cardView.setOnMouseEntered(mouseEvent -> {
             if (cardView.canHaveEffects())
             if (!blocked){
-                cardView.setActions(gamePlayController.getPossibleAction(cardView.getPLACE_NUMBER(), cardView.getIsEnemy(), gameState));
+                askActions(cardView.getPLACE_NUMBER(), cardView.getIsEnemy(), gameState);
+                cardView.setActions(getAction());
                 getActionImage(cardView);
             } else cardView.changeImageViewOpacity(0);
             if (cardView.getPaint() != Color.TRANSPARENT) {
@@ -433,7 +449,8 @@ public class GameBoardView{
         cardView.setOnMouseEntered(mouseEvent -> {
             if (cardView.canHaveEffects())
             if (!blocked){
-                cardView.setActions(gamePlayController.getPossibleAction(cardView.getPLACE_NUMBER(), cardView.getIsEnemy(), gameState));
+                askActions(cardView.getPLACE_NUMBER(), cardView.getIsEnemy(), gameState);
+                cardView.setActions(getAction());
                 getActionImage(cardView);
                 TranslateTransition translateTransition = new TranslateTransition();
                 translateTransition.setToY(originalY + (enemy ? 40 : -40));
@@ -479,7 +496,8 @@ public class GameBoardView{
                 if (action != Action.NOTHING && !cardView.getIsEnemy())
                     doAction(cardView.getPLACE_NUMBER(), action, gameState);
             } else {
-                    cardView.setActions(gamePlayController.getPossibleAction(cardView.getPLACE_NUMBER(), cardView.getIsEnemy(), gameState));
+                    askActions(cardView.getPLACE_NUMBER(), cardView.getIsEnemy(), gameState);
+                    cardView.setActions(getAction());
                     getActionImage(cardView);
                 }
         });
@@ -548,7 +566,8 @@ public class GameBoardView{
                     communicator.start();
                     break;
                 case CHANGE_POSITION:
-                    STATUS status = gamePlayController.getGamePlay().getSelectedCard().getStatus();
+                    sender.send("getSelectedCardStatus");
+                    STATUS status = receiveSelectedCardStatus();
                     if (status != STATUS.SET) {
                         communicator.setAction(Action.NOTHING);
                         communicator.setJob("set --position " + (status == STATUS.ATTACK ? "defense" : "attack"));
@@ -584,6 +603,11 @@ public class GameBoardView{
                 communicator.start();
             }
         }
+    }
+
+    private STATUS receiveSelectedCardStatus(){
+        String statusString = sender.receive();
+        return STATUS.getStatusByString(statusString);
     }
 
     private String getType(int placeNumber){
@@ -792,7 +816,7 @@ public class GameBoardView{
         cardView.setDescription(description);
     }
 
-    public void shutdown(Stage stage, Stage stage1, boolean changeScene){
+    public void shutdown(Stage stage, Stage stage1, boolean changeScene, GameBoardHandler gameBoardHandler){
         communicator.setRun(false);
         communicator.start();
         if (changeScene) {
@@ -802,11 +826,13 @@ public class GameBoardView{
                             new File("./src/main/java/sample/view/mainMenu/MainMenuFxml.fxml").toURI().toURL());
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
-                    stage1.close();
+//                    stage1.close();
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
             });
+            gameBoardHandler.setRun(false);
+            sender.send("shutdown");
         }
     }
 }
