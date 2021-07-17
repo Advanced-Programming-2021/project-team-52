@@ -1,6 +1,7 @@
 package sample.view.listener;
 
 import sample.controller.*;
+import sample.model.Shop;
 import sample.model.User;
 import sample.model.cards.Cards;
 import sample.model.tools.StringMessages;
@@ -20,6 +21,7 @@ public class ActionFinder implements StringMessages {
     private ShopController shopController = ShopController.getInstance();
     private PrintBuilderController printBuilderController = PrintBuilderController.getInstance();
     private ChatroomController chatroomController = ChatroomController.getInstance();
+    private AuctionController auctionController = AuctionController.getInstance();
     private final String LOGIN_PREFIX = "-LC-";
     private final String PROFILE_PREFIX = "-PC-";
     private final String SCOREBOARD_PREFIX = "-SBC-";
@@ -31,6 +33,7 @@ public class ActionFinder implements StringMessages {
     private final String CARD_PREFIX = "-CM-";
     private final String PRINT_BUILDER_PREFIX = "-PBC-";
     private final String CHAT_PREFIX = "-CRC-";
+    private final String AUCTION_PREFIX = "-AC-";
     private String command = "";
     private User user;
     private String[] elements;
@@ -67,6 +70,18 @@ public class ActionFinder implements StringMessages {
             return chooseMethodFromPrintBuilder();
         else if (command.startsWith(CHAT_PREFIX))
             return chooseMethodFromChat();
+        else if (command.startsWith(AUCTION_PREFIX))
+            return chooseMethodFromAuction();
+        return invalidCommand;
+    }
+
+    public String chooseMethodFromAuction(){
+        if (command.startsWith(AUCTION_PREFIX + "getAllActiveActionsInString"))
+            return AuctionController.getAllActiveActionsInString();
+        if (command.startsWith(AUCTION_PREFIX + "makeAnAuction"))
+            return auctionController.makeAnAuction(user, elements[1], elements[2]);
+        if (command.startsWith(AUCTION_PREFIX + "participateToAuction"))
+            return auctionController.participateToAuction(user, elements[1], elements[2]);
         return invalidCommand;
     }
 
@@ -131,6 +146,8 @@ public class ActionFinder implements StringMessages {
             return ShopController.getCardImagePathByName(elements[1]);
         else if (command.startsWith(SHOP_PREFIX + "getAllUnusedCardsByString"))
             return shopController.getAllUnusedCardsByString(user);
+        else if (command.startsWith(SHOP_PREFIX + "getAllCardsWithPrice"))
+            return Shop.getInstance().getAllCardsWithPrice();
         return invalidCommand;
     }
 

@@ -203,7 +203,7 @@ public class AuctionControllerTest implements StringMessages {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-//        Assertions.assertEquals(YOU_ATTENDED_TO_AUCTION_SUCCESSFULLY, AuctionController.getAllActiveActionsInString());
+        Assertions.assertEquals(YOU_ATTENDED_TO_AUCTION_SUCCESSFULLY, AuctionController.getAllActiveActionsInString());
         try {
             Thread.sleep(30000);
         } catch (InterruptedException e) {

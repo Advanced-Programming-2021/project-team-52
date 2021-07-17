@@ -24,8 +24,8 @@ public class Auction {
 
     private long totalTime;
 
-    private final long FIRST_TOTAL_TIME = 20000;
-    private final long TOTAL_TIME_AFTER_OFFER = 10000;
+    private final long FIRST_TOTAL_TIME = 120000;
+    private final long TOTAL_TIME_AFTER_OFFER = 60000;
 
     public Auction(User auctioneer, int firstPriceByAuctioneer, Cards card) {
         this.auctioneer = auctioneer;
