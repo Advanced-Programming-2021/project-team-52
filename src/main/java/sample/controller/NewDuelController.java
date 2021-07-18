@@ -104,8 +104,8 @@ public class NewDuelController implements RegexPatterns, StringMessages {
         guestGameBoardView.setOpponentCommunicator(hostCommunicator);
         hostGamePlayController = new GamePlayController(hostGamePlay, hostGameBoardView.getCommunicator(), guestGameBoardView.getCommunicator());
         guestGamePlayController = new GamePlayController(guestGamePlay, guestGameBoardView.getCommunicator(), hostGameBoardView.getCommunicator());
-        hostGameBoardView.setGamePlayController(hostGamePlayController);
-        guestGameBoardView.setGamePlayController(guestGamePlayController);
+//        hostGameBoardView.setGamePlayController(hostGamePlayController);
+//        guestGameBoardView.setGamePlayController(guestGamePlayController);
         hostGamePlay.setOpponentGamePlayController(guestGamePlayController);
         guestGamePlay.setOpponentGamePlayController(hostGamePlayController);
     }
