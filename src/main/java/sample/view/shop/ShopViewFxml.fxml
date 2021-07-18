@@ -189,7 +189,7 @@ add in initialize
                </font>
             </Label>
             <JFXButton fx:id="adminPanelLoginConfirmButton" layoutX="442.0" layoutY="1066.0" prefHeight="25.0" prefWidth="50.0" ripplerFill="#ffff55" text="login" textFill="#ffff55" />
-            <JFXButton fx:id="sellACardButton" layoutX="354.0" layoutY="562.0" prefHeight="45.0" prefWidth="193.0" text="sell" textFill="#ffff55">
+            <JFXButton fx:id="sellACardButton" layoutX="354.0" layoutY="562.0" onAction="#sellCard" prefHeight="45.0" prefWidth="193.0" text="sell" textFill="#ffff55">
                <graphic>
                   <ImageView fitHeight="37.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>

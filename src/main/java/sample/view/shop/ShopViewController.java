@@ -81,7 +81,7 @@ public class ShopViewController implements StringMessages, Initializable {
                     if (isInShopMenu) {
                         getAllActiveAuctions();
 //                    userBalanceInShopHeader.setText(String.valueOf(user.getBalance()));
-                                            showUnusedAllCardsOfUser();
+                        showUnusedAllCardsOfUser();
                     } else {
                         timer.cancel();
                         timer.purge();
@@ -272,6 +272,16 @@ public class ShopViewController implements StringMessages, Initializable {
                 auctionPanelSetAPriceToAuctionTextArea.setText("");
                 auctionPanelSearchAuctionIdSituationLabel.setText("");
             }
+        }
+    }
+
+    public void sellCard(ActionEvent e) {
+        String cardName = searchInUserCardsTextArea.getText().trim();
+        String response = "";
+        if (!cardName.equals("")) {
+            response = shopController.sellCard(cardName);
+            numberOfCardLabelUnderUserCard.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                    (cardName)));
         }
     }
 
