@@ -56,6 +56,8 @@ public class ChatroomController {
             return "Error: Deleter is not the writer";
         allMessages.remove(message);
         deletedMessages.add(message);
+        if(pinnedMessage == message)
+            pinnedMessage = null;
         return "Message has been deleted successfully";
     }
 

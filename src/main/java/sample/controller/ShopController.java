@@ -16,6 +16,8 @@ public class ShopController implements StringMessages, RegexPatterns {
     private static ShopController shopController = null;
     private PrintBuilderController printBuilderController;
     private Shop shop = Shop.getInstance();
+    private final String ADMIN_USERNAME = "a"/*"Maraam"*/;
+    private final String ADMIN_PASSWORD ="a" /*"IHateYoGiOh"*/;
 
     {
         printBuilderController = PrintBuilderController.getInstance();
@@ -130,12 +132,15 @@ public class ShopController implements StringMessages, RegexPatterns {
         return "Card is not banned any more";
     }
 
-    public String addNumberOfCardToShop(String name, int amount){
+    public String addNumberOfCardToShop(String name, String amount){
         Cards card = Cards.getCard(name);
         if (card == null) {
             return noCardWithThisName;
         }
-        Shop.increaseNumberOfCard(name, amount);
+        if(!AuctionController.getInstance().isInputNumber(amount)){
+            return "Amount most be number";
+        }
+        Shop.increaseNumberOfCard(name, Integer.parseInt(amount));
         return "Number of card increased successfully";
     }
 
@@ -144,11 +149,13 @@ public class ShopController implements StringMessages, RegexPatterns {
         if (card == null) {
             return noCardWithThisName;
         }
+        if(Shop.getBannedCards().contains(cardName))
+            return "The card is banned";
         int numberOfThisCardOutOfDeck = user.getNumberOfThisCardInCardsOutOfDeck(cardName);
         if(numberOfThisCardOutOfDeck < 1)
             return "You do not have enough of this card to sell";
 
-        int price = countPriceOfCardForSelling(cardName);
+        int price = shop.getItemPrize(cardName);
         Shop.increaseNumberOfCard(cardName, 1);
         shop.changeBalanceOfShop(-price);
         user.removeCardFromCardsWithoutDeck(cardName);
@@ -156,14 +163,9 @@ public class ShopController implements StringMessages, RegexPatterns {
         return "Card sold successfully";
     }
 
-    public int countPriceOfCardForSelling(String cardName){
-        Cards card = Cards.getCard(cardName);
-        if (card == null) {
-            return -1;
-        }
-        return (int) (shop.getItemPrize(cardName) / 1.3);
+    public String adminLogin(String username, String password){
+        return "";
     }
-
 
 
 }

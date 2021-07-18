@@ -10,7 +10,7 @@ public class Shop {
     private static HashMap<String, Integer> items;
     private static HashMap<String, Integer> numberOfItems;
     private static ArrayList<String> bannedCards;
-    private int shopBalance = 0;
+    private int shopBalance = 100000000;
 
     static {
         items = new HashMap<>();
@@ -25,6 +25,26 @@ public class Shop {
         if (shop == null)
             shop = new Shop();
         return shop;
+    }
+
+    public static void setItems(HashMap<String, Integer> items) {
+        Shop.items = items;
+    }
+
+    public static void setNumberOfItems(HashMap<String, Integer> numberOfItems) {
+        Shop.numberOfItems = numberOfItems;
+    }
+
+    public static void setBannedCards(ArrayList<String> bannedCards) {
+        Shop.bannedCards = bannedCards;
+    }
+
+    public int getShopBalance() {
+        return shopBalance;
+    }
+
+    public void setShopBalance(int shopBalance) {
+        this.shopBalance = shopBalance;
     }
 
     public static HashMap<String, Integer> getItems() {

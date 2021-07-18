@@ -114,7 +114,7 @@ public class AuctionController implements StringMessages {
         return auctioneer.getCards().contains(cardName);
     }
 
-    private boolean isInputNumber(String input) {
+    public boolean isInputNumber(String input) {
         return input.matches("^\\d+$");
     }
 
