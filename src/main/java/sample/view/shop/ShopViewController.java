@@ -46,20 +46,20 @@ public class ShopViewController implements StringMessages, Initializable {
     @FXML
     ProgressBar shopCardProgressBar;
     @FXML
-    JFXTextArea searchInUserCardsTextArea, searchInShopTextArea;
+    JFXTextArea searchInUserCardsTextArea, searchInShopTextArea, userCardsLabel;
     @FXML
     JFXButton buyButton, submitSearchInUserCards, submitSearchInShop;
     @FXML
     Label cardDoNotExistInUserCardsLabel, cardDoNotExistInShopLabel, cardNameLabelUnderUserCard,
             numberOfCardLabelUnderUserCard, cardNameLabelUnderShopCard, numberOfCardLabelUnderShopCard,
-            userCardDetailsLabel, shopCardDetailsLabel, shopCardsLabel, userCardsLabel;
+            userCardDetailsLabel, shopCardDetailsLabel, shopCardsLabel;
     @FXML
     ImageView userCardInfoImageView, shopCardInfoImageView;
 
     @FXML
     JFXTextArea auctionPanelSearchACardToAuctionTextArea, auctionPanelSetAPriceToAuctionTextArea, auctionPanelAllCardsInAuctionTextArea,
             auctionPanelSearchAuctionIdTextArea, auctionPanelPriceOfAuctionedCardTextArea, auctionPanelTimeLeftToBidTextArea,
-            adminPanelUsernameTextArea, adminPanelPasswordTextArea, adminPanelCardSearchTextArea;
+            adminPanelUsernameTextArea, adminPanelPasswordTextArea, adminPanelCardSearchTextArea, suggestedCardTextArea;
 
     @FXML
     Label auctionPanelSearchCArdToAuctionSituationLabel, auctionPanelSearchAuctionIdSituationLabel;
@@ -119,6 +119,8 @@ public class ShopViewController implements StringMessages, Initializable {
         adminPanelUsernameTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         adminPanelPasswordTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         adminPanelCardSearchTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        userCardsLabel.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        suggestedCardTextArea.setStyle("-fx-prompt-text-fill: white; linear-gradient(to right, aqua , blue);");
 
         showAllCardsOfShop();
         showUnusedAllCardsOfUser();
