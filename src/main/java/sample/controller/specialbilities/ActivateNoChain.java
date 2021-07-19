@@ -119,8 +119,8 @@ public class ActivateNoChain implements SpecialAbility, StringMessages {
             Cards card = gamePlayController.getGamePlay().getMyGameBoard().getACardByType("Field");
             if (card != null) {
                 gamePlayController.getGamePlay().getMyGameBoard().getPlace(emptyHand, PLACE_NAME.HAND).setCard(card);
-                gamePlayController.getMyCommunicator().addToHand(emptyHand, false, card.getName(), card.getDescription());
-                gamePlayController.getOpponentCommunicator().addToHand(emptyHand, true, "UNKNOWN", "");
+                gamePlayController.getMyCommunicator().addToHand(emptyHand, "false", card.getName(), card.getDescription());
+                gamePlayController.getOpponentCommunicator().addToHand(emptyHand, "true", "UNKNOWN", "");
             } else printerAndScanner.printNextLine(couldNotFindASuitableCard);
         } else printerAndScanner.printNextLine(fullHand);
     }
