@@ -90,7 +90,7 @@ public class GameBoardHandler implements Runnable{
     }
 
     private void startANewDuel(String[] args){
-        GameBoardView gameBoardView = new GameBoardView(stage);
+        GameBoardView gameBoardView = new GameBoardView(stage, args[0], args[1], args[2], args[3]);
         gameBoardView.initialize();
         this.communicator = gameBoardView.getCommunicator();
         this.gameBoardView = gameBoardView;

@@ -92,10 +92,10 @@ public class NewDuelController implements RegexPatterns, StringMessages {
         guestGameBoard = makeCards(guest);
         hostGamePlay = new GamePlay(true, hostGameBoard, false, host.getUsername());
         guestGamePlay = new GamePlay(false, guestGameBoard, false, guest.getUsername());
-        GameBoardView hostGameBoardView = new GameBoardView(stage);
+        GameBoardView hostGameBoardView = new GameBoardView(stage, "", "", "", "");
 //        hostGameBoardView.initialize();
         stage1 = new Stage();
-        GameBoardView guestGameBoardView = new GameBoardView(stage1);
+        GameBoardView guestGameBoardView = new GameBoardView(stage1, "", "", "", "");
         stage1.show();
 //        guestGameBoardView.initialize();
         hostCommunicator = hostGameBoardView.getCommunicator();
