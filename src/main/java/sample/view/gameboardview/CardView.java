@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import sample.model.game.STATUS;
 
 
 public class CardView extends Rectangle {
@@ -22,6 +23,7 @@ public class CardView extends Rectangle {
     private String name;
     private Image preview;
     public boolean playExitMouseTransition;
+    private STATUS status;
 
     public CardView(int placeNumber, boolean isEnemy){
         this.PLACE_NUMBER = placeNumber;
@@ -86,6 +88,10 @@ public class CardView extends Rectangle {
         this.setFill(paint);
     }
 
+    public void setStatus(STATUS status) {
+        this.status = status;
+    }
+
     public void setInGraveYard(boolean inGraveYard) {
         isInGraveYard = inGraveYard;
     }
@@ -107,7 +113,7 @@ public class CardView extends Rectangle {
     }
 
     public boolean canHaveEffects(){
-        return !paint.equals(Color.TRANSPARENT) && !isInGraveYard;
+        return (!paint.equals(Color.TRANSPARENT) || status == STATUS.SET) && !isInGraveYard;
     }
 
     @Override

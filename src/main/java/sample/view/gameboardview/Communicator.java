@@ -5,6 +5,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import sample.controller.Action;
 import sample.controller.GamePlayController;
@@ -106,7 +107,7 @@ public class Communicator implements Runnable {
         gameBoardView.setBlocked(true);
         if (action == Action.NOTHING) {
             try {
-                sender.send(job.take());
+                sender.send(Sender.GAME_PLAY_CONTROLLER_PREFIX + job.take());
             } catch (InterruptedException interruptedException) {
                 interruptedException.printStackTrace();
             }
@@ -119,7 +120,7 @@ public class Communicator implements Runnable {
                 for (int i = 11; i < 15; i++) {
                     if (enemyPlaces.get(i).getPaint() != Color.TRANSPARENT)
                     if (enemyPlaces.get(i).contains(clickInputHandler.getMouseX(), clickInputHandler.getMouseY())) {
-                        sender.send("attack " + (i - 10));
+                        sender.send(Sender.GAME_PLAY_CONTROLLER_PREFIX + "attack " + (i - 10));
                         break outerLoop;
                     }
                 }
@@ -179,18 +180,30 @@ public class Communicator implements Runnable {
             int i = type != 0 ? 1 : 0;
             for (; i < 5; i++) {
                 if (me)
-                    if (myPlaces.get(i + type).contains(clickInputHandler.getMouseX(), clickInputHandler.getMouseY())) {
-                        sender.send(String.valueOf(addType ? i + type : i));
+                    if (contains(type, clickInputHandler.getMouseX(),
+                            clickInputHandler.getMouseY(), myPlaces.get(i+ type), true)) {
+                        sender.send(Sender.GAME_PLAY_CONTROLLER_PREFIX + (addType ? i + type : i));
                         break outerLoop;
                     }
                 if (enemy)
-                    if (enemyPlaces.get(i + type).contains(clickInputHandler.getMouseX(), clickInputHandler.getMouseY())) {
-                        sender.send(String.valueOf(addType ? (i + type) * -1 : -i));
+                    if (contains(type, clickInputHandler.getMouseX(),
+                            clickInputHandler.getMouseY(), enemyPlaces.get(i + type), false)) {
+                        sender.send(Sender.GAME_PLAY_CONTROLLER_PREFIX + (addType ? (i + type) * -1 : -i));
                         break outerLoop;
                     }
             }
         }
         gameBoardView.setBlocked(false);
+    }
+
+    private boolean contains(int type, double x, double y, CardView cardView, boolean me){
+        if (type != 0)
+            return cardView.contains(x, y);
+        else {
+            HBox hand = me ? gameBoardView.getMyHand() : gameBoardView.getEnemyHand();
+            Point2D point2D = cardView.parentToLocal(hand.parentToLocal(x, y));
+            return cardView.contains(point2D);
+        }
     }
 
     private int typeToInt(String type) {
@@ -226,7 +239,7 @@ public class Communicator implements Runnable {
             }
         }
         customPopup.reset();
-        sender.send(chosenOption);
+        sender.send(Sender.GAME_PLAY_CONTROLLER_PREFIX + chosenOption);
     }
 
     public void changePhase(String phase, boolean enemyTurn) {
@@ -254,16 +267,16 @@ public class Communicator implements Runnable {
             for (int i = 0; i < myGraveyard.size(); i++) {
                 if (myGraveyard.get(i).contains(
                         myGraveyard.get(i).parentToLocal(myGraveyardObject.getScrollPane().parentToLocal(x, y)))) {
-                    sender.send(justName ?
-                            myGraveyard.get(i).getName() : "select card " + myGraveyard.get(i).getName());
+                    sender.send(Sender.GAME_PLAY_CONTROLLER_PREFIX + (justName ?
+                            myGraveyard.get(i).getName() : "select card " + myGraveyard.get(i).getName()));
                     break outerLoop;
                 }
             }
             for (int i = 0; i < opponentGraveyard.size(); i++) {
                 if (opponentGraveyard.get(i).contains(
                         myGraveyard.get(i).localToParent(opponentGraveyardObject.getScrollPane().parentToLocal(x, y)))) {
-                    sender.send(justName ?
-                            myGraveyard.get(i).getName() : "select card opponent " + opponentGraveyard.get(i).getName());
+                    sender.send(Sender.GAME_PLAY_CONTROLLER_PREFIX + (justName ?
+                            myGraveyard.get(i).getName() : "select card opponent " + opponentGraveyard.get(i).getName()));
                     break outerLoop;
                 }
             }
@@ -279,7 +292,7 @@ public class Communicator implements Runnable {
             getMouseClick();
             for (int i = 0; i < opponentGraveyard.size(); i++) {
                 if (opponentGraveyard.get(i).contains(clickInputHandler.getMouseX(), clickInputHandler.getMouseY())) {
-                    sender.send(opponentGraveyard.get(i).getName());
+                    sender.send(Sender.GAME_PLAY_CONTROLLER_PREFIX + opponentGraveyard.get(i).getName());
                     break outerLoop;
                 }
             }
@@ -288,26 +301,29 @@ public class Communicator implements Runnable {
     }
 
     public void mindCrush() {
+        System.out.println("fuck");
         gameBoardView.setBlocked(true);
         Rectangle rectangle = new Rectangle(anchorPane.getWidth(), anchorPane.getHeight());
         rectangle.setFill(Color.TRANSPARENT);
-        anchorPane.getChildren().add(rectangle);
+        Platform.runLater(() -> anchorPane.getChildren().add(rectangle));
         TextField textField = new TextField();
         textField.setPromptText("please enter the card name");
-        textField.setLayoutX(100);
-        textField.setLayoutY(100);
+        textField.setLayoutX(anchorPane.getWidth() / 2);
+        textField.setLayoutY(anchorPane.getHeight() / 2);
         textField.setPrefWidth(50);
         textField.setPrefHeight(20);
         Button button = new Button();
         button.setText("send");
-        button.setLayoutX(151);
-        button.setLayoutY(100);
+        button.setLayoutX(anchorPane.getWidth() / 2 + 51);
+        button.setLayoutY(anchorPane.getHeight() / 2);
+        button.setPrefWidth(50);
+        button.setPrefHeight(20);
         button.setOnMouseClicked(e -> {
-            anchorPane.getChildren().removeAll(button, textField, rectangle);
-            sender.send(textField.getText());
+            Platform.runLater(() -> anchorPane.getChildren().removeAll(button, textField, rectangle));
+            sender.send(Sender.GAME_PLAY_CONTROLLER_PREFIX + textField.getText());
             gameBoardView.setBlocked(false);
         });
-        anchorPane.getChildren().addAll(textField, button);
+        Platform.runLater(() -> anchorPane.getChildren().addAll(textField, button));
     }
 
     public void ritualSummon() {
@@ -324,7 +340,7 @@ public class Communicator implements Runnable {
                     result.append(" ").append(i - 10);
             }
         }
-        sender.send(result.toString());
+        sender.send(Sender.GAME_PLAY_CONTROLLER_PREFIX + result.toString());
         gameBoardView.setBlocked(false);
     }
 
@@ -353,7 +369,7 @@ public class Communicator implements Runnable {
                 break;
             }
         }
-        sender.send(chosenOption);
+        sender.send(Sender.GAME_PLAY_CONTROLLER_PREFIX + chosenOption);
         switch (chosenOption) {
             case "deck":
                 mindCrush();
@@ -383,7 +399,7 @@ public class Communicator implements Runnable {
         coin.setFitHeight(100);
         coin.setX(anchorPane.getPrefWidth() / 2 - coin.getFitWidth() / 2);
         coin.setY(anchorPane.getPrefHeight() / 2 - coin.getFitHeight() / 2 - 300);
-        timeline.setCycleCount(1);
+        timeline.setCycleCount(5);
         timeline.setOnFinished(e -> {
             Timeline timeline1 = new Timeline();
             for (int i = 1; i < finishingPicture + 1; i++) {
@@ -393,7 +409,7 @@ public class Communicator implements Runnable {
                 timeline1.getKeyFrames().add(keyFrame);
             }
             timeline1.play();
-            timeline1.setOnFinished(alert -> sender.send("finished"));
+            timeline1.setOnFinished(alert -> sender.send(Sender.GAME_PLAY_CONTROLLER_PREFIX + "finished"));
         });
         Platform.runLater(() -> anchorPane.getChildren().add(coin));
         timeline.play();
@@ -409,7 +425,7 @@ public class Communicator implements Runnable {
 
     public void nextPhase(){
         if (!gameBoardView.getBlocked())
-        sender.send("next phase");
+        sender.send(Sender.GAME_PLAY_CONTROLLER_PREFIX + "next phase");
     }
 
     public void showCard(int placeNumber, String cardName, String description, boolean enemy){
@@ -418,7 +434,7 @@ public class Communicator implements Runnable {
     }
 
     public void shutdown(Stage stage, Stage stage1, boolean changeScene){
-        gameBoardView.shutdown(stage, stage1, changeScene, null);
+        gameBoardView.shutdown(stage, stage1, changeScene);
     }
 
     public void pause(){

@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class Sender {
+
+
+    public static final String GAME_PLAY_CONTROLLER_PREFIX = "-GPC-";
     private static  Sender sender = null;
     private  StringBuilder messageBuilder = new StringBuilder();
     private String token;

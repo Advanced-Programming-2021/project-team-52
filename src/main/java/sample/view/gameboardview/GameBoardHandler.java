@@ -34,7 +34,7 @@ public class GameBoardHandler implements Runnable{
         if (message.startsWith("duel"))
             startANewDuel(message.split(","));
         else if (message.startsWith("reset"))
-            gameBoardView.shutdown(stage, null, message.matches("changeSene"), this);
+            gameBoardView.shutdown(stage, null, message.matches("changeSene"));
         else if (message.startsWith("askOption")) {
             strings = message.replaceAll("askOption,", "").split(",");
             String[] options = new String[strings.length - 1];

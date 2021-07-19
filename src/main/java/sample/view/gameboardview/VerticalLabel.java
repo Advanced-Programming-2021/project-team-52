@@ -6,6 +6,14 @@ import javafx.scene.text.Font;
 
 public class VerticalLabel extends Label {
 
+    public VerticalLabel() {
+        super();
+    }
+
+    public VerticalLabel(String text) {
+        super(text);
+    }
+
     public void setValues(double x, double y, double prefWidth, double prefHeight, double rotate, String text) {
         this.setText(text);
         this.setAlignment(Pos.CENTER);
