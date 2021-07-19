@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class Communicator {
 
@@ -11,12 +12,14 @@ public class Communicator {
     private final DataOutputStream DATA_OUTPUT_STREAM;
     private final Socket SOCKET;
     private final ActionFinder ACTION_FINDER;
+    private final ArrayBlockingQueue<String> ARRAY_BLOCKING_QUEUE;
 
     public Communicator(Socket socket, DataInputStream dataInputStream, DataOutputStream dataOutputStream){
         this.SOCKET = socket;
         this.DATA_INPUT_STREAM = dataInputStream;
         this. DATA_OUTPUT_STREAM = dataOutputStream;
         this.ACTION_FINDER = new ActionFinder(this);
+        this.ARRAY_BLOCKING_QUEUE = new ArrayBlockingQueue<>(1);
     }
 
     public static String askOption(String message, String... options){
@@ -59,9 +62,10 @@ public class Communicator {
     public String receive(){
         String message = "";
         try {
-            message = DATA_INPUT_STREAM.readUTF();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
+//            message = DATA_INPUT_STREAM.readUTF();
+            message = ARRAY_BLOCKING_QUEUE.take();
+        } catch (InterruptedException interruptedException) {
+            interruptedException.printStackTrace();
         }
         return message;
     }
@@ -139,5 +143,9 @@ public class Communicator {
 
     public void reduceHealth(int amount, boolean enemy){
         sendMessage("reduceHealth," + amount + "," + enemy);
+    }
+
+    public void saveCommand(String command, String prefix){
+        this.ARRAY_BLOCKING_QUEUE.add(command.replaceAll(prefix, ""));
     }
 }

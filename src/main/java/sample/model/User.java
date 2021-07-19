@@ -7,6 +7,7 @@ import sample.view.listener.Communicator;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class User extends Player {
 

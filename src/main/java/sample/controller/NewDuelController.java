@@ -10,7 +10,7 @@ import sample.model.tools.RegexPatterns;
 import sample.model.tools.StringMessages;
 import sample.view.PrinterAndScanner;
 import sample.view.UserKeeper;
-import sample.view.gameboardview.GameBoardView;
+//import sample.view.gameboardview.GameBoardView;
 import sample.view.listener.Communicator;
 
 import java.util.ArrayList;
@@ -126,14 +126,14 @@ public class NewDuelController implements RegexPatterns, StringMessages {
         GamePlayController currentPlayer = flipACoin();
         hostGamePlayController.shuffleDeck();
         guestGamePlayController.shuffleDeck();
-        for (int i = 0; i < 5; i++) {
-            hostGamePlayController.drawCard();
-            guestGamePlayController.drawCard();
-        }
         int roundsStatic = rounds;
         int maxHostLP, maxGuestLP, roundsWonCounter;
         maxHostLP = maxGuestLP = roundsWonCounter = 0;
         while (rounds > 0) {
+            for (int i = 0; i < 5; i++) {
+                hostGamePlayController.drawCard();
+                guestGamePlayController.drawCard();
+            }
             runGame(currentPlayer);
             rounds--;
             if (guestGamePlayController.getSurrendered() || guestGameBoard.getHealth() == 0) {
@@ -166,8 +166,10 @@ public class NewDuelController implements RegexPatterns, StringMessages {
         guestCommunicator.sendMessage("reset");
         resetGame(hostGameBoard, hostGamePlay, hostGamePlayController);
         resetGame(guestGameBoard, guestGamePlay, guestGamePlayController);
-        swapCards(host.getUsername(), hostGameBoard.getMainCards(), hostGameBoard.getSideCards());
-        swapCards(guest.getUsername(), guestGameBoard.getMainCards(), guestGameBoard.getSideCards());
+        swapCards(host.getUsername(), hostGameBoard.getMainCards(), hostGameBoard.getSideCards(),
+                hostCommunicator, hostGamePlayController);
+        swapCards(guest.getUsername(), guestGameBoard.getMainCards(), guestGameBoard.getSideCards(),
+                guestCommunicator, guestGamePlayController);
         hostGamePlayController.shuffleDeck();
         guestGamePlayController.shuffleDeck();
     }
@@ -258,14 +260,20 @@ public class NewDuelController implements RegexPatterns, StringMessages {
         gamePlayController.setSurrendered(false);
     }
 
-    private void swapCards(String name, ArrayList<Cards> mainCards, ArrayList<Cards> sideCards) {
-        PRINTER_AND_SCANNER.printNextLine(PRINT_BUILDER_CONTROLLER.askSwapCards(name));
-        if (PRINTER_AND_SCANNER.scanNextLine().equals("yes")) {
-            PRINTER_AND_SCANNER.printNextLine(swapFormat);
+    private void swapCards(String name, ArrayList<Cards> mainCards, ArrayList<Cards> sideCards,
+                           Communicator communicator, GamePlayController gamePlayController) {
+        communicator.askOptions(PRINT_BUILDER_CONTROLLER.askSwapCards(name), "yes", "no");
+        if (gamePlayController.takeCommand().equals("yes")) {
             Cards fromMainDeck, fromSideDeck;
             Matcher matcher;
-            for (String command = PRINTER_AND_SCANNER.scanNextLine();
-                 !command.equals("cancel"); command = PRINTER_AND_SCANNER.scanNextLine()) {
+            String command;
+            while (true){
+                communicator.askOptions(swapFormat, "ok");
+                gamePlayController.takeCommand();
+                communicator.mindCrush();
+                command = gamePlayController.takeCommand();
+                if (command.equals("cancel"))
+                    break;
                 matcher = RegexController.getMatcher(command, RegexPatterns.swapPattern);
                 if (matcher != null) {
                     fromMainDeck = Cards.getCard(matcher.group(1));
@@ -276,10 +284,15 @@ public class NewDuelController implements RegexPatterns, StringMessages {
                             mainCards.add(fromSideDeck);
                             sideCards.remove(fromSideDeck);
                             sideCards.add(fromMainDeck);
-                            PRINTER_AND_SCANNER.printNextLine(swappedSuccessfully);
+                            communicator.askOptions(swappedSuccessfully, "ok");
+                            gamePlayController.takeCommand();
                         }
-                    PRINTER_AND_SCANNER.printNextLine(wrongCardForSwap);
-                } else PRINTER_AND_SCANNER.printNextLine(invalidCommand);
+                    communicator.askOptions(wrongCardForSwap, "ok");
+                    gamePlayController.takeCommand();
+                } else {
+                    communicator.askOptions(invalidCommand, "ok");
+                    gamePlayController.takeCommand();
+                }
             }
         }
     }

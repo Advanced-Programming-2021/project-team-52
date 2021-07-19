@@ -89,6 +89,8 @@ public class ActivateChain implements SpecialAbility, StringMessages {
         int amountToDamage = opponentGamePlayController.getGamePlay().getUniversalHistory().contains("preventDamageFromTrap") ?
                 0 : ((MonsterZone) place.getAffect()).getAttack() * -1;
         opponentGamePlayController.getGamePlay().getMyGameBoard().changeHealth(amountToDamage);
+        opponentGamePlayController.getMyCommunicator().reduceHealth(amountToDamage, false);
+        gamePlayController.getMyCommunicator().reduceHealth(amountToDamage, true);
     }
 
     public void destroyAllEnemyMonstersInThisStatus() {
