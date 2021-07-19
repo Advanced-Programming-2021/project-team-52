@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ActionFinder implements StringMessages {
@@ -88,6 +89,8 @@ public class ActionFinder implements StringMessages {
             return chooseMethodFromAuction();
         else if (command.startsWith(NEW_DUEL_PREFIX))
             return chooseMethodFromNewDuel();
+        else if (command.startsWith(GAME_PLAY_CONTROLLER_PREFIX))
+            return saveCommand();
         return invalidCommand;
     }
 
@@ -238,6 +241,11 @@ public class ActionFinder implements StringMessages {
         if (command.startsWith(SCOREBOARD_PREFIX + "toString"))
             return scoreBoardController.toString();
         return invalidCommand;
+    }
+
+    private String saveCommand(){
+        communicator.saveCommand(command, GAME_PLAY_CONTROLLER_PREFIX);
+        return "";
     }
 
     public String chooseMethodFromCardCreator() {
