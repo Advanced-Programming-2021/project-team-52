@@ -91,6 +91,11 @@ public class ChatRoomViewController implements Initializable {
         enterNewMessageTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         searchMessageTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         searchedMessageTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+
+        pinnedMessageTextArea.setStyle("-fx-prompt-text-fill: white; " +
+                "-fx-text-fill: linear-gradient(to bottom left, aqua, #ef8fff)");
+        replyMessageTestArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+
         System.out.println("start");
         System.out.println("start");
     }
