@@ -1,6 +1,8 @@
 package sample.view.listener;
 
 import sample.controller.*;
+import sample.controller.matchmaking.MatchMaker;
+import sample.controller.matchmaking.ReadyUser;
 import sample.controller.matchmaking.ReadyUser;
 import sample.model.Shop;
 import sample.model.User;
@@ -11,9 +13,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ActionFinder implements StringMessages {
+
     private static Map<String, User> authorizedUsers = new ConcurrentHashMap<>();
     private LoginController loginController = LoginController.getInstance();
     private ProfileController profileController = ProfileController.getInstance();
@@ -44,8 +48,6 @@ public class ActionFinder implements StringMessages {
     private String[] elements;
     private Communicator communicator;
 
-
-
     public ActionFinder(Communicator communicator) {
         this.communicator = communicator;
     }
@@ -53,7 +55,6 @@ public class ActionFinder implements StringMessages {
     public Communicator getCommunicator() {
         return communicator;
     }
-
 
     public String chooseClass(String command) {
         this.command = command;
@@ -88,6 +89,8 @@ public class ActionFinder implements StringMessages {
             return chooseMethodFromAuction();
         else if (command.startsWith(NEW_DUEL_PREFIX))
             return chooseMethodFromNewDuel();
+        else if (command.startsWith(GAME_PLAY_CONTROLLER_PREFIX))
+            return saveCommand();
         return invalidCommand;
     }
 
@@ -238,6 +241,11 @@ public class ActionFinder implements StringMessages {
         if (command.startsWith(SCOREBOARD_PREFIX + "toString"))
             return scoreBoardController.toString();
         return invalidCommand;
+    }
+
+    private String saveCommand(){
+        communicator.saveCommand(command, GAME_PLAY_CONTROLLER_PREFIX);
+        return "";
     }
 
     public String chooseMethodFromCardCreator() {

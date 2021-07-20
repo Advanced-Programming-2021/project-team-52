@@ -124,12 +124,8 @@ public class GamePlayController extends RegexController implements RegexPatterns
                 nextPhase();
                 continue;
             }
-            try {
-                command = commands.take();
-                handleCommands(command);
-            } catch (InterruptedException interruptedException) {
-                interruptedException.printStackTrace();
-            }
+            command = takeCommand();
+            handleCommands(command);
             if (phase == PHASE.END || gameOver)
                 break;
         }
@@ -238,6 +234,11 @@ public class GamePlayController extends RegexController implements RegexPatterns
             drawCard();
         new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2, sendChainedPlaces());
         specialAbilityActivationController.handleMonstersThatCanBeActivated();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException interruptedException) {
+            interruptedException.printStackTrace();
+        }
         standByPhase();
     }
 
@@ -246,6 +247,11 @@ public class GamePlayController extends RegexController implements RegexPatterns
         checkIndividualHistory();
         myCommunicator.changePhase("SB", "false");
         opponentCommunicator.changePhase("SB", "true");
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException interruptedException) {
+            interruptedException.printStackTrace();
+        }
         nextPhase();
     }
 
@@ -255,6 +261,11 @@ public class GamePlayController extends RegexController implements RegexPatterns
         new NewChain(this, null, CHAIN_JOB.DRAW_PHASE, 2, sendChainedPlaces());
         gamePlay.getUniversalHistory().remove("starter");
         checkIndividualHistory();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException interruptedException) {
+            interruptedException.printStackTrace();
+        }
     }
 
     public void drawCard() {
@@ -1000,19 +1011,19 @@ public class GamePlayController extends RegexController implements RegexPatterns
         else {
             Place place = gamePlay.getMyGameBoard().getPlace(placeNumber);
             if (gameState == GameState.MAIN_PHASE)
-                mainPhaseActions(place, action);
+                mainPhaseActions(place, action, gameState);
             else if (gameState == GameState.BATTLE_PHASE)
                 battlePhaseActions(place, action);
-            else chainActions(place, action);
+            else chainActions(place, action, gameState);
         }
         return action;
     }
 
-    private void mainPhaseActions(Place place, Action[] actions) {
+    private void mainPhaseActions(Place place, Action[] actions, GameState gameState) {
         if (place.getType() == PLACE_NAME.HAND)
             handAction(place, actions);
         else if (place.getType() == PLACE_NAME.SPELL_AND_TRAP)
-            spellAndTrapMainPhaseActions(place, actions);
+            spellAndTrapMainPhaseActions(place, actions, gameState);
         else if (place.getType() == PLACE_NAME.MONSTER)
             monsterMainPhaseActions(place, actions);
         else actions[0] = actions[1] = Action.NOTHING;
@@ -1033,17 +1044,17 @@ public class GamePlayController extends RegexController implements RegexPatterns
         return ((SpellCards) place.getCard()).getIcon().equals("Field") ? Action.ACTIVATE_EFFECT : Action.SET;
     }
 
-    private void spellAndTrapMainPhaseActions(Place place, Action[] actions) {
+    private void spellAndTrapMainPhaseActions(Place place, Action[] actions, GameState gameState) {
         if (place.getCard() instanceof TrapCards)
             actions[0] = Action.NOTHING;
-        else actions[0] = spellActivationAction(place.getTemporaryFeatures());
+        else actions[0] = spellActivationAction(place.getTemporaryFeatures(), gameState);
         actions[1] = Action.NOTHING;
     }
 
-    private Action spellActivationAction(ArrayList<TEMPORARY_FEATURES> temporaryFeatures) {
+    private Action spellActivationAction(ArrayList<TEMPORARY_FEATURES> temporaryFeatures, GameState gameState) {
         return temporaryFeatures.contains(TEMPORARY_FEATURES.CONTINUOUS_ACTIVATED) ||
                 temporaryFeatures.contains(TEMPORARY_FEATURES.SPELL_ACTIVATED) ||
-                temporaryFeatures.contains(TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN) ?
+                (temporaryFeatures.contains(TEMPORARY_FEATURES.CARD_SET_OR_SUMMONED_IN_THIS_TURN) && gameState != GameState.CHAIN) ?
                 Action.NOTHING :
                 Action.ACTIVATE_EFFECT;
     }
@@ -1084,10 +1095,10 @@ public class GamePlayController extends RegexController implements RegexPatterns
         return true;
     }
 
-    private void chainActions(Place place, Action[] actions) {
+    private void chainActions(Place place, Action[] actions, GameState gameState) {
         if (place.getType() != PLACE_NAME.SPELL_AND_TRAP)
             actions[0] = Action.NOTHING;
-        else actions[0] = spellActivationAction(place.getTemporaryFeatures());
+        else actions[0] = spellActivationAction(place.getTemporaryFeatures(), gameState);
         actions[1] = Action.NOTHING;
     }
 
