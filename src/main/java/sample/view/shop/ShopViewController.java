@@ -377,8 +377,8 @@ public class ShopViewController implements StringMessages, Initializable {
     public void increaseNumberOfCard(ActionEvent e) {
         String cardName = adminPanelCardSearchTextArea.getText();
         if (cardName != null && !cardName.equals("")) {
-            adminPanelSituationLabel.setText(shopController.increaseNumberOfCard(cardName, String.valueOf((int)
-                    Integer.parseInt(adminPanelCardAmountSlider.getText()))));
+            adminPanelSituationLabel.setText(shopController.increaseNumberOfCard(cardName, String.valueOf(
+                    adminPanelCardAmountSlider.getText())));
         }
     }
 

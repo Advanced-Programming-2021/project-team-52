@@ -76,6 +76,7 @@ public class ChatRoomViewController implements Initializable {
                     } else {
                         getAllMessages();
                         getPinMessage();
+                        getOnlineUsernames();
                     }
                 }
             }, 0, 1000);
@@ -210,6 +211,10 @@ public class ChatRoomViewController implements Initializable {
             searchedUserInfoLabel.setText(response);
         }
 
+    }
+
+    public void getOnlineUsernames(){
+        allUsersTextArea.setText(chatRoomController.getOnlineUsernames());
     }
 
 
