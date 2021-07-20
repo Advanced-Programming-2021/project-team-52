@@ -66,6 +66,21 @@ public class ShopController implements StringMessages, RegexPatterns {
 
     public String sellCard(String cardName){
         return sender.getResponseWithToken(PREFIX, "sellCard", cardName);
+    }
 
+    public String adminLogin(String username, String password){
+        return sender.getResponseWithToken(PREFIX, "adminLogin", username, password);
+    }
+
+    public String restrictCard(String cardName){
+        return sender.getResponseWithToken(PREFIX, "restrictCard", cardName);
+    }
+
+    public String allowCard(String cardName){
+        return sender.getResponseWithToken(PREFIX, "allowCard", cardName);
+    }
+
+    public String increaseNumberOfCard(String cardName, String amount){
+        return sender.getResponseWithToken(PREFIX, "increaseNumberOfCard", cardName,amount);
     }
 }

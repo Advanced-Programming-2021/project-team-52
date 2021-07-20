@@ -156,6 +156,7 @@ public class MainMenuController implements Initializable {
         FXMLLoader loader = new FXMLLoader(new File
 //                ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\java\\sample\\view\\shop\\ShopViewFxml.fxml").toURI().toURL());
                 ("./src/main/java/sample/view/shop/ShopViewFxml.fxml").toURI().toURL());
+//                ("C:\\Users\\paitakht\\IdeaProjects\\phase3-client\\src\\main\\java\\sample\\view\\shop\\ShopViewFxml.fxml").toURI().toURL());
 
         Parent root = loader.load();
         stage = (Stage)((Node)e.getSource()).getScene().getWindow();

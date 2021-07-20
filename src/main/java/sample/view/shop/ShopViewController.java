@@ -1,6 +1,7 @@
 package sample.view.shop;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXSlider;
 import com.jfoenix.controls.JFXTextArea;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,14 +36,14 @@ public class ShopViewController implements StringMessages, Initializable {
     ShopController shopController = ShopController.getInstance();
     AuctionController auctionController = AuctionController.getInstance();
     PrintBuilderController printBuilderController = PrintBuilderController.getInstance();
-    String cardNameInString;
+    String cardNameInString = "";
     User user = UserKeeper.getInstance().getCurrentUser();
     @FXML
     JFXButton backButton;
     @FXML
     Pane shopScenePane;
     @FXML
-    Label userBalanceInShopHeader;
+    JFXTextArea userBalanceInShopHeader;
     @FXML
     ProgressBar shopCardProgressBar;
     @FXML
@@ -51,7 +52,7 @@ public class ShopViewController implements StringMessages, Initializable {
     JFXButton buyButton, submitSearchInUserCards, submitSearchInShop;
     @FXML
     Label cardDoNotExistInUserCardsLabel, cardDoNotExistInShopLabel, cardNameLabelUnderUserCard,
-            numberOfCardLabelUnderUserCard, cardNameLabelUnderShopCard, numberOfCardLabelUnderShopCard,
+            cardNameLabelUnderShopCard,
             userCardDetailsLabel, shopCardDetailsLabel, shopCardsLabel;
     @FXML
     ImageView userCardInfoImageView, shopCardInfoImageView;
@@ -60,12 +61,17 @@ public class ShopViewController implements StringMessages, Initializable {
     JFXTextArea auctionPanelSearchACardToAuctionTextArea, auctionPanelSetAPriceToAuctionTextArea, auctionPanelAllCardsInAuctionTextArea,
             auctionPanelSearchAuctionIdTextArea, auctionPanelPriceOfAuctionedCardTextArea, auctionPanelTimeLeftToBidTextArea,
             adminPanelUsernameTextArea, adminPanelPasswordTextArea, adminPanelCardSearchTextArea, suggestedCardTextArea;
-
     @FXML
-    Label auctionPanelSearchCArdToAuctionSituationLabel, auctionPanelSearchAuctionIdSituationLabel;
-
+    JFXTextArea numberOfCardLabelUnderUserCard, numberOfCardLabelUnderShopCard;
+    @FXML
+    Label auctionPanelSearchCArdToAuctionSituationLabel, auctionPanelSearchAuctionIdSituationLabel, adminPanelSituationLabel;
+    @FXML
+    JFXButton adminPanelSearchConfirmButton, adminPanelCardAmountConfirmButton, adminPanelRestrictCardButton,
+            adminPanelUnRestrictCardButton, adminPanelLoginConfirmButton;
+    @FXML
+    JFXSlider adminPanelCardAmountSlider;
     boolean isInShopMenu = true;
-
+    String cardNameInUserCards = "";
 
     Scene scene;
     Stage stage;
@@ -73,24 +79,37 @@ public class ShopViewController implements StringMessages, Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         isInShopMenu = true;
-        new Thread(() -> {
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if (isInShopMenu) {
-                        getAllActiveAuctions();
-//                    userBalanceInShopHeader.setText(String.valueOf(user.getBalance()));
-                        showUnusedAllCardsOfUser();
-                    } else {
-                        timer.cancel();
-                        timer.purge();
-                    }
+//        new Thread(() -> {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (isInShopMenu) {
+                    getAllActiveAuctions();
+                    showUnusedAllCardsOfUser();
+                    userBalanceInShopHeader.setText(String.valueOf(user.getBalance()));
+                    if (Cards.isCardWithThisNameExist(cardNameInUserCards) != null)
+                        numberOfCardLabelUnderUserCard.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                                (cardNameInUserCards)));
+                    else
+                        numberOfCardLabelUnderUserCard.setText("");
+                    if (Cards.isCardWithThisNameExist(cardNameInString) != null)
+                        numberOfCardLabelUnderShopCard.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                                (cardNameInString)));
+                    else
+                        numberOfCardLabelUnderShopCard.setText("");
+//                        showUnusedAllCardsOfUser();
+                } else {
+                    timer.cancel();
+                    timer.purge();
                 }
-            }, 5000, 2000);
-        }).start();
+            }
+        }, 5000, 2000);
+//        }).start();
 
         shopScenePane.setStyle("-fx-background-color: black");
+
+        userBalanceInShopHeader.setText("-fx-text-fill: white");
 
 
 //        UserKeeper.getInstance().getCurrentUser().setBalance(1000000);
@@ -115,13 +134,21 @@ public class ShopViewController implements StringMessages, Initializable {
         auctionPanelAllCardsInAuctionTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         auctionPanelSearchAuctionIdTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         auctionPanelPriceOfAuctionedCardTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
-        auctionPanelTimeLeftToBidTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+//        auctionPanelTimeLeftToBidTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         adminPanelUsernameTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         adminPanelPasswordTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         adminPanelCardSearchTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         userCardsLabel.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         suggestedCardTextArea.setStyle("-fx-prompt-text-fill: white; linear-gradient(to right, aqua , blue);");
 
+        adminPanelCardSearchTextArea.setVisible(false);
+        adminPanelSearchConfirmButton.setVisible(false);
+        adminPanelCardAmountConfirmButton.setVisible(false);
+        adminPanelRestrictCardButton.setVisible(false);
+        adminPanelCardAmountSlider.setVisible(false);
+        adminPanelUnRestrictCardButton.setVisible(false);
+//        adminPanelCardAmountSlider.setMin(1);
+//        adminPanelCardAmountSlider.setMax(100);
         showAllCardsOfShop();
         showUnusedAllCardsOfUser();
     }
@@ -146,11 +173,14 @@ public class ShopViewController implements StringMessages, Initializable {
             numberOfCardLabelUnderUserCard.setText("");
             userCardDetailsLabel.setText("");
             userCardInfoImageView.setImage(new Image(new FileInputStream("./src/main/resources/cardsInLowerCase/unknown.jpg")));
+            cardNameInUserCards = "";
             return;
         }
+        cardNameInUserCards = cardName;
         cardDoNotExistInUserCardsLabel.setText("");
         numberOfCardLabelUnderUserCard.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
                 (cardName)));
+
         userCardDetailsLabel.setText(printBuilderController.showOneCard2(card));
         userCardInfoImageView.setImage(new Image(new FileInputStream(shopController.getCardImagePathByName(searchInUserCardsTextArea.getText()))));
 //        System.out.println(shopController.getCardImagePathByName(searchInUserCardsTextArea.getText()));
@@ -182,6 +212,7 @@ public class ShopViewController implements StringMessages, Initializable {
         String cardName = searchInShopTextArea.getText().trim();
         String card = Cards.isCardWithThisNameExist(cardName);
         if (card == null) {
+            cardNameInString = "";
             shopCardInfoImageView.setImage(new Image(new FileInputStream("./src/main/resources/cardsInLowerCase/unknown.jpg")));
             cardDoNotExistInShopLabel.setText("there is no card with this name");
             cardNameLabelUnderShopCard.setText("");
@@ -258,6 +289,7 @@ public class ShopViewController implements StringMessages, Initializable {
                 auctionPanelSearchCArdToAuctionSituationLabel.setText("");
                 auctionPanelSetAPriceToAuctionTextArea.setText("");
                 auctionPanelSearchACardToAuctionTextArea.setText("");
+//                auctionPanelPriceOfAuctionedCardTextArea.setText("");
             }
         }
     }
@@ -271,8 +303,9 @@ public class ShopViewController implements StringMessages, Initializable {
                 auctionPanelSearchAuctionIdSituationLabel.setText(response.split(" : ")[1]);
             } else {
                 auctionPanelSearchAuctionIdTextArea.setText("");
-                auctionPanelSetAPriceToAuctionTextArea.setText("");
+//                auctionPanelSetAPriceToAuctionTextArea.setText("");
                 auctionPanelSearchAuctionIdSituationLabel.setText("");
+                auctionPanelPriceOfAuctionedCardTextArea.setText("");
             }
         }
     }
@@ -282,8 +315,66 @@ public class ShopViewController implements StringMessages, Initializable {
         String response = "";
         if (!cardName.equals("")) {
             response = shopController.sellCard(cardName);
-            numberOfCardLabelUnderUserCard.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
-                    (cardName)));
+            if (response.equals("Card sold successfully")) {
+                numberOfCardLabelUnderUserCard.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                        (cardName)));
+                if (Cards.isCardWithThisNameExist(cardName) != null)
+                    if (cardName.equals(cardNameInString))
+                        numberOfCardLabelUnderShopCard.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
+                                (cardNameInString)));
+                cardDoNotExistInUserCardsLabel.setText("");
+            } else {
+                cardDoNotExistInUserCardsLabel.setText(response);
+            }
+        }
+    }
+
+    public void adminLogin(ActionEvent e) {
+        String username = adminPanelUsernameTextArea.getText();
+        String password = adminPanelPasswordTextArea.getText();
+        if (username != null && !username.equals("") && password != null && !password.equals("")) {
+            String response = shopController.adminLogin(username, password);
+            if (response.equals("login successful")) {
+                adminPanelUsernameTextArea.setText("");
+                adminPanelPasswordTextArea.setText("");
+                adminPanelCardSearchTextArea.setVisible(true);
+                adminPanelSearchConfirmButton.setVisible(true);
+                adminPanelCardAmountConfirmButton.setVisible(true);
+                adminPanelRestrictCardButton.setVisible(true);
+                adminPanelCardAmountSlider.setVisible(true);
+                adminPanelUnRestrictCardButton.setVisible(true);
+                adminPanelSituationLabel.setText("");
+            } else {
+                adminPanelCardSearchTextArea.setVisible(false);
+                adminPanelSearchConfirmButton.setVisible(false);
+                adminPanelCardAmountConfirmButton.setVisible(false);
+                adminPanelRestrictCardButton.setVisible(false);
+                adminPanelCardAmountSlider.setVisible(false);
+                adminPanelUnRestrictCardButton.setVisible(false);
+                adminPanelSituationLabel.setText(response);
+            }
+        }
+    }
+
+    public void restrictCard(ActionEvent e) {
+        String cardName = adminPanelCardSearchTextArea.getText();
+        if (cardName != null && !cardName.equals("")) {
+            adminPanelSituationLabel.setText(shopController.restrictCard(cardName));
+        }
+    }
+
+    public void allowCard(ActionEvent e) {
+        String cardName = adminPanelCardSearchTextArea.getText();
+        if (cardName != null && !cardName.equals("")) {
+            adminPanelSituationLabel.setText(shopController.allowCard(cardName));
+        }
+    }
+
+    public void increaseNumberOfCard(ActionEvent e) {
+        String cardName = adminPanelCardSearchTextArea.getText();
+        if (cardName != null && !cardName.equals("")) {
+            adminPanelSituationLabel.setText(shopController.increaseNumberOfCard(cardName, String.valueOf((int)
+                    adminPanelCardAmountSlider.getValue())));
         }
     }
 
