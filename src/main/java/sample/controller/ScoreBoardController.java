@@ -20,4 +20,6 @@ public class ScoreBoardController {
     public String toString() {
         return sender.getResponse(sender.setMessageWithToken(PREFIX, "toString"));
     }
+
+
 }

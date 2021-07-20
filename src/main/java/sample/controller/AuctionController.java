@@ -27,5 +27,4 @@ public class AuctionController {
     public String participateToAuction( String idInString, String offerInString){
         return sender.getResponseWithToken(PREFIX, "participateToAuction", idInString, offerInString);
     }
-
 }

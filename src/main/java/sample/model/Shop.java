@@ -31,9 +31,6 @@ public class Shop {
         return shop;
     }
 
-    public int getItemPrize(String name) {
-        return items.get(name);
-    }
 
     public String toString() {
         TreeMap<String, Integer> treeMap = new TreeMap<>(items);

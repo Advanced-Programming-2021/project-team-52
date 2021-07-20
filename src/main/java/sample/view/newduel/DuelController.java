@@ -13,7 +13,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
-import sample.controller.NewDuelController;
+
 import sample.view.UserKeeper;
 
 import java.io.File;
@@ -43,14 +43,14 @@ public class DuelController implements Initializable{
 
     @FXML
     private void startGame(ActionEvent actionEvent){
-        if (opponentUsername.getText().isEmpty())
-            errorLabel.setText("please enter a username");
-        else {
-            NewDuelController newDuelController = new NewDuelController(UserKeeper.getInstance().getCurrentUser(),
-                    (Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
-            String result = newDuelController.run("duel -n -r " + rounds + " -sp " + opponentUsername.getText());
-            errorLabel.setText(result);
-        }
+//        if (opponentUsername.getText().isEmpty())
+//            errorLabel.setText("please enter a username");
+//        else {
+//            NewDuelController newDuelController = new NewDuelController(UserKeeper.getInstance().getCurrentUser(),
+//                    (Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
+//            String result = newDuelController.run("duel -n -r " + rounds + " -sp " + opponentUsername.getText());
+//            errorLabel.setText(result);
+//        }
     }
 
     @FXML

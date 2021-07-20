@@ -146,7 +146,7 @@ public class ShopViewController implements StringMessages, Initializable {
         userBalanceInShopHeader.setStyle("-fx-text-fill: linear-gradient(to right, aqua , #e56cff) ");
 
         adminPanelCardSearchTextArea.setVisible(false);
-        adminPanelSearchConfirmButton.setVisible(false);
+//        adminPanelSearchConfirmButton.setVisible(false);
         adminPanelCardAmountConfirmButton.setVisible(false);
         adminPanelRestrictCardButton.setVisible(false);
         adminPanelCardAmountSlider.setVisible(false);
@@ -342,7 +342,7 @@ public class ShopViewController implements StringMessages, Initializable {
                 adminPanelUsernameTextArea.setText("");
                 adminPanelPasswordTextArea.setText("");
                 adminPanelCardSearchTextArea.setVisible(true);
-                adminPanelSearchConfirmButton.setVisible(true);
+//                adminPanelSearchConfirmButton.setVisible(true);
                 adminPanelCardAmountConfirmButton.setVisible(true);
                 adminPanelRestrictCardButton.setVisible(true);
                 adminPanelCardAmountSlider.setVisible(true);
@@ -350,7 +350,7 @@ public class ShopViewController implements StringMessages, Initializable {
                 adminPanelSituationLabel.setText("");
             } else {
                 adminPanelCardSearchTextArea.setVisible(false);
-                adminPanelSearchConfirmButton.setVisible(false);
+//                adminPanelSearchConfirmButton.setVisible(false);
                 adminPanelCardAmountConfirmButton.setVisible(false);
                 adminPanelRestrictCardButton.setVisible(false);
                 adminPanelCardAmountSlider.setVisible(false);

@@ -4,7 +4,6 @@ import javafx.scene.paint.Color;
 import sample.model.Shop;
 import sample.model.User;
 import sample.model.cards.Cards;
-import sample.model.tools.RegexPatterns;
 import sample.model.tools.StringMessages;
 import sample.view.PrinterAndScanner;
 import sample.view.sender.Sender;
@@ -16,7 +15,7 @@ import java.util.regex.Matcher;
 import static sample.controller.LoginController.users;
 
 
-public class ShopController implements StringMessages, RegexPatterns {
+public class ShopController implements StringMessages {
     private static ShopController shopController = null;
     private static PrintBuilderController printBuilderController;
     private static PrinterAndScanner printerAndScanner;

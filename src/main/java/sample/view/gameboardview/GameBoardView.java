@@ -4,7 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.text.Font;
 import sample.controller.Action;
-import sample.controller.GamePlayController;
+
 import sample.controller.GameState;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
