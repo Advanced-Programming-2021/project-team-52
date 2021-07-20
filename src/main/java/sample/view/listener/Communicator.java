@@ -4,8 +4,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
+import java.util.HashMap;
 
 public class Communicator {
+//    private static HashMap<Thread, String> onlineUsers = new HashMap<>();
 
     private final DataInputStream DATA_INPUT_STREAM;
     private final DataOutputStream DATA_OUTPUT_STREAM;
@@ -34,11 +37,18 @@ public class Communicator {
                 try {
                     input = DATA_INPUT_STREAM.readUTF();
                     String response = ACTION_FINDER.chooseClass(input);
+//                    String[] elements = input.split(",");
+//                    if(elements[0].equals("loginUser") && response.length() == 36){
+//                        onlineUsers.put(thread, elements[1])
+//                    }
                     System.out.println("response : " + response);
                     if (response.equals("finish")) break;
                     sendMessage(response);
+                } catch (SocketException e) {
+                    System.out.println("client disconnected");
+                    break;
                 } catch (IOException ioException) {
-                    ioException.printStackTrace();
+                   ioException.printStackTrace();
                 }
             }
             shutDown();

@@ -10,7 +10,6 @@ import sample.model.tools.RegexPatterns;
 import sample.model.tools.StringMessages;
 import sample.view.PrinterAndScanner;
 import sample.view.UserKeeper;
-import sample.view.gameboardview.GameBoardView;
 import sample.view.listener.Communicator;
 
 import java.util.ArrayList;
