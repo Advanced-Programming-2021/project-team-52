@@ -86,8 +86,8 @@ public class AuctionController implements StringMessages {
 
         participant.changeBalance(-offer);
         auction.setLastOffer(offer);
-        auction.setOriginTime();
         auction.setTotalTime();
+        auction.setOriginTime();
         auction.setUserWithBestOffer(participant);
         return YOU_ATTENDED_TO_AUCTION_SUCCESSFULLY;
     }

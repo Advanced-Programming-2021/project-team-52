@@ -51,12 +51,19 @@ public class Auction {
     }
 
     public void setTotalTime() {
-        if (userWithBestOffer == null) {
-            if ((System.currentTimeMillis() - originTime) > TOTAL_TIME_AFTER_OFFER)
-                this.totalTime = TOTAL_TIME_AFTER_OFFER;
-        }else{
+//        if (userWithBestOffer == null) {
+//            if ((System.currentTimeMillis() - originTime) > TOTAL_TIME_AFTER_OFFER)
+//                this.totalTime = FIRST_TOTAL_TIME;
+//            else
+//                this.totalTime = TOTAL_TIME_AFTER_OFFER;
+//        }else{
+//            this.totalTime = TOTAL_TIME_AFTER_OFFER;
+//        }
+//        System.out.println(System.currentTimeMillis() - originTime);
+        if ((totalTime - (System.currentTimeMillis() - originTime)) > TOTAL_TIME_AFTER_OFFER)
+            this.totalTime = FIRST_TOTAL_TIME;
+        else
             this.totalTime = TOTAL_TIME_AFTER_OFFER;
-        }
     }
 
     public int getId() {

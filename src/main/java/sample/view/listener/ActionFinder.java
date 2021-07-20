@@ -164,6 +164,16 @@ public class ActionFinder implements StringMessages {
             return shopController.getAllUnusedCardsByString(user);
         else if (command.startsWith(SHOP_PREFIX + "getAllCardsWithPrice"))
             return Shop.getInstance().getAllCardsWithPrice();
+        else if (command.startsWith(SHOP_PREFIX + "adminLogin"))
+            return shopController.adminLogin(elements[1],elements[2]);
+        else if (command.startsWith(SHOP_PREFIX + "restrictCard"))
+            return shopController.addCardToBannedCards(elements[1]);
+        else if (command.startsWith(SHOP_PREFIX + "allowCard"))
+            return shopController.removeCardFromBannedCards(elements[1]);
+        else if (command.startsWith(SHOP_PREFIX + "increaseNumberOfCard"))
+            return shopController.addNumberOfCardToShop(elements[1], elements[2]);
+        else if (command.startsWith(SHOP_PREFIX + "sellCard"))
+            return shopController.sellCard(user, elements[2]);
         return invalidCommand;
     }
 

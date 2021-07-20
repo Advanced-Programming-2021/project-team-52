@@ -61,7 +61,7 @@ public class Shop {
 
     public static void addCard(String name, int price) {
         items.put(name, price);
-        numberOfItems.put(name, 50);
+        numberOfItems.put(name, 5);
     }
 
     public static void increaseNumberOfCard(String name, int number) {

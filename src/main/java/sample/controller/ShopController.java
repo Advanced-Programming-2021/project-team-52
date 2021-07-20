@@ -16,8 +16,8 @@ public class ShopController implements StringMessages, RegexPatterns {
     private static ShopController shopController = null;
     private PrintBuilderController printBuilderController;
     private Shop shop = Shop.getInstance();
-    private final String ADMIN_USERNAME = "a"/*"Maraam"*/;
-    private final String ADMIN_PASSWORD ="a" /*"IHateYoGiOh"*/;
+    private final String ADMIN_USERNAME = "Maraam";
+    private final String ADMIN_PASSWORD = "IHateYoGiOh";
 
     {
         printBuilderController = PrintBuilderController.getInstance();
@@ -53,9 +53,9 @@ public class ShopController implements StringMessages, RegexPatterns {
         if (card == null) {
             return noCardWithThisName;
         }
-        if(Shop.getBannedCards().contains(cardName))
+        if (Shop.getBannedCards().contains(cardName))
             return "The card is banned";
-        if(Shop.getNumberOfAvailableOfThisCard(cardName) == 0)
+        if (Shop.getNumberOfAvailableOfThisCard(cardName) == 0)
             return "There is not enough card in shop";
         if (!checkBeforeTransaction(cardName, user.getBalance())) {
             return notEnoughMoney;
@@ -106,53 +106,54 @@ public class ShopController implements StringMessages, RegexPatterns {
         return response.toString();
     }
 
-    public static boolean isCardWithThisNameValid(String cardName){
+    public static boolean isCardWithThisNameValid(String cardName) {
         return Shop.getItems().containsKey(cardName) && Shop.getNumberOfItems().containsKey(cardName);
     }
 
-    public String addCardToBannedCards(String name){
+    public String addCardToBannedCards(String name) {
         Cards card = Cards.getCard(name);
         if (card == null) {
             return noCardWithThisName;
         }
-        if(Shop.getBannedCards().contains(name))
+        if (Shop.getBannedCards().contains(name))
             return "Card has been already banned";
         Shop.addCardToForbiddenCards(name);
         return "Card banned successfully";
     }
 
-    public String removeCardFromBannedCards(String name){
+    public String removeCardFromBannedCards(String name) {
         Cards card = Cards.getCard(name);
         if (card == null) {
             return noCardWithThisName;
         }
-        if(!Shop.getBannedCards().contains(name))
+        if (!Shop.getBannedCards().contains(name))
             return "Card was not banned";
         Shop.removeCardFromForbiddenCards(name);
         return "Card is not banned any more";
     }
 
-    public String addNumberOfCardToShop(String name, String amount){
+    public String addNumberOfCardToShop(String name, String amount) {
+        System.out.println(amount);
         Cards card = Cards.getCard(name);
         if (card == null) {
             return noCardWithThisName;
         }
-        if(!AuctionController.getInstance().isInputNumber(amount)){
+        if (!AuctionController.getInstance().isInputNumber(amount)) {
             return "Amount most be number";
         }
         Shop.increaseNumberOfCard(name, Integer.parseInt(amount));
         return "Number of card increased successfully";
     }
 
-    public String sellCard(User user,String cardName){
+    public String sellCard(User user, String cardName) {
         Cards card = Cards.getCard(cardName);
         if (card == null) {
             return noCardWithThisName;
         }
-        if(Shop.getBannedCards().contains(cardName))
+        if (Shop.getBannedCards().contains(cardName))
             return "The card is banned";
         int numberOfThisCardOutOfDeck = user.getNumberOfThisCardInCardsOutOfDeck(cardName);
-        if(numberOfThisCardOutOfDeck < 1)
+        if (numberOfThisCardOutOfDeck < 1)
             return "You do not have enough of this card to sell";
 
         int price = shop.getItemPrize(cardName);
@@ -163,8 +164,10 @@ public class ShopController implements StringMessages, RegexPatterns {
         return "Card sold successfully";
     }
 
-    public String adminLogin(String username, String password){
-        return "";
+    public String adminLogin(String username, String password) {
+        if(username.equals(ADMIN_USERNAME) && password.equals(ADMIN_PASSWORD))
+            return "login successful";
+        return "Invalid information";
     }
 
 
