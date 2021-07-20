@@ -8,7 +8,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import sample.controller.Action;
-import sample.controller.GamePlayController;
+
 import sample.controller.GameState;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

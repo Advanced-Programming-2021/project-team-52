@@ -13,8 +13,9 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
-import sample.controller.NewDuelController;
 import sample.view.UserKeeper;
+import sample.view.gameboardview.GameBoardHandler;
+import sample.view.sender.Sender;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,32 +33,39 @@ public class DuelController implements Initializable{
     @FXML
     private Label errorLabel;
 
-    private int rounds = 1;
+    private String rounds = "1";
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ToggleGroup toggleGroup = new ToggleGroup();
         oneRound.setToggleGroup(toggleGroup);
         threeRounds.setToggleGroup(toggleGroup);
+        errorLabel.setWrapText(true);
     }
 
     @FXML
     private void startGame(ActionEvent actionEvent){
-        if (opponentUsername.getText().isEmpty())
-            errorLabel.setText("please enter a username");
-        else {
-            NewDuelController newDuelController = new NewDuelController(UserKeeper.getInstance().getCurrentUser(),
-                    (Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
-            String result = newDuelController.run("duel -n -r " + rounds + " -sp " + opponentUsername.getText());
-            errorLabel.setText(result);
-        }
+//        if (opponentUsername.getText().isEmpty())
+//            errorLabel.setText("please enter a username");
+//        else {
+//            NewDuelController newDuelController = new NewDuelController(UserKeeper.getInstance().getCurrentUser(),
+//                    (Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
+//            String result = newDuelController.run("duel -n -r " + rounds + " -sp " + opponentUsername.getText());
+        Sender sender = Sender.getInstance();
+//            String result = NewDuelController.newDuel(opponentUsername.getText(), rounds);
+        errorLabel.setText(sender.getResponse(sender.setMessageWithToken("-ND-", rounds)));
+        GameBoardHandler gameBoardHandler = new GameBoardHandler((Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
+        Thread thread = new Thread(gameBoardHandler);
+        thread.setDaemon(true);
+        thread.start();
+//        }
     }
 
     @FXML
     private void changeRounds(ActionEvent actionEvent){
         if (oneRound.isSelected())
-            rounds = 1;
-        else rounds = 3;
+            rounds = "1";
+        else rounds = "3";
     }
 
     @FXML

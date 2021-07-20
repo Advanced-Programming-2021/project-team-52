@@ -380,11 +380,11 @@ add in initialize
                   </LinearGradient>
                </stroke>
             </Line>
-            <ImageView fitHeight="29.0" fitWidth="34.0" layoutX="793.0" layoutY="1011.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../resources/media/images/others/searchIconYellow.png" />
-               </image>
-            </ImageView>
+<!--            <ImageView fitHeight="29.0" fitWidth="34.0" layoutX="793.0" layoutY="1011.0" pickOnBounds="true" preserveRatio="true">-->
+<!--               <image>-->
+<!--                  <Image url="@../../../../resources/media/images/others/searchIconYellow.png" />-->
+<!--               </image>-->
+<!--            </ImageView>-->
             <JFXTextArea fx:id="adminPanelCardAmountSlider" focusColor="#59ff59" labelFloat="true" layoutX="604.0" layoutY="1061.0" prefHeight="35.0" prefWidth="168.0" promptText="number of cards" unFocusColor="WHITE" />
             <JFXButton fx:id="adminPanelCardAmountConfirmButton" buttonType="RAISED" layoutX="746.0" layoutY="1069.0" onAction="#increaseNumberOfCard" prefHeight="25.0" prefWidth="30.0" text="ok" textFill="#ffff55" />
          </children>
