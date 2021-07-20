@@ -37,6 +37,7 @@ public class ActionFinder implements StringMessages {
     private final String PRINT_BUILDER_PREFIX = "-PBC-";
     private final String CHAT_PREFIX = "-CRC-";
     private final String AUCTION_PREFIX = "-AC-";
+    private final String COMMUNICATOR_PREFIX = "-C-";
     private final String NEW_DUEL_PREFIX = "-ND-";
     private final String GAME_PLAY_CONTROLLER_PREFIX = "-GPC-";
     private String command = "";
@@ -86,8 +87,16 @@ public class ActionFinder implements StringMessages {
             return chooseMethodFromChat();
         else if (command.startsWith(AUCTION_PREFIX))
             return chooseMethodFromAuction();
+        else if (command.startsWith(COMMUNICATOR_PREFIX))
+            return chooseMethodFromCommunicator();
         else if (command.startsWith(NEW_DUEL_PREFIX))
             return chooseMethodFromNewDuel();
+        return invalidCommand;
+    }
+
+    public String chooseMethodFromCommunicator(){
+        if(command.startsWith(COMMUNICATOR_PREFIX + "getOnlineUsernames"))
+        return Communicator.getOnlineUsernames();
         return invalidCommand;
     }
 

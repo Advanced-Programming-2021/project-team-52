@@ -141,6 +141,8 @@ public class ShopController implements StringMessages, RegexPatterns {
         if (!AuctionController.getInstance().isInputNumber(amount)) {
             return "Amount most be number";
         }
+        if(Integer.parseInt(amount) <= 0)
+            return "Amount most be more than 0";
         Shop.increaseNumberOfCard(name, Integer.parseInt(amount));
         return "Number of card increased successfully";
     }

@@ -8,12 +8,13 @@ import java.net.SocketException;
 import java.util.HashMap;
 
 public class Communicator {
-//    private static HashMap<Thread, String> onlineUsers = new HashMap<>();
+    private static HashMap<Thread, String> onlineUsers = new HashMap<>();
 
     private final DataInputStream DATA_INPUT_STREAM;
     private final DataOutputStream DATA_OUTPUT_STREAM;
     private final Socket SOCKET;
     private final ActionFinder ACTION_FINDER;
+    private Thread thread;
 
     public Communicator(Socket socket, DataInputStream dataInputStream, DataOutputStream dataOutputStream){
         this.SOCKET = socket;
@@ -31,16 +32,19 @@ public class Communicator {
     }
 
     public void startReceiving(){
-        Thread thread = new Thread(() -> {
+        thread = new Thread(() -> {
             String input;
             while (true) {
                 try {
+//                    System.out.println("I am here");
                     input = DATA_INPUT_STREAM.readUTF();
                     String response = ACTION_FINDER.chooseClass(input);
-//                    String[] elements = input.split(",");
-//                    if(elements[0].equals("loginUser") && response.length() == 36){
-//                        onlineUsers.put(thread, elements[1])
-//                    }
+                    String[] elements = input.split(",");
+//                    System.out.println(input);
+                    if(elements[0].equals("-LC-loginUser") && response.length() == 36){
+                        onlineUsers.put(thread, elements[1]);
+//                        System.out.println("hereeeeee" + elements[1]);
+                    }
                     System.out.println("response : " + response);
                     if (response.equals("finish")) break;
                     sendMessage(response);
@@ -83,6 +87,20 @@ public class Communicator {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
+    }
+
+    public static String getOnlineUsernames(){
+        StringBuilder response = new StringBuilder();
+        for (Thread thread : onlineUsers.keySet()) {
+            try {
+                if(thread.isAlive())
+                    response.append(onlineUsers.get(thread)).append("\n");
+//                    System.out.println("user "+onlineUsers.get(thread)+ " is online");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return response.toString();
     }
 
     public void changeGameState(String gameState){
