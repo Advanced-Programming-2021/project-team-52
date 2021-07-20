@@ -42,21 +42,62 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
             </content>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
           </TitledPane>
           <TitledPane fx:id="searchedPlayerTitledPane" text="searched player" textFill="#858500">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
             </content>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
           </TitledPane>
             <TitledPane fx:id="searchedPlayerOpponentTitledPane" text="searched player opponent" textFill="#858500">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                </content>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </TitledPane>
         </panes>
       </Accordion>
       <JFXTextArea fx:id="searchGameIdTextArea" focusColor="#ffff55" labelFloat="true" layoutX="868.0" layoutY="104.0" prefHeight="26.0" prefWidth="334.0" promptText="search game ID" unFocusColor="WHITE" />
-      <JFXTextArea fx:id="AllGamesIdsTextArea" editable="false" focusColor="#ffff55" layoutX="868.0" layoutY="300.0" prefHeight="398.0" prefWidth="334.0" unFocusColor="WHITE" />
+      <JFXTextArea fx:id="AllGamesIdsTextArea" editable="false" layoutX="868.0" layoutY="300.0" prefHeight="398.0" prefWidth="334.0">
+         <unFocusColor>
+            <RadialGradient centerX="0.5" centerY="0.5" radius="0.6121495594488127">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </RadialGradient>
+         </unFocusColor>
+         <focusColor>
+            <RadialGradient centerX="0.5" centerY="0.5" radius="0.6121495594488127">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.8375308513641357" green="0.3037036955356598" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </RadialGradient>
+         </focusColor></JFXTextArea>
       <Label fx:id="searchGameIdSituationLabel" layoutX="868.0" layoutY="154.0" prefHeight="26.0" prefWidth="334.0" textFill="WHITE">
          <font>
             <Font name="System Italic" size="12.0" />
@@ -88,7 +129,7 @@
             </LinearGradient>
          </textFill>
       </Label>
-      <JFXButton fx:id="focusButton" buttonType="RAISED" layoutX="1048.0" layoutY="18.0" onAction="#focusMode" prefHeight="56.0" prefWidth="89.0" textFill="WHITE">
+      <JFXButton fx:id="focusButton" buttonType="RAISED" layoutX="1048.0" layoutY="18.0" onAction="#focusMode" prefHeight="56.0" prefWidth="89.0" ripplerFill="AQUA" textFill="WHITE">
          <font>
             <Font size="29.0" />
          </font>
@@ -127,6 +168,9 @@
                </image>
             </ImageView>
          </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </JFXButton>
       <JFXButton fx:id="backButton" layoutX="22.0" layoutY="34.0" prefHeight="47.0" prefWidth="58.0">
          <graphic>
@@ -147,6 +191,9 @@
          <selectedColor>
             <Color red="1.0" green="0.6000000238418579" blue="0.6000000238418579" />
          </selectedColor>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </JFXRadioButton>
       <JFXRadioButton fx:id="rate2RadioButton" layoutX="934.0" layoutY="202.0" text="2" textFill="#ffff55" toggleGroup="$rateGame">
          <unSelectedColor>
@@ -155,6 +202,9 @@
          <selectedColor>
             <Color red="0.8947368264198303" green="0.8947368264198303" blue="0.28167641162872314" />
          </selectedColor>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </JFXRadioButton>
       <JFXRadioButton fx:id="rate3RadioButton" layoutX="1001.0" layoutY="202.0" text="3" textFill="AQUA" toggleGroup="$rateGame">
          <unSelectedColor>
@@ -163,6 +213,9 @@
          <selectedColor>
             <Color red="0.6925926208496094" green="1.0" blue="1.0" />
          </selectedColor>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </JFXRadioButton>
       <JFXTextArea fx:id="averageGameRateTextArea" editable="false" layoutX="1153.0" layoutY="192.0" prefHeight="37.0" prefWidth="47.0">
          <unFocusColor>
@@ -203,10 +256,39 @@
             </RadialGradient>
          </focusColor>
       </JFXTextArea>
-      <JFXButton buttonType="RAISED" layoutX="1074.0" layoutY="195.0" text="rate" textFill="#59ff59">
+      <JFXButton fx:id="rateSubmitButton" buttonType="RAISED" layoutX="1074.0" layoutY="195.0" text="rate" textFill="#59ff59">
          <font>
             <Font size="15.0" />
          </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </JFXButton>
+      <Label fx:id="screenLabel" layoutX="91.0" layoutY="81.0" prefHeight="56.0" prefWidth="334.0" text="Screen">
+         <font>
+            <Font name="Open Sans" size="37.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.5343511523181246" endY="0.4465648718462646" startX="0.11450382043387144" startY="0.04580155583738371">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="1.0" green="0.3629629611968994" blue="0.9681481719017029" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.007680491551459294">
+                     <color>
+                        <Color red="1.0" green="0.3629629611968994" blue="0.9681481719017029" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
    </children>
 </AnchorPane>

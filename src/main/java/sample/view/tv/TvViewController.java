@@ -43,7 +43,7 @@ public class TvViewController implements Initializable {
     TitledPane topPlayerOpponentTitledPane, topPlayerTitledPane, searchedPlayerOpponentTitledPane, searchedPlayerTitledPane;
 
     @FXML
-    Label tvHeaderLabel,searchGameIdSituationLabel,allGamesIdLabel;
+    Label tvHeaderLabel,searchGameIdSituationLabel,allGamesIdLabel, screenLabel;
 
     @FXML
     Pane tvHeaderImageViewPane;
@@ -55,7 +55,7 @@ public class TvViewController implements Initializable {
     Line tvHeaderLine;
 
     @FXML
-    JFXButton searchSubmitButton, backButton;
+    JFXButton searchSubmitButton,rateSubmitButton ,backButton;
 
     @FXML
     Tooltip focusModeToolTip;
@@ -87,9 +87,15 @@ public class TvViewController implements Initializable {
             tvHeaderLabel.setEffect(a);
             searchGameIdSituationLabel.setEffect(a);
             allGamesIdLabel.setEffect(a);
-            allGamesIdLabel.setStyle("-fx-text-fill: #8bffff");
+//            allGamesIdLabel.setStyle("-fx-text-fill: #8bffff");
             searchSubmitButton.setEffect(a);
             backButton.setEffect(a);
+            screenLabel.setEffect(a);
+            rate1RadioButton.setEffect(a);
+            rate2RadioButton.setEffect(a);
+            rate3RadioButton.setEffect(a);
+            rateSubmitButton.setEffect(a);
+            averageGameRateTextArea.setEffect(a);
             focusModeToolTip.setText("normal mode");
             isFocus = true;
         } else {
@@ -100,9 +106,15 @@ public class TvViewController implements Initializable {
             tvHeaderLabel.setEffect(null);
             searchGameIdSituationLabel.setEffect(null);
             allGamesIdLabel.setEffect(null);
-            allGamesIdLabel.setStyle("-fx-text-fill: #00ffff");
+//            allGamesIdLabel.setStyle("-fx-text-fill: #00ffff");
             searchSubmitButton.setEffect(null);
             backButton.setEffect(null);
+            screenLabel.setEffect(null);
+            rate1RadioButton.setEffect(null);
+            rate2RadioButton.setEffect(null);
+            rate3RadioButton.setEffect(null);
+            rateSubmitButton.setEffect(null);
+            averageGameRateTextArea.setEffect(null);
             focusModeToolTip.setText("chill mode");
             isFocus = false;
         }
