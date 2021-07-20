@@ -1,6 +1,7 @@
 package sample.view.tv;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXTextArea;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -42,16 +43,13 @@ public class TvViewController implements Initializable {
     TitledPane topPlayerOpponentTitledPane, topPlayerTitledPane, searchedPlayerOpponentTitledPane, searchedPlayerTitledPane;
 
     @FXML
-    VBox bRectangle;
-
-    @FXML
     Label tvHeaderLabel,searchGameIdSituationLabel,allGamesIdLabel;
 
     @FXML
     Pane tvHeaderImageViewPane;
 
     @FXML
-    JFXTextArea searchGameIdTextArea, AllGamesIdsTextArea;
+    JFXTextArea searchGameIdTextArea, AllGamesIdsTextArea, averageGameRateTextArea;
 
     @FXML
     Line tvHeaderLine;
@@ -62,6 +60,9 @@ public class TvViewController implements Initializable {
     @FXML
     Tooltip focusModeToolTip;
 
+    @FXML
+    JFXRadioButton rate1RadioButton ,rate2RadioButton ,rate3RadioButton;
+
     Stage stage;
     Scene scene;
 
@@ -70,6 +71,7 @@ public class TvViewController implements Initializable {
         TvViewPane.setStyle("-fx-background-color: black");
         searchGameIdTextArea.setStyle("-fx-text-fill: white; -fx-prompt-text-fill: white");
         AllGamesIdsTextArea.setStyle("-fx-text-fill: white; -fx-prompt-text-fill: white");
+        averageGameRateTextArea.setStyle("-fx-text-fill: white; -fx-prompt-text-fill: white");
     }
 
     public void focusMode(ActionEvent e){
