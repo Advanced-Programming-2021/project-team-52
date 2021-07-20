@@ -140,14 +140,14 @@ add in initialize
                </font>
             </Label>
             <Label layoutX="508.0" layoutY="474.0" prefHeight="32.0" prefWidth="30.0" text="NO." textFill="WHITE" />
-            <JFXTextArea fx:id="numberOfCardLabelUnderUserCard" layoutX="508.0" layoutY="515.0" prefHeight="32.0" prefWidth="30.0" />
+            <JFXTextArea fx:id="numberOfCardLabelUnderUserCard" editable="false" layoutX="508.0" layoutY="515.0" prefHeight="32.0" prefWidth="30.0" />
             <Label fx:id="cardNameLabelUnderShopCard" layoutX="764.0" layoutY="465.0" prefHeight="82.0" prefWidth="138.0" text="Label">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
             <Label layoutX="904.0" layoutY="474.0" prefHeight="32.0" prefWidth="30.0" text="NO." textFill="WHITE" />
-            <JFXTextArea fx:id="numberOfCardLabelUnderShopCard" layoutX="904.0" layoutY="499.0" prefHeight="32.0" prefWidth="30.0" />
+            <JFXTextArea fx:id="numberOfCardLabelUnderShopCard" editable="false" layoutX="904.0" layoutY="499.0" prefHeight="32.0" prefWidth="30.0" />
             <JFXTextArea fx:id="adminPanelUsernameTextArea" focusColor="#ffff55" labelFloat="true" layoutX="282.0" layoutY="1002.0" prefHeight="36.0" prefWidth="203.0" promptText="admin username" unFocusColor="WHITE" />
             <JFXTextArea fx:id="adminPanelPasswordTextArea" focusColor="#ffff55" labelFloat="true" layoutX="282.0" layoutY="1055.0" prefHeight="36.0" prefWidth="203.0" promptText="admin password" unFocusColor="WHITE" />
 <!--            <Label fx:id="adminPanelSituationLabel" layoutX="904.0" layoutY="474.0" prefHeight="32.0" prefWidth="30.0" text="NO." textFill="WHITE" />-->
