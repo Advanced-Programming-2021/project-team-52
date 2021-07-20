@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXSlider?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
@@ -56,7 +55,7 @@ add in initialize
                <image>
                   <Image url="@../../../../resources/media/images/others/shopCardInMainMenu34.png" />
                </image></ImageView>
-            <JFXTextArea fx:id="userBalanceInShopHeader" layoutX="1024.0" layoutY="40.0" text="Label" focusColor="AQUA" labelFloat="true" editable="false" unFocusColor="WHITE" prefHeight="36.0" prefWidth="72.0">
+            <JFXTextArea fx:id="userBalanceInShopHeader" editable="false" focusColor="AQUA" labelFloat="true" layoutX="1024.0" layoutY="40.0" prefHeight="36.0" prefWidth="72.0" text="Label" unFocusColor="WHITE">
                <font>
                   <Font size="17.0" />
                </font>
@@ -109,7 +108,7 @@ add in initialize
                   <Image url="@../../../../resources/media/images/others/cardTemp.jpg" />
                </image>
             </ImageView>
-            <Label fx:id="userCardDetailsLabel" layoutX="350.0" layoutY="659.0" prefHeight="279.0" prefWidth="191.0" text="Label" textFill="#6fffff" />
+            <Label fx:id="userCardDetailsLabel" layoutX="350.0" layoutY="619.0" prefHeight="319.0" prefWidth="191.0" text="Label" textFill="#6fffff" />
             <Label fx:id="shopCardDetailsLabel" layoutX="745.0" layoutY="615.0" prefHeight="350.0" prefWidth="191.0" text="Label" textFill="#ffff66" />
             <JFXButton fx:id="submitSearchInUserCards" buttonType="RAISED" layoutX="528.0" layoutY="115.0" nodeOrientation="LEFT_TO_RIGHT" onAction="#searchInUserCards" ripplerFill="AQUA" text="ok" textFill="AQUA">
                <graphic>
@@ -141,21 +140,19 @@ add in initialize
                </font>
             </Label>
             <Label layoutX="508.0" layoutY="474.0" prefHeight="32.0" prefWidth="30.0" text="NO." textFill="WHITE" />
-            <JFXTextArea fx:id="numberOfCardLabelUnderUserCard" layoutX="508.0" layoutY="515.0" prefHeight="32.0" prefWidth="30.0"  />
+            <JFXTextArea fx:id="numberOfCardLabelUnderUserCard" layoutX="508.0" layoutY="515.0" prefHeight="32.0" prefWidth="30.0" />
             <Label fx:id="cardNameLabelUnderShopCard" layoutX="764.0" layoutY="465.0" prefHeight="82.0" prefWidth="138.0" text="Label">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
             <Label layoutX="904.0" layoutY="474.0" prefHeight="32.0" prefWidth="30.0" text="NO." textFill="WHITE" />
-            <JFXTextArea fx:id="numberOfCardLabelUnderShopCard" layoutX="904.0" layoutY="499.0" prefHeight="32.0" prefWidth="30.0"  />
+            <JFXTextArea fx:id="numberOfCardLabelUnderShopCard" layoutX="904.0" layoutY="499.0" prefHeight="32.0" prefWidth="30.0" />
             <JFXTextArea fx:id="adminPanelUsernameTextArea" focusColor="#ffff55" labelFloat="true" layoutX="282.0" layoutY="1002.0" prefHeight="36.0" prefWidth="203.0" promptText="admin username" unFocusColor="WHITE" />
             <JFXTextArea fx:id="adminPanelPasswordTextArea" focusColor="#ffff55" labelFloat="true" layoutX="282.0" layoutY="1055.0" prefHeight="36.0" prefWidth="203.0" promptText="admin password" unFocusColor="WHITE" />
 <!--            <Label fx:id="adminPanelSituationLabel" layoutX="904.0" layoutY="474.0" prefHeight="32.0" prefWidth="30.0" text="NO." textFill="WHITE" />-->
             <JFXTextArea fx:id="adminPanelCardSearchTextArea" focusColor="AQUA" labelFloat="true" layoutX="605.0" layoutY="1004.0" prefHeight="36.0" prefWidth="214.0" promptText="card name to edit" unFocusColor="WHITE" />
-            <JFXSlider fx:id="adminPanelCardAmountSlider" layoutX="605.0" layoutY="1086.0"/>
-            <JFXButton fx:id="adminPanelCardAmountConfirmButton" layoutX="745.0" layoutY="1081.0" onAction="#increaseNumberOfCard" prefHeight="25.0" prefWidth="30.0" text="ok" textFill="#ffff55" />
-            <JFXButton fx:id="adminPanelRestrictCardButton" layoutX="775.0" layoutY="1081.0" onAction="#restrictCard" prefHeight="25.0" prefWidth="34.0" ripplerFill="#ff5959" text="Button" textFill="#ff5959">
+            <JFXButton fx:id="adminPanelRestrictCardButton" buttonType="RAISED" layoutX="776.0" layoutY="1067.0" onAction="#restrictCard" prefHeight="25.0" prefWidth="34.0" ripplerFill="#ff5959" textFill="#ff5959">
                <graphic>
                   <ImageView fitHeight="17.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -171,8 +168,7 @@ add in initialize
                   </Tooltip>
                </tooltip>
             </JFXButton>
-             <JFXButton fx:id="adminPanelUnRestrictCardButton" layoutX="775.0" layoutY="1110.0" onAction="#allowCard" prefHeight="25.0" prefWidth="34.0" ripplerFill="#a6ff56"
-                        text="Button" textFill="#eaff41">
+             <JFXButton fx:id="adminPanelUnRestrictCardButton" buttonType="RAISED" layoutX="776.0" layoutY="1096.0" onAction="#allowCard" prefHeight="25.0" prefWidth="34.0" ripplerFill="#ffff55" textFill="#eaff41">
                  <graphic>
                      <ImageView fitHeight="17.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
                          <image>
@@ -188,16 +184,7 @@ add in initialize
                      </Tooltip>
                  </tooltip>
              </JFXButton>
-            <JFXButton fx:id="adminPanelSearchConfirmButton" layoutX="763.0" layoutY="1010.0" prefHeight="30.0" prefWidth="62.0" ripplerFill="#ffff55" text="ok" textFill="#ffff55">
-               <graphic>
-                  <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../resources/media/images/others/searchIconYellow.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </JFXButton>
-            <Label fx:id="adminPanelSituationLabel" layoutX="279.0" layoutY="1112.0" prefHeight="19.0" prefWidth="540.0"  textFill="WHITE">
+            <Label fx:id="adminPanelSituationLabel" layoutX="279.0" layoutY="1112.0" prefHeight="19.0" prefWidth="494.0" textFill="WHITE">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>
@@ -247,17 +234,17 @@ add in initialize
                   <Font size="21.0" />
                </font>
             </Label>
-            <Label fx:id="auctionPanelSearchAuctionIdSituationLabel" layoutX="789.0" layoutY="1251.0" prefHeight="19.0" prefWidth="212.0" textFill="WHITE">
+            <Label fx:id="auctionPanelSearchAuctionIdSituationLabel" layoutX="672.0" layoutY="1423.0" prefHeight="20.0" prefWidth="323.0" textFill="WHITE">
                <font>
-                  <Font name="System Italic" size="13.0" />
+                  <Font name="System Italic" size="12.0" />
                </font>
             </Label>
-            <JFXTextArea fx:id="auctionPanelPriceOfAuctionedCardTextArea" focusColor="AQUA" labelFloat="true" layoutX="844.0" layoutY="1261.0" prefHeight="36.0" prefWidth="149.0" promptText="enter price" unFocusColor="WHITE">
+            <JFXTextArea fx:id="auctionPanelPriceOfAuctionedCardTextArea" focusColor="AQUA" labelFloat="true" layoutX="844.0" layoutY="1278.0" prefHeight="36.0" prefWidth="149.0" promptText="enter price" unFocusColor="WHITE">
                <tooltip>
                   <Tooltip text="max bid given" />
                </tooltip>
             </JFXTextArea>
-            <ImageView fitHeight="37.0" fitWidth="30.0" layoutX="957.0" layoutY="1264.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="37.0" fitWidth="30.0" layoutX="957.0" layoutY="1281.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../resources/media/images/others/moneyIconInShopMenu.png" />
                </image>
@@ -275,10 +262,10 @@ add in initialize
                </font>
             </JFXButton>
             <JFXTextArea fx:id="auctionPanelSearchACardToAuctionTextArea" focusColor="#ffff55" labelFloat="true" layoutX="282.0" layoutY="1200.0" prefHeight="36.0" prefWidth="185.0" promptText="search card to auction" unFocusColor="WHITE" />
-            <JFXTextArea fx:id="auctionPanelSetAPriceToAuctionTextArea" focusColor="AQUA" labelFloat="true" layoutX="282.0" layoutY="1273.0" prefHeight="36.0" prefWidth="179.0" promptText="set a price" unFocusColor="WHITE" />
-            <Label fx:id="auctionPanelSearchCArdToAuctionSituationLabel" layoutX="284.0" layoutY="1243.0" prefHeight="19.0" prefWidth="186.0" textFill="WHITE">
+            <JFXTextArea fx:id="auctionPanelSetAPriceToAuctionTextArea" focusColor="AQUA" labelFloat="true" layoutX="282.0" layoutY="1275.0" prefHeight="36.0" prefWidth="179.0" promptText="set a price" unFocusColor="WHITE" />
+            <Label fx:id="auctionPanelSearchCArdToAuctionSituationLabel" layoutX="287.0" layoutY="1421.0" prefHeight="24.0" prefWidth="367.0" textFill="WHITE">
                <font>
-                  <Font name="System Italic" size="13.0" />
+                  <Font name="System Italic" size="12.0" />
                </font>
             </Label>
             <JFXButton fx:id="auctionPanelPutOnAuctionButton" buttonType="RAISED" layoutX="272.0" layoutY="1349.0" onAction="#makeAnAuction" prefHeight="68.0" prefWidth="198.0" text="Put On Auction" textFill="#59ff59">
@@ -293,18 +280,8 @@ add in initialize
                   <Font size="18.0" />
                </font>
             </JFXButton>
-            <Label fx:id="priceToSellLabel" layoutX="363.0" layoutY="617.0" prefHeight="31.0" prefWidth="173.0" text="Label" textFill="AQUA">
-               <font>
-                  <Font name="System Italic" size="16.0" />
-               </font>
-            </Label>
-            <ImageView fitHeight="36.0" fitWidth="28.0" layoutX="333.0" layoutY="619.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../resources/media/images/others/moneyIconInShopMenu.png" />
-               </image>
-            </ImageView>
             <JFXTextArea fx:id="userCardsLabel" editable="false" layoutX="97.0" layoutY="153.0" prefHeight="1438.0" prefWidth="173.0" />
-            <ImageView fitHeight="37.0" fitWidth="30.0" layoutX="427.0" layoutY="1279.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="37.0" fitWidth="30.0" layoutX="427.0" layoutY="1281.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../resources/media/images/others/moneyIconInShopMenu.png" />
                </image>
@@ -314,7 +291,7 @@ add in initialize
                   <Image url="@../../../../resources/media/images/others/searchIconAqua.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="37.0" fitWidth="30.0" layoutX="957.0" layoutY="1205.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="37.0" fitWidth="30.0" layoutX="963.0" layoutY="1205.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../resources/media/images/others/searchIconYellow.png" />
                </image>
@@ -403,6 +380,13 @@ add in initialize
                   </LinearGradient>
                </stroke>
             </Line>
+            <ImageView fitHeight="29.0" fitWidth="34.0" layoutX="793.0" layoutY="1011.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/searchIconYellow.png" />
+               </image>
+            </ImageView>
+            <JFXTextArea fx:id="adminPanelCardAmountSlider" focusColor="#59ff59" labelFloat="true" layoutX="604.0" layoutY="1061.0" prefHeight="35.0" prefWidth="168.0" promptText="number of cards" unFocusColor="WHITE" />
+            <JFXButton fx:id="adminPanelCardAmountConfirmButton" buttonType="RAISED" layoutX="746.0" layoutY="1069.0" onAction="#increaseNumberOfCard" prefHeight="25.0" prefWidth="30.0" text="ok" textFill="#ffff55" />
          </children>
       </Pane>
    </content>

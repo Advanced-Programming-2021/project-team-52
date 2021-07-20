@@ -69,7 +69,7 @@ public class ShopViewController implements StringMessages, Initializable {
     JFXButton adminPanelSearchConfirmButton, adminPanelCardAmountConfirmButton, adminPanelRestrictCardButton,
             adminPanelUnRestrictCardButton, adminPanelLoginConfirmButton;
     @FXML
-    JFXSlider adminPanelCardAmountSlider;
+    JFXTextArea adminPanelCardAmountSlider;
     boolean isInShopMenu = true;
     String cardNameInUserCards = "";
 
@@ -126,9 +126,6 @@ public class ShopViewController implements StringMessages, Initializable {
         numberOfCardLabelUnderUserCard.setStyle("-fx-text-fill: white");
         numberOfCardLabelUnderShopCard.setStyle("-fx-text-fill: white");
 
-        cardNameLabelUnderUserCard.setStyle("-fx-text-fill: white");
-        cardNameLabelUnderShopCard.setStyle("-fx-text-fill: white");
-
         auctionPanelSearchACardToAuctionTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         auctionPanelSetAPriceToAuctionTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         auctionPanelAllCardsInAuctionTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
@@ -139,7 +136,14 @@ public class ShopViewController implements StringMessages, Initializable {
         adminPanelPasswordTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         adminPanelCardSearchTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         userCardsLabel.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
-        suggestedCardTextArea.setStyle("-fx-prompt-text-fill: white; linear-gradient(to right, aqua , blue);");
+        suggestedCardTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: linear-gradient(to right, aqua , blue);");
+        
+        adminPanelCardAmountSlider.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+
+        numberOfCardLabelUnderShopCard.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+        numberOfCardLabelUnderUserCard.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
+
+        userBalanceInShopHeader.setStyle("-fx-text-fill: linear-gradient(to right, aqua , #e56cff) ");
 
         adminPanelCardSearchTextArea.setVisible(false);
         adminPanelSearchConfirmButton.setVisible(false);
@@ -374,7 +378,7 @@ public class ShopViewController implements StringMessages, Initializable {
         String cardName = adminPanelCardSearchTextArea.getText();
         if (cardName != null && !cardName.equals("")) {
             adminPanelSituationLabel.setText(shopController.increaseNumberOfCard(cardName, String.valueOf((int)
-                    adminPanelCardAmountSlider.getValue())));
+                    Integer.parseInt(adminPanelCardAmountSlider.getText()))));
         }
     }
 
