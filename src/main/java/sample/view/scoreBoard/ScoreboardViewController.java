@@ -1,5 +1,6 @@
 package sample.view.scoreBoard;
 
+import com.jfoenix.controls.JFXTextArea;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -47,12 +48,12 @@ public class ScoreboardViewController implements Initializable {
     Stage stage;
 
     @FXML
-    Label player01Score, player02Score, player03Score, player04Score, player05Score, player06Score, player07Score,
+    JFXTextArea player01Score, player02Score, player03Score, player04Score, player05Score, player06Score, player07Score,
             player08Score, player09Score, player10Score, player11Score, player12Score, player13Score, player14Score,
             player15Score, player16Score, player17Score, player18Score, player19Score, player20Score;
 
     @FXML
-    Label player01, player02, player03, player04, player05, player06, player07, player08, player09, player10,
+    JFXTextArea player01, player02, player03, player04, player05, player06, player07, player08, player09, player10,
             player11, player12, player13, player14, player15, player16, player17, player18, player19, player20;
 
     @Override
@@ -237,7 +238,7 @@ public class ScoreboardViewController implements Initializable {
         return listOfUsers.get(i).split(",");
     }
 
-    private void setUserStyle(Label player, Label score) {
+    private void setUserStyle(JFXTextArea player, JFXTextArea score) {
         player.setStyle("-fx-background-color: #357264; -fx-font-style: italic");
         score.setStyle("-fx-background-color: #357264; -fx-font-style: italic");
     }
