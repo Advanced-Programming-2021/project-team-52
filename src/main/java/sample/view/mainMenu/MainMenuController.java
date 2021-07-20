@@ -31,7 +31,7 @@ public class MainMenuController implements Initializable {
 
     @FXML
     MediaView mainMenuBackgroundMediaView;
-    MediaPlayer mainMenuBackgroundMediaPlayer;
+    static MediaPlayer mainMenuBackgroundMediaPlayer;
     Media mainMenuBackgroundMedia;
     File mainMenuBackgroundMediaFile;
 
@@ -223,4 +223,7 @@ public class MainMenuController implements Initializable {
     }
 
 
+    public static MediaPlayer getMainMenuBackgroundMediaPlayer() {
+        return mainMenuBackgroundMediaPlayer;
+    }
 }

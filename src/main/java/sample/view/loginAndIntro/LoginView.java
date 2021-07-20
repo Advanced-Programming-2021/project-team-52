@@ -65,6 +65,8 @@ public class LoginView extends Application {
 
     MediaView introMediaView = new MediaView();
     AnchorPane introScenePane = new AnchorPane();
+    static MediaPlayer welcomeMediaPlayer;
+
 
     Stage pStage;
     Scene pScene;
@@ -112,6 +114,10 @@ public class LoginView extends Application {
 
         stage.setScene(introScene);
         stage.show();
+    }
+
+    public static MediaPlayer getWelcomeMediaPlayer() {
+        return welcomeMediaPlayer;
     }
 
 //    public void nextButtonAction(ActionEvent e) throws IOException {

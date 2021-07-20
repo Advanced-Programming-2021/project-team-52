@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXSlider?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
@@ -40,11 +44,43 @@
       <JFXTextArea fx:id="oldPasswordTextArea" focusColor="#ffff55" labelFloat="true" layoutX="614.0" layoutY="168.0" prefHeight="34.0" prefWidth="233.0" promptText="old Password" unFocusColor="WHITE" visible="false" />
       <JFXTextArea fx:id="newPasswordTextArea" focusColor="#ffff55" labelFloat="true" layoutX="614.0" layoutY="239.0" prefHeight="34.0" prefWidth="233.0" promptText="new Password" unFocusColor="WHITE" visible="false" />
       <JFXTextArea fx:id="newPasswordAgainTextArea" focusColor="#ffff55" labelFloat="true" layoutX="614.0" layoutY="304.0" prefHeight="34.0" prefWidth="233.0" promptText="new Password Again" unFocusColor="WHITE" visible="false" />
-      <Line endX="1041.4000244140625" endY="7.62939453125E-6" layoutX="169.0" layoutY="507.0" startX="-100.0" stroke="#ffff22" />
-      <Label layoutX="68.0" layoutY="449.0" prefHeight="47.0" prefWidth="247.0" text="Achievements" textFill="WHITE">
+      <Line endX="1041.4000244140625" endY="7.62939453125E-6" layoutX="169.0" layoutY="507.0" startX="-100.0">
+         <stroke>
+            <LinearGradient endX="0.10305342601455802" endY="0.7748091521153923" startX="0.2671755907189755" startY="0.5839694729288115">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.621052622795105" blue="0.5485965013504028" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </stroke></Line>
+      <Label layoutX="68.0" layoutY="458.0" prefHeight="47.0" prefWidth="247.0" text="Achievements">
          <font>
-            <Font size="32.0" />
+            <Font name="Garamond" size="40.0" />
          </font>
+         <textFill>
+            <LinearGradient endX="0.6603053580713636" endY="0.9503816743843428" startX="0.6603053143916239" startY="0.5458015703972969">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.7894737124443054" blue="0.6973684430122375" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
       </Label>
       <ImageView fitHeight="47.0" fitWidth="62.0" layoutX="1164.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -99,5 +135,348 @@
       <JFXTextArea fx:id="newPhotoTextArea" focusColor="#ffff59" labelFloat="true" layoutX="71.0" layoutY="364.0" prefHeight="47.0" prefWidth="458.0" promptText="new Photo address" unFocusColor="WHITE" />
       <JFXButton fx:id="usernameChangeSubmitButton1" buttonType="RAISED" layoutX="507.0" layoutY="184.0" ripplerFill="#ffff22" text="ok" textFill="#ffff22" visible="false" />
       <JFXButton fx:id="photoChangeSubmitButton" buttonType="RAISED" layoutX="497.0" layoutY="385.0" onAction="#changeImageByPath" ripplerFill="#ffff22" text="ok" textFill="#ffff22" />
+      <Label fx:id="nicknameLabelInProfileScene11" layoutX="945.0" layoutY="240.0" prefHeight="66.0" prefWidth="278.0" text="Setting:" textFill="#ffff55">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="47.0" fitWidth="54.0" layoutX="66.0" layoutY="516.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/gainnedFirstGameAward.png" />
+         </image></ImageView>
+      <ImageView fitHeight="47.0" fitWidth="54.0" layoutX="66.0" layoutY="576.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/gainnedShopAward.png" />
+         </image></ImageView>
+      <ImageView fitHeight="47.0" fitWidth="54.0" layoutX="66.0" layoutY="636.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/gainnedMasterCartorAward.png" />
+         </image></ImageView>
+      <ImageView fitHeight="47.0" fitWidth="54.0" layoutX="520.0" layoutY="523.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/gainnedSpellAward.png" />
+         </image></ImageView>
+      <ImageView fitHeight="47.0" fitWidth="54.0" layoutX="520.0" layoutY="583.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/gainnedTrapAward.png" />
+         </image></ImageView>
+      <ImageView fitHeight="47.0" fitWidth="54.0" layoutX="520.0" layoutY="643.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/gainnedMonsterAward.png" />
+         </image></ImageView>
+      <ImageView fitHeight="47.0" fitWidth="54.0" layoutX="918.0" layoutY="523.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/gainnedNotBadKidAward.png" />
+         </image></ImageView>
+      <ImageView fitHeight="47.0" fitWidth="54.0" layoutX="918.0" layoutY="583.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/gainnedThatWhatITalkingAboutAward.png" />
+         </image></ImageView>
+      <ImageView fitHeight="47.0" fitWidth="54.0" layoutX="918.0" layoutY="643.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/gainnedISeeYoureAManOfCultureAsWellAward.png" />
+         </image></ImageView>
+      <ImageView fitHeight="47.0" fitWidth="66.0" layoutX="1169.0" layoutY="459.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../resources/media/images/others/achievementIcon.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="124.0" layoutY="515.0" prefHeight="32.0" prefWidth="207.0" text="first Step (brother)">
+         <font>
+            <Font name="Garamond" size="27.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.6603053580713636" endY="0.9503816743843428" startX="0.6603053143916239" startY="0.6183206398068494">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.7894737124443054" blue="0.6973684430122375" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label layoutX="124.0" layoutY="540.0" prefHeight="32.0" prefWidth="396.0" text="win your first game(by completing this you'r already ahead of developers)" textFill="#c7c7c7">
+         <font>
+            <Font name="Garamond" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="124.0" layoutY="578.0" prefHeight="32.0" prefWidth="285.0" text="start your capitalism path">
+         <font>
+            <Font name="Garamond" size="27.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.6603053580713636" endY="0.9503816743843428" startX="0.6603053143916239" startY="0.6183206398068494">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.7894737124443054" blue="0.6973684430122375" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label layoutX="124.0" layoutY="603.0" prefHeight="32.0" prefWidth="155.0" text="buy your first card" textFill="#c7c7c7">
+         <font>
+            <Font name="Garamond" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="124.0" layoutY="638.0" prefHeight="32.0" prefWidth="215.0" text="a real jew">
+         <font>
+            <Font name="Garamond" size="27.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.6603053580713636" endY="0.9503816743843428" startX="0.6603053143916239" startY="0.6183206398068494">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.7894737124443054" blue="0.6973684430122375" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label layoutX="124.0" layoutY="663.0" prefHeight="32.0" prefWidth="155.0" text="collect all of cards" textFill="#c7c7c7">
+         <font>
+            <Font name="Garamond" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="575.0" layoutY="518.0" prefHeight="32.0" prefWidth="285.0" text="witcher">
+         <font>
+            <Font name="Garamond" size="27.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.6603053580713636" endY="0.9503816743843428" startX="0.6603053143916239" startY="0.6183206398068494">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.7894737124443054" blue="0.6973684430122375" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label layoutX="575.0" layoutY="543.0" prefHeight="32.0" prefWidth="155.0" text="use spells 100 times" textFill="#c7c7c7">
+         <font>
+            <Font name="Garamond" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="575.0" layoutY="582.0" prefHeight="32.0" prefWidth="285.0" text="man, you like traps">
+         <font>
+            <Font name="Garamond" size="27.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.6603053580713636" endY="0.9503816743843428" startX="0.6603053143916239" startY="0.6183206398068494">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.7894737124443054" blue="0.6973684430122375" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label layoutX="575.0" layoutY="607.0" prefHeight="32.0" prefWidth="155.0" text="use traps 100 times" textFill="#c7c7c7">
+         <font>
+            <Font name="Garamond" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="575.0" layoutY="642.0" prefHeight="32.0" prefWidth="285.0" text="furry and beyond">
+         <font>
+            <Font name="Garamond" size="27.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.6603053580713636" endY="0.9503816743843428" startX="0.6603053143916239" startY="0.6183206398068494">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.7894737124443054" blue="0.6973684430122375" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label layoutX="575.0" layoutY="667.0" prefHeight="32.0" prefWidth="155.0" text="use monsters 100 times" textFill="#c7c7c7">
+         <font>
+            <Font name="Garamond" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="965.0" layoutY="519.0" prefHeight="32.0" prefWidth="285.0" text="not Bad kid ">
+         <font>
+            <Font name="Garamond" size="27.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.6603053580713636" endY="0.900763355593645" startX="0.6603053143916239" startY="0.3587786113942853">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="1.0" green="0.8111110925674438" blue="0.8111110925674438" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.007680491551459294">
+                     <color>
+                        <Color red="1.0" green="0.8111110925674438" blue="0.8111110925674438" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" blue="0.25" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label layoutX="965.0" layoutY="544.0" prefHeight="32.0" prefWidth="155.0" text="win 100 games" textFill="#c7c7c7">
+         <font>
+            <Font name="Garamond" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="965.0" layoutY="578.0" prefHeight="32.0" prefWidth="285.0" text="shit is getting serious">
+         <font>
+            <Font name="Garamond" size="27.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.6603053580713636" endY="0.8549618270560986" startX="0.6603053143916239" startY="0.5267176009316481">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.9473684430122375" green="0.7938596606254578" blue="0.5087719559669495" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="0.6784313917160034" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label layoutX="965.0" layoutY="603.0" prefHeight="32.0" prefWidth="155.0" text="win 1000 games" textFill="#c7c7c7">
+         <font>
+            <Font name="Garamond" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="965.0" layoutY="638.0" prefHeight="32.0" prefWidth="285.0" text="i think you should visit a therapist">
+         <font>
+            <Font name="Garamond" size="21.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.6603053580713636" endY="0.8473282647496871" startX="0.6603053143916239" startY="0.511450330719693">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.007680491551459294">
+                     <color>
+                        <Color green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.1102230246251565E-16" green="0.5833333134651184" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label layoutX="965.0" layoutY="663.0" prefHeight="32.0" prefWidth="155.0" text="win 10000 games" textFill="#c7c7c7">
+         <font>
+            <Font name="Garamond" size="14.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="achievement1GainImageView" fitHeight="32.0" fitWidth="31.0" layoutX="90.0" layoutY="541.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="achievement3GainImageView" fitHeight="48.0" fitWidth="31.0" layoutX="90.0" layoutY="659.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/stampIcon.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="48.0" fitWidth="31.0" layoutX="545.0" layoutY="548.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="48.0" fitWidth="31.0" layoutX="545.0" layoutY="668.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="achievement9GainImageView" fitHeight="32.0" fitWidth="31.0" layoutX="942.0" layoutY="668.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="achievement7GainImageView" fitHeight="48.0" fitWidth="31.0" layoutX="942.0" layoutY="545.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/stampIcon.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="achievement1GainImageView1" fitHeight="32.0" fitWidth="31.0" layoutX="100.0" layoutY="551.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="achievement9GainImageView1" fitHeight="32.0" fitWidth="31.0" layoutX="952.0" layoutY="678.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="achievement2GainImageView" fitHeight="48.0" fitWidth="31.0" layoutX="90.0" layoutY="599.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/stampIcon.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="achievement1GainImageView" fitHeight="48.0" fitWidth="31.0" layoutX="90.0" layoutY="545.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/stampIcon.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="achievement4GainImageView" fitHeight="48.0" fitWidth="31.0" layoutX="545.0" layoutY="545.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/stampIcon.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="achievement5GainImageView" fitHeight="48.0" fitWidth="31.0" layoutX="545.0" layoutY="604.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/stampIcon.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="achievement6GainImageView" fitHeight="48.0" fitWidth="31.0" layoutX="545.0" layoutY="664.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/stampIcon.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="achievement8GainImageView" fitHeight="48.0" fitWidth="31.0" layoutX="942.0" layoutY="608.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/stampIcon.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="achievement9GainImageView" fitHeight="48.0" fitWidth="31.0" layoutX="942.0" layoutY="668.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../../../../resources/media/images/achievement/stampIcon.png" />
+         </image>
+      </ImageView>
+      <JFXSlider fx:id="volumeSlider" layoutX="950.0" layoutY="315.0" prefHeight="24.0" prefWidth="155.0" />
+      <JFXButton buttonType="RAISED" layoutX="1121.0" layoutY="318.0" onAction="#volumeSetting" text="ok" textFill="#ffff55" />
    </children>
 </AnchorPane>

@@ -1,6 +1,7 @@
 package sample.view.profileAndSetting;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXSlider;
 import com.jfoenix.controls.JFXTextArea;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,6 +11,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
@@ -20,6 +23,8 @@ import sample.controller.ProfileController;
 import sample.model.User;
 import sample.model.tools.StringMessages;
 import sample.view.UserKeeper;
+import sample.view.loginAndIntro.LoginView;
+import sample.view.mainMenu.MainMenuController;
 
 import java.io.*;
 import java.net.URL;
@@ -49,6 +54,13 @@ public class ProfileAndSettingViewController implements Initializable {
     Label usernameLabelInProfileScene, nicknameLabelInProfileScene;
     @FXML
     Label situationLabel;
+
+    @FXML
+    ImageView achievement1GainImageView,achievement2GainImageView,achievement3GainImageView,
+            achievement4GainImageView,achievement5GainImageView,achievement6GainImageView,
+            achievement7GainImageView,achievement8GainImageView,achievement9GainImageView;
+    @FXML
+    JFXSlider volumeSlider;
 
     //    InputStream defaultProfileImageStream = new FileInputStream
 //            ("./src/main/resources/media/images/profile/1.jpg");
@@ -153,6 +165,19 @@ public class ProfileAndSettingViewController implements Initializable {
         }
         situationLabel.setText(response);
 
+    }
+
+    public ColorAdjust unGainedEffectSetting(){
+        ColorAdjust colorEffect = new ColorAdjust();
+        colorEffect.setBrightness(-0.8);
+        GaussianBlur aLittleBlur = new GaussianBlur(4);
+        colorEffect.setInput(aLittleBlur);
+        return colorEffect;
+    }
+
+    public void volumeSetting(ActionEvent e){
+        MainMenuController.getMainMenuBackgroundMediaPlayer().setVolume(volumeSlider.getValue()/100);
+        LoginView.getWelcomeMediaPlayer().setVolume(volumeSlider.getValue()/100);
     }
 
     public void backButton(ActionEvent e) throws IOException {
