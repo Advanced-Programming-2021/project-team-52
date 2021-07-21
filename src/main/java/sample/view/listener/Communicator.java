@@ -91,6 +91,19 @@ public class Communicator {
             ioException.printStackTrace();
         }
     }
+    public static String getOnlineUsernames(){
+        StringBuilder response = new StringBuilder();
+        for (Thread thread : onlineUsers.keySet()) {
+            try {
+                if(thread.isAlive())
+                    response.append(onlineUsers.get(thread)).append("\n");
+//                    System.out.println("user "+onlineUsers.get(thread)+ " is online");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return response.toString();
+    }
 
     public void changeGameState(String gameState) {
         sendMessage("changeGameState" + "*" + gameState);
