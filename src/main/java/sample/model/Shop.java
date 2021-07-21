@@ -68,6 +68,9 @@ public class Shop {
         numberOfItems.put(name, numberOfItems.get(name) + number);
 
     }
+    public static void decreaseNumberOfCardWithInput(String name, int number){
+        numberOfItems.put(name, numberOfItems.get(name) - number);
+    }
 
     public static void decreaseNumberOfCard(String name) {
         numberOfItems.put(name, numberOfItems.get(name) - 1);

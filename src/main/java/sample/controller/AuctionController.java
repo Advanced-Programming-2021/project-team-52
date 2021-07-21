@@ -1,6 +1,7 @@
 package sample.controller;
 
 import sample.model.Auction;
+import sample.model.Shop;
 import sample.model.User;
 import sample.model.cards.Cards;
 import sample.model.tools.StringMessages;
@@ -54,6 +55,8 @@ public class AuctionController implements StringMessages {
             return CARD_NAME_IS_INVALID;
         if (!doesAuctioneerHaveThisCard(auctioneer, cardName))
             return YOU_DO_NOT_HAVE_ANY_OF_THIS_CARD_OUT_OF_DECK;
+        if (Shop.getBannedCards().contains(cardName))
+            return "Error : The card is banned";
 
         Auction auction = new Auction(auctioneer, firstPrice, card);
         allActiveAuctions.add(auction);
