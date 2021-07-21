@@ -309,25 +309,28 @@ public class GameBoardView{
             if (button.getText().equals("pause")) {
                 button.setText("resume");
                 pause();
-                opponentCommunicator.pause();
+                sender.send("-GPC-pause");
             } else {
                 button.setText("pause");
                 resume();
-                opponentCommunicator.resume();
+                sender.send("-GPC-resume");
             }
         });
     }
 
     public void pause(){
         blocked = true;
-        pauseButton.setText("resume");
-        anchorPane.getChildren().add(darkMode);
+        Platform.runLater(() -> pauseButton.setText("resume"));
+        if (!anchorPane.getChildren().contains(darkMode))
+            Platform.runLater(() -> anchorPane.getChildren().add(darkMode));
     }
 
     public void resume(){
         blocked = false;
-        pauseButton.setText("pause");
-        anchorPane.getChildren().remove(darkMode);
+        Platform.runLater(() -> {
+            pauseButton.setText("pause");
+            anchorPane.getChildren().remove(darkMode);
+        });
     }
 
     private void setNextPhase(Rectangle... rectangles){
@@ -377,12 +380,13 @@ public class GameBoardView{
             messageField.clear();
             text = "\n" + myNicknameString + " : " + text;
             chatTexts.appendText(text);
-            opponentCommunicator.sendMessage(text);
+            sender.send("-GPC-message*" + text);
         }
     }
 
     public void addTextToChat(String message){
-        chatTexts.appendText(message);
+        if (message.startsWith("\n" + enemyNickname.getText()))
+            chatTexts.appendText(message);
     }
 
     private void initializeCardPlaces(HashMap<Integer, CardView> places, AnchorPane anchorPane, boolean enemy){

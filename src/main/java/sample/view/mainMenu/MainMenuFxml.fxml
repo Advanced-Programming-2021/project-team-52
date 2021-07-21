@@ -58,7 +58,7 @@
                   <Image url="@../../../../resources/media/images/others/swordIcon.png" />
                </image>
             </ImageView>
-            <JFXButton fx:id="newGameButton" buttonType="RAISED" layoutX="76.0" layoutY="251.0" onMouseEntered="#onMouseEnteredNewGameButton" onMouseExited="#onMouseExitedNewGameButton" prefHeight="300.0" prefWidth="200.0" text="New Game" textFill="#ffff44" wrapText="true">
+            <JFXButton fx:id="newGameButton" onAction="#switchToGameScene" buttonType="RAISED" layoutX="76.0" layoutY="251.0" onMouseEntered="#onMouseEnteredNewGameButton" onMouseExited="#onMouseExitedNewGameButton" prefHeight="300.0" prefWidth="200.0" text="New Game" textFill="#ffff44" wrapText="true">
                <font>
                   <Font size="25.0" />
                </font>
@@ -216,11 +216,11 @@
 <!--                  </LinearGradient>-->
 <!--               </ripplerFill>-->
 <!--            </JFXButton>-->
-            <JFXButton fx:id="tvButton" buttonType="RAISED" layoutX="0" layoutY="0" onAction="#switchToTv"  prefHeight="45.0" prefWidth="380.0" text="TV" textFill="#ffff44">
-               <font>
-                  <Font size="25.0" />
-               </font>
-            </JFXButton>
+<!--            <JFXButton fx:id="tvButton" buttonType="RAISED" layoutX="0" layoutY="0" onAction="#switchToTv"  prefHeight="45.0" prefWidth="380.0" text="TV" textFill="#ffff44">-->
+<!--               <font>-->
+<!--                  <Font size="25.0" />-->
+<!--               </font>-->
+<!--            </JFXButton>-->
             <ImageView fx:id="leftHandImageHelper" fitHeight="202.0" fitWidth="219.0" layoutX="91.0" layoutY="461.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="rightHandImageHelper" fitHeight="320.0" fitWidth="300.0" layoutX="867.0" layoutY="436.0" pickOnBounds="true" preserveRatio="true" />
          </children>

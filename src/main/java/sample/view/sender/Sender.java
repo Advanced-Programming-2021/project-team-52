@@ -106,6 +106,7 @@ public class Sender {
             message = dataInputStream.readUTF();
         } catch (IOException ioException) {
             ioException.printStackTrace();
+            message = "break";
         }
         return message;
     }

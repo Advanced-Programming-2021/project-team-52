@@ -17,6 +17,7 @@ public class GameBoardHandler implements Runnable{
     private Stage stage;
     private Communicator communicator;
     private GameBoardView gameBoardView;
+    private boolean isRunning;
 
     public GameBoardHandler(Stage stage){
         this.stage = stage;
@@ -34,13 +35,21 @@ public class GameBoardHandler implements Runnable{
         this.gameBoardView = gameBoardView;
     }
 
+    public boolean getIsRunning(){
+        return isRunning;
+    }
+
     @Override
     public void run() {
+        isRunning = true;
         String message;
         while (run){
             message = sender.receive();
             handle(message);
+            if (message.equals("break"))
+                break;
         }
+        isRunning = false;
     }
 
     protected void handle(String message){
@@ -99,7 +108,14 @@ public class GameBoardHandler implements Runnable{
         } else if (message.startsWith("actions")){
             strings= message.replaceAll("actions\\*", "").split("\\*");
             gameBoardView.setActions(strings[0], strings[1], Integer.parseInt(strings[2]), strings[3].equalsIgnoreCase("true"));
-        }
+        } else if (message.startsWith("message"))
+            gameBoardView.addTextToChat(message.replaceAll("^message\\*", ""));
+        else if (message.equals("pause"))
+            gameBoardView.pause();
+        else if (message.equals("resume"))
+            gameBoardView.resume();
+        else if (message.equals("break"))
+            gameBoardView.shutdown(stage, true);
         else {
             handleSelecting(message);
         }
