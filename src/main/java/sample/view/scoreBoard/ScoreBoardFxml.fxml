@@ -198,7 +198,7 @@
             <Font size="10.0" />
          </font>
       </JFXTextArea>
-      <JFXTextArea fx:id="player091" editable="false" focusColor="GOLD" layoutX="654.0" layoutY="345.0" prefHeight="31.0" prefWidth="118.0">
+      <JFXTextArea fx:id="player09Score" editable="false" focusColor="GOLD" layoutX="654.0" layoutY="345.0" prefHeight="31.0" prefWidth="118.0">
          <font>
             <Font size="10.0" />
          </font>
