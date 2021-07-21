@@ -98,8 +98,8 @@ public class ActionFinder implements StringMessages {
     }
 
     public String chooseMethodFromCommunicator(){
-//        if(command.startsWith(COMMUNICATOR_PREFIX + "getOnlineUsernames"))
-//        return Communicator.getOnlineUsernames();
+        if(command.startsWith(COMMUNICATOR_PREFIX + "getOnlineUsernames"))
+        return Communicator.getOnlineUsernames();
         return invalidCommand;
     }
 
