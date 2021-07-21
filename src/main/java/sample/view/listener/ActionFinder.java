@@ -1,6 +1,8 @@
 package sample.view.listener;
 
 import sample.controller.*;
+import sample.controller.matchmaking.MatchMaker;
+import sample.controller.matchmaking.ReadyUser;
 import sample.controller.matchmaking.ReadyUser;
 import sample.model.Shop;
 import sample.model.User;
@@ -11,9 +13,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ActionFinder implements StringMessages {
+
     private static Map<String, User> authorizedUsers = new ConcurrentHashMap<>();
     private LoginController loginController = LoginController.getInstance();
     private ProfileController profileController = ProfileController.getInstance();
@@ -45,8 +49,6 @@ public class ActionFinder implements StringMessages {
     private String[] elements;
     private Communicator communicator;
 
-
-
     public ActionFinder(Communicator communicator) {
         this.communicator = communicator;
     }
@@ -55,11 +57,12 @@ public class ActionFinder implements StringMessages {
         return communicator;
     }
 
-
     public String chooseClass(String command) {
         this.command = command;
         this.elements = command.split(",");
-        if (command.startsWith(LOGIN_PREFIX))
+        if (command.startsWith(GAME_PLAY_CONTROLLER_PREFIX))
+            return saveCommand();
+        else if (command.startsWith(LOGIN_PREFIX))
             return chooseMethodFromLogin();
         User user = getUserByToken(elements[elements.length - 1]);
         if (user == null)
@@ -249,6 +252,11 @@ public class ActionFinder implements StringMessages {
         return invalidCommand;
     }
 
+    private String saveCommand(){
+        communicator.saveCommand(command, GAME_PLAY_CONTROLLER_PREFIX);
+        return "";
+    }
+
     public String chooseMethodFromCardCreator() {
         if (command.startsWith(CARD_CREATOR_PREFIX + "setName"))
             return cardCreatorController.setName(elements[1]);
@@ -286,9 +294,34 @@ public class ActionFinder implements StringMessages {
     private String chooseMethodFromNewDuel(){
 //        NewDuelController newDuelController = new NewDuelController(user);
 //        newDuelController.run(elements[1], elements[2]);
+        if (command.startsWith("-ND-startANewGame")) {
+            return startNewGame();
+        } else if (command.startsWith("-ND-end")) {
+            return endSearching();
+        } else /*if (command.startsWith("-ND-getActiveGames"))
+            return getActiveGames();
+        else if (command.startsWith("-ND-stream"))
+            return stream();*/
+        return "";
+    }
+
+    private String endSearching() {
+        MatchMaker.removeFromQueue(user);
+        return "end";
+    }
+
+    private String startNewGame() {
         ReadyUser.tryToGetOpponent(user, Integer.parseInt(elements[1]));
         return "trying to find opponent";
     }
+
+//    private String getActiveGames() {
+//        return NewDuelController.getActiveGames();
+//    }
+//
+//    private String stream(){
+//        return NewDuelController.stream(Integer.parseInt(elements[1]), communicator);
+//    }
 
     public boolean convertStringToBoolean(String message) {
         return message.toLowerCase().trim().equals("true");

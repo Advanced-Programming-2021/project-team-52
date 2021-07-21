@@ -31,7 +31,7 @@ public class GamePlayControllerCommandReceiver implements Runnable {
         String[] strings = string.replaceAll("getPossibleAction,", "").split(",");
         Action[] actions = gamePlayController.getPossibleAction(Integer.parseInt(strings[0]),
                 strings[1].equalsIgnoreCase("true"), GameState.getGameStateByString(strings[2]));
-        communicator.sendMessage(actions[0].name() + "," + actions[1].name());
+        communicator.sendMessage("actions*" + actions[0].name() + "*" + actions[1].name() + "*" + strings[0] + "*" + strings[1]);
     }
 
     private void getSelectedCardStatus() {

@@ -47,7 +47,8 @@ public class UponActivation implements SpecialAbility, StringMessages {
     }
 
     private void payLPForActivation() {
-        printerAndScanner.printNextLine(printBuilderController.askForLpForActivation(amount).toString());
+        gamePlayController.getMyCommunicator().askOptions(
+                printBuilderController.askForLpForActivation(amount).toString(), "yes","no");
         if (printerAndScanner.scanNextLine().equals("yes")) {
             gamePlayController.getGamePlay().getMyGameBoard().changeHealth(amount * -1);
             met = true;
@@ -57,14 +58,16 @@ public class UponActivation implements SpecialAbility, StringMessages {
 
     private void sacrificeCardFromHand() {
         met = false;
-        printerAndScanner.printNextLine(askForPlace);
+        gamePlayController.getMyCommunicator().askOptions(askForPlace, "ok");
+        gamePlayController.takeCommand();
         String command;
         Place place;
         while (true) {
-            command = printerAndScanner.scanNextLine();
+            gamePlayController.getMyCommunicator().selectCard("hand", true, false, false);
+            command = gamePlayController.takeCommand();
             if (command.equals("cancel"))
                 break;
-            if (command.matches("[^012345]"))
+            if (!command.matches("^[012345]$"))
                 printerAndScanner.printNextLine(invalidInput);
             else {
                 place = gamePlayController.getGamePlay().getMyGameBoard().getPlace(Integer.parseInt(command), PLACE_NAME.HAND);
