@@ -158,18 +158,23 @@ public class ScoreboardViewController implements Initializable {
 //            setUsersInBoard();
 //        });
 
-        new Thread(()->{
-            while (true){
-                makeEveryThingNull();
-                setUsersInBoard();
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+//        new Thread(()->{
+//            while (true){
+        makeEveryThingNull();
+        setUsersInBoard();
+//                try {
+//                    Thread.sleep(3000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
 
+    }
+
+    public void refresh(ActionEvent e) {
+        makeEveryThingNull();
+        setUsersInBoard();
     }
 
     public void makeEveryThingNull() {

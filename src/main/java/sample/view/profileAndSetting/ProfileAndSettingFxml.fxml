@@ -228,7 +228,7 @@
             </LinearGradient>
          </textFill>
       </Label>
-      <Label layoutX="124.0" layoutY="603.0" prefHeight="32.0" prefWidth="155.0" text="buy your first card" textFill="#c7c7c7">
+      <Label layoutX="124.0" layoutY="603.0" prefHeight="32.0" prefWidth="155.0" text="buy your 1000 card" textFill="#c7c7c7">
          <font>
             <Font name="Garamond" size="14.0" />
          </font>
