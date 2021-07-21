@@ -141,14 +141,32 @@ public class ShopController implements StringMessages, RegexPatterns {
         if (!AuctionController.getInstance().isInputNumber(amount)) {
             return "Amount most be number";
         }
-        if(Integer.parseInt(amount) <= 0)
+        if (Integer.parseInt(amount) <= 0)
             return "Amount most be more than 0";
         Shop.increaseNumberOfCard(name, Integer.parseInt(amount));
         return "Number of card increased successfully";
     }
 
+    public String removeNumberOfCardToShop(String name, String amount) {
+        System.out.println(amount);
+        Cards card = Cards.getCard(name);
+        if (card == null) {
+            return noCardWithThisName;
+        }
+        if (!AuctionController.getInstance().isInputNumber(amount)) {
+            return "Amount most be number";
+        }
+        if (Integer.parseInt(amount) <= 0)
+            return "Amount most be more than 0";
+        if (Integer.parseInt(amount) > Shop.getNumberOfItems().get(name))
+            return "There are not enough of this card in shop";
+        Shop.decreaseNumberOfCardWithInput(name, Integer.parseInt(amount));
+        return "Number of card decreased successfully";
+    }
+
     public String sellCard(User user, String cardName) {
-        Cards card = Cards.getCard(cardName);
+//        System.out.println("111111111" + cardName);
+        Cards card = Cards.getCard( cardName);
         if (card == null) {
             return noCardWithThisName;
         }
@@ -167,7 +185,7 @@ public class ShopController implements StringMessages, RegexPatterns {
     }
 
     public String adminLogin(String username, String password) {
-        if(username.equals(ADMIN_USERNAME) && password.equals(ADMIN_PASSWORD))
+        if (username.equals(ADMIN_USERNAME) && password.equals(ADMIN_PASSWORD))
             return "login successful";
         return "Invalid information";
     }
