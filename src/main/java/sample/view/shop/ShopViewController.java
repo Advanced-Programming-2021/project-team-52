@@ -67,7 +67,7 @@ public class ShopViewController implements StringMessages, Initializable {
     Label auctionPanelSearchCArdToAuctionSituationLabel, auctionPanelSearchAuctionIdSituationLabel, adminPanelSituationLabel;
     @FXML
     JFXButton adminPanelSearchConfirmButton, adminPanelCardAmountConfirmButton, adminPanelRestrictCardButton,
-            adminPanelUnRestrictCardButton, adminPanelLoginConfirmButton;
+            adminPanelUnRestrictCardButton, adminPanelLoginConfirmButton,adminPanelCardRemoveConfirmButton;
     @FXML
     JFXTextArea adminPanelCardAmountSlider;
     boolean isInShopMenu = true;
@@ -149,6 +149,7 @@ public class ShopViewController implements StringMessages, Initializable {
         adminPanelRestrictCardButton.setVisible(false);
         adminPanelCardAmountSlider.setVisible(false);
         adminPanelUnRestrictCardButton.setVisible(false);
+        adminPanelCardRemoveConfirmButton.setVisible(false);
 //        adminPanelCardAmountSlider.setMin(1);
 //        adminPanelCardAmountSlider.setMax(100);
         showAllCardsOfShop();
@@ -331,6 +332,8 @@ public class ShopViewController implements StringMessages, Initializable {
         }
     }
 
+
+
     public void adminLogin(ActionEvent e) {
         String username = adminPanelUsernameTextArea.getText();
         String password = adminPanelPasswordTextArea.getText();
@@ -345,6 +348,7 @@ public class ShopViewController implements StringMessages, Initializable {
                 adminPanelRestrictCardButton.setVisible(true);
                 adminPanelCardAmountSlider.setVisible(true);
                 adminPanelUnRestrictCardButton.setVisible(true);
+                adminPanelCardRemoveConfirmButton.setVisible(true);
                 adminPanelSituationLabel.setText("");
             } else {
                 adminPanelCardSearchTextArea.setVisible(false);
@@ -353,6 +357,7 @@ public class ShopViewController implements StringMessages, Initializable {
                 adminPanelRestrictCardButton.setVisible(false);
                 adminPanelCardAmountSlider.setVisible(false);
                 adminPanelUnRestrictCardButton.setVisible(false);
+                adminPanelCardRemoveConfirmButton.setVisible(false);
                 adminPanelSituationLabel.setText(response);
             }
         }
@@ -376,6 +381,13 @@ public class ShopViewController implements StringMessages, Initializable {
         String cardName = adminPanelCardSearchTextArea.getText();
         if (cardName != null && !cardName.equals("")) {
             adminPanelSituationLabel.setText(shopController.increaseNumberOfCard(cardName, String.valueOf(
+                    adminPanelCardAmountSlider.getText())));
+        }
+    }
+    public void decreaseNumberOfCard(ActionEvent e) {
+        String cardName = adminPanelCardSearchTextArea.getText();
+        if (cardName != null && !cardName.equals("")) {
+            adminPanelSituationLabel.setText(shopController.removeNumberOfCardToShop(cardName, String.valueOf(
                     adminPanelCardAmountSlider.getText())));
         }
     }
