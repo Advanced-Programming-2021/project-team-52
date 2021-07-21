@@ -116,7 +116,7 @@ public class GamePlayController extends RegexController implements RegexPatterns
 
     private void startListening(){
         GamePlayControllerCommandReceiver gamePlayControllerCommandReceiver =
-                new GamePlayControllerCommandReceiver(this, myCommunicator);
+                new GamePlayControllerCommandReceiver(this, myCommunicator, opponentCommunicator);
         Thread thread = new Thread(gamePlayControllerCommandReceiver);
         thread.setDaemon(true);
         thread.start();

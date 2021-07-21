@@ -64,7 +64,6 @@ public class Communicator {
 
     public void sendMessage(String message) {
         try {
-            System.out.println(message);
             DATA_OUTPUT_STREAM.writeUTF(message);
             DATA_OUTPUT_STREAM.flush();
         } catch (IOException ioException) {

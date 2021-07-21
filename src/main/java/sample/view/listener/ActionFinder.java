@@ -98,8 +98,8 @@ public class ActionFinder implements StringMessages {
     }
 
     public String chooseMethodFromCommunicator(){
-        if(command.startsWith(COMMUNICATOR_PREFIX + "getOnlineUsernames"))
-        return Communicator.getOnlineUsernames();
+//        if(command.startsWith(COMMUNICATOR_PREFIX + "getOnlineUsernames"))
+//        return Communicator.getOnlineUsernames();
         return invalidCommand;
     }
 
@@ -298,10 +298,12 @@ public class ActionFinder implements StringMessages {
             return startNewGame();
         } else if (command.startsWith("-ND-end")) {
             return endSearching();
-        } else /*if (command.startsWith("-ND-getActiveGames"))
+        } /*if (command.startsWith("-ND-getActiveGames"))
             return getActiveGames();
         else if (command.startsWith("-ND-stream"))
             return stream();*/
+        else if (command.startsWith("dummy"))
+            return "dummy";
         return "";
     }
 
