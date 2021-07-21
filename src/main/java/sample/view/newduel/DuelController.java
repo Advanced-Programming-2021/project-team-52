@@ -55,13 +55,14 @@ public class DuelController implements Initializable{
 
     @FXML
     private void startGame(ActionEvent actionEvent){
-        errorLabel.setText(sender.getResponse(sender.setMessageWithToken("-ND-", "startANewGame", rounds)));
-        GameBoardHandler gameBoardHandler = new GameBoardHandler((Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
-        this.gameBoardHandler = gameBoardHandler;
-        Thread thread = new Thread(gameBoardHandler);
-        thread.setDaemon(true);
-        thread.start();
-//        }
+        if (gameBoardHandler == null) {
+            errorLabel.setText(sender.getResponse(sender.setMessageWithToken("-ND-", "startANewGame", rounds)));
+            GameBoardHandler gameBoardHandler = new GameBoardHandler((Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
+            this.gameBoardHandler = gameBoardHandler;
+            Thread thread = new Thread(gameBoardHandler);
+            thread.setDaemon(true);
+            thread.start();
+        }
     }
 
     @FXML
@@ -69,15 +70,13 @@ public class DuelController implements Initializable{
         if (oneRound.isSelected())
             rounds = "1";
         else rounds = "3";
+        reset();
     }
 
     @FXML
     private void back(ActionEvent actionEvent){
         try {
-            if (gameBoardHandler != null){
-                gameBoardHandler.setRun(false);
-            }
-            sender.send(sender.setMessageWithToken("-ND-", "end", rounds));
+            reset();
             Parent root = FXMLLoader.load(new File("./src/main/java/sample/view/mainMenu/MainMenuFxml.fxml").toURI().toURL());
             Scene scene = new Scene(root);
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -85,5 +84,21 @@ public class DuelController implements Initializable{
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
+    }
+
+    private void reset() {
+        if (gameBoardHandler != null){
+            gameBoardHandler.setRun(false);
+            sender.send(sender.setMessageWithToken("-ND-", "dummy", "dummy"));
+            while (gameBoardHandler.getIsRunning()) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException interruptedException) {
+                    interruptedException.printStackTrace();
+                }
+            }
+            this.gameBoardHandler = null;
+        }
+        sender.getResponse(sender.setMessageWithToken("-ND-", "end", rounds));
     }
 }

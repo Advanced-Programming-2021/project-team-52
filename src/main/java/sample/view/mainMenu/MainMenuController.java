@@ -88,7 +88,7 @@ public class MainMenuController implements Initializable {
         logoutButton.setStyle("-fx-border-width: 0 0 0 0.5; -fx-border-color: #ff5959");
         searchPlayerToPlayTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: #ffff22");
         allUsersTextArea.setStyle("-fx-text-fill: white");
-        tvButton.setStyle("-fx-border-width: 0 0 0 0.4; -fx-border-color: radial-gradient(aqua, #ff5bec)");
+//        tvButton.setStyle("-fx-border-width: 0 0 0 0.4; -fx-border-color: radial-gradient(aqua, #ff5bec)");
     }
 
     public void onMouseEnteredNewGameButton(MouseEvent e){
