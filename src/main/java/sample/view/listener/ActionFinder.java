@@ -59,7 +59,9 @@ public class ActionFinder implements StringMessages {
     public String chooseClass(String command) {
         this.command = command;
         this.elements = command.split(",");
-        if (command.startsWith(LOGIN_PREFIX))
+        if (command.startsWith(GAME_PLAY_CONTROLLER_PREFIX))
+            return saveCommand();
+        else if (command.startsWith(LOGIN_PREFIX))
             return chooseMethodFromLogin();
         User user = getUserByToken(elements[elements.length - 1]);
         if (user == null)
@@ -89,8 +91,6 @@ public class ActionFinder implements StringMessages {
             return chooseMethodFromAuction();
         else if (command.startsWith(NEW_DUEL_PREFIX))
             return chooseMethodFromNewDuel();
-        else if (command.startsWith(GAME_PLAY_CONTROLLER_PREFIX))
-            return saveCommand();
         return invalidCommand;
     }
 
@@ -285,9 +285,34 @@ public class ActionFinder implements StringMessages {
     private String chooseMethodFromNewDuel(){
 //        NewDuelController newDuelController = new NewDuelController(user);
 //        newDuelController.run(elements[1], elements[2]);
+        if (command.startsWith("-ND-startANewGame")) {
+            return startNewGame();
+        } else if (command.startsWith("-ND-end")) {
+            return endSearching();
+        } else /*if (command.startsWith("-ND-getActiveGames"))
+            return getActiveGames();
+        else if (command.startsWith("-ND-stream"))
+            return stream();*/
+        return "";
+    }
+
+    private String endSearching() {
+        MatchMaker.removeFromQueue(user);
+        return "end";
+    }
+
+    private String startNewGame() {
         ReadyUser.tryToGetOpponent(user, Integer.parseInt(elements[1]));
         return "trying to find opponent";
     }
+
+//    private String getActiveGames() {
+//        return NewDuelController.getActiveGames();
+//    }
+//
+//    private String stream(){
+//        return NewDuelController.stream(Integer.parseInt(elements[1]), communicator);
+//    }
 
     public boolean convertStringToBoolean(String message) {
         return message.toLowerCase().trim().equals("true");

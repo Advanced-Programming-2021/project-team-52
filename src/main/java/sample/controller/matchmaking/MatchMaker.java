@@ -4,6 +4,7 @@ import sample.controller.NewDuelController;
 import sample.model.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,11 +12,16 @@ import java.util.List;
 public class MatchMaker {
 
     private static List<ReadyUser> queuedUsers;
+    private static long leastWaitingTime;
 
     static {
-        queuedUsers = Collections.synchronizedList(new LinkedList<>());
-        ReadyUser.setQueuedUsers(queuedUsers);
+        queuedUsers = Collections.synchronizedList(new ArrayList<>());
+        leastWaitingTime = 60000;
         startMatchThread();
+    }
+
+    public static List<ReadyUser> getQueuedUsers() {
+        return queuedUsers;
     }
 
     public static void addToList(ReadyUser readyUser){
@@ -30,25 +36,26 @@ public class MatchMaker {
         Thread thread = new Thread(() -> {
             while (true){
                 if (queuedUsers.size() > 1){
-                    if (queuedUsers.get(0).getLocalDateTime().minusMinutes(2).compareTo(LocalDateTime.now()) > 0){
-                        queuedUsers.remove(0);
+                    if (LocalDateTime.now().minusMinutes(1).compareTo(queuedUsers.get(0).getLocalDateTime()) >= 0){
                         int opponent = getOpponent(queuedUsers.get(0).getRounds());
                         if (opponent != -1){
-                            queuedUsers.remove(1);
-                            queuedUsers.remove(opponent);
-                            MatchMaker.startANewGame(queuedUsers.get(0).getUser(), queuedUsers.get(opponent).getUser(),
-                                    String.valueOf(queuedUsers.get(0).getRounds()));
+                            int rounds = queuedUsers.get(0).getRounds();
+                            User host = queuedUsers.get(0).getUser();
+                            queuedUsers.remove(0);
+                            User guest = queuedUsers.get(opponent - 1).getUser();
+                            queuedUsers.remove(opponent - 1);
+                            MatchMaker.startANewGame(host, guest, String.valueOf(rounds));
                         }
                     } else {
                         try {
-                            Thread.sleep(2000);
+                            Thread.sleep(leastWaitingTime);
                         } catch (InterruptedException interruptedException) {
                             interruptedException.printStackTrace();
                         }
                     }
                 } else {
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(leastWaitingTime);
                     } catch (InterruptedException interruptedException) {
                         interruptedException.printStackTrace();
                     }
@@ -60,10 +67,12 @@ public class MatchMaker {
     }
 
     public static void startANewGame(User host, User guest, String rounds){
+        host.getActionFinder().getCommunicator().sendMessage("starting the match with " + guest.getUsername());
+        guest.getActionFinder().getCommunicator().sendMessage("starting the match with " + host.getUsername());
         host.getActionFinder().getCommunicator().sendMessage(getMessage("duel", host.getNickname(),
                 host.getImageAddress(), guest.getNickname(), guest.getImageAddress()));
         guest.getActionFinder().getCommunicator().sendMessage(getMessage("duel", guest.getNickname(),
-                guest.getImageAddress(), guest.getNickname(), guest.getImageAddress()));
+                guest.getImageAddress(), host.getNickname(), host.getImageAddress()));
         NewDuelController newDuelController = new NewDuelController(host);
         newDuelController.run(guest.getUsername(), rounds, host.getActionFinder().getCommunicator(),
                 guest.getActionFinder().getCommunicator());
@@ -72,7 +81,7 @@ public class MatchMaker {
     private static String getMessage(String... args){
         StringBuilder message = new StringBuilder(args[0]);
         for (int i = 1; i < args.length; i++) {
-            message.append(",").append(args[i]);
+            message.append("*").append(args[i]);
         }
         return message.toString();
     }
@@ -83,5 +92,22 @@ public class MatchMaker {
                 return i;
         }
         return -1;
+    }
+
+    public static boolean doesNotHaveThisUserInQueue(User user){
+        for (int i = 0; i < queuedUsers.size(); i++) {
+            if (queuedUsers.get(i).getUser() == user)
+                return false;
+        }
+        return true;
+    }
+
+    public static void removeFromQueue(User user){
+        for (int i = 0; i < queuedUsers.size(); i++) {
+            if (queuedUsers.get(i).getUser() == user){
+                queuedUsers.remove(queuedUsers.get(i));
+                break;
+            }
+        }
     }
 }

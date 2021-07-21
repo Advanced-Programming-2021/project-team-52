@@ -1,6 +1,5 @@
 package sample.controller;
 
-import javafx.stage.Stage;
 import sample.model.User;
 import sample.model.cards.Cards;
 import sample.model.game.GameBoard;
@@ -14,6 +13,7 @@ import sample.view.UserKeeper;
 import sample.view.listener.Communicator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.regex.Matcher;
 
@@ -22,12 +22,16 @@ public class NewDuelController implements RegexPatterns, StringMessages {
     private static final PrinterAndScanner PRINTER_AND_SCANNER;
     private static final PrintBuilderController PRINT_BUILDER_CONTROLLER;
     private static final Random RANDOM;
+    private static final HashMap<Integer, NewDuelController> ACTIVE_GAMES;
+    private static int counter;
 //    public static GameBoardView hostGameBoardView, guestGameBoardView;
 
     static {
         PRINTER_AND_SCANNER = PrinterAndScanner.getInstance();
         PRINT_BUILDER_CONTROLLER = PrintBuilderController.getInstance();
         RANDOM = new Random();
+        counter = 0;
+        ACTIVE_GAMES = new HashMap<>();
     }
 
     private User host, guest;
@@ -36,10 +40,69 @@ public class NewDuelController implements RegexPatterns, StringMessages {
     private GamePlay hostGamePlay, guestGamePlay;
     private GamePlayController hostGamePlayController, guestGamePlayController;
     private Communicator hostCommunicator, guestCommunicator;
+//    private ArrayList<Communicator> streamedTo;
 
     public NewDuelController(User host) {
         this.host = host;
+//        this.streamedTo = new ArrayList<>();
     }
+
+//    public static String getActiveGames(){
+//        StringBuilder result = new StringBuilder();
+//        for (Integer integer : ACTIVE_GAMES.keySet()) {
+//            result.append(integer).append("\n");
+//        }
+//        return result.toString();
+//    }
+
+//    public static String stream(int id, Communicator communicator){
+//        NewDuelController newDuelController = ACTIVE_GAMES.get(id);
+//        if (newDuelController == null)
+//            return "nothing";
+//        else {
+//            newDuelController.getStreamedTo().add(communicator);
+//            return "stream*" + newDuelController.getHost().getUsername() + "*" + newDuelController.getHost().getImageAddress() + "*" +
+//                    newDuelController.getGuest().getUsername() + "*" + newDuelController.getGuest().getImageAddress() + "*" +
+//                    "*" + newDuelController.getHostGamePlayController().getSituation() +
+//                    "*" + newDuelController.getGuestGamePlayController().getSituation();
+//        }
+//    }
+
+//    public void sendToViewers(String hostMessage, String guestMessage){
+//        hostMessage = "host*" + hostMessage;
+//        guestMessage = "guest*" + guestMessage;
+//        for (int i = 0; i < streamedTo.size(); i++) {
+//            streamedTo.get(i).sendMessage(hostMessage);
+//            streamedTo.get(i).sendMessage(guestMessage);
+//        }
+//    }
+//
+//    public void sendToViewers(boolean isHost, String message){
+//        message = (isHost ? "host" : "guest") + message;
+//        for (int i = 0; i < streamedTo.size(); i++) {
+//            streamedTo.get(i).sendMessage(message);
+//        }
+//    }
+
+    public User getHost() {
+        return host;
+    }
+
+    public User getGuest() {
+        return guest;
+    }
+
+    public GamePlayController getHostGamePlayController() {
+        return hostGamePlayController;
+    }
+
+    public GamePlayController getGuestGamePlayController() {
+        return guestGamePlayController;
+    }
+
+//    public ArrayList<Communicator> getStreamedTo() {
+//        return streamedTo;
+//    }
 
     public String run(String username, String rounds, Communicator hostCommunicator, Communicator guestCommunicator) {
         String result = "";
@@ -60,6 +123,7 @@ public class NewDuelController implements RegexPatterns, StringMessages {
                     }
                     hostGamePlayController.shuffleDeck();
                     guestGamePlayController.shuffleDeck();
+                    ACTIVE_GAMES.put(counter++, this);
                     startTheGame(roundsNum);
                 });
                 thread.setDaemon(true);
@@ -86,6 +150,8 @@ public class NewDuelController implements RegexPatterns, StringMessages {
     }
 
     private void makeNeededObjects() {
+        host.getActionFinder().getCommunicator().resetArr();
+        guest.getActionFinder().getCommunicator().resetArr();
         hostGameBoard = makeCards(host);
         guestGameBoard = makeCards(guest);
         hostGamePlay = new GamePlay(true, hostGameBoard, false, host.getUsername());
@@ -100,8 +166,8 @@ public class NewDuelController implements RegexPatterns, StringMessages {
 //        guestCommunicator = guestGameBoardView.getCommunicator();
 //        hostGameBoardView.setOpponentCommunicator(guestCommunicator);
 //        guestGameBoardView.setOpponentCommunicator(hostCommunicator);
-        hostGamePlayController = new GamePlayController(hostGamePlay, hostCommunicator, guestCommunicator);
-        guestGamePlayController = new GamePlayController(guestGamePlay, guestCommunicator, hostCommunicator);
+        hostGamePlayController = new GamePlayController(hostGamePlay, hostCommunicator, guestCommunicator/*, this*/);
+        guestGamePlayController = new GamePlayController(guestGamePlay, guestCommunicator, hostCommunicator/*, this*/);
 //        hostGameBoardView.setGamePlayController(hostGamePlayController);
 //        guestGameBoardView.setGamePlayController(guestGamePlayController);
         hostGamePlay.setOpponentGamePlayController(guestGamePlayController);
@@ -164,6 +230,7 @@ public class NewDuelController implements RegexPatterns, StringMessages {
     private void resetEverything() {
         hostCommunicator.sendMessage("reset");
         guestCommunicator.sendMessage("reset");
+//        sendToViewers("reset", "reset");
         resetGame(hostGameBoard, hostGamePlay, hostGamePlayController);
         resetGame(guestGameBoard, guestGamePlay, guestGamePlayController);
         swapCards(host.getUsername(), hostGameBoard.getMainCards(), hostGameBoard.getSideCards(),
@@ -207,6 +274,7 @@ public class NewDuelController implements RegexPatterns, StringMessages {
         if (theWholeMatch) {
             hostCommunicator.sendMessage("reset changeScene");
             guestCommunicator.sendMessage("reset changeScene");
+//            sendToViewers("reset changeScene", "reset changeScene");
             winner.addToNumberOfGamesWon(1);
             loser.addToNumberOfGamesLost(1);
             hostGamePlayController.setRun(false);
@@ -214,10 +282,12 @@ public class NewDuelController implements RegexPatterns, StringMessages {
         } else {
             hostCommunicator.sendMessage("reset");
             guestCommunicator.sendMessage("reset");
+//            sendToViewers("reset", "reset");
         }
     }
 
     private GamePlayController flipACoin() {
+        System.out.println("gameStart");
         GamePlayController starter;
         if (RANDOM.nextBoolean()) {
             PRINTER_AND_SCANNER.printString(PRINT_BUILDER_CONTROLLER.thisPlayerWillStartTheGame(host.getUsername()));
@@ -228,8 +298,8 @@ public class NewDuelController implements RegexPatterns, StringMessages {
             guestGamePlayController.getGamePlay().getUniversalHistory().add("starter");
             starter = guestGamePlayController;
         }
-        hostGamePlayController.getMyCommunicator().sendMessage("flipCoin " + (starter == hostGamePlayController ? "1" : "11"));
-        guestGamePlayController.getMyCommunicator().sendMessage("flipCoin " + (starter == hostGamePlayController ? "11" : "1"));
+        hostGamePlayController.getMyCommunicator().flipCoin(starter == hostGamePlayController ? 1 : 11);
+        guestGamePlayController.getMyCommunicator().flipCoin(starter == hostGamePlayController ? 11 : 1);
         hostGamePlayController.takeCommand();
         guestGamePlayController.takeCommand();
         hostGamePlayController.getMyCommunicator().sendMessage(Communicator.askOption(starter == hostGamePlayController ?
@@ -258,6 +328,8 @@ public class NewDuelController implements RegexPatterns, StringMessages {
         gamePlay.setSelectedCard(null);
         gamePlayController.setGameOver(false);
         gamePlayController.setSurrendered(false);
+        host.getActionFinder().getCommunicator().resetArr();
+        guest.getActionFinder().getCommunicator().resetArr();
     }
 
     private void swapCards(String name, ArrayList<Cards> mainCards, ArrayList<Cards> sideCards,

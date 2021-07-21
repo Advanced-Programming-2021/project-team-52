@@ -1,12 +1,13 @@
 package sample.view.listener;
 
+import sample.controller.NewDuelController;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.net.SocketException;
-import java.util.HashMap;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class Communicator {
 //    private static HashMap<Thread, String> onlineUsers = new HashMap<>();
@@ -17,23 +18,23 @@ public class Communicator {
     private final ActionFinder ACTION_FINDER;
     private final ArrayBlockingQueue<String> ARRAY_BLOCKING_QUEUE;
 
-    public Communicator(Socket socket, DataInputStream dataInputStream, DataOutputStream dataOutputStream){
+    public Communicator(Socket socket, DataInputStream dataInputStream, DataOutputStream dataOutputStream) {
         this.SOCKET = socket;
         this.DATA_INPUT_STREAM = dataInputStream;
-        this. DATA_OUTPUT_STREAM = dataOutputStream;
+        this.DATA_OUTPUT_STREAM = dataOutputStream;
         this.ACTION_FINDER = new ActionFinder(this);
         this.ARRAY_BLOCKING_QUEUE = new ArrayBlockingQueue<>(1);
     }
 
-    public static String askOption(String message, String... options){
-        StringBuilder result = new StringBuilder("askOption " + message);
+    public static String askOption(String message, String... options) {
+        StringBuilder result = new StringBuilder("askOption*" + message);
         for (String option : options) {
-            result.append(" ").append(option);
+            result.append("*").append(option);
         }
         return result.toString();
     }
 
-    public void startReceiving(){
+    public void startReceiving() {
         Thread thread = new Thread(() -> {
             String input;
             while (true) {
@@ -51,7 +52,7 @@ public class Communicator {
                     System.out.println("client disconnected");
                     break;
                 } catch (IOException ioException) {
-                   ioException.printStackTrace();
+                    ioException.printStackTrace();
                 }
             }
             shutDown();
@@ -60,8 +61,9 @@ public class Communicator {
         thread.start();
     }
 
-    public void sendMessage(String message){
+    public void sendMessage(String message) {
         try {
+            System.out.println(message);
             DATA_OUTPUT_STREAM.writeUTF(message);
             DATA_OUTPUT_STREAM.flush();
         } catch (IOException ioException) {
@@ -69,7 +71,7 @@ public class Communicator {
         }
     }
 
-    public String receive(){
+    public String receive() {
         String message = "";
         try {
 //            message = DATA_INPUT_STREAM.readUTF();
@@ -80,7 +82,7 @@ public class Communicator {
         return message;
     }
 
-    public void shutDown(){
+    public void shutDown() {
         try {
             DATA_INPUT_STREAM.close();
             SOCKET.close();
@@ -89,73 +91,85 @@ public class Communicator {
         }
     }
 
-    public void changeGameState(String gameState){
-        sendMessage("changeGameState" + "," + gameState);
+    public void changeGameState(String gameState) {
+        sendMessage("changeGameState" + "*" + gameState);
     }
 
-    public void changePhase(String phase, String enemyTurn){
-        sendMessage("changePhase" + "," + phase + "," + enemyTurn);
+    public void changePhase(String phase, String enemyTurn/*, boolean isEnemy, NewDuelController newDuelController*/) {
+        sendMessage("changePhase*" + phase + "*" + enemyTurn);
+//        newDuelController.sendToViewers(isEnemy, "changePhase*" + phase + "*" + enemyTurn);
     }
 
-    public void addToHand(int emptyHandPlace, String enemy, String cardName, String cardDescription){
-        sendMessage("addToHand," + emptyHandPlace + "," + enemy + "," + cardName + "," + cardDescription);
+    public void addToHand(int emptyHandPlace, String enemy, String cardName, String cardDescription/*,
+                          boolean isEnemy, NewDuelController newDuelController*/) {
+        sendMessage("addToHand*" + emptyHandPlace + "*" + enemy + "*" + cardName + "*" + cardDescription);
+//        newDuelController.sendToViewers(isEnemy, "addToHand*" + emptyHandPlace + "*" + enemy + "*" + cardName + "*" + cardDescription);
     }
 
     public void moveFromHandToBoard(int handNumber, int destination, String enemy, String status, String cardName,
-                                    String description){
-        sendMessage("moveFromHandToBoard," + handNumber + "," + destination + "," + enemy + "," + status + "," +
-                cardName + "," + description);
+                                    String description/*, boolean isEnemy, NewDuelController newDuelController*/) {
+        sendMessage("moveFromHandToBoard*" + handNumber + "*" + destination + "*" + enemy + "*" + status + "*" +
+                cardName + "*" + description);
+//        newDuelController.sendToViewers(isEnemy);
     }
 
-    public void changePosition(int number, boolean enemy, String status){
-        sendMessage("changePosition," + number + "," + enemy + "," + status);
+    public void changePosition(int number, boolean enemy, String status) {
+        sendMessage("changePosition*" + number + "*" + enemy + "*" + status);
     }
 
-    public void flipSummon(int num, boolean enemy, String cardName){
-        sendMessage("flipSummon," + num + "," + enemy + "," + cardName);
+    public void flipSummon(int num, boolean enemy, String cardName) {
+        sendMessage("flipSummon*" + num + "*" + enemy + "*" + cardName);
     }
 
-    public void showCard(int placeNumber, String cardName, String description, boolean enemy){
-        sendMessage("showCard," + placeNumber + "," + cardName + "," + description + "," + enemy);
+    public void showCard(int placeNumber, String cardName, String description, boolean enemy) {
+        sendMessage("showCard*" + placeNumber + "*" + cardName + "*" + description + "*" + enemy);
     }
 
-    public void moveToGraveyard(int number, boolean enemy, String cardName, String description){
-        sendMessage("moveToGraveyard," + number + "," + enemy + "," + cardName + "," + description);
+    public void moveToGraveyard(int number, boolean enemy, String cardName, String description) {
+        sendMessage("moveToGraveyard*" + number + "*" + enemy + "*" + cardName + "*" + description);
     }
 
-    public void selectCard(String cardType, boolean me, boolean enemy, boolean addType){
-        sendMessage("selectCard," + cardType + "," + me + "," + enemy + "," + addType);
+    public void selectCard(String cardType, boolean me, boolean enemy, boolean addType) {
+        sendMessage("selectCard*" + cardType + "*" + me + "*" + enemy + "*" + addType);
     }
 
-    public void specialSummonFromGraveYard(boolean justName){
-        sendMessage("specialSummonFromGraveYard," + justName);
+    public void specialSummonFromGraveYard(boolean justName) {
+        sendMessage("specialSummonFromGraveYard*" + justName);
     }
 
-    public void scanner(){
+    public void scanner() {
         sendMessage("scanner");
     }
 
-    public void mindCrush(){
+    public void mindCrush() {
         sendMessage("mindCrush");
     }
 
-    public void askOptions(String message, String... options){
+    public void askOptions(String message, String... options) {
         sendMessage(Communicator.askOption(message, options));
     }
 
-    public void ritualSummon(){
+    public void ritualSummon() {
         sendMessage("ritualSummon");
     }
 
-    public void specialSummonFromAnywhere(String message){
-        sendMessage("specialSummonFromAnywhere," + message);
+    public void specialSummonFromAnywhere(String message) {
+        sendMessage("specialSummonFromAnywhere*" + message);
     }
 
-    public void reduceHealth(int amount, boolean enemy){
-        sendMessage("reduceHealth," + amount + "," + enemy);
+    public void reduceHealth(int amount, boolean enemy) {
+        sendMessage("reduceHealth*" + amount + "*" + enemy);
     }
 
-    public void saveCommand(String command, String prefix){
+    public void saveCommand(String command, String prefix) {
         this.ARRAY_BLOCKING_QUEUE.add(command.replaceAll(prefix, ""));
+    }
+
+    public void resetArr() {
+        ARRAY_BLOCKING_QUEUE.clear();
+    }
+
+    public void flipCoin(int number){
+        sendMessage("flipCoin*" + number);
     }
 }
