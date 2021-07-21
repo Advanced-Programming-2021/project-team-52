@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
 import static sample.model.tools.StringMessages.*;
 
 public class LoginViewController implements Initializable {
@@ -66,15 +67,15 @@ public class LoginViewController implements Initializable {
 //               ("C:\\Users\\paitakht\\IdeaProjects\\project-team-52-Bader03\\project-team-52-Bader03\\src\\main\\java\\sample\\view\\mainMenu\\MainMenuFxml.fxml").toURI().toURL());
                 ("./src/main/java/sample/view/mainMenu/MainMenuFxml.fxml").toURI().toURL());
         Parent root = loader.load();
-        stage = (Stage)((Node)e.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
 
-    public void onNextButtonClick(ActionEvent e){
+    public void onNextButtonClick(ActionEvent e) {
 //        System.out.println(loginController.isUserWithThisUsernameExists(usernameFieldInEntranceScene.getText().trim()));
-        if(loginController.isUserWithThisUsernameExists(usernameFieldInEntranceScene.getText().trim())){
+        if (loginController.isUserWithThisUsernameExists(usernameFieldInEntranceScene.getText().trim())) {
             passwordFieldInEntranceScene.setVisible(true);
             loginButtonInEntranceScene.setVisible(true);
             nickNameFieldInEntranceScene.setVisible(false);
@@ -90,23 +91,25 @@ public class LoginViewController implements Initializable {
     }
 
     public void onLoginButtonClick(ActionEvent e) throws IOException {
-        String situation = loginController.loginUser(usernameFieldInEntranceScene.getText().trim()
-                , passwordFieldInEntranceScene.getText().trim());
-        if(situation.equals(usernameAndPasswordDoNotMatch)){
-            errorLabelInEntranceMenu.setDisable(false);
-            errorLabelInEntranceMenu.setText(usernameAndPasswordDoNotMatch);
-        } else {
+        if (!usernameFieldInEntranceScene.getText().equals("") && !passwordFieldInEntranceScene.getText().equals("")) {
+            String situation = loginController.loginUser(usernameFieldInEntranceScene.getText().trim()
+                    , passwordFieldInEntranceScene.getText().trim());
+            if (situation.equals(usernameAndPasswordDoNotMatch)) {
+                errorLabelInEntranceMenu.setDisable(false);
+                errorLabelInEntranceMenu.setText(usernameAndPasswordDoNotMatch);
+            } else {
 //            System.out.println(LoginController.getUserByUsername(usernameFieldInEntranceScene.getText().trim()));
 //            UserKeeper.setCurrentUser(LoginController.getUserByUsername(usernameFieldInEntranceScene.getText().trim()));
 //            System.out.println(UserKeeper.getInstance().getCurrentUser().getUsername());
-            sender.setToken(situation);
-            switchToMainMenu(e);
+                sender.setToken(situation);
+                switchToMainMenu(e);
+            }
         }
     }
 
     public void onSignupButtonClick(ActionEvent e) throws IOException {
         String situation = loginController.createUser(usernameFieldInEntranceScene.getText().trim(), passwordFieldInEntranceScene.getText()
-        , nickNameFieldInEntranceScene.getText().trim(), userBirthDateFieldInEntranceScene.getValue());
+                , nickNameFieldInEntranceScene.getText().trim(), userBirthDateFieldInEntranceScene.getValue());
 //        if(situation.equals(createUserFailedBecauseOfUsername)){
 //            errorLabelInEntranceMenu.setDisable(false);
 //            errorLabelInEntranceMenu.setText(createUserFailedBecauseOfUsername);
@@ -125,22 +128,21 @@ public class LoginViewController implements Initializable {
 //        } else {
 //            switchToMainMenu(e);
 //        }
-            if(!situation.equals(createUserSuccessfully)){
-                errorLabelInEntranceMenu.setDisable(false);
-                errorLabelInEntranceMenu.setText(situation);
-            }
-            else {
+        if (!situation.equals(createUserSuccessfully)) {
+            errorLabelInEntranceMenu.setDisable(false);
+            errorLabelInEntranceMenu.setText(situation);
+        } else {
 //                switchToMainMenu(e);
-                errorLabelInEntranceMenu.setText(situation);
-                passwordFieldInEntranceScene.setVisible(true);
-                loginButtonInEntranceScene.setVisible(true);
-                nickNameFieldInEntranceScene.setVisible(false);
-                signupButtonInEntranceScene.setVisible(false);
-                userBirthDateFieldInEntranceScene.setVisible(false);
-            }
+            errorLabelInEntranceMenu.setText(situation);
+            passwordFieldInEntranceScene.setVisible(true);
+            loginButtonInEntranceScene.setVisible(true);
+            nickNameFieldInEntranceScene.setVisible(false);
+            signupButtonInEntranceScene.setVisible(false);
+            userBirthDateFieldInEntranceScene.setVisible(false);
+        }
     }
 
-    public void exitApp(ActionEvent e){
+    public void exitApp(ActionEvent e) {
 //        loginController.saveUsers();
         System.exit(0);
     }
