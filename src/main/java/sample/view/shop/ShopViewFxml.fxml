@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.RadialGradient?>
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
@@ -84,7 +85,23 @@ add in initialize
                   <Image url="@../../../../resources/media/images/others/cardTemp.jpg" />
                </image>
             </ImageView>
-            <Label fx:id="shopCardsLabel" alignment="TOP_CENTER" layoutX="1011.0" layoutY="145.0" prefHeight="1423.0" prefWidth="173.0" text="Label" textFill="#e4e4e4" />
+            <Label fx:id="shopCardsLabel" alignment="TOP_CENTER" layoutX="1011.0" layoutY="145.0" prefHeight="1423.0" prefWidth="173.0" text="Label">
+               <textFill>
+                  <LinearGradient endX="0.5267175354120386" endY="0.9465648909561507" startY="0.09160305343511432">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="0.5555555820465088" blue="0.9851852059364319" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill></Label>
             <Label layoutX="1058.0" layoutY="95.0" prefHeight="45.0" prefWidth="130.0" text="shop cards:" textFill="#ffff55">
                <font>
                   <Font name="Open Sans" size="23.0" />
@@ -108,7 +125,23 @@ add in initialize
                   <Image url="@../../../../resources/media/images/others/cardTemp.jpg" />
                </image>
             </ImageView>
-            <Label fx:id="userCardDetailsLabel" layoutX="350.0" layoutY="619.0" prefHeight="319.0" prefWidth="191.0" text="Label" textFill="#6fffff" />
+            <Label fx:id="userCardDetailsLabel" layoutX="350.0" layoutY="619.0" prefHeight="319.0" prefWidth="191.0" text="Label">
+               <textFill>
+                  <RadialGradient centerX="0.8200000339084201" centerY="0.5152671974123889" radius="0.8364485892179971">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="0.3481481373310089" blue="0.9891358017921448" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </RadialGradient>
+               </textFill></Label>
             <Label fx:id="shopCardDetailsLabel" layoutX="745.0" layoutY="615.0" prefHeight="350.0" prefWidth="191.0" text="Label" textFill="#ffff66" />
             <JFXButton fx:id="submitSearchInUserCards" buttonType="RAISED" layoutX="528.0" layoutY="115.0" nodeOrientation="LEFT_TO_RIGHT" onAction="#searchInUserCards" ripplerFill="AQUA" text="ok" textFill="AQUA">
                <graphic>
@@ -140,19 +173,35 @@ add in initialize
                </font>
             </Label>
             <Label layoutX="508.0" layoutY="474.0" prefHeight="32.0" prefWidth="30.0" text="NO." textFill="WHITE" />
-            <JFXTextArea fx:id="numberOfCardLabelUnderUserCard" layoutX="508.0" layoutY="515.0" prefHeight="32.0" prefWidth="30.0" />
+            <JFXTextArea fx:id="numberOfCardLabelUnderUserCard" editable="false" layoutX="508.0" layoutY="515.0" prefHeight="32.0" prefWidth="30.0" />
             <Label fx:id="cardNameLabelUnderShopCard" layoutX="764.0" layoutY="465.0" prefHeight="82.0" prefWidth="138.0" text="Label">
                <font>
-                  <Font size="15.0" />
+                  <Font size="22.0" />
                </font>
+               <textFill>
+                  <LinearGradient endX="0.45038162114966007" endY="1.0">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="0.385185182094574" blue="1.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
             </Label>
             <Label layoutX="904.0" layoutY="474.0" prefHeight="32.0" prefWidth="30.0" text="NO." textFill="WHITE" />
-            <JFXTextArea fx:id="numberOfCardLabelUnderShopCard" layoutX="904.0" layoutY="499.0" prefHeight="32.0" prefWidth="30.0" />
+            <JFXTextArea fx:id="numberOfCardLabelUnderShopCard" editable="false" layoutX="904.0" layoutY="499.0" prefHeight="32.0" prefWidth="30.0" />
             <JFXTextArea fx:id="adminPanelUsernameTextArea" focusColor="#ffff55" labelFloat="true" layoutX="282.0" layoutY="1002.0" prefHeight="36.0" prefWidth="203.0" promptText="admin username" unFocusColor="WHITE" />
             <JFXTextArea fx:id="adminPanelPasswordTextArea" focusColor="#ffff55" labelFloat="true" layoutX="282.0" layoutY="1055.0" prefHeight="36.0" prefWidth="203.0" promptText="admin password" unFocusColor="WHITE" />
 <!--            <Label fx:id="adminPanelSituationLabel" layoutX="904.0" layoutY="474.0" prefHeight="32.0" prefWidth="30.0" text="NO." textFill="WHITE" />-->
             <JFXTextArea fx:id="adminPanelCardSearchTextArea" focusColor="AQUA" labelFloat="true" layoutX="605.0" layoutY="1004.0" prefHeight="36.0" prefWidth="214.0" promptText="card name to edit" unFocusColor="WHITE" />
-            <JFXButton fx:id="adminPanelRestrictCardButton" buttonType="RAISED" layoutX="776.0" layoutY="1067.0" onAction="#restrictCard" prefHeight="25.0" prefWidth="34.0" ripplerFill="#ff5959" textFill="#ff5959">
+            <JFXButton fx:id="adminPanelRestrictCardButton" buttonType="RAISED" layoutX="783.0" layoutY="1108.0" onAction="#restrictCard" prefHeight="25.0" prefWidth="34.0" ripplerFill="#ff5959" text="Button" textFill="#ff5959">
                <graphic>
                   <ImageView fitHeight="17.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -168,7 +217,7 @@ add in initialize
                   </Tooltip>
                </tooltip>
             </JFXButton>
-             <JFXButton fx:id="adminPanelUnRestrictCardButton" buttonType="RAISED" layoutX="776.0" layoutY="1096.0" onAction="#allowCard" prefHeight="25.0" prefWidth="34.0" ripplerFill="#ffff55" textFill="#eaff41">
+             <JFXButton fx:id="adminPanelUnRestrictCardButton" buttonType="RAISED" layoutX="783.0" layoutY="1069.0" onAction="#allowCard" prefHeight="25.0" prefWidth="34.0" ripplerFill="#ffff55" textFill="#eaff41">
                  <graphic>
                      <ImageView fitHeight="17.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
                          <image>
@@ -228,7 +277,39 @@ add in initialize
             <JFXTextArea fx:id="auctionPanelAllCardsInAuctionTextArea" editable="false" layoutX="473.0" layoutY="1236.0" prefHeight="174.0" prefWidth="360.0">
                <font>
                   <Font name="System Bold" size="10.0" />
-               </font></JFXTextArea>
+               </font>
+               <focusColor>
+                  <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </RadialGradient>
+               </focusColor>
+               <unFocusColor>
+                  <RadialGradient centerX="0.5" centerY="0.5114503525595628" focusAngle="-2.2" radius="0.6495327459317501">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </RadialGradient>
+               </unFocusColor></JFXTextArea>
             <Label layoutX="568.0" layoutY="1188.0" prefHeight="35.0" prefWidth="168.0" text="all card in auction" textFill="AQUA">
                <font>
                   <Font size="21.0" />
@@ -386,7 +467,8 @@ add in initialize
 <!--               </image>-->
 <!--            </ImageView>-->
             <JFXTextArea fx:id="adminPanelCardAmountSlider" focusColor="#59ff59" labelFloat="true" layoutX="604.0" layoutY="1061.0" prefHeight="35.0" prefWidth="168.0" promptText="number of cards" unFocusColor="WHITE" />
-            <JFXButton fx:id="adminPanelCardAmountConfirmButton" buttonType="RAISED" layoutX="746.0" layoutY="1069.0" onAction="#increaseNumberOfCard" prefHeight="25.0" prefWidth="30.0" text="ok" textFill="#ffff55" />
+            <JFXButton fx:id="adminPanelCardAmountConfirmButton" buttonType="RAISED" layoutX="723.0" layoutY="1069.0" onAction="#increaseNumberOfCard" prefHeight="25.0" prefWidth="53.0" text="add" textFill="#59ff59" />
+            <JFXButton fx:id="adminPanelCardRemoveConfirmButton" buttonType="RAISED" layoutX="711.0" layoutY="1108.0" prefHeight="25.0" prefWidth="64.0" text="remove" textFill="WHITE" />
          </children>
       </Pane>
    </content>

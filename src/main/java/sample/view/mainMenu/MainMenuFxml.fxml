@@ -2,10 +2,18 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.media.MediaView?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.view.mainMenu.MainMenuController">
@@ -13,7 +21,42 @@
       <MediaView fx:id="mainMenuBackgroundMediaView" fitHeight="720.0" fitWidth="1280.0" StackPane.alignment="CENTER" />
       <Pane focusTraversable="true" prefHeight="720.0" prefWidth="1280.0">
          <children>
-            <JFXButton fx:id="newGameButton" buttonType="RAISED" layoutX="450.0" layoutY="270.0" onAction="#switchToGameScene" onMouseEntered="#onMouseEnteredNewGameButton" onMouseExited="#onMouseExitedNewGameButtos" prefHeight="45.0" prefWidth="380.0" text="New Game" textFill="#ffff44" wrapText="true">
+            <ImageView fx:id="deckManagerImageView" fitHeight="51.0" fitWidth="71.0" layoutX="366.0" layoutY="360.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/deckManagerIcon.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="profileAndSettingImageView" fitHeight="57.0" fitWidth="61.0" layoutX="601.0" layoutY="357.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/profileAndSettingIconInProfileAndSettingMenu.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="chatImageview" fitHeight="70.0" fitWidth="57.0" layoutX="852.0" layoutY="357.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/chatIcon.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="importAndExportImageView" fitHeight="57.0" fitWidth="57.0" layoutX="851.0" layoutY="548.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/importAndExportIcon.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="scoreBoardImageView" fitHeight="51.0" fitWidth="57.0" layoutX="605.0" layoutY="551.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/scoreboardIcon.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="shopImageView" fitHeight="68.0" fitWidth="57.0" layoutX="363.0" layoutY="548.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/shopCardInMainMenu34.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="newGameImageView" fitHeight="74.0" fitWidth="73.0" layoutX="140.0" layoutY="457.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../resources/media/images/others/swordIcon.png" />
+               </image>
+            </ImageView>
+            <JFXButton fx:id="newGameButton" buttonType="RAISED" layoutX="76.0" layoutY="251.0" onMouseEntered="#onMouseEnteredNewGameButton" onMouseExited="#onMouseExitedNewGameButton" prefHeight="300.0" prefWidth="200.0" text="New Game" textFill="#ffff44" wrapText="true">
                <font>
                   <Font size="25.0" />
                </font>
@@ -21,40 +64,155 @@
                   <Insets />
                </opaqueInsets>
             </JFXButton>
-            <JFXButton fx:id="deckManagerButton" buttonType="RAISED" layoutX="450.0" layoutY="330.0" onAction="#switchToDeckManagerScene" onMouseEntered="#onMouseEnteredDeckManagerButton" onMouseExited="#onMouseExitedDeckManagerButtos" prefHeight="45.0" prefWidth="380.0" text="Deck Manager" textFill="#ffff44">
+            <JFXButton fx:id="deckManagerButton" alignment="TOP_CENTER" buttonType="RAISED" layoutX="291.0" layoutY="290.0" onAction="#switchToDeckManagerScene" onMouseEntered="#onMouseEnteredDeckManagerButton" onMouseExited="#onMouseExitedDeckManagerButton" prefHeight="150.0" prefWidth="200.0" text="Deck Manager" textFill="#ffff44">
                <font>
                   <Font size="25.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="shopButton" buttonType="RAISED" layoutX="450.0" layoutY="390.0" onAction="#switchToShopScene" onMouseEntered="#onMouseEnteredShopButton" onMouseExited="#onMouseExitedShopButtos" prefHeight="45.0" prefWidth="380.0" text="Shop" textFill="#ffff44">
+            <JFXButton fx:id="shopButton" alignment="TOP_CENTER" buttonType="RAISED" layoutX="291.0" layoutY="482.0" onAction="#switchToShopScene" onMouseEntered="#onMouseEnteredShopButton" onMouseExited="#onMouseExitedShopButton" prefHeight="150.0" prefWidth="200.0" text="Shop" textFill="#ffff44">
                <font>
                   <Font size="25.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="profileAndSettingButton" buttonType="RAISED" layoutX="450.0" layoutY="450.0" onAction="#switchToProfileAndSettingScene" onMouseEntered="#onMouseEnteredProfileAndSettingButton" onMouseExited="#onMouseExitedProfileAndSettingButtos" prefHeight="45.0" prefWidth="380.0" text="Profile &amp; Setting" textFill="#ffff44">
+            <JFXButton fx:id="profileAndSettingButton" alignment="TOP_CENTER" buttonType="RAISED" layoutX="520.0" layoutY="291.0" onAction="#switchToProfileAndSettingScene" onMouseEntered="#onMouseEnteredProfileAndSettingButton" onMouseExited="#onMouseExitedProfileAndSettingButton" prefHeight="150.0" prefWidth="220.0" text="Profile &amp; Setting" textFill="#ffff44">
                <font>
                   <Font size="25.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="scoreboardButton" buttonType="RAISED" layoutX="450.0" layoutY="510.0" onAction="#switchToScoreboardScene" onMouseEntered="#onMouseEnteredScoreBoardButton" onMouseExited="#onMouseExitedScoreBoardButtos" prefHeight="45.0" prefWidth="380.0" text="Score Board" textFill="#ffff44">
+            <JFXButton fx:id="scoreboardButton" alignment="TOP_CENTER" buttonType="RAISED" layoutX="520.0" layoutY="481.0" onAction="#switchToScoreboardScene" onMouseEntered="#onMouseEnteredScoreBoardButton" onMouseExited="#onMouseExitedScoreBoardButton" prefHeight="150.0" prefWidth="220.0" text="Score Board" textFill="#ffff44">
                <font>
                   <Font size="25.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="importAndExportButton" buttonType="RAISED" layoutX="450.0" layoutY="570.0" onAction="#switchToImportAndExportScene" onMouseEntered="#onMouseEnteredImportAndExportButton" onMouseExited="#onMouseExitedImportAndExportButton" prefHeight="45.0" prefWidth="380.0" text="Import &amp; Export" textFill="#ffff44">
+            <JFXButton fx:id="importAndExportButton" alignment="TOP_CENTER" buttonType="RAISED" layoutX="770.0" layoutY="483.0" onAction="#switchToImportAndExportScene" onMouseEntered="#onMouseEnteredImportAndExportButton" onMouseExited="#onMouseExitedImportAndExportButton" prefHeight="150.0" prefWidth="220.0" text="Import &amp; Export" textFill="#ffff44">
                <font>
                   <Font size="25.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="logoutButton" buttonType="RAISED" layoutX="450.0" layoutY="630.0" onAction="#switchToEntranceScene" onMouseEntered="#onMouseEnteredLogoutButton" onMouseExited="#onMouseExitedLogoutButton" prefHeight="45.0" prefWidth="380.0" ripplerFill="#ff4545" text="Log Out" textFill="#ffff44">
+            <JFXButton fx:id="logoutButton" alignment="TOP_CENTER" buttonType="RAISED" layoutX="995.0" layoutY="574.0" onAction="#switchToEntranceScene" onMouseEntered="#onMouseEnteredLogoutButton" onMouseExited="#onMouseExitedLogoutButton" prefHeight="57.0" prefWidth="254.0" ripplerFill="#ff4545" text="Log Out" textFill="#ffff44">
                <font>
                   <Font size="25.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="chatRoomButton" buttonType="RAISED" layoutX="850.0" layoutY="390.0" onAction="#switchToChatRoom" onMouseEntered="#onMouseEnteredShopButton" onMouseExited="#onMouseExitedShopButtos" prefHeight="45.0" prefWidth="380.0" text="ChatRoom" textFill="#ffff44">
+            <JFXButton fx:id="chatRoomButton" alignment="TOP_CENTER" buttonType="RAISED" layoutX="770.0" layoutY="291.0" onAction="#switchToChatRoom" prefHeight="150.0" prefWidth="220.0" text="Chat" textFill="#ffff55">
                <font>
                   <Font size="25.0" />
                </font>
+            </JFXButton>
+            <JFXTextArea fx:id="allUsersTextArea" editable="false" focusColor="AQUA" layoutX="996.0" layoutY="405.0" prefHeight="162.0" prefWidth="254.0">
+               <unFocusColor>
+                  <RadialGradient centerX="0.5" centerY="0.5" radius="0.5186915709593586">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </RadialGradient>
+               </unFocusColor></JFXTextArea>
+            <JFXTextArea fx:id="searchPlayerToPlayTextArea" focusColor="AQUA" labelFloat="true" layoutX="996.0" layoutY="273.0" prefHeight="37.0" prefWidth="194.0" promptText="player you want to play" unFocusColor="WHITE" />
+            <Label fx:id="userSearchSituationLabel" layoutX="1110.0" layoutY="414.0" prefHeight="17.0" prefWidth="300.0" rotate="90.0" text="*" textFill="#ff5959" />
+            <JFXButton fx:id="searchAndPlayButton" layoutX="992.0" layoutY="317.0" prefHeight="28.0" prefWidth="254.0" text="search &amp; play" textFill="#ffff55">
+               <font>
+                  <Font size="13.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/media/images/others/sendIcon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <JFXRadioButton fx:id="oneRoundRadioButton" layoutX="1195.0" layoutY="270.0" prefHeight="18.0" prefWidth="42.0" text="1 r" textFill="AQUA">
+               <selectedColor>
+                  <Color green="1.0" blue="1.0" />
+               </selectedColor>
+               <unSelectedColor>
+                  <Color red="1.0" green="1.0" blue="1.0" />
+               </unSelectedColor>
+               <toggleGroup>
+                  <ToggleGroup fx:id="numberOfRound" />
+               </toggleGroup>
+            </JFXRadioButton>
+            <JFXRadioButton fx:id="threeRoundRadioButton" layoutX="1195.0" layoutY="295.0" text="3 r" textFill="AQUA" toggleGroup="$numberOfRound">
+               <selectedColor>
+                  <Color green="1.0" blue="1.0" />
+               </selectedColor>
+               <unSelectedColor>
+                  <Color red="1.0" green="1.0" blue="1.0" />
+               </unSelectedColor>
+            </JFXRadioButton>
+            <Label fx:id="theInviteSenderNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="995.0" layoutY="349.0" prefHeight="19.0" prefWidth="194.0" text="inviter name" textFill="AQUA">
+               <font>
+                  <Font name="System Bold Italic" size="13.0" />
+               </font>
+            </Label>
+            <JFXButton fx:id="searchAndPlayButton1" layoutX="992.0" layoutY="372.0" prefHeight="28.0" prefWidth="254.0" text="accept &amp; play" textFill="#ffff55">
+               <font>
+                  <Font size="13.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/media/images/others/sendIcon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <Label fx:id="theInviteSenderNumberOfRoundsLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="1195.0" layoutY="348.0" prefHeight="19.0" prefWidth="42.0" text="inv. r" textFill="AQUA">
+               <font>
+                  <Font name="System Bold Italic" size="13.0" />
+               </font>
+            </Label>
+            <JFXButton fx:id="tvButton" layoutX="76.0" layoutY="574.0" prefHeight="57.0" prefWidth="200.0" text="TV">
+               <font>
+                  <Font size="27.0" />
+               </font>
+               <textFill>
+                  <LinearGradient endX="0.8244274663561173" endY="0.034351115008346866">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="0.35555556416511536" blue="0.9248148202896118" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+               <ripplerFill>
+                  <LinearGradient endX="0.8244274663561173" endY="0.034351115008346866">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color green="1.0" blue="1.0" opacity="0.19999998807907104" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="0.3700000047683716" blue="0.9265000224113464" opacity="0.19655172526836395" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </ripplerFill>
             </JFXButton>
             <JFXButton fx:id="tvButton" buttonType="RAISED" layoutX="0" layoutY="0" onAction="#switchToTv"  prefHeight="45.0" prefWidth="380.0" text="TV" textFill="#ffff44">
                <font>
