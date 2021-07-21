@@ -3,24 +3,44 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
 <Pane fx:id="startGame" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.view.newduel.DuelController">
    <children>
-      <Label alignment="CENTER" layoutX="453.0" layoutY="27.0" prefHeight="60.0" prefWidth="374.0" text="new duel menu">
+      <Label alignment="CENTER" layoutX="453.0" layoutY="27.0" prefHeight="174.0" prefWidth="374.0" text="new duel menu">
          <font>
-            <Font size="27.0" />
+            <Font size="54.0" />
          </font>
+         <textFill>
+            <LinearGradient endX="0.9312976662439244" endY="0.8816793929529554" startX="0.9312977249385747" startY="0.46564895688122465">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="1.0" green="1.0" blue="0.3333333432674408" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
       </Label>
-      <RadioButton fx:id="threeRounds" layoutX="712.0" layoutY="252.0" mnemonicParsing="false" onAction="#changeRounds" text="3">
+      <RadioButton fx:id="threeRounds" layoutX="712.0" layoutY="252.0" mnemonicParsing="false" onAction="#changeRounds" text="3" textFill="WHITE">
          </RadioButton>
-      <RadioButton fx:id="oneRound" layoutX="683.0" layoutY="252.0" mnemonicParsing="false" onAction="#changeRounds" selected="true" text="1" />
-      <Label layoutX="540.0" layoutY="252.0" prefHeight="17.0" prefWidth="126.0" text="number of rounds" />
-      <TextField fx:id="opponentUsername" layoutX="566.0" layoutY="284.0" promptText="opponent username" />
-      <Button layoutX="615.0" layoutY="348.0" mnemonicParsing="false" onAction="#startGame" text="start" />
-      <Label fx:id="errorLabel" layoutX="697.0" layoutY="352.0" prefHeight="25.0" prefWidth="149.0" />
-      <Button layoutX="116.0" layoutY="57.0" mnemonicParsing="false" onAction="#back" text="back" />
+      <RadioButton fx:id="oneRound" layoutX="683.0" layoutY="252.0" mnemonicParsing="false" onAction="#changeRounds" selected="true" text="1" textFill="WHITE" />
+      <Label layoutX="540.0" layoutY="252.0" prefHeight="17.0" prefWidth="126.0" text="number of rounds" textFill="WHITE" />
+      <Button layoutX="621.0" layoutY="348.0" mnemonicParsing="false" onAction="#startGame" text="start" textFill="#565656" />
+      <Label fx:id="errorLabel" alignment="TOP_CENTER" layoutX="446.0" layoutY="409.0" prefHeight="97.0" prefWidth="389.0" textFill="#ff7070">
+         <font>
+            <Font name="System Bold Italic" size="16.0" />
+         </font></Label>
+      <Button layoutX="116.0" layoutY="57.0" mnemonicParsing="false" onAction="#back" text="back" textFill="#ff1f1f" />
    </children>
 </Pane>

@@ -137,9 +137,7 @@ public class ShopViewController implements StringMessages, Initializable {
         adminPanelCardSearchTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         userCardsLabel.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         suggestedCardTextArea.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: linear-gradient(to right, aqua , blue);");
-        
         adminPanelCardAmountSlider.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
-
         numberOfCardLabelUnderShopCard.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
         numberOfCardLabelUnderUserCard.setStyle("-fx-prompt-text-fill: white; -fx-text-fill: white");
 

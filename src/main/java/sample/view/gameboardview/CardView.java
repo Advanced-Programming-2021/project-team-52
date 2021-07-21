@@ -92,6 +92,10 @@ public class CardView extends Rectangle {
         this.status = status;
     }
 
+    public STATUS getStatus() {
+        return status;
+    }
+
     public void setInGraveYard(boolean inGraveYard) {
         isInGraveYard = inGraveYard;
     }
