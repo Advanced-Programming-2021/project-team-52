@@ -379,6 +379,4 @@ public class ShopViewController implements StringMessages, Initializable {
                     adminPanelCardAmountSlider.getText())));
         }
     }
-
-
 }

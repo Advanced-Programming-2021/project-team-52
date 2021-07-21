@@ -16,6 +16,8 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXRadioButton?>
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.view.mainMenu.MainMenuController">
    <children>
       <MediaView fx:id="mainMenuBackgroundMediaView" fitHeight="720.0" fitWidth="1280.0" StackPane.alignment="CENTER" />
@@ -177,43 +179,43 @@
                   <Font name="System Bold Italic" size="13.0" />
                </font>
             </Label>
-            <JFXButton fx:id="tvButton" layoutX="76.0" layoutY="574.0" prefHeight="57.0" prefWidth="200.0" text="TV">
-               <font>
-                  <Font size="27.0" />
-               </font>
-               <textFill>
-                  <LinearGradient endX="0.8244274663561173" endY="0.034351115008346866">
-                     <stops>
-                        <Stop>
-                           <color>
-                              <Color green="1.0" blue="1.0" />
-                           </color>
-                        </Stop>
-                        <Stop offset="1.0">
-                           <color>
-                              <Color red="1.0" green="0.35555556416511536" blue="0.9248148202896118" />
-                           </color>
-                        </Stop>
-                     </stops>
-                  </LinearGradient>
-               </textFill>
-               <ripplerFill>
-                  <LinearGradient endX="0.8244274663561173" endY="0.034351115008346866">
-                     <stops>
-                        <Stop>
-                           <color>
-                              <Color green="1.0" blue="1.0" opacity="0.19999998807907104" />
-                           </color>
-                        </Stop>
-                        <Stop offset="1.0">
-                           <color>
-                              <Color red="1.0" green="0.3700000047683716" blue="0.9265000224113464" opacity="0.19655172526836395" />
-                           </color>
-                        </Stop>
-                     </stops>
-                  </LinearGradient>
-               </ripplerFill>
-            </JFXButton>
+<!--            <JFXButton fx:id="tvButton" layoutX="76.0" layoutY="574.0" prefHeight="57.0" prefWidth="200.0" text="TV">-->
+<!--               <font>-->
+<!--                  <Font size="27.0" />-->
+<!--               </font>-->
+<!--               <textFill>-->
+<!--                  <LinearGradient endX="0.8244274663561173" endY="0.034351115008346866">-->
+<!--                     <stops>-->
+<!--                        <Stop>-->
+<!--                           <color>-->
+<!--                              <Color green="1.0" blue="1.0" />-->
+<!--                           </color>-->
+<!--                        </Stop>-->
+<!--                        <Stop offset="1.0">-->
+<!--                           <color>-->
+<!--                              <Color red="1.0" green="0.35555556416511536" blue="0.9248148202896118" />-->
+<!--                           </color>-->
+<!--                        </Stop>-->
+<!--                     </stops>-->
+<!--                  </LinearGradient>-->
+<!--               </textFill>-->
+<!--               <ripplerFill>-->
+<!--                  <LinearGradient endX="0.8244274663561173" endY="0.034351115008346866">-->
+<!--                     <stops>-->
+<!--                        <Stop>-->
+<!--                           <color>-->
+<!--                              <Color green="1.0" blue="1.0" opacity="0.19999998807907104" />-->
+<!--                           </color>-->
+<!--                        </Stop>-->
+<!--                        <Stop offset="1.0">-->
+<!--                           <color>-->
+<!--                              <Color red="1.0" green="0.3700000047683716" blue="0.9265000224113464" opacity="0.19655172526836395" />-->
+<!--                           </color>-->
+<!--                        </Stop>-->
+<!--                     </stops>-->
+<!--                  </LinearGradient>-->
+<!--               </ripplerFill>-->
+<!--            </JFXButton>-->
             <JFXButton fx:id="tvButton" buttonType="RAISED" layoutX="0" layoutY="0" onAction="#switchToTv"  prefHeight="45.0" prefWidth="380.0" text="TV" textFill="#ffff44">
                <font>
                   <Font size="25.0" />
