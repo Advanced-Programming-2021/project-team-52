@@ -32,6 +32,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class GameBoardView{
 
@@ -46,7 +47,7 @@ public class GameBoardView{
     private AnchorPane anchorPane;
 //    private GamePlayController gamePlayController;
     private boolean primaryMouse;
-    private Stage stage;
+//    private Stage stage;
     private HashMap<Integer, CardView> myPlaces;
     private HashMap<Integer, CardView> enemyPlaces;
     private HandPlace myHand, enemyHand;
@@ -71,9 +72,9 @@ public class GameBoardView{
     private VerticalLabel myNickname, enemyNickname;
     private String myNicknameString;
 
-    public GameBoardView(Stage stage, String myNickname, String myProfileImageAddress, String enemyNickname,
-                         String enemyImageAddress){
-        this.stage = stage;
+    public GameBoardView(String myNickname, String myProfileImageAddress, String enemyNickname,
+                         String enemyImageAddress, GameBoardHandler gameBoardHandler){
+//        this.stage = stage;
         this.anchorPane = new AnchorPane();
         this.primaryMouse = true;
         this.myPlaces = new HashMap<>();
@@ -106,7 +107,7 @@ public class GameBoardView{
         this.communicator = new Communicator(anchorPane, this, myPlaces, enemyPlaces);
         this.darkMode = new ToggleButton();
         this.sender = Sender.getInstance();
-        this.gameBoardHandler = new GameBoardHandler(stage);
+        this.gameBoardHandler = gameBoardHandler;
         this.darkMode = new ToggleButton();
         try {
             this.myProfileImage = new ImageView(new Image(new FileInputStream(myProfileImageAddress)));
@@ -120,12 +121,12 @@ public class GameBoardView{
         Thread thread = new Thread(communicator);
         thread.setDaemon(true);
         thread.start();
-        Thread thread1 = new Thread(gameBoardHandler);
-        thread1.setDaemon(true);
-        thread1.start();
+//        Thread thread1 = new Thread(gameBoardHandler);
+//        thread1.setDaemon(true);
+//        thread1.start();
         initialize();
-        Scene scene = new Scene(anchorPane);
-        stage.setScene(scene);
+//        Scene scene = new Scene(anchorPane);
+//        stage.setScene(scene);
 //        initialize();
     }
 
@@ -166,12 +167,19 @@ public class GameBoardView{
         return opponentGraveyard;
     }
 
+    public boolean getBlocked(){
+        return blocked;
+    }
+
+    public AnchorPane getAnchorPane() {
+        return anchorPane;
+    }
+
     public void initialize() {
+        anchorPane.getChildren().clear();
         Rectangle dummy = new Rectangle(1280, 720);
         dummy.setFill(Color.TRANSPARENT);
         anchorPane.getChildren().add(dummy);
-        stage.setHeight(dummy.getHeight() + 37);
-        stage.setWidth(dummy.getWidth() + 14);
         Image lightImageOfTheBackground = new Image("./misc/b1.jpg");
         lightBackground = new BackgroundImage(lightImageOfTheBackground, BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
@@ -284,10 +292,8 @@ public class GameBoardView{
         enemyNickname.setValues(1134, 46, 51, 76, 90, enemyNickname.getText());
         enemyNickname.setTextFill(Color.WHITE);
         anchorPane.getChildren().addAll(myProfileImage, myNickname, enemyProfileImage, enemyNickname);
-    }
-
-    public boolean getBlocked(){
-        return blocked;
+        this.gameBoardHandler.setGameBoardView(this);
+        this.gameBoardHandler.setCommunicator(this.communicator);
     }
 
     private void changeBackground(ToggleButton toggleButton){
@@ -462,8 +468,8 @@ public class GameBoardView{
             if (cardView.canHaveEffects())
             if (!blocked || gameState == GameState.CHAIN){
                 askActions(cardView.getPLACE_NUMBER(), cardView.getIsEnemy(), gameState);
-                cardView.setActions(getAction());
-                getActionImage(cardView);
+//                cardView.setActions(getAction());
+//                getActionImage(cardView);
             } else cardView.changeImageViewOpacity(0);
             if (cardView.getPaint() != Color.TRANSPARENT) {
                 previewRectangle.setFill(new ImagePattern(cardView.getPreview()));
@@ -494,8 +500,8 @@ public class GameBoardView{
             if (cardView.canHaveEffects())
             if (!blocked){
                 askActions(cardView.getPLACE_NUMBER(), cardView.getIsEnemy(), gameState);
-                cardView.setActions(getAction());
-                getActionImage(cardView);
+//                cardView.setActions(getAction());
+//                getActionImage(cardView);
                 if (cardView.playExitMouseTransition) {
                     TranslateTransition translateTransition = new TranslateTransition();
                     translateTransition.setToY(originalY + (enemy ? 40 : -40));
@@ -541,12 +547,12 @@ public class GameBoardView{
                         Action action = primaryMouse ? cardView.getActions()[0] : cardView.getActions()[1];
                         primaryMouse = true;
                         if (action != Action.NOTHING && !cardView.getIsEnemy())
-                            doAction(cardView.getPLACE_NUMBER(), action, gameState);
+                            doAction(cardView.getPLACE_NUMBER(), action, gameState, cardView);
                     }
             } else {
                     askActions(cardView.getPLACE_NUMBER(), cardView.getIsEnemy(), gameState);
-                    cardView.setActions(getAction());
-                    getActionImage(cardView);
+//                    cardView.setActions(getAction());
+//                    getActionImage(cardView);
                 }
         });
     }
@@ -558,7 +564,8 @@ public class GameBoardView{
         hBox.setPrefWidth(735);
         hBox.setPrefHeight(79);
         hBox.setMinHeight(79);
-        anchorPane.getChildren().add(hBox);
+        if (!anchorPane.getChildren().contains(hBox))
+            anchorPane.getChildren().add(hBox);
     }
 
     private void addToGraveyard(CardView cardView, boolean enemy){
@@ -586,12 +593,11 @@ public class GameBoardView{
         else anchorPane.getChildren().remove(graveyard.getScrollPane());
     }
 
-    public void doAction(int placeNumber, Action action, GameState gameState){
+    public void doAction(int placeNumber, Action action, GameState gameState, CardView cardView){
         communicator.setAction(Action.NOTHING);
         communicator.setJob("select " + getType(placeNumber) + " " + placeNumber % 10);
         communicator.start();
         try {
-            //TODO for timing problem
             Thread.sleep(150);
         } catch (InterruptedException interruptedException) {
             interruptedException.printStackTrace();
@@ -615,7 +621,7 @@ public class GameBoardView{
                     break;
                 case CHANGE_POSITION:
                     sender.send(Sender.GAME_PLAY_CONTROLLER_PREFIX + "getSelectedCardStatus");
-                    STATUS status = receiveSelectedCardStatus();
+                    STATUS status = cardView.getStatus();
                     if (status != STATUS.SET) {
                         communicator.setAction(Action.NOTHING);
                         communicator.setJob("set --position " + (status == STATUS.ATTACK ? "defense" : "attack"));
@@ -636,7 +642,6 @@ public class GameBoardView{
                     communicator.start();
                     break;
                 case ATTACK:
-                    CardView cardView = myPlaces.get(placeNumber);
                     sword.setX(cardView.getX() + cardView.getWidth() / 2 - sword.getFitWidth() / 2);
                     sword.setY(cardView.getY() + cardView.getHeight() / 2 - sword.getFitHeight() / 2);
                     sword.setOpacity(1);
@@ -651,11 +656,6 @@ public class GameBoardView{
                 communicator.start();
             }
         }
-    }
-
-    private STATUS receiveSelectedCardStatus(){
-        String statusString = sender.receive();
-        return STATUS.getStatusByString(statusString);
     }
 
     private String getType(int placeNumber){
@@ -792,6 +792,7 @@ public class GameBoardView{
     }
 
     public void changePhase(String phase, boolean enemyTurn){
+        System.out.println(enemyTurn);
         blocked = enemyTurn;
         Color phaseColor = enemyTurn ? Color.INDIANRED : Color.ROYALBLUE;
         Color defaultColor = enemyTurn ? Color.PALEVIOLETRED : Color.LIGHTSKYBLUE;
@@ -867,7 +868,7 @@ public class GameBoardView{
         cardView.setDescription(description);
     }
 
-    public void shutdown(Stage stage, Stage stage1, boolean changeScene){
+    public void shutdown(Stage stage, boolean changeScene){
         communicator.setRun(false);
         communicator.start();
         if (changeScene) {
@@ -885,5 +886,12 @@ public class GameBoardView{
             gameBoardHandler.setRun(false);
             sender.send(Sender.GAME_PLAY_CONTROLLER_PREFIX + "shutdown");
         }
+    }
+
+    public void setActions(String action1, String action2, int placeNumber, boolean isEnemy){
+        CardView cardView = isEnemy ? enemyPlaces.get(placeNumber) : myPlaces.get(placeNumber);
+        Action[] actions = {Action.getActionByValue(action1), Action.getActionByValue(action2)};
+        cardView.setActions(actions);
+        getActionImage(cardView);
     }
 }

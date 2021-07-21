@@ -433,10 +433,6 @@ public class Communicator implements Runnable {
         gameBoardView.showCard(placeNumber, cardPath, description, enemy);
     }
 
-    public void shutdown(Stage stage, Stage stage1, boolean changeScene){
-        gameBoardView.shutdown(stage, stage1, changeScene);
-    }
-
     public void pause(){
         gameBoardView.pause();
     }

@@ -38,7 +38,7 @@ public class MainMenuController implements Initializable {
 
     @FXML
     JFXButton newGameButton, deckManagerButton, shopButton, profileAndSettingButton,
-            scoreboardButton, importAndExportButton, logoutButton,chatRoomButton;
+            scoreboardButton, importAndExportButton, logoutButton,chatRoomButton, tvButton;
 
     @FXML
     ImageView leftHandImageHelper, rightHandImageHelper;
@@ -221,6 +221,19 @@ public class MainMenuController implements Initializable {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void switchToTv(ActionEvent actionEvent) throws IOException{
+        FXMLLoader loader = new FXMLLoader(new File("./src/main/java/sample/view/tv/TvViewFxml.fxml")
+                .toURI().toURL());
+//        FXMLLoader loader = new FXMLLoader(new File("src\\main\\java\\sample\\view\\shop\\ShopViewFxml.fxml")
+        Parent root = loader.load();
+//        root.getStylesheets().add(new File
+//                (".src/main/resources/cssFiles/ShopViewCss.css").toURI().toURL().toExternalForm());
+////                ("src\\main\\resources\\cssFiles\\ShopViewCss.css").toURI().toURL().toExternalForm());
+        Scene tvScene = new Scene(root, 1280, 720);
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        stage.setScene(tvScene);
     }
 
 
