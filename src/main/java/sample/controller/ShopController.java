@@ -86,4 +86,8 @@ public class ShopController implements StringMessages {
     public String removeNumberOfCardToShop(String cardName, String amount){
         return sender.getResponseWithToken(PREFIX, "removeNumberOfCardToShop", cardName,amount);
     }
+
+    public String getSuggestedCards(){
+        return sender.getResponseWithToken(PREFIX, "getSuggestedCards");
+    }
 }

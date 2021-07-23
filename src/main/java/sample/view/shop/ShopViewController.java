@@ -55,7 +55,7 @@ public class ShopViewController implements StringMessages, Initializable {
             cardNameLabelUnderShopCard,
             userCardDetailsLabel, shopCardDetailsLabel, shopCardsLabel;
     @FXML
-    ImageView userCardInfoImageView, shopCardInfoImageView;
+    ImageView userCardInfoImageView, shopCardInfoImageView,suggestedCardImageView;
 
     @FXML
     JFXTextArea auctionPanelSearchACardToAuctionTextArea, auctionPanelSetAPriceToAuctionTextArea, auctionPanelAllCardsInAuctionTextArea,
@@ -87,6 +87,7 @@ public class ShopViewController implements StringMessages, Initializable {
                 if (isInShopMenu) {
                     getAllActiveAuctions();
                     showUnusedAllCardsOfUser();
+                    getSuggestedCard();
                     userBalanceInShopHeader.setText(String.valueOf(user.getBalance()));
                     if (Cards.isCardWithThisNameExist(cardNameInUserCards) != null)
                         numberOfCardLabelUnderUserCard.setText(String.valueOf(shopController.getNumberOfThisCardOutOfDeck
@@ -209,6 +210,20 @@ public class ShopViewController implements StringMessages, Initializable {
 //        }
 
 
+    }
+
+    public void getSuggestedCard(){
+        String response = shopController.getSuggestedCards();
+        suggestedCardTextArea.setText(response);
+        try {
+            suggestedCardImageView.setImage(new Image(new FileInputStream(shopController.getCardImagePathByName(response))));
+        } catch (FileNotFoundException exception) {
+            try {
+                suggestedCardImageView.setImage(new Image(new FileInputStream("./src/main/resources/cardsInLowerCase/weddingcard.jpg")));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void searchInShop(ActionEvent e) throws FileNotFoundException {
