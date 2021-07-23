@@ -8,6 +8,7 @@ import sample.model.tools.StringMessages;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static sample.controller.LoginController.users;
 
@@ -166,7 +167,7 @@ public class ShopController implements StringMessages, RegexPatterns {
 
     public String sellCard(User user, String cardName) {
 //        System.out.println("111111111" + cardName);
-        Cards card = Cards.getCard( cardName);
+        Cards card = Cards.getCard(cardName);
         if (card == null) {
             return noCardWithThisName;
         }
@@ -188,6 +189,24 @@ public class ShopController implements StringMessages, RegexPatterns {
         if (username.equals(ADMIN_USERNAME) && password.equals(ADMIN_PASSWORD))
             return "login successful";
         return "Invalid information";
+    }
+
+    public String getSuggestedCards(User user) {
+        return getBestCardByUserBalance(user.getBalance());
+    }
+
+    public String getBestCardByUserBalance(int balance) {
+        HashMap<String, Integer> items = Shop.getItems();
+        String bestCard = "You can't buy shit";
+        int bestCardPrice = 0;
+        int cardPrice = 0;
+        for (String s : items.keySet()) {
+            cardPrice = items.get(s);
+            if (cardPrice <= balance && cardPrice > bestCardPrice){
+                bestCardPrice = cardPrice;
+                bestCard = s;}
+        }
+        return bestCard;
     }
 
 

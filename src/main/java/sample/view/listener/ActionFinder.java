@@ -188,6 +188,8 @@ public class ActionFinder implements StringMessages {
             return shopController.sellCard(user, elements[1]);
         else if (command.startsWith(SHOP_PREFIX + "removeNumberOfCardToShop"))
             return shopController.removeNumberOfCardToShop(elements[1],elements[2]);
+        else if (command.startsWith(SHOP_PREFIX + "getSuggestedCards"))
+            return shopController.getSuggestedCards(user);
         return invalidCommand;
     }
 
